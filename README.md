@@ -1,4 +1,4 @@
-This project is intended to be a dbt porject with poor DAG modeling so the professional services team can develop tools to detect these errors
+This project is intended to be a dbt proect with poor DAG modeling so the professional services team can develop tools to detect these errors
 
 ### Types of DAG issues to potentially detect:
 
