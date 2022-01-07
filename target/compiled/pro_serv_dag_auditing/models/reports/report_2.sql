@@ -1,0 +1,1 @@
+analytics.dbt_dconnors.fct_model_6
