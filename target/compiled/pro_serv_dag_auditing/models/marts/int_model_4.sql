@@ -1,2 +1,0 @@
-analytics.dbt_dconnors.stg_model_1
-real_database.real_schema.table_2

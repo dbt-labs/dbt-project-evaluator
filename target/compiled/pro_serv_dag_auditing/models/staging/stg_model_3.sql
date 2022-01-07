@@ -1,1 +1,0 @@
-real_database.real_schema.table_3

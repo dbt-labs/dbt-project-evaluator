@@ -1,2 +1,0 @@
-real_database.real_schema.table_1
-real_database.real_schema.table_2

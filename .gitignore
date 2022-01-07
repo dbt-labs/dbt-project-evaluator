@@ -1,2 +1,5 @@
+
 target/
 logs/
+dbt_modules/
+dbt_packages/
