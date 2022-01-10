@@ -61,7 +61,7 @@
     all_relationships as (
 
         -- anchor 
-        select 
+        select distinct
             model as parent,
             model as child,
             0 as distance,
