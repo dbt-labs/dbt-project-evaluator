@@ -57,7 +57,7 @@
     ),
 
     -- recursive CTE
-    -- one record for every root node and each of its downstream children (including itself)
+    -- one record for every node and each of its downstream children (including itself)
     all_relationships as (
 
         -- anchor 
@@ -67,7 +67,7 @@
             0 as distance,
             array_construct(child) as path {# snowflake-specific, but helpful for troubleshooting right now #}
         from direct_relationships
-        where direct_parent is null
+        -- where direct_parent is null {# optional lever to change filtering of anchor clause to only include root nodes #}
 
         union all
 
