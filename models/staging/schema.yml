@@ -1,0 +1,14 @@
+version: 2
+
+models: 
+  - name: stg_model_1
+    columns:
+      - name: id
+        description: not a real column
+        tests:
+          - unique:
+              tags: ['dave']
+          - not_null
+          - relationships:
+              to: ref('stg_model_2')
+              field: stg_model_1_id
