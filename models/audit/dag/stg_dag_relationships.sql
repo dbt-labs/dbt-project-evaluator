@@ -4,49 +4,51 @@
 -- TO DO: fix whitespace
 
 -- one record for each node in the DAG (models and sources) and its direct parent
-with direct_relationships as (
+with 
 
-{%- for model in graph.nodes.values() | selectattr("resource_type", "equalto", "model") -%}
-{%- set outer_loop = loop -%}
+models as (
+    select * from {{ ref('base__nodes')}}
+    where resource_type = 'model'
+    -- and enabled = true
+    -- and package_name != 'pro-serv-dag-auditing'
+),
 
-    {%- if model.depends_on.nodes|length == 0 -%}
+sources as (
+    select * from {{ ref('base__sources')}}
+),
 
-    select 
-        '{{model.name}}' as node,
-        '{{model.unique_id}}' as node_id,
-        'model' as node_type,
-        NULL as direct_parent_id
-
-    {%- else -%}       
-
-        {%- for model_parent in model.depends_on.nodes -%}
-
-        select
-            '{{model.name}}' as node,
-            '{{model.unique_id}}' as node_id,
-            'model' as node_type,
-            '{{model_parent}}' as direct_parent_id
-        {% if not loop.last %}union all{% endif %}
-
-        {% endfor -%}
+direct_model_relationships as (
     
-    {%- endif %}
-
-    {% if not outer_loop.last %}union all{% endif %}
-
-{% endfor -%}
-
-{%- for source in graph.sources.values() -%}
-
-    {% if loop.first and graph.nodes|length > 0 %}union all{% endif %}
     select 
-        '{{source.source_name}}.{{source.name}}' as node,
-        '{{source.unique_id}}' as node_id,
-        'source' as node_type,
-        NULL as direct_parent_id 
-    {% if not loop.last %}union all{% endif %}
+        models.node_name as node, 
+        models.unique_id as node_id,
+        models.resource_type as node_type,
+        parents.value as direct_parent_id 
+        
+    from models,
+    lateral flatten(depends_on:nodes, outer => true) as parents
 
-{% endfor -%}
+),
+
+direct_source_relationships as (
+
+    select 
+        sources.source_name || '.' ||sources.node_name as node, 
+        sources.unique_id as node_id,
+        sources.resource_type as node_type,
+        null as direct_parent_id 
+    
+    from sources
+
+),
+
+direct_relationships as (
+
+    select * from direct_model_relationships
+
+    union all 
+
+    select * from direct_source_relationships
 
 ),
 
@@ -83,6 +85,15 @@ all_relationships as (
 
 final as (
     select
+        {{
+            dbt_utils.surrogate_key([
+                'parent',
+                'parent_type',
+                'child',
+                'distance',
+                'path'
+            ])
+        }} as unique_id,
         parent,
         parent_type,
         child,
