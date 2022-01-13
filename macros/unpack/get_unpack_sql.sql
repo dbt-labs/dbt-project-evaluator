@@ -14,7 +14,6 @@
 
     {% endif %}
     
-    {{  keys }}
 {% endmacro %}
 
 
@@ -30,7 +29,7 @@
             '{{ node.name }}' as node_name,
             '{{ node.resource_type }}' as resource_type,
             parse_json('{{ node.depends_on | tojson }}') as depends_on,
-            '{{ node.config.enabled }}'::boolean as enabled,
+            '{{ node.config.enabled }}'::boolean as is_enabled,
             '{{ node.config.materialized }}' as materialized,
             '{{ node.config.on_schema_change}}' as on_schema_change,
             '{{ node.database }}' as database,
@@ -63,7 +62,7 @@
             '{{ node.source_name }}' as source_name,
             '{{ node.source_description }}' as source_description,
             '{{ node.description }}' as description,
-            '{{ node.config.enabled }}'::boolean as enabled,
+            '{{ node.config.enabled }}'::boolean as is_enabled,
             '{{ node.loaded_at_field}}' as loaded_at_field,
             '{{ node.database }}' as database,
             '{{ node.schema }}' as schema,
