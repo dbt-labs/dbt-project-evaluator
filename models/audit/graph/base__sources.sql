@@ -1,6 +1,4 @@
-{{ get_unpack_sql('sources') }}
 
-
-
-
-
+{{ 
+    get_sources()
+}}

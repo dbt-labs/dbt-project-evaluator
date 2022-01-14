@@ -1,4 +1,4 @@
 
 {{ 
-    get_unpack_sql('metrics') 
+    get_metrics()
 }}

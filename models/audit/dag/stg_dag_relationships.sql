@@ -6,37 +6,29 @@
 -- one record for each node in the DAG (models and sources) and its direct parent
 with 
 
-models as (
-    select * from {{ ref('base__nodes')}}
+direct_model_relationships as (
+    select  
+        node
+        , node_id
+        , resource_type
+        , direct_parent_id
+    from {{ ref('base__node_relationships')}}
     where resource_type = 'model'
-    -- and enabled = true
     -- and package_name != 'pro-serv-dag-auditing'
+    -- and 
 ),
 
 sources as (
     select * from {{ ref('base__sources')}}
 ),
 
-direct_model_relationships as (
-    
-    select 
-        models.node_name as node, 
-        models.unique_id as node_id,
-        models.resource_type as node_type,
-        parents.value as direct_parent_id 
-        
-    from models,
-    lateral flatten(depends_on:nodes, outer => true) as parents
-
-),
-
 direct_source_relationships as (
 
     select 
-        sources.source_name || '.' ||sources.node_name as node, 
-        sources.unique_id as node_id,
-        sources.resource_type as node_type,
-        null as direct_parent_id 
+        sources.source_name || '.' ||sources.node_name as node 
+        , sources.unique_id as node_id
+        , sources.resource_type as resource_type
+        , null as direct_parent_id 
     
     from sources
 
@@ -59,7 +51,7 @@ all_relationships as (
     select distinct
         node as parent,
         node_id as parent_id,
-        node_type as parent_type,
+        resource_type as parent_type,
         node as child,
         node_id as child_id,
         0 as distance,

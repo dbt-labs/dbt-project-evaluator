@@ -1,9 +1,4 @@
 
 {{ 
-    get_unpack_sql('exposures') 
+    get_exposures() 
 }}
-
-
-
-
-

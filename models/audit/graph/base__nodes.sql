@@ -1,6 +1,4 @@
-{{ get_unpack_sql('nodes') }}
 
-
-
-
-
+{{
+    get_nodes()
+}}
