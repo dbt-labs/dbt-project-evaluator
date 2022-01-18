@@ -5,6 +5,11 @@ models:
     description: "This table shows one record for each node in the DAG (models and sources) and its direct parent."
   - name: int_all_dag_relationships
     description: "This table shows one record for every node and each of its downstream children (including itself)."
+    columns:
+      - name: unique_id
+        description: identifier representing a every distinct from each node to another node
+        tests:
+          - unique
   - name: fct_source_fanout
     description: "This table shows each parent/child relationship where a source is the direct parent of multiple nodes in the DAG."
     tests:
