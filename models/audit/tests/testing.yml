@@ -9,4 +9,15 @@ models:
   - name: fct_untested_models
     tests:
       - is_empty 
-  
+  - name: fct_test_coverage
+    columns:
+      - name: test_to_model_ratio
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 1" 
+              severity: warn
+      - name: test_coverage
+        tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 50" 
+              severity: warn
