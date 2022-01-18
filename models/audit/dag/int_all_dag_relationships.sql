@@ -4,19 +4,19 @@ with direct_relationships as (
     from {{ ref('stg_direct_relationships') }}
 ),
 
--- one record for every node and each of its downstream children (including itself)
 -- recursive CTE
+-- one record for every node and each of its downstream children (including itself)
 all_relationships as (
     -- anchor 
     select distinct
         node as parent,
         node_id as parent_id,
-        node_type as parent_type,
+        resource_type as parent_type,
         node as child,
         node_id as child_id,
-        node_type as child_type,
+        resource_type as child_type,
         0 as distance,
-        array_construct(child) as path {# snowflake-specific, but helpful for troubleshooting right now #}
+        array_construct(child) as path --snowflake-specific, but helpful for troubleshooting right now
     from direct_relationships
     -- where direct_parent is null {# optional lever to change filtering of anchor clause to only include root nodes #}
     
@@ -29,7 +29,7 @@ all_relationships as (
         all_relationships.parent_type as parent_type,
         direct_relationships.node as child, 
         direct_relationships.node_id as child_id,
-        direct_relationships.node_type as child_type,
+        direct_relationships.resource_type as child_type,
         all_relationships.distance+1 as distance,
         array_append(all_relationships.path, direct_relationships.node) as path
     from direct_relationships
@@ -39,6 +39,12 @@ all_relationships as (
 
 final as (
     select
+        {{
+            dbt_utils.surrogate_key([
+                'parent',
+                'child',
+            ])
+        }} as unique_id,
         parent,
         parent_type,
         child,

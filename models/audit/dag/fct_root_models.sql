@@ -9,10 +9,10 @@ with direct_relationships as (
 final as (
     select distinct 
         node,
-        node_type,
+        resource_type,
         direct_parent_id
     from direct_relationships
-    where node_type = 'model'
+    where resource_type = 'model'
     and direct_parent_id is NULL
 )
 

@@ -4,49 +4,42 @@
 -- TO DO: fix whitespace
 
 -- one record for each node in the DAG (models and sources) and its direct parent
-with direct_relationships as (
+with 
 
-{%- for model in graph.nodes.values() | selectattr("resource_type", "equalto", "model") -%}
-{%- set outer_loop = loop -%}
+direct_model_relationships as (
+    select  
+        node,
+        node_id,
+        resource_type,
+        direct_parent_id
+    from {{ ref('base__node_relationships')}}
+    where resource_type = 'model'
+    -- and package_name != 'pro-serv-dag-auditing'
+),
 
-    {%- if model.depends_on.nodes|length == 0 -%}
+sources as (
+    select * from {{ ref('base__sources')}}
+),
+
+direct_source_relationships as (
 
     select 
-        '{{model.name}}' as node,
-        '{{model.unique_id}}' as node_id,
-        '{{model.unique_id.split(".")[0]}}' as node_type,
-        NULL as direct_parent_id
-
-    {%- else -%}       
-
-        {%- for model_parent in model.depends_on.nodes -%}
-
-        select
-            '{{model.name}}' as node,
-            '{{model.unique_id}}' as node_id,
-            '{{model.unique_id.split(".")[0]}}' as node_type,
-            '{{model_parent}}' as direct_parent_id
-        {% if not loop.last %}union all{% endif %}
-
-        {% endfor -%}
+        sources.source_name || '.' ||sources.node_name as node,
+        sources.unique_id as node_id,
+        sources.resource_type as resource_type,
+        null as direct_parent_id 
     
-    {%- endif %}
+    from sources
 
-    {% if not outer_loop.last %}union all{% endif %}
+),
 
-{% endfor -%}
+direct_relationships as (
 
-{%- for source in graph.sources.values() -%}
+    select * from direct_model_relationships
 
-    {% if loop.first and graph.nodes|length > 0 %}union all{% endif %}
-    select 
-        '{{source.source_name}}.{{source.name}}' as node,
-        '{{source.unique_id}}' as node_id,
-        '{{source.unique_id.split(".")[0]}}' as node_type,
-        NULL as direct_parent_id 
-    {% if not loop.last %}union all{% endif %}
+    union all 
 
-{% endfor -%}
+    select * from direct_source_relationships
 
 )
 
