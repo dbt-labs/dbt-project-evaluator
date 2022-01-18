@@ -1,0 +1,12 @@
+version: 2 
+
+models: 
+  - name: stg_model_test_summary 
+    columns:
+      - name: total_tests_applied
+        tests:
+          - not_null 
+  - name: fct_untested_models
+    tests:
+      - is_empty 
+  
