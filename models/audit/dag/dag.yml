@@ -6,19 +6,28 @@ models:
   - name: int_all_dag_relationships
     description: "This table shows one record for every node and each of its downstream children (including itself)."
     columns:
-      - name: unique_id
-        description: identifier representing a every distinct from each node to another node
+      - name: path
+        description: unique identifier representing a distinct path from each node to another node
         tests:
           - unique
+          - not_null
   - name: fct_source_fanout
     description: "This table shows each parent/child relationship where a source is the direct parent of multiple nodes in the DAG."
     tests:
       - is_empty
   - name: fct_root_models
-    description: "This table shows each parent/child relationship where a model has 0 direct parents."
+    description: "This table shows each model with 0 direct parents."
     tests:
       - is_empty
   - name: fct_multiple_sources_joined
     description: "This table shows each parent/child relationship where a model references more than one source."
+    tests:
+      - is_empty
+  - name: fct_unused_sources
+    description: "This table shows each source with 0 children."
+    tests:
+      - is_empty
+  - name: fct_direct_join_to_source
+    description: "This table shows each parent/child reltionship where a model has a reference to both a model and a source."
     tests:
       - is_empty

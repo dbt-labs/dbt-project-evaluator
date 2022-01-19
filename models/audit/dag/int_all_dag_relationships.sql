@@ -39,12 +39,6 @@ all_relationships as (
 
 final as (
     select
-        {{
-            dbt_utils.surrogate_key([
-                'parent',
-                'child',
-            ])
-        }} as unique_id,
         parent,
         parent_type,
         child,
