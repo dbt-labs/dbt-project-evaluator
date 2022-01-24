@@ -1,4 +1,4 @@
--- this model finds cases where a source is used in multiple direct downstream models
+-- this model finds cases where a model references more than one source
 with direct_source_relationships as (
     select  
         *
@@ -7,9 +7,9 @@ with direct_source_relationships as (
     and parent_type = 'source'
 ),
 
-source_fanout as (
+multiple_sources_joined as (
     select
-        parent,
+        child,
         count(*)
     from direct_source_relationships
     group by 1
@@ -20,9 +20,9 @@ final as (
     select 
         direct_source_relationships.*
     from direct_source_relationships
-    inner join source_fanout
-    on direct_source_relationships.parent = source_fanout.parent
-    order by direct_source_relationships.parent
+    inner join multiple_sources_joined
+    on direct_source_relationships.child = multiple_sources_joined.child
+    order by direct_source_relationships.child
 )
 
 select * from final
