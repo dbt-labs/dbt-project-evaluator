@@ -1,5 +1,6 @@
 -- this model finds cases where a model has 0 direct parents, likely due to a lack of source or ref function
--- TO DO: What are seeds classified as?
+-- TO DO: 
+    -- decide how seeds are handled in these dag tests, seeds are in the base__nodes model where resource_type = 'seed' 
 
 with model_relationships as (
     select  
