@@ -11,7 +11,7 @@
             '{{ node.unique_id }}' as unique_id
             , '{{ node.name }}' as node_name
             , '{{ node.resource_type }}' as resource_type
-            , '{{ node.description }}' as description
+            , {{ safe_quote_string(node.description) }} as description
             , '{{ node.type }}' as exposure_type
             , '{{ node.maturity}}' as maturity
             , '{{ node.package_name }}' as package_name
