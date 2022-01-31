@@ -11,7 +11,7 @@
             '{{ node.unique_id }}' as unique_id
             , '{{ node.name }}' as node_name
             , '{{ node.resource_type }}' as resource_type
-            , '{{ node.description }}' as description
+            , '{{ is_not_empty_string(node.description) }}'::boolean as is_described
             , '{{ node.type }}' as metric_type
             , '{{ node.model.identifier }}' as model
             , '{{ node.label }}' as label
