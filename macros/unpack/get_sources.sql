@@ -2,28 +2,48 @@
 
     {% if execute %}
     {% set nodes_list = graph.sources.values() %}
+    {% set list_nodes = [] %}
     {% for node in nodes_list %}
-        {% if not loop.first %}
-          union all 
-        {% endif %}
 
-        select 
-            '{{ node.unique_id }}' as unique_id
-            , '{{ node.name }}' as node_name
-            , '{{ node.alias }}' as alias
-            , '{{ node.resource_type }}' as resource_type
-            , '{{ node.source_name }}' as source_name
-            , {{ safe_quote_string(node.source_description) }} as source_description
-            , {{ safe_quote_string(node.description) }} as description
-            , '{{ node.config.enabled }}'::boolean as is_enabled
-            , '{{ node.loaded_at_field}}' as loaded_at_field
-            , '{{ node.database }}' as database
-            , '{{ node.schema }}' as schema
-            , '{{ node.package_name }}' as package_name
-            , '{{ node.loader }}' as loader
-            , '{{ node.identifier }}' as identifier
+        {% do list_nodes.append(
+          {
+            "unique_id": node.unique_id, 
+            "node_name": node.node_name or none,
+            "alias": node.alias or none,
+            "resource_type": node.resource_type or none,
+            "source_name": node.source_name or none,
+            "is_source_described": true if node.source_description else false,
+            "is_described": true if node.description else false,
+            "is_enabled": node.is_enabled or none,
+            "loaded_at_field": node.loaded_at_field or none,
+            "database": node.database or none,
+            "schema": node.schema or none,
+            "package_name": node.package_name or none,
+            "loader": node.loader or none,
+            "identifier": node.identifier or none
+          }
+        ) %}
 
     {% endfor %}
+
+    {% set nodes_in_json = tojson(list_nodes) %}
+    {{ select_from_json_string(nodes_in_json,[
+      'unique_id',
+      'node_name',
+      'alias',
+      'resource_type',
+      'source_name',
+      'is_source_described',
+      'is_described',
+      'is_enabled',
+      'loaded_at_field',
+      'database',
+      'schema',
+      'package_name',
+      'loader',
+      'identifier'
+      ]) }}
+
     {% endif %}
     
 

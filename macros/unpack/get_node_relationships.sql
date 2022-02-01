@@ -2,41 +2,32 @@
 
     {% if execute %}
     {% set nodes_list = graph.nodes.values() %}
+    {% set list_nodes = [] %}
     
-    with relationships as (
     {%- for node in graph.nodes.values() -%}
-    {%- set outer_loop = loop -%}
-
+  
         {%- if node.depends_on.nodes|length == 0 -%}
 
-        select 
-            '{{ node.name }}' as node,
-            '{{ node.unique_id }}' as node_id,
-            '{{ node.resource_type }}' as resource_type,
-            NULL as direct_parent_id
+        {% do list_nodes.append({"node": node.name, "node_id": node.unique_id, "resource_type": node.resource_type, "direct_parent_id": none}) %}
 
         {%- else -%}       
 
             {%- for parent in node.depends_on.nodes -%}
-
-            select 
-                '{{ node.name }}' as node,
-                '{{ node.unique_id }}' as node_id,
-                '{{ node.resource_type }}' as resource_type,
-                '{{ parent }}'  as direct_parent_id
-            {% if not loop.last %}union all{% endif %}
-
+            {% do list_nodes.append({"node": node.name, "node_id": node.unique_id, "resource_type": node.resource_type, "direct_parent_id": parent}) %}
             {% endfor -%}
         
         {%- endif %}
 
-        {% if not outer_loop.last %}union all{% endif %}
-
     {% endfor -%}
 
-    ), 
 
-    final as (
+    {# build a real JSON object, query it and create a select statement with all columns #}
+    {% set nodes_in_json = tojson(list_nodes) %}
+    with relationships as (
+        {{ select_from_json_string(nodes_in_json,['node','node_id','resource_type','direct_parent_id']) }}
+    )
+
+    , final as (
         select 
             {{ dbt_utils.surrogate_key(['node_id', 'direct_parent_id']) }} as unique_id, 
             *
@@ -44,6 +35,7 @@
     )
 
     select * from final
+
     {% endif %}
-  
+
 {% endmacro %}
