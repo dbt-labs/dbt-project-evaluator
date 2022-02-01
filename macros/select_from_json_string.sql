@@ -46,27 +46,3 @@
     from unnested
 
 {% endmacro %}
-
-
-
-
-
-
-with source as (
-    select json_extract_array('')
-    as json_data
-)
-
-, unnested as (
-    select 
-        json_data
-    from source,
-    unnest(json_data) json_data
-)
-
-select 
-    json_extract_scalar(json_data, "$.node") as node,
-    json_extract_scalar(json_data, "$.node_id") as node_id,
-    json_extract_scalar(json_data, "$.resource_type") as resource_type,
-    json_extract_scalar(json_data, "$.direct_parent_id") as direct_parent_id
-from unnested
