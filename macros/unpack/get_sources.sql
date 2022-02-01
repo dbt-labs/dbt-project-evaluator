@@ -13,8 +13,8 @@
             , '{{ node.alias }}' as alias
             , '{{ node.resource_type }}' as resource_type
             , '{{ node.source_name }}' as source_name
-            , '{{ node.source_description }}' as source_description
-            , '{{ node.description }}' as description
+            , '{{ is_not_empty_string(node.source_description) }}'::boolean as is_source_described
+            , '{{ is_not_empty_string(node.description) }}'::boolean as is_described
             , '{{ node.config.enabled }}'::boolean as is_enabled
             , '{{ node.loaded_at_field}}' as loaded_at_field
             , '{{ node.database }}' as database
