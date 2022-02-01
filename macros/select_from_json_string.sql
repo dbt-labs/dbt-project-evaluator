@@ -46,3 +46,21 @@
     from unnested
 
 {% endmacro %}
+
+
+
+{% macro postgres__select_from_json_string(json_string,columns) %}
+
+    with unnested as (
+        select 
+            value as json_data 
+        from json_array_elements('{{ json_string }}')
+    )
+
+    select 
+        {% for column in columns %}
+        json_data::json->>'{{column}}' as {{column}} {% if not loop.last %}, {% endif %}
+        {% endfor %}
+    from unnested
+
+{% endmacro %}
