@@ -4,7 +4,7 @@
     {% set nodes_list = graph.nodes.values() %}
     
     with relationships as (
-    {%- for node in graph.nodes.values() -%}
+    {%- for node in nodes_list -%}
     {%- set outer_loop = loop -%}
 
         {%- if node.depends_on.nodes|length == 0 -%}

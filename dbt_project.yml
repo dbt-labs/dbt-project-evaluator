@@ -24,3 +24,13 @@ clean-targets:         # directories to be removed by `dbt clean`
     - "target"
     - "dbt_modules"
 
+
+seeds:
+  pro_serv_dag_auditing:
+    node_relationships:
+      +column_types:
+        node: VARCHAR
+        node_id: VARCHAR
+        resource_type: VARCHAR
+        direct_parent_id: VARCHAR
+      +post-hook: "{{ fill_node_relationships_csv(this) }}"
