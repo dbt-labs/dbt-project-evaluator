@@ -2,23 +2,41 @@
 
     {% if execute %}
     {% set nodes_list = graph.exposures.values() %}
-    {% for node in nodes_list %}
-        {% if not loop.first %}
-          union all 
-        {% endif %}
+    {% set values = [] %}
 
-        select 
-            '{{ node.unique_id }}' as unique_id
-            , '{{ node.name }}' as node_name
-            , '{{ node.resource_type }}' as resource_type
-            , '{{ is_not_empty_string(node.description) }}'::boolean as is_described
-            , '{{ node.type }}' as exposure_type
-            , '{{ node.maturity}}' as maturity
-            , '{{ node.package_name }}' as package_name
-            , '{{ node.url }}' as url
+    {% for node in nodes_list %}
+
+      {% set values_line %}
+      (
+        '{{ node.unique_id }}', 
+        '{{ node.name }}', 
+        '{{ node.resource_type }}', 
+        cast('{{ is_not_empty_string(node.description) | trim }}'as boolean), 
+        '{{ node.type }}', 
+        '{{ node.maturity}}', 
+        '{{ node.package_name }}', 
+        '{{ node.url }}'
+      )
+      {% endset %}
+      {% do values.append(values_line) %}
 
     {% endfor %}
     {% endif %}
-    
+
+    {{ return(
+        select_from_values(
+            values = values,
+            column_names = [
+              'unique_id', 
+              'node_name', 
+              'resource_type', 
+              'is_described', 
+              'exposure_type', 
+              'maturity', 
+              'package_name', 
+              'url'
+            ]
+         )
+    ) }}
 
 {% endmacro %}

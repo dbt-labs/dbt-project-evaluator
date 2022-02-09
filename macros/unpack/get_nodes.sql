@@ -2,24 +2,45 @@
 
     {% if execute %}
     {% set nodes_list = graph.nodes.values() %}
-    {% for node in nodes_list %}
-        {% if not loop.first %}
-          union all 
-        {% endif %}
+    {% set values = [] %}
 
-        select 
-            '{{ node.unique_id }}' as unique_id
-            , '{{ node.name }}' as node_name
-            , '{{ node.resource_type }}' as resource_type
-            , '{{ node.config.enabled }}'::boolean as is_enabled
-            , '{{ node.config.materialized }}' as materialized
-            , '{{ node.config.on_schema_change}}' as on_schema_change
-            , '{{ node.database }}' as database
-            , '{{ node.schema }}' as schema
-            , '{{ node.package_name }}' as package_name
-            , '{{ node.alias }}' as alias
+    {% for node in nodes_list %}
+
+          {% set values_line %}
+            (
+              '{{ node.unique_id }}', 
+              '{{ node.name }}', 
+              '{{ node.resource_type }}', 
+              cast('{{ node.config.enabled | trim }}' as boolean), 
+              '{{ node.config.materialized }}', 
+              '{{ node.config.on_schema_change}}', 
+              '{{ node.database }}', 
+              '{{ node.schema }}', 
+              '{{ node.package_name }}', 
+              '{{ node.alias }}'
+            )
+        {% endset %}
+        {% do values.append(values_line) %}
 
     {% endfor %}
     {% endif %}
-  
+
+    {{ return(
+        select_from_values(
+            values = values,
+            column_names = [
+              'unique_id', 
+              'node_name', 
+              'resource_type', 
+              'is_enabled', 
+              'materialized', 
+              'on_schema_change', 
+              'database', 
+              'schema', 
+              'package_name', 
+              'alias'
+            ]
+         )
+    ) }}
+
 {% endmacro %}

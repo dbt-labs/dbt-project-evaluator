@@ -2,29 +2,54 @@
 
     {% if execute %}
     {% set nodes_list = graph.sources.values() %}
-    {% for node in nodes_list %}
-        {% if not loop.first %}
-          union all 
-        {% endif %}
+    {% set values = [] %}
 
-        select 
-            '{{ node.unique_id }}' as unique_id
-            , '{{ node.name }}' as node_name
-            , '{{ node.alias }}' as alias
-            , '{{ node.resource_type }}' as resource_type
-            , '{{ node.source_name }}' as source_name
-            , '{{ is_not_empty_string(node.source_description) }}'::boolean as is_source_described
-            , '{{ is_not_empty_string(node.description) }}'::boolean as is_described
-            , '{{ node.config.enabled }}'::boolean as is_enabled
-            , '{{ node.loaded_at_field}}' as loaded_at_field
-            , '{{ node.database }}' as database
-            , '{{ node.schema }}' as schema
-            , '{{ node.package_name }}' as package_name
-            , '{{ node.loader }}' as loader
-            , '{{ node.identifier }}' as identifier
+    {% for node in nodes_list %}
+
+         {% set values_line %}
+            (
+              '{{ node.unique_id }}', 
+              '{{ node.name }}', 
+              '{{ node.alias }}', 
+              '{{ node.resource_type }}', 
+              '{{ node.source_name }}', 
+              cast('{{ is_not_empty_string(node.source_description) | trim }}' as boolean), 
+              cast('{{ is_not_empty_string(node.description) | trim }}' as boolean), 
+              cast('{{ node.config.enabled }}' as boolean), 
+              '{{ node.loaded_at_field}}', 
+              '{{ node.database }}', 
+              '{{ node.schema }}', 
+              '{{ node.package_name }}', 
+              '{{ node.loader }}', 
+              '{{ node.identifier }}'
+            )
+        {% endset %}
+        {% do values.append(values_line) %}
 
     {% endfor %}
     {% endif %}
-    
 
+
+    {{ return(
+        select_from_values(
+            values = values,
+            column_names = [
+              'unique_id',
+              'node_name',
+              'alias',
+              'resource_type',
+              'source_name',
+              'is_source_described',
+              'is_described',
+              'is_enabled',
+              'loaded_at_field',
+              'database',
+              'schema',
+              'package_name',
+              'loader',
+              'identifier' 
+            ]
+         )
+    ) }}
+ 
 {% endmacro %}

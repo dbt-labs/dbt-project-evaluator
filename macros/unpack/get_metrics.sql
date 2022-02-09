@@ -2,25 +2,45 @@
 
     {% if execute %}
     {% set nodes_list = graph.metrics.values() %}
+    {% set values = [] %}
+
     {% for node in nodes_list %}
-        {% if not loop.first %}
-          union all 
-        {% endif %}
 
-        select 
-            '{{ node.unique_id }}' as unique_id
-            , '{{ node.name }}' as node_name
-            , '{{ node.resource_type }}' as resource_type
-            , '{{ is_not_empty_string(node.description) }}'::boolean as is_described
-            , '{{ node.type }}' as metric_type
-            , '{{ node.model.identifier }}' as model
-            , '{{ node.label }}' as label
-            , '{{ node.sql }}' as sql
-            , '{{ node.timestamp }}' as timestamp
-            , '{{ node.package_name }}' as package_name
-
+          {% set values_line %}
+            (
+            '{{ node.unique_id }}', 
+            '{{ node.name }}', 
+            '{{ node.resource_type }}', 
+            cast('{{ is_not_empty_string(node.description) | trim }}' as boolean), 
+            '{{ node.type }}', 
+            '{{ node.model.identifier }}', 
+            '{{ node.label }}', 
+            '{{ node.sql }}', 
+            '{{ node.timestamp }}', 
+            '{{ node.package_name }}'
+            )
+        {% endset %}
+        {% do values.append(values_line) %}
 
     {% endfor %}
     {% endif %}
-  
+
+    {{ return(
+        select_from_values(
+            values = values,
+            column_names = [
+              'unique_id', 
+              'node_name', 
+              'resource_type', 
+              'is_described', 
+              'metric_type', 
+              'model', 
+              'label', 
+              'sql', 
+              'timestamp', 
+              'package_name'
+            ]
+         )
+    ) }}
+
 {% endmacro %}
