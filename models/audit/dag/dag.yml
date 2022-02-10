@@ -31,3 +31,10 @@ models:
     description: "This table shows each parent/child reltionship where a model has a reference to both a model and a source."
     tests:
       - is_empty
+  - name: fct_rejoining_of_upstream_concepts
+    description: >
+      "All cases where one of the parent node's direct children (direct_child_1) is ALSO the direct child of ANOTHER one of the 
+      parent node's direct childen (direct_child_2). Only includes cases where the model "in between" the parent node and 
+      direct_child_1 has NO other downstream dependencies."
+    tests:
+      - is_empty
