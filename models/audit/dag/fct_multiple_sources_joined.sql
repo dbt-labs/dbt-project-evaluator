@@ -1,3 +1,5 @@
+-- TO DO: maybe switch grain to one row per "issue" similar to fct_rejoining_of_upstream_concepts
+
 -- this model finds cases where a model references more than one source
 with direct_source_relationships as (
     select  

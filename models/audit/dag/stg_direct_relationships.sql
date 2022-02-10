@@ -13,7 +13,7 @@ direct_model_relationships as (
         resource_type,
         direct_parent_id
     from {{ ref('base__node_relationships')}}
-    where resource_type = 'model'
+    where resource_type = 'model' -- TO DO: include exposures
     -- and package_name != 'pro-serv-dag-auditing'
 ),
 
