@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: stg_model_1
+    description: test
+    columns:
+      - name: id 
+        description: hocus pocus
+        tests:
+          - fake_unique

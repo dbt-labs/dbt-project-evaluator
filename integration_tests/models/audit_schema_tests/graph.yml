@@ -1,0 +1,37 @@
+version: 2
+
+models:
+  - name: base__exposures
+    description: base model from the graph variable, one record per exposure node
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+          
+  - name: base__metrics
+    description: base model from the graph variable, one record per metric node
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+          
+  - name: base__node_relationships
+    description: base model from the graph variable, one record per direct node relationship (comes from the depends on field in the graph)
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+          
+  - name: base__nodes
+    description:  base model from the graph variable, one record per node (analysis, model, operation, seed, snapshot, test)
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+          
+  - name: base__sources
+    description: base model from the graph variable, one record per source node
+    columns:
+      - name: unique_id
+        tests:
+          - unique
