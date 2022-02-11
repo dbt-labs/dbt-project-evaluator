@@ -36,28 +36,35 @@
     select * from unnest( [ struct('val1a' as col_name1, 'val2a' as col_name2, 'val3a' as col_name3), ('val1b','val2b','val3b') ] )
     #}
 
-    {% set first_value_in_list = values[0].replace('(','').replace(')','').split(',') %}
-    {% set following_values_string =  values[1:] | join(", ") %}
+    {% if execute and values %}
 
-    {% set struct_header = [] %}
-    {% for column in column_names %}
+        {% set trimed_first_row = values[0] | trim  %}
+        {% set first_value_in_list = trimed_first_row[1:-1:].split(',') %}
+        {% set following_values_string =  values[1:] | join(", ") %}
 
-        {% set name %}
-            {{ first_value_in_list[loop.index0] }} as {{ column }}
-        {% endset %}
-        {% do struct_header.append(name) %}
-      
-    {% endfor %}
+        {% set struct_header = [] %}
+        {% for column in column_names %}
 
-    {% set struct_header_string = struct_header | join(', ') %}
+            {% set name %}
+                {{ first_value_in_list[loop.index0] }} as {{ column }}
+            {% endset %}
+            {% do struct_header.append(name) %}
+        
+        {% endfor %}
 
-    select 
-        * 
-    from 
-        unnest([    
-            struct( {{ struct_header_string }} ),
-            {{ following_values_string }}
+        {% set struct_header_string = struct_header | join(', ') %}
+
+        select 
+            * 
+        from 
+            unnest([    
+                struct( {{ struct_header_string }} )
+                {% if following_values_string %}
+                , {{ following_values_string }}
+                {% endif %}
         ])
+
+    {% endif %}
 
 {% endmacro %}
 
