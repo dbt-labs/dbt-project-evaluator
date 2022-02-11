@@ -1,1 +1,0 @@
-{{ ref('stg_model_3') }}
