@@ -24,7 +24,7 @@ single_use_nodes as (
     where distance = 1
     group by 1
     having count(*) = 1
-)
+),
 
 -- all cases where one of the parent node's direct children (direct_child_1) is ALSO the direct child of ANOTHER one of the parent node's direct childen (direct_child_2)
 three_node_relationships as (
@@ -40,7 +40,7 @@ three_node_relationships as (
         on rejoined.parent = direct_parent.parent
         and direct_parent.distance = 1
     where direct_child.parent = direct_parent.child
-)
+),
 
 -- additionally, only includes cases where the model "in between" the parent node and direct_child_1 has NO other downstream dependencies
 -- Note: when the "in between" model DOES have downstream dependencies, it's possible this DAG choice has been made to avoid duplicated code and as such is OKAY
