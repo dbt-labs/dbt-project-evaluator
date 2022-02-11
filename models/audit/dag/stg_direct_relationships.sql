@@ -27,7 +27,7 @@ direct_source_relationships as (
         sources.source_name || '.' ||sources.node_name as node,
         sources.unique_id as node_id,
         sources.resource_type as resource_type,
-        null as direct_parent_id 
+        cast(null as string) as direct_parent_id 
     
     from sources
 
