@@ -3,8 +3,9 @@ version: 2
 models: 
   - name: stg_model_test_summary 
     columns:
-      - name: total_tests_applied
+      - name: unique_id
         tests:
+          - unique 
           - not_null 
   - name: fct_untested_models
     tests:
@@ -13,11 +14,11 @@ models:
     columns:
       - name: test_to_model_ratio
         tests:
-          - dbt_utils.expression_is_true:
-              expression: "> 1" 
+          - dbt_utils.accepted_range:
+              min_value: 1 
               severity: warn
-      - name: test_coverage
+      - name: test_coverage_pct
         tests:
-          - dbt_utils.expression_is_true:
-              expression: "> 50" 
+          - dbt_utils.accepted_range:
+              min_value: 50
               severity: warn

@@ -16,7 +16,7 @@ agg_relationships as (
     
     select 
         direct_parent_id, 
-        count(distinct node_id) as total_tests_applied 
+        count(distinct node_id) as tests_per_model 
     
     from test_relationships
     group by 1
@@ -25,7 +25,7 @@ agg_relationships as (
 final as (
     select 
         models.unique_id, 
-        coalesce(agg_relationships.total_tests_applied, 0) as total_tests_applied
+        coalesce(agg_relationships.tests_per_model, 0) as tests_per_model
     from models
     left join agg_relationships
         on models.unique_id = agg_relationships.direct_parent_id
