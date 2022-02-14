@@ -14,4 +14,4 @@ final as (
     from relationships
 )
 
-select * from final
+select distinct * from final
