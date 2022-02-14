@@ -8,12 +8,11 @@ with all_relationships as (
 rejoined as (
     select
         parent,
-        child,
-        sum(case when distance = 1 then 1 else 0 end) as num_1_distance_paths,
-        sum(case when distance = 2 then 1 else 0 end) as num_2_distance_paths
+        child
     from all_relationships
     group by 1, 2
-    having (num_1_distance_paths >= 1 and num_2_distance_paths >= 1)
+    having (sum(case when distance = 1 then 1 else 0 end) >= 1 
+        and sum(case when distance = 2 then 1 else 0 end) >= 1)
 ),
 
 -- nodes with only one direct child
