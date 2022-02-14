@@ -29,3 +29,13 @@ models:
     audit:
       graph:
         +materialized: table
+
+tests:
+  pro_serv_dag_auditing:
+    audit:
+      dag:
+        not_null_int_all_dag_relationships_path:
+          +enabled: false
+        unique_int_all_dag_relationships_path:
+          +enabled: false
+        
