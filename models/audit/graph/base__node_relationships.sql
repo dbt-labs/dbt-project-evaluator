@@ -1,7 +1,7 @@
 with relationships as (
 
     {{
-        get_node_relationships()
+        get_relationships("nodes")
     }}
 
 ),
@@ -14,4 +14,4 @@ final as (
     from relationships
 )
 
-select * from final
+select distinct * from final
