@@ -7,7 +7,14 @@ models:
       - name: unique_id
         tests:
           - unique
-          
+
+  - name: base__exposure_relationships
+    description: base model from the graph variable, one record per exposure node relationship (comes from the depends on field in the graph)
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+
   - name: base__metrics
     description: base model from the graph variable, one record per metric node
     columns:
