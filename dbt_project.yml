@@ -35,7 +35,7 @@ tests:
     audit:
       dag:
         not_null_int_all_dag_relationships_path:
-          +enabled: false
+          +enabled: "{{ var('debug_snowflake',false) }}"
         unique_int_all_dag_relationships_path:
-          +enabled: false
+          +enabled: "{{ var('debug_snowflake',false) }}"
         
