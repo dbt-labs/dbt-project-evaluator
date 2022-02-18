@@ -2,6 +2,7 @@
 -- TO DO: exclude models that are part of the audit package
     -- can use package_name attribute in final version
 -- TO DO: fix whitespace
+-- TO DO: determine if we want to include exposures?
 
 -- one record for each node in the DAG (models and sources) and its direct parent
 with 

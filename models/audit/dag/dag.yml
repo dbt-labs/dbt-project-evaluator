@@ -31,3 +31,7 @@ models:
     description: "This table shows each parent/child reltionship where a model has a reference to both a model and a source."
     tests:
       - is_empty
+  - name: fct_model_fanout
+    description: "This table shows all parents with more direct "leaf" children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
+    tests:
+      - is_empty
