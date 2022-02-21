@@ -18,6 +18,15 @@ direct_model_relationships as (
     -- and package_name != 'pro-serv-dag-auditing'
 ),
 
+direct_exposure_relationships as (
+    select  
+        node,
+        node_id,
+        resource_type,
+        direct_parent_id
+    from {{ ref('base__exposure_relationships')}}
+),
+
 sources as (
     select * from {{ ref('base__sources')}}
 ),
@@ -37,6 +46,10 @@ direct_source_relationships as (
 direct_relationships as (
 
     select * from direct_model_relationships
+
+    union all 
+
+    select * from direct_exposure_relationships
 
     union all 
 
