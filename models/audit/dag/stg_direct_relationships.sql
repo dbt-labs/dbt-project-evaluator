@@ -2,59 +2,43 @@
 -- TO DO: exclude models that are part of the audit package
     -- can use package_name attribute in final version
 -- TO DO: fix whitespace
--- TO DO: determine if we want to include exposures?
 
 -- one record for each node in the DAG (models and sources) and its direct parent
 with 
 
+all_dag_nodes as (
+    select * from {{ ref('stg_all_dag_nodes') }}
+),
+
 direct_model_relationships as (
     select  
-        node,
         node_id,
-        resource_type,
         direct_parent_id
     from {{ ref('base__node_relationships')}}
-    where resource_type in ('model','snapshot')
-    -- and package_name != 'pro-serv-dag-auditing'
 ),
 
 direct_exposure_relationships as (
     select  
-        node,
         node_id,
-        resource_type,
         direct_parent_id
     from {{ ref('base__exposure_relationships')}}
 ),
 
-sources as (
-    select * from {{ ref('base__sources')}}
-),
-
-direct_source_relationships as (
-
-    select 
-        sources.source_name || '.' ||sources.node_name as node,
-        sources.unique_id as node_id,
-        sources.resource_type as resource_type,
-        cast(null as {{ dbt_utils.type_string() }}) as direct_parent_id 
-    
-    from sources
-
-),
-
+-- for all nodes in the DAG, find their direct parent
 direct_relationships as (
-
-    select * from direct_model_relationships
-
-    union all 
-
-    select * from direct_exposure_relationships
-
-    union all 
-
-    select * from direct_source_relationships
-
+    select
+        all_dag_nodes.node_id,
+        CASE 
+            WHEN resource_type = 'source' THEN NULL
+            WHEN resource_type IN ('model', 'snapshot') THEN models.direct_parent_id
+            WHEN resource_type = 'exposure' THEN exposures.direct_parent_id
+            ELSE NULL
+        END AS direct_parent_id
+    from all_dag_nodes
+    left join direct_model_relationships as models
+        on all_dag_nodes.node_id = models.node_id
+    left join direct_exposure_relationships as exposures
+        on all_dag_nodes.node_id = exposures.node_id
 )
 
 select * from direct_relationships

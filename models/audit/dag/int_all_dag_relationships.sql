@@ -6,17 +6,15 @@ with recursive direct_relationships as (
     from {{ ref('stg_direct_relationships') }}
 ),
 
+-- should this be a fct_ model?
+
 -- recursive CTE
 -- one record for every node and each of its downstream children (including itself)
 all_relationships as (
     -- anchor 
     select distinct
-        node as parent,
         node_id as parent_id,
-        resource_type as parent_type,
-        node as child,
         node_id as child_id,
-        resource_type as child_type,
         0 as distance
 
         {% if debug_snowflake %}
@@ -30,12 +28,8 @@ all_relationships as (
 
     -- recursive clause
     select  
-        all_relationships.parent as parent,
         all_relationships.parent_id as parent_id,
-        all_relationships.parent_type as parent_type,
-        direct_relationships.node as child, 
         direct_relationships.node_id as child_id,
-        direct_relationships.resource_type as child_type,
         all_relationships.distance+1 as distance
 
         {% if debug_snowflake %}
@@ -47,19 +41,29 @@ all_relationships as (
         on all_relationships.child_id = direct_relationships.direct_parent_id
 ),
 
+node_info as (
+    select * from {{ ref('stg_all_dag_nodes') }}
+),
+
 final as (
     select
-        parent,
-        parent_type,
-        child,
-        child_type,
-        distance
+        parent.node_name as parent,
+        parent.resource_type as parent_type,
+        parent.file_path as parent_file_path,
+        child.node_name as child,
+        child.resource_type as child_type,
+        child.file_path as child_file_path,
+        all_relationships.distance
 
         {% if debug_snowflake %}
-        , path
+        , all_relationships.path
         {% endif %}
 
     from all_relationships
+    left join node_info as parent
+        on all_relationships.parent_id = parent.node_id
+    left join node_info as child
+        on all_relationships.child_id = child.node_id
 )
 
 select * from final

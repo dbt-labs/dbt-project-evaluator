@@ -7,18 +7,23 @@ models as (
         and resource_type = 'model'
 ),
 
-test_relationships as (
-    select * from {{ ref('base__node_relationships') }}
+tests as (
+    select * from {{ ref('base__nodes') }}
     where resource_type = 'test'
+),
+
+relationships as (
+    select * from {{ ref('base__node_relationships') }}
 ),
 
 agg_relationships as (
     
     select 
-        direct_parent_id, 
-        count(distinct node_id) as tests_per_model 
-    
-    from test_relationships
+        relationships.direct_parent_id, 
+        count(distinct relationships.node_id) as tests_per_model 
+    from tests
+    left join relationships
+        on tests.unique_id = relationships.node_id
     group by 1
 ),
 

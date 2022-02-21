@@ -1,8 +1,10 @@
 version: 2
 
 models:
+  - name: stg_all_dag_nodes
+    description: "This table shows one record for each node in the DAG and information about that node. Includes models, snapshots, exposures, and source."
   - name: stg_direct_relationships
-    description: "This table shows one record for each node in the DAG (models and sources) and its direct parent."
+    description: "This table shows one record for each node in the DAG and its direct parent."
   - name: int_all_dag_relationships
     description: "This table shows one record for every node and each of its downstream children (including itself)."
     columns:
@@ -32,6 +34,6 @@ models:
     tests:
       - is_empty
   - name: fct_model_fanout
-    description: "This table shows all parents with more direct "leaf" children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
+    description: "This table shows all parents with more direct leaf children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
     tests:
       - is_empty
