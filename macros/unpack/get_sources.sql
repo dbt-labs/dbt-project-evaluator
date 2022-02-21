@@ -11,7 +11,7 @@
               '{{ node.unique_id }}', 
               '{{ node.name }}',
               '{{ node.source_name }}' || '.' || '{{ node.name }}', 
-               '{{ node.path }}',
+              '{{ node.path }}',
               '{{ node.alias }}', 
               '{{ node.resource_type }}', 
               '{{ node.source_name }}', 
