@@ -1,14 +1,14 @@
--- one row for each node in the DAG
+-- one row for each node in the graph
 with 
 
-models_and_snapshots as (
+enabled_nodes as (
     select 
         unique_id as node_id,
         node_name,
         resource_type,
         file_path
     from {{ ref('base__nodes')}}
-    where resource_type in ('model','snapshot')
+    where is_enabled
     -- and package_name != 'pro-serv-dag-auditing'
 ),
 
@@ -31,7 +31,7 @@ sources as (
 ),
 
 all_dag_nodes as (
-    select * from models_and_snapshots
+    select * from enabled_nodes
 
     union all
 

@@ -1,39 +1,35 @@
+-- should this be a fct_ model?
+
 with 
 
-models as (
-    select * from {{ ref('base__nodes') }}
-    where 
-        is_enabled
-        and resource_type = 'model'
-),
-
-tests as (
-    select * from {{ ref('base__nodes') }}
-    where resource_type = 'test'
+all_graph_nodes as (
+    select * from {{ ref('stg_all_graph_nodes') }}
 ),
 
 relationships as (
-    select * from {{ ref('base__node_relationships') }}
+    select * from {{ ref('int_direct_relationships') }}
 ),
 
-agg_relationships as (
+agg_test_relationships as (
     
     select 
         relationships.direct_parent_id, 
         count(distinct relationships.node_id) as tests_per_model 
-    from tests
+    from all_graph_nodes
     left join relationships
-        on tests.unique_id = relationships.node_id
+        on all_graph_nodes.node_id = relationships.node_id
+    where all_graph_nodes.resource_type = 'test'
     group by 1
 ),
 
 final as (
     select 
-        models.unique_id, 
-        coalesce(agg_relationships.tests_per_model, 0) as tests_per_model
-    from models
-    left join agg_relationships
-        on models.unique_id = agg_relationships.direct_parent_id
+        all_graph_nodes.node_id, 
+        coalesce(agg_test_relationships.tests_per_model, 0) as tests_per_model
+    from all_graph_nodes
+    left join agg_test_relationships
+        on all_graph_nodes.node_id = agg_test_relationships.direct_parent_id
+    where all_graph_nodes.resource_type = 'model'
 )
 
 select * from final
