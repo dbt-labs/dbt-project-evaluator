@@ -41,14 +41,6 @@ all_dag_nodes as (
 
     select * from sources
 
-),
-
-final as (
-    select 
-        node_id,
-        node_name,
-        resource_type,
-        file_path
 )
 
 select * from all_dag_nodes
