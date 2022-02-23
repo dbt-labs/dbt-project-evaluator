@@ -28,3 +28,11 @@ models:
   pro_serv_dag_auditing_integration_tests:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
     +materialized: ephemeral
+
+tests:
+  pro_serv_dag_auditing_integration_tests:
+    audit_schema_tests:
+      not_null_int_all_dag_relationships_path:
+        +enabled: "{{ var('debug_snowflake',false) }}"
+      unique_int_all_dag_relationships_path:
+        +enabled: "{{ var('debug_snowflake',false) }}"
