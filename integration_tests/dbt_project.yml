@@ -36,3 +36,5 @@ tests:
         +enabled: "{{ var('debug_snowflake',false) }}"
       unique_int_all_dag_relationships_path:
         +enabled: "{{ var('debug_snowflake',false) }}"
+  pro_serv_dag_auditing:
+    +enabled: false
