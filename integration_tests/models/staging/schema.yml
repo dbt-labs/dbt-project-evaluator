@@ -7,4 +7,4 @@ models:
       - name: id 
         description: hocus pocus
         tests:
-          - unique
+          - fake_unique

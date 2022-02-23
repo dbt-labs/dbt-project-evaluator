@@ -1,14 +1,6 @@
 version: 2
 
 models:
-  - name: int_all_dag_relationships
-    description: "This table shows one record for every node in the visual DAG (includes models, snapshots, exposures, and sources) and each of its downstream children (including itself)."
-    columns:
-      - name: path
-        description: unique identifier representing a distinct path from each node to another node
-        tests:
-          - unique
-          - not_null
   - name: fct_source_fanout
     description: "This table shows each parent/child relationship where a source is the direct parent of multiple nodes in the DAG."
     tests:
