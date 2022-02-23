@@ -3,9 +3,9 @@
     {% if execute %}
 
         {% if node_type == 'nodes' %}
-            {% set nodes_list = graph.nodes.values() %}   
+            {% set nodes_list = graph.nodes.values() | selectattr('package_name', 'ne', 'pro_serv_dag_auditing') | list %}   
         {% elif node_type == 'exposures' %}
-            {% set nodes_list = graph.exposures.values() %}
+            {% set nodes_list = graph.exposures.values() | selectattr('package_name', 'ne', 'pro_serv_dag_auditing') | list %}
         {% else %}
             {{ exceptions.raise_compiler_error("node_type needs to be either nodes or exposures, got " ~ node_type) }}
         {% endif %}

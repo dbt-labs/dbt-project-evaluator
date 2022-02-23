@@ -4,13 +4,13 @@ seeds:
   - name: test_fct_untested_models
     config:
       column_types:
-        UNIQUE_ID: varchar
+        NODE_ID: varchar
         TESTS_PER_MODEL: int
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_untested_models')
           compare_columns:
-            - unique_id
+            - node_id
             - tests_per_model
   - name: test_fct_test_coverage
     config:
@@ -19,8 +19,8 @@ seeds:
         TOTAL_MODELS: number
         TOTAL_TESTS: number
         TESTED_MODELS: number
-        TEST_COVERAGE_PCT: number
-        TEST_TO_MODEL_RATIO: number
+        TEST_COVERAGE_PCT: float
+        TEST_TO_MODEL_RATIO: float
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_test_coverage')
