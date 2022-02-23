@@ -64,3 +64,15 @@ seeds:
             - child
             - child_type
             - distance
+  
+  - name: test_fct_model_fanout
+    config:
+      column_types:
+        PARENT: varchar
+        NUM_OF_LEAF_CHILDREN: int
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_model_fanout')
+          compare_columns:
+            - parent
+            - num_of_leaf_children
