@@ -17,7 +17,7 @@
             {%- if node.depends_on.nodes|length == 0 -%}
 
                 {% set values_line %}
-                  ('{{ node.name }}','{{ node.unique_id }}','{{ node.resource_type }}',NULL)
+                  ('{{ node.unique_id }}',NULL)
                 {% endset %}
                 {% do values.append(values_line) %}
 
@@ -26,7 +26,7 @@
                 {%- for parent in node.depends_on.nodes -%}
 
                     {% set values_line %}
-                    ('{{ node.name }}','{{ node.unique_id }}','{{ node.resource_type }}','{{ parent }}')
+                    ('{{ node.unique_id }}','{{ parent }}')
                     {% endset %}
                     {% do values.append(values_line) %}
 
@@ -40,9 +40,7 @@
         select_from_values(
             values = values,
             column_names = [
-                'node',
                 'node_id',
-                'resource_type',
                 'direct_parent_id'
             ]
          )

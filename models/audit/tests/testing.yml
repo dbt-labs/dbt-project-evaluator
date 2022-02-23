@@ -3,7 +3,7 @@ version: 2
 models: 
   - name: stg_model_test_summary 
     columns:
-      - name: unique_id
+      - name: node_id
         tests:
           - unique 
           - not_null 
