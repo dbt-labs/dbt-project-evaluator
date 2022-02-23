@@ -10,12 +10,12 @@ with direct_model_relationships as (
 
 model_and_source_joined as (
     select
-        child,
-        sum(case when parent_type = 'model' then 1 else 0 end) as num_model_direct_parents,
-        sum(case when parent_type = 'source' then 1 else 0 end) as num_source_direct_parents
+        child
     from direct_model_relationships
     group by 1
-    having num_model_direct_parents > 0 and num_source_direct_parents > 0
+    having 
+        sum(case when parent_type = 'model' then 1 else 0 end) > 0 
+        and sum(case when parent_type = 'source' then 1 else 0 end) > 0
 ),
 
 final as (
