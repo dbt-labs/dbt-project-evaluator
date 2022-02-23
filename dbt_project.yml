@@ -29,13 +29,4 @@ models:
     audit:
       graph:
         +materialized: table
-
-tests:
-  pro_serv_dag_auditing:
-    audit:
-      dag:
-        not_null_int_all_dag_relationships_path:
-          +enabled: "{{ var('debug_snowflake',false) }}"
-        unique_int_all_dag_relationships_path:
-          +enabled: "{{ var('debug_snowflake',false) }}"
         

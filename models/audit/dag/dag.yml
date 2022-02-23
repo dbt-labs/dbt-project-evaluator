@@ -22,6 +22,6 @@ models:
     tests:
       - is_empty
   - name: fct_model_fanout
-    description: "This table shows all parents with more direct "leaf" children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
+    description: "This table shows all parents with more direct leaf children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
     tests:
       - is_empty
