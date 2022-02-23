@@ -48,3 +48,9 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_all_graph_nodes
+    description: "This table shows one record for each enabled node in the graph and information about that node."
+
+  - name: int_direct_relationships
+    description: "This table shows one record for each node in the graph and its direct parent."

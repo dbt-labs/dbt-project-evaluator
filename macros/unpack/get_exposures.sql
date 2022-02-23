@@ -11,6 +11,7 @@
         '{{ node.unique_id }}', 
         '{{ node.name }}', 
         '{{ node.resource_type }}', 
+        '{{ node.path }}',
         cast('{{ is_not_empty_string(node.description) | trim }}'as boolean), 
         '{{ node.type }}', 
         '{{ node.maturity}}', 
@@ -29,7 +30,8 @@
             column_names = [
               'unique_id', 
               'node_name', 
-              'resource_type', 
+              'resource_type',
+              'file_path', 
               'is_described', 
               'exposure_type', 
               'maturity', 

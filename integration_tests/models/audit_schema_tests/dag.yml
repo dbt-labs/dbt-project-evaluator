@@ -3,6 +3,7 @@ version: 2
 models: 
   - name: stg_direct_relationships
     description: "This table shows one record for each node in the DAG (models and sources) and its direct parent."
+    
   - name: int_all_dag_relationships
     description: "This table shows one record for every node and each of its downstream children (including itself)."
     columns:
@@ -10,4 +11,4 @@ models:
         description: unique identifier representing a distinct path from each node to another node
         tests:
           - unique
-          - not_null
+          - not_null 

@@ -9,7 +9,9 @@
          {% set values_line %}
             (
               '{{ node.unique_id }}', 
-              '{{ node.name }}', 
+              '{{ node.name }}',
+              '{{ node.source_name }}' || '.' || '{{ node.name }}', 
+              '{{ node.path }}',
               '{{ node.alias }}', 
               '{{ node.resource_type }}', 
               '{{ node.source_name }}', 
@@ -36,6 +38,8 @@
             column_names = [
               'unique_id',
               'node_name',
+              'node',
+              'file_path',
               'alias',
               'resource_type',
               'source_name',

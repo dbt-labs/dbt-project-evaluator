@@ -24,7 +24,7 @@ select * from final
 -- with direct_relationships as ( 
 --     select  
 --         *
---     from {{ ref('stg_direct_relationships') }}  
+--     from int_direct_relationships
 -- ),
 -- 
 -- final as (
