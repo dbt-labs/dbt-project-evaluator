@@ -1,7 +1,7 @@
 with relationships as (
 
     {{
-        get_relationships("nodes")
+        get_relationships("exposures")
     }}
 
 ),

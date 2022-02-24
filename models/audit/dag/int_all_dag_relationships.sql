@@ -1,4 +1,6 @@
-with direct_relationships as (
+{% set debug_snowflake = var('debug_snowflake',false) %}
+
+with recursive direct_relationships as (
     select  
         *
     from {{ ref('stg_direct_relationships') }}
@@ -15,8 +17,12 @@ all_relationships as (
         node as child,
         node_id as child_id,
         resource_type as child_type,
-        0 as distance,
-        array_construct(child) as path --snowflake-specific, but helpful for troubleshooting right now
+        0 as distance
+
+        {% if debug_snowflake %}
+        , array_construct(child) as path -- snowflake-specific, but helpful for troubleshooting  
+        {% endif %}
+
     from direct_relationships
     -- where direct_parent is null {# optional lever to change filtering of anchor clause to only include root nodes #}
     
@@ -30,8 +36,12 @@ all_relationships as (
         direct_relationships.node as child, 
         direct_relationships.node_id as child_id,
         direct_relationships.resource_type as child_type,
-        all_relationships.distance+1 as distance,
-        array_append(all_relationships.path, direct_relationships.node) as path
+        all_relationships.distance+1 as distance
+
+        {% if debug_snowflake %}
+        , array_append(all_relationships.path, direct_relationships.node) as path
+        {% endif %}
+
     from direct_relationships
     inner join all_relationships
         on all_relationships.child_id = direct_relationships.direct_parent_id
@@ -43,8 +53,12 @@ final as (
         parent_type,
         child,
         child_type,
-        distance,
-        path
+        distance
+
+        {% if debug_snowflake %}
+        , path
+        {% endif %}
+
     from all_relationships
 )
 

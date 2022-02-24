@@ -1,8 +1,15 @@
-{% macro get_node_relationships() %}
+{% macro get_relationships(node_type) %}
 
     {% if execute %}
 
-        {% set nodes_list = graph.nodes.values() %}
+        {% if node_type == 'nodes' %}
+            {% set nodes_list = graph.nodes.values() %}   
+        {% elif node_type == 'exposures' %}
+            {% set nodes_list = graph.exposures.values() %}
+        {% else %}
+            {{ exceptions.raise_compiler_error("node_type needs to be either nodes or exposures, got " ~ node_type) }}
+        {% endif %}
+        
         {% set values = [] %}
 
         {%- for node in nodes_list -%}
