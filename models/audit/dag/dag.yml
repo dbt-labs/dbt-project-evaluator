@@ -37,6 +37,6 @@ models:
       parent node's direct childen (direct_child_2). Only includes cases where the model "in between" the parent node and 
       direct_child_1 has NO other downstream dependencies."
   - name: fct_model_fanout
-    description: "This table shows all parents with more direct "leaf" children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
+    description: "This table shows all parents with more direct leaf children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
     tests:
       - is_empty

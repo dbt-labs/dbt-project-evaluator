@@ -45,10 +45,15 @@ three_node_relationships as (
 -- Note: when the "in between" model DOES have downstream dependencies, it's possible this DAG choice has been made to avoid duplicated code and as such is OKAY
 final as (
     select
-        three_node_relationships.*
+        three_node_relationships.*,
+        case 
+            when single_use_nodes.parent is not null then true 
+            else false
+        end as is_loop_independent
     from three_node_relationships
-    inner join single_use_nodes 
+    left join single_use_nodes 
         on three_node_relationships.direct_child_2 = single_use_nodes.parent
 )
 
 select * from final
+where is_loop_independent -- TO DO: decide if we want to include loops where the "in between" mode is has other downstream children, if so the above can be reverted to an inner join
