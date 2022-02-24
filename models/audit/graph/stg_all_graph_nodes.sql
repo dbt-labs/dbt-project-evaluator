@@ -21,6 +21,15 @@ exposures as (
     from {{ ref('base__exposures')}}
 ),
 
+metrics as (
+    select 
+        unique_id as node_id,
+        node_name,
+        resource_type,
+        file_path
+    from {{ ref('base__metrics')}}
+),
+
 sources as (
     select 
         unique_id as node_id,
@@ -36,6 +45,10 @@ all_dag_nodes as (
     union all
 
     select * from exposures
+
+    union all
+
+    select * from metrics
 
     union all
 
