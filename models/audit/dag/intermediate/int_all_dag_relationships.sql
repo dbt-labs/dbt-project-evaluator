@@ -4,7 +4,7 @@ with recursive direct_relationships as (
     select  
         *
     from {{ ref('int_direct_relationships') }}
-    where resource_type in ('model', 'snapshot', 'exposure', 'source')
+    where resource_type <> 'test'
 ),
 
 -- should this be a fct_ model?
