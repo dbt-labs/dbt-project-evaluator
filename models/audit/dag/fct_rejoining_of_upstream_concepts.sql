@@ -2,6 +2,8 @@ with all_relationships as (
     select  
         *
     from {{ ref('int_all_dag_relationships') }}
+    where parent_type not in ('exposures', 'metrics')
+    and child_type not in ('exposures', 'metrics')
 ),
 
 -- all parent/child relationships where the parent node is BOTH the direct parent of the child and the second level parent of the child 
@@ -56,4 +58,4 @@ final as (
 )
 
 select * from final
-where is_loop_independent -- TO DO: decide if we want to include loops where the "in between" mode is has other downstream children, if so the above can be reverted to an inner join
+where is_loop_independent -- TO DO: decide if we want to include loops where the "in between" mode is has other downstream children
