@@ -2,7 +2,7 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'pro_serv_dag_auditing'
+name: 'pro_serv_dag_auditing_integration_tests'
 version: '1.0.0'
 config-version: 2
 
@@ -25,8 +25,16 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_modules"
 
 models:
+  pro_serv_dag_auditing_integration_tests:
+    # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
+    +materialized: ephemeral
+
+tests:
+  pro_serv_dag_auditing_integration_tests:
+    audit_schema_tests:
+      not_null_int_all_dag_relationships_path:
+        +enabled: "{{ var('debug_snowflake',false) }}"
+      unique_int_all_dag_relationships_path:
+        +enabled: "{{ var('debug_snowflake',false) }}"
   pro_serv_dag_auditing:
-    audit:
-      graph:
-        +materialized: table
-        
+    +enabled: false

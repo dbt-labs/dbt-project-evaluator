@@ -1,0 +1,12 @@
+version: 2 
+
+models: 
+    
+  - name: int_all_dag_relationships
+    description: "This table shows one record for every node and each of its downstream children (including itself)."
+    columns:
+      - name: path
+        description: unique identifier representing a distinct path from each node to another node
+        tests:
+          - unique
+          - not_null 

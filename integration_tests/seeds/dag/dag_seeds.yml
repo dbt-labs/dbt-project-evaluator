@@ -1,0 +1,78 @@
+version: 2
+
+seeds:
+  - name: test_fct_multiple_sources_joined
+    config:
+      column_types:
+        PARENT: varchar
+        PARENT_TYPE: varchar
+        CHILD: varchar
+        CHILD_TYPE: varchar
+        DISTANCE: int
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_multiple_sources_joined')
+          compare_columns:
+            - parent
+            - parent_type
+            - child
+            - child_type
+            - distance
+
+  - name: test_fct_direct_join_to_source
+    config:
+      column_types:
+        PARENT: varchar
+        PARENT_TYPE: varchar
+        CHILD: varchar
+        CHILD_TYPE: varchar
+        DISTANCE: int
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_direct_join_to_source')
+          compare_columns:
+            - parent
+            - parent_type
+            - child
+            - child_type
+            - distance
+
+  - name: test_fct_root_models
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_root_models')
+
+  - name: test_fct_unused_sources
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_unused_sources')
+
+  - name: test_fct_source_fanout
+    config:
+      column_types:
+        PARENT: varchar
+        PARENT_TYPE: varchar
+        CHILD: varchar
+        CHILD_TYPE: varchar
+        DISTANCE: int
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_source_fanout')
+          compare_columns:
+            - parent
+            - parent_type
+            - child
+            - child_type
+            - distance
+  
+  - name: test_fct_model_fanout
+    config:
+      column_types:
+        PARENT: varchar
+        NUM_OF_LEAF_CHILDREN: int
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_model_fanout')
+          compare_columns:
+            - parent
+            - num_of_leaf_children

@@ -1,12 +1,6 @@
 version: 2 
 
 models: 
-  - name: stg_model_test_summary 
-    columns:
-      - name: unique_id
-        tests:
-          - unique 
-          - not_null 
   - name: fct_untested_models
     tests:
       - is_empty 
