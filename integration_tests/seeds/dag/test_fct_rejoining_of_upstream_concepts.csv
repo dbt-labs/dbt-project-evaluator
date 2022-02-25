@@ -1,0 +1,2 @@
+PARENT,CHILD,PARENT_AND_CHILD,IS_LOOP_INDEPENDENT
+stg_model_1,int_model_5,int_model_4,true

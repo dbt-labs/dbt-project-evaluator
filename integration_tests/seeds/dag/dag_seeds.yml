@@ -76,3 +76,19 @@ seeds:
           compare_columns:
             - parent
             - num_of_leaf_children
+
+  - name: test_fct_rejoining_of_upstream_concepts
+    config:
+      column_types:
+        PARENT: varchar
+        CHILD: varchar
+        PARENT_AND_CHILD: varchar
+        IS_LOOP_INDEPENDENT: boolean
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_rejoining_of_upstream_concepts')
+          compare_columns:
+            - parent
+            - child
+            - parent_and_child
+            - is_loop_independent
