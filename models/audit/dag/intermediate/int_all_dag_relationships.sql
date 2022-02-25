@@ -46,7 +46,7 @@ all_relationships as (
         all_relationships.distance+1 as distance
 
         {% if debug_snowflake %}
-        , array_append(all_relationships.path, direct_relationships.node) as path
+        , array_append(all_relationships.path, direct_relationships.node_id) as path
         {% endif %}
 
     from direct_relationships
