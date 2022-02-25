@@ -29,4 +29,6 @@ models:
     audit:
       graph:
         +materialized: table
-        
+
+vars:
+  max_depth_bigquery: 9
