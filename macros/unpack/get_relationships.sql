@@ -7,7 +7,7 @@
         {% elif node_type == 'exposures' %}
             {% set nodes_list = graph.exposures.values() %}
         {% elif node_type == 'metrics' %}
-            {% set nodes_list = graph.exposures.values() %}
+            {% set nodes_list = graph.metrics.values() %}
         {% else %}
             {{ exceptions.raise_compiler_error("node_type needs to be either nodes, exposures or metrics, got " ~ node_type) }}
         {% endif %}
