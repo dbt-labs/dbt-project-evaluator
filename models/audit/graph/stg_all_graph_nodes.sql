@@ -5,6 +5,7 @@ enabled_nodes as (
     select 
         unique_id as node_id,
         node_name,
+        is_described,
         resource_type,
         file_path
     from {{ ref('base__nodes')}}
@@ -16,6 +17,7 @@ exposures as (
     select 
         unique_id as node_id,
         node_name,
+        is_described,
         resource_type,
         file_path
     from {{ ref('base__exposures')}}
@@ -25,6 +27,7 @@ metrics as (
     select 
         unique_id as node_id,
         node_name,
+        is_described,
         resource_type,
         file_path
     from {{ ref('base__metrics')}}
@@ -34,6 +37,7 @@ sources as (
     select 
         unique_id as node_id,
         node_name,
+        is_described,
         resource_type,
         file_path
     from {{ ref('base__sources')}}
