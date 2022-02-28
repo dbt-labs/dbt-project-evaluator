@@ -18,10 +18,12 @@ all_relationships as (
         node_name as parent,
         resource_type as parent_resource_type,
         model_type as parent_model_type,
+        file_path as parent_file_path,
         node_id as child_id,
         node_name as child,
         resource_type as child_resource_type,
         model_type as child_model_type,
+        file_path as child_file_path,
         0 as distance
 
         {% if debug_snowflake %}
@@ -39,10 +41,12 @@ all_relationships as (
         all_relationships.parent as parent,
         all_relationships.parent_resource_type as parent_resource_type,
         all_relationships.parent_model_type as parent_model_type,
+        all_relationships.parent_file_path as parent_file_path,
         direct_relationships.node_id as child_id,
         direct_relationships.node_name as child,
         direct_relationships.resource_type as child_resource_type,
         direct_relationships.model_type as child_model_type,
+        direct_relationships.file_path as child_file_path,
         all_relationships.distance+1 as distance
 
         {% if debug_snowflake %}

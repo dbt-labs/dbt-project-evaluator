@@ -13,7 +13,7 @@ enabled_nodes as (
             when resource_type in ('test') then null
             when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or node_name like '%staging%' or node_name like '%stg%' then 'staging'
             when file_path like '%{{ var('marts_folder_name', 'marts') }}%' then 'marts'
-            else null
+            else 'intermediate'
         end as model_type 
     from {{ ref('base__nodes')}}
     where is_enabled
@@ -35,7 +35,8 @@ metrics as (
         unique_id as node_id,
         node_name,
         resource_type,
-        file_path
+        file_path,
+        null as model_type
     from {{ ref('base__metrics')}}
 ),
 
