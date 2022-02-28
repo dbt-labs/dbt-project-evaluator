@@ -23,6 +23,13 @@ direct_exposure_relationships as (
     from {{ ref('base__exposure_relationships')}}
 ),
 
+direct_metrics_relationships as (
+    select  
+        node_id,
+        direct_parent_id
+    from {{ ref('base__metric_relationships')}}
+),
+
 -- for all nodes in the graph, find their direct parent
 direct_relationships as (
     select

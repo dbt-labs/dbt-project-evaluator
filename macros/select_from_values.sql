@@ -1,5 +1,21 @@
 {% macro select_from_values(values,column_names) %}
-    {{ return(adapter.dispatch('select_from_values')(values, column_names)) }}
+
+    {% if values %}
+        {{ return(adapter.dispatch('select_from_values')(values, column_names)) }}
+    {% else %} -- if values is an empty list, return an empty table
+        {% set null_values -%}
+        (
+            {% for column in column_names %}
+            NULL{% if not loop.last %},{% endif %}
+            {% endfor %}
+        )
+        {%- endset %}
+
+        -- Creates a one-record table with NULL for every column. Then, filters out the NULL records so the final table is empty.
+        {{ return(adapter.dispatch('select_from_values')([null_values], column_names) ~ 'where ' ~ column_names[0] ~ ' is not null') }}
+
+    {% endif %}
+
 {% endmacro %}
 
 
