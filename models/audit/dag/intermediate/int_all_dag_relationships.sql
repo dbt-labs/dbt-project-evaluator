@@ -4,7 +4,7 @@ with recursive direct_relationships as (
     select  
         *
     from {{ ref('int_direct_relationships') }}
-    where resource_type in ('model', 'snapshot', 'exposure', 'source')
+    where resource_type <> 'test'
 ),
 
 -- should this be a fct_ model?
@@ -46,7 +46,7 @@ all_relationships as (
         all_relationships.distance+1 as distance
 
         {% if debug_snowflake %}
-        , array_append(all_relationships.path, direct_relationships.node) as path
+        , array_append(all_relationships.path, direct_relationships.node_id) as path
         {% endif %}
 
     from direct_relationships
