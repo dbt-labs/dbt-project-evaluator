@@ -21,6 +21,11 @@ models:
     description: "This table shows each parent/child reltionship where a model has a reference to both a model and a source."
     tests:
       - is_empty
+  - name: fct_rejoining_of_upstream_concepts
+    description: >
+      "All cases where one of the parent node's direct children (child) is ALSO the direct child of ANOTHER one of the 
+      parent node's direct childen (parent_and_child). Only includes cases where the model "in between" the parent node and child node 
+      has NO other downstream dependencies.
   - name: fct_model_fanout
     description: "This table shows all parents with more direct leaf children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
     tests:
