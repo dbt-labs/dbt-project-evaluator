@@ -1,3 +1,5 @@
+-- TO DO: consider changing name to stg_all_graph_resources and all references to "node" to "resource" (example: node_id -> resource_id)
+    -- this would help prevent confusion between this model and base__nodes
 -- one row for each node in the graph
 with 
 
@@ -6,7 +8,13 @@ enabled_nodes as (
         unique_id as node_id,
         node_name,
         resource_type,
-        file_path
+        file_path,
+        case 
+            when resource_type in ('test') then null
+            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or node_name like '%staging%' or node_name like '%stg%' then 'staging'
+            when file_path like '%{{ var('marts_folder_name', 'marts') }}%' then 'marts'
+            else null
+        end as model_type 
     from {{ ref('base__nodes')}}
     where is_enabled
     -- and package_name != 'pro-serv-dag-auditing'
@@ -17,16 +25,18 @@ exposures as (
         unique_id as node_id,
         node_name,
         resource_type,
-        file_path
+        file_path,
+        null as model_type
     from {{ ref('base__exposures')}}
 ),
 
 sources as (
     select 
         unique_id as node_id,
-        node_name,
+        source_name || '.' || node_name as node_name,
         resource_type,
-        file_path
+        file_path,
+        null as model_type
     from {{ ref('base__sources')}}
 ),
 

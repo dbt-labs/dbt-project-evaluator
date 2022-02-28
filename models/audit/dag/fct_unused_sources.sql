@@ -4,7 +4,7 @@ with source_relationships as (
     select  
         *
     from {{ ref('int_all_dag_relationships') }}
-    where parent_type = 'source'
+    where parent_resource_type = 'source'
 ),
 
 final as (

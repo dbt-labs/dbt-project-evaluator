@@ -10,7 +10,6 @@
             (
               '{{ node.unique_id }}', 
               '{{ node.name }}',
-              '{{ node.source_name }}' || '.' || '{{ node.name }}', 
               '{{ node.path }}',
               '{{ node.alias }}', 
               '{{ node.resource_type }}', 
@@ -38,7 +37,6 @@
             column_names = [
               'unique_id',
               'node_name',
-              'node',
               'file_path',
               'alias',
               'resource_type',

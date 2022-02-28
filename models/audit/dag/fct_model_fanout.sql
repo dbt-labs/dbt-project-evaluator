@@ -9,7 +9,7 @@ models_without_children as (
     select
         parent
     from all_dag_relationships
-    where parent_type = 'model'
+    where parent_resource_type = 'model'
     group by 1
     having max(distance) = 0
 ),
@@ -23,7 +23,7 @@ model_fanout as (
     from all_dag_relationships
     inner join models_without_children
         on all_dag_relationships.child = models_without_children.parent
-    where all_dag_relationships.distance = 1 and all_dag_relationships.child_type = 'model'
+    where all_dag_relationships.distance = 1 and all_dag_relationships.child_resource_type = 'model'
     group by 1
     having count(*) >= {{ var('models_fanout_threshold', 3) }}
 )

@@ -25,3 +25,7 @@ models:
     description: "This table shows all parents with more direct leaf children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
     tests:
       - is_empty
+  - name: fct_bending_connections
+    description: "This table shows each parent/child reltionship where models in the staging layer are dependent on each other."
+    tests:
+      - is_empty 

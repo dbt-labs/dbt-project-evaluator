@@ -6,7 +6,7 @@ with model_relationships as (
     select  
         *
     from {{ ref('int_all_dag_relationships') }}
-    where child_type = 'model'
+    where child_resource_type = 'model'
 ),
 
 final as (
