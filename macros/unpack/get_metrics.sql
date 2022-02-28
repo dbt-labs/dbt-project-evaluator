@@ -1,7 +1,7 @@
 {% macro get_metrics() %}
 
     {% if execute %}
-    {% set nodes_list = graph.metrics.values() | selectattr('package_name', 'eq', project_name) | list %}
+    {% set nodes_list = graph.metrics.values() %}
     {% set values = [] %}
 
     {% for node in nodes_list %}

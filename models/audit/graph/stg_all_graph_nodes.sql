@@ -9,7 +9,7 @@ enabled_nodes as (
         file_path
     from {{ ref('base__nodes')}}
     where is_enabled
-    -- and package_name != 'pro-serv-dag-auditing'
+    and not(resource_type = 'model' and package_name = 'pro_serv_dag_auditing')
 ),
 
 exposures as (

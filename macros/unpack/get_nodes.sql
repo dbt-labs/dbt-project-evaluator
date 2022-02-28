@@ -1,7 +1,7 @@
 {% macro get_nodes() %}
 
     {% if execute %}
-    {% set nodes_list = graph.nodes.values() | selectattr('package_name', 'eq', project_name) | list %}
+    {% set nodes_list = graph.nodes.values() %}
     {% set values = [] %}
 
     {% for node in nodes_list %}

@@ -1,7 +1,7 @@
 {% macro get_exposures() %}
 
     {% if execute %}
-    {% set nodes_list = graph.exposures.values() | selectattr('package_name', 'eq', project_name) | list %}
+    {% set nodes_list = graph.exposures.values() %}
     {% set values = [] %}
 
     {% for node in nodes_list %}
