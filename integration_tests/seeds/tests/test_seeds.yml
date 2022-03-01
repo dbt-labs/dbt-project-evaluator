@@ -19,8 +19,8 @@ seeds:
         TOTAL_MODELS: number
         TOTAL_TESTS: number
         TESTED_MODELS: number
-        TEST_COVERAGE_PCT: number
-        TEST_TO_MODEL_RATIO: number
+        TEST_COVERAGE_PCT: float
+        TEST_TO_MODEL_RATIO: float
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_test_coverage')
