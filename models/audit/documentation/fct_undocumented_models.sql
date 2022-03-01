@@ -5,5 +5,12 @@ all_nodes as (
     
 )
 
-select * from all_nodes 
+select
+    node_id,
+    node_name,
+    is_described,
+    resource_type,
+    file_path
+
+from all_nodes 
 where not is_described and resource_type = 'model'
