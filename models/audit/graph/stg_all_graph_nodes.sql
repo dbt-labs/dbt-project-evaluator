@@ -10,36 +10,42 @@ unioned as (
         ref('base__sources')
     ])}}
 
+),
+
+final as (
+
+    select
+        unique_id as node_id, 
+        node_name, 
+        resource_type, 
+        file_path, 
+        is_enabled, 
+        materialized, 
+        on_schema_change, 
+        database, 
+        schema, 
+        package_name, 
+        alias, 
+        is_described, 
+        exposure_type, 
+        maturity, 
+        url, 
+        metric_type, 
+        model, 
+        label, 
+        sql, 
+        timestamp, 
+        node, 
+        source_name, 
+        is_source_described, 
+        loaded_at_field, 
+        loader, 
+        identifier
+
+    from unioned
+    where coalesce(is_enabled, True) = True
+    and not(resource_type = 'model' and package_name = 'pro_serv_dag_auditing')
+
 )
 
-select
-    unique_id as node_id, 
-    node_name, 
-    resource_type, 
-    file_path, 
-    is_enabled, 
-    materialized, 
-    on_schema_change, 
-    database, 
-    schema, 
-    package_name, 
-    alias, 
-    is_described, 
-    exposure_type, 
-    maturity, 
-    url, 
-    metric_type, 
-    model, 
-    label, 
-    sql, 
-    timestamp, 
-    node, 
-    source_name, 
-    is_source_described, 
-    loaded_at_field, 
-    loader, 
-    identifier
-
-from unioned
-where coalesce(is_enabled, True) = True
-and not(resource_type = 'model' and package_name = 'pro_serv_dag_auditing')
+select * from final
