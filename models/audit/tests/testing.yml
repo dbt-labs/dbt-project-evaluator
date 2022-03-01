@@ -16,5 +16,5 @@ models:
         description: the number of models in the project with at least one test configured divided by the total number of models in the project
         tests:
           - dbt_utils.accepted_range:
-              min_value: 50
+              min_value: "{{ var('test_coverage_target') }}"
               severity: warn
