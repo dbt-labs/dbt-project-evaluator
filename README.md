@@ -44,13 +44,3 @@ This table shows each parent/child relationship where a source is the direct par
 __Model__: fct_unused_sources
 
 This table shows each source with 0 children.
-
-
-![image](https://user-images.githubusercontent.com/53586774/157129634-98263607-7538-4b66-b424-4eaf9b34d58f.png)
-
-
-### Limitation with BigQuery
-
-BigQuery current support for recursive CTEs is limited. 
-
-For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
