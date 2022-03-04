@@ -20,9 +20,12 @@ __[DAG Issues](#dag-issues)__
 
 ## Documentation Coverage
 
-## Test Coverage
+`fct_undocumented_models` lists every model with no description configured.
+`fct_documentation_coverage` calculates the percent of enabled models in the project that have a configured description.
 
-###
+We recommend you describe at least 75 percent of your models.
+
+## Test Coverage
 
 `fct_untested_models` lists every model with no tests.
 `fct_test_coverage` contains metrics pertaining to project-wide test coverage.
