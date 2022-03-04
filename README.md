@@ -32,45 +32,45 @@ __[DAG Issues](#dag-issues)__
 ## DAG Issues
 
 ### Direct Join to Source
-__Model__
+###### Model
 
 `fct_direct_join_to_source` shows each parent/child relationship where a model has a reference to both a model and a source.
 
-__Reason For Flag__
+###### Reason For Flag
 
-__How to Remediate__
+###### How to Remediate
 
-__Example__
+###### Example
 
 `model_2` is pulling in both a model and a source.
 <p align = "center">
 <img width="800" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
 
 ### Model Fanout
-__Model__
+###### Model
 
 `fct_model_fanout` shows all parents with more direct leaf children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)
 
-__Reason For Flag__
+###### Reason For Flag
 
-__How to Remediate__
+###### How to Remediate
 
-__Example__
+###### Example
 
 `fct_model` has three direct leaf children.
 <p align = "center">
 <img width="800" alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/91074396/156635853-99bd1bea-662a-4247-875d-cd7cf33c6ac1.png">
 
 ### Multiple Sources Joined
-__Model__
+###### Model
 
 `fct_multiple_sources_joined` shows each parent/child relationship where a model references more than one source.
 
-__Reason For Flag__
+###### Reason For Flag
 
-__How to Remediate__
+###### How to Remediate
 
-__Example__
+###### Example
 
 `model_1` references two source tables.
 <p align = "center">
@@ -78,60 +78,60 @@ __Example__
 
 ### Rejoining of Upstream Concepts
 
-__Model__
+###### Model
 
 `fct_rejoining_of_upstream_concepts` shows all cases where one of the parent node's direct children (child) is _also_ the direct child of _another_ one of the parent node's direct children (parent_and_child). Only includes cases where the model "in between" the parent node and child node has NO other downstream dependencies.
 
-__Reason For Flag__
+###### Reason For Flag
 
-__How to Remediate__
+###### How to Remediate
 
-__Example__
+###### Example
 
 `stg_model`, `int_model`, and `fct_model` create a "loop" in the DAG. `int_model` has no other downstream dependencies other than `fct_model`.
 <p align = "center">
 <img width="800" alt="A DAG showing four nodes. A source is feeding into a staging model. The staging model is referenced by both an int model and a fct model. The int model is also being referenced by the fct model. This creates a 'loop' between the staging model, the int model, and the fct model." src="https://user-images.githubusercontent.com/91074396/156642410-d402a7c0-bf91-4b9a-8b3c-815aa7cbbccb.png">
 
 ### Root Models
-__Model__
+###### Model
 
 `fct_root_models` shows each model with 0 direct parents.
 
-__Reason For Flag__
+###### Reason For Flag
 
-__How to Remediate__
+###### How to Remediate
 
-__Example__
+###### Example
 
 `model_4` has no direct parents
 <p align = "center">
 <img width="800" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent node not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
 
 ### Source Fanout
-__Model__
+###### Model
 
 `fct_source_fanout` shows each parent/child relationship where a source is the direct parent of multiple nodes in the DAG.
 
-__Reason For Flag__
+###### Reason For Flag
 
-__How to Remediate__
+###### How to Remediate
 
-__Example__
+###### Example
 
 `source.table_1` has more than one direct child model.
 <p align = "center">
 <img width="800" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
 
 ### Unused Sources
-__Model__
+###### Model
 
 `fct_unused_sources` shows each source with 0 children.
 
-__Reason For Flag__
+###### Reason For Flag
 
-__How to Remediate__
+###### How to Remediate
 
-__Example__
+###### Example
 
 `source.table_4` isn't being referenced.
 <p align = "center">
