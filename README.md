@@ -1,5 +1,8 @@
 This package is used to flag areas within a dbt project that are misaligned with dbt Labs' best practices.
 
+# Contributing
+If you'd like to add models to flag new areas, please update this README and add an integration test ([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).
+
 # Contents
 
 __[Documentation Coverage](#documentation-coverage)__
