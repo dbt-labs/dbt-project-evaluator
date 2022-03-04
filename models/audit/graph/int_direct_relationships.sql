@@ -10,7 +10,8 @@ all_graph_nodes as (
         node_id,
         node_name,
         resource_type,
-        file_path 
+        file_path,
+        model_type 
     from {{ ref('stg_all_graph_nodes') }}
 ),
 

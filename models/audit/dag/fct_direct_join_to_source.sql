@@ -4,7 +4,7 @@ with direct_model_relationships as (
     select  
         *
     from {{ ref('int_all_dag_relationships') }}
-    where child_type = 'model'
+    where child_resource_type = 'model'
     and distance = 1
 ),
 
@@ -14,8 +14,8 @@ model_and_source_joined as (
     from direct_model_relationships
     group by 1
     having 
-        sum(case when parent_type = 'model' then 1 else 0 end) > 0 
-        and sum(case when parent_type = 'source' then 1 else 0 end) > 0
+        sum(case when parent_resource_type = 'model' then 1 else 0 end) > 0 
+        and sum(case when parent_resource_type = 'source' then 1 else 0 end) > 0
 ),
 
 final as (

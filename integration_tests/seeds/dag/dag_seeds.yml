@@ -5,36 +5,36 @@ seeds:
     config:
       column_types:
         PARENT: varchar
-        PARENT_TYPE: varchar
+        PARENT_RESOURCE_TYPE: varchar
         CHILD: varchar
-        CHILD_TYPE: varchar
+        CHILD_RESOURCE_TYPE: varchar
         DISTANCE: int
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_multiple_sources_joined')
           compare_columns:
             - parent
-            - parent_type
+            - parent_resource_type
             - child
-            - child_type
+            - child_resource_type
             - distance
 
   - name: test_fct_direct_join_to_source
     config:
       column_types:
         PARENT: varchar
-        PARENT_TYPE: varchar
+        PARENT_RESOURCE_TYPE: varchar
         CHILD: varchar
-        CHILD_TYPE: varchar
+        CHILD_RESOURCE_TYPE: varchar
         DISTANCE: int
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_direct_join_to_source')
           compare_columns:
             - parent
-            - parent_type
+            - parent_resource_type
             - child
-            - child_type
+            - child_resource_type
             - distance
 
   - name: test_fct_root_models
@@ -51,18 +51,18 @@ seeds:
     config:
       column_types:
         PARENT: varchar
-        PARENT_TYPE: varchar
+        PARENT_RESOURCE_TYPE: varchar
         CHILD: varchar
-        CHILD_TYPE: varchar
+        CHILD_RESOURCE_TYPE: varchar
         DISTANCE: int
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_source_fanout')
           compare_columns:
             - parent
-            - parent_type
+            - parent_resource_type
             - child
-            - child_type
+            - child_resource_type
             - distance
   
   - name: test_fct_model_fanout
@@ -76,7 +76,21 @@ seeds:
           compare_columns:
             - parent
             - num_of_leaf_children
-
+  - name: test_fct_bending_connections
+    config:
+      column_types:
+        PARENT: varchar
+        PARENT_MODEL_TYPE: varchar
+        CHILD: varchar
+        CHILD_MODEL_TYPE: varchar
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_bending_connections')
+          compare_columns:
+            - parent
+            - parent_model_type
+            - child
+            - child_model_type
   - name: test_fct_rejoining_of_upstream_concepts
     config:
       column_types:

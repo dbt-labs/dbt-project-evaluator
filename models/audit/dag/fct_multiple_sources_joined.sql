@@ -6,7 +6,7 @@ with direct_source_relationships as (
         *
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
-    and parent_type = 'source'
+    and parent_resource_type = 'source'
 ),
 
 multiple_sources_joined as (
