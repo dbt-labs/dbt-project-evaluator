@@ -18,7 +18,8 @@
               '{{ node.database }}', 
               '{{ node.schema }}', 
               '{{ node.package_name }}', 
-              '{{ node.alias }}'
+              '{{ node.alias }}',
+              cast('{{ is_not_empty_string(node.description) | trim }}' as boolean)
             )
         {% endset %}
         {% do values.append(values_line) %}
@@ -40,7 +41,8 @@
               'database', 
               'schema', 
               'package_name', 
-              'alias'
+              'alias',
+              'is_described'
             ]
          )
     ) }}

@@ -1,59 +1,51 @@
 -- one row for each node in the graph
 with 
 
-enabled_nodes as (
-    select 
-        unique_id as node_id,
-        node_name,
-        resource_type,
-        file_path
-    from {{ ref('base__nodes')}}
-    where is_enabled
+unioned as (
+
+    {{ dbt_utils.union_relations([
+        ref('base__nodes'),
+        ref('base__exposures'),
+        ref('base__metrics'),
+        ref('base__sources')
+    ])}}
+
+),
+
+final as (
+
+    select
+        unique_id as node_id, 
+        node_name, 
+        resource_type, 
+        file_path, 
+        is_enabled, 
+        materialized, 
+        on_schema_change, 
+        database, 
+        schema, 
+        package_name, 
+        alias, 
+        is_described, 
+        exposure_type, 
+        maturity, 
+        url, 
+        metric_type, 
+        model, 
+        label, 
+        sql, 
+        timestamp, 
+        node, 
+        source_name, 
+        is_source_described, 
+        loaded_at_field, 
+        loader, 
+        identifier
+
+    from unioned
+    where coalesce(is_enabled, True) = True
     and not(resource_type = 'model' and package_name = 'pro_serv_dag_auditing')
-),
-
-exposures as (
-    select 
-        unique_id as node_id,
-        node_name,
-        resource_type,
-        file_path
-    from {{ ref('base__exposures')}}
-),
-
-metrics as (
-    select 
-        unique_id as node_id,
-        node_name,
-        resource_type,
-        file_path
-    from {{ ref('base__metrics')}}
-),
-
-sources as (
-    select 
-        unique_id as node_id,
-        node_name,
-        resource_type,
-        file_path
-    from {{ ref('base__sources')}}
-),
-
-all_dag_nodes as (
-    select * from enabled_nodes
-
-    union all
-
-    select * from exposures
-
-    union all
-
-    select * from metrics
-
-    union all
-
-    select * from sources
 
 )
 
-select * from all_dag_nodes
+select * from final

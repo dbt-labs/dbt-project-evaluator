@@ -6,7 +6,12 @@
 with 
 
 all_graph_nodes as (
-    select * from {{ ref('stg_all_graph_nodes') }}
+    select
+        node_id,
+        node_name,
+        resource_type,
+        file_path 
+    from {{ ref('stg_all_graph_nodes') }}
 ),
 
 direct_model_relationships as (
