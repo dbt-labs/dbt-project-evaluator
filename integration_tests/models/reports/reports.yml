@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: report_1
+    description: tom cruise's minorty report
+  - name: report_2
+    description: the colbert report

@@ -1,0 +1,31 @@
+version: 2
+
+seeds:
+  - name: test_fct_undocumented_models
+    config:
+      column_types:
+        NODE_ID: varchar
+        NODE_NAME: varchar
+        IS_DESCRIBED: boolean
+        RESOURCE_TYOE: varchar
+        FILE_PATH: varchar
+      tags:
+        - docs
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('test_fct_undocumented_models')
+  - name: test_fct_documentation_coverage
+    config:
+      column_types:
+        TOTAL_MODELS: integer
+        DOCUMENTED_MODELS: integer
+        DOCUMENTATION_COVERAGE_PCT: float
+      tags:
+        - docs
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_documentation_coverage')
+          compare_columns:
+            - TOTAL_MODELS
+            - DOCUMENTED_MODELS
+            - DOCUMENTATION_COVERAGE_PCT
