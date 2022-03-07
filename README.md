@@ -9,3 +9,10 @@ This project is intended to be a dbt proect with poor DAG modeling so the profes
 
 
 <img width="999" alt="Screen Shot 2022-01-10 at 1 27 20 PM" src="https://user-images.githubusercontent.com/53586774/148968091-8c9cfc06-5f26-4938-8a0d-8d7abb72ce8d.png">
+
+
+### Limitation with BigQuery
+
+BigQuery current support for recursive CTEs is limited. 
+
+For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.

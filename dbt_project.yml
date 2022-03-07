@@ -33,3 +33,4 @@ models:
 vars:
   documentation_coverage_target: 100
   test_coverage_target: 100
+  max_depth_bigquery: 9
