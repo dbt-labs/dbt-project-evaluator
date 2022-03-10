@@ -34,6 +34,21 @@ We recommend you describe at least 75 percent of your models.
 
 ## DAG Issues
 
+### Bending Connections
+###### Model
+
+`fct_bending_connections` shows each parent/child relationship where models in the staging layer are dependent on each other.
+
+###### Reason For Flag
+
+###### How to Remediate
+
+###### Example
+
+`stg_model_1` is a parent of `stg_model_2`
+<p align = "center">
+<img width="800" alt="A DAG showing stg_model_1 as a parent of stg_model_2 and int_model" src="https://user-images.githubusercontent.com/91074396/157698052-06654cb2-6a8d-45f8-a29a-7154d73edf59.png">
+
 ### Direct Join to Source
 ###### Model
 
