@@ -1,4 +1,4 @@
--- cases where a staging model depends on a marts model
+-- cases where a staging model depends on a marts/intermediate model
 -- data should flow from raw -> staging -> intermediate -> marts
 with direct_model_relationships as (
     select  
