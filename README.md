@@ -3,6 +3,12 @@ This package is used to flag areas within a dbt project that are misaligned with
 # Contributing
 If you'd like to add models to flag new areas, please update this README and add an integration test ([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).
 
+# Limitation with BigQuery
+
+BigQuery current support for recursive CTEs is limited.
+
+For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
+
 # Contents
 
 __[Documentation Coverage](#documentation-coverage)__
