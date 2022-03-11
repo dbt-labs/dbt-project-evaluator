@@ -7,7 +7,7 @@ all_nodes as (
 
 select
     resource_id,
-    node_name,
+    resource_name,
     is_described,
     resource_type,
     file_path

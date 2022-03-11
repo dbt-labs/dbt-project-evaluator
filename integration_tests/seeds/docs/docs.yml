@@ -5,7 +5,7 @@ seeds:
     config:
       column_types:
         RESOURCE_ID: varchar
-        NODE_NAME: varchar
+        RESOURCE_NAME: varchar
         IS_DESCRIBED: boolean
         RESOURCE_TYOE: varchar
         FILE_PATH: varchar

@@ -8,7 +8,7 @@ with
 all_graph_nodes as (
     select
         resource_id,
-        node_name,
+        resource_name,
         resource_type,
         file_path,
         model_type 

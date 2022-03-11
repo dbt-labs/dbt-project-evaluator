@@ -1,4 +1,4 @@
-﻿RESOURCE_ID,NODE_NAME,IS_DESCRIBED,RESOURCE_TYPE,FILE_PATH
+﻿RESOURCE_ID,RESOURCE_NAME,IS_DESCRIBED,RESOURCE_TYPE,FILE_PATH
 model.pro_serv_dag_auditing_integration_tests.stg_model_3,stg_model_3,FALSE,model,staging/stg_model_3.sql
 model.pro_serv_dag_auditing_integration_tests.stg_model_2,stg_model_2,FALSE,model,staging/stg_model_2.sql
 model.pro_serv_dag_auditing_integration_tests.fct_model_6,fct_model_6,FALSE,model,marts/fct_model_6.sql

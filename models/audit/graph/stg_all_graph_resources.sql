@@ -17,12 +17,12 @@ final as (
         case 
             when resource_type = 'source' then source_name || '.' || name
             else name 
-        end as node_name, 
+        end as resource_name, 
         resource_type, 
         file_path, 
         case 
             when resource_type in ('test', 'source', 'metric', 'exposure') then null
-            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or node_name like '%staging%' or node_name like '%stg%' then 'staging'
+            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or resource_name like '%staging%' or resource_name like '%stg%' then 'staging'
             when file_path like '%{{ var('marts_folder_name', 'marts') }}%' then 'marts'
             else 'intermediate'
         end as model_type, 
