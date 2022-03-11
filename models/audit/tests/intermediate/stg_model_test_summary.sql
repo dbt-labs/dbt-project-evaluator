@@ -3,7 +3,7 @@
 with 
 
 all_graph_nodes as (
-    select * from {{ ref('stg_all_graph_nodes') }}
+    select * from {{ ref('stg_all_graph_resources') }}
 ),
 
 relationships as (

@@ -1,7 +1,7 @@
 with 
 
 models as (
-    select * from {{ ref('stg_all_graph_nodes') }}
+    select * from {{ ref('stg_all_graph_resources') }}
     where resource_type = 'model' 
 ), 
 

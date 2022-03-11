@@ -12,7 +12,7 @@ all_graph_nodes as (
         resource_type,
         file_path,
         model_type 
-    from {{ ref('stg_all_graph_nodes') }}
+    from {{ ref('stg_all_graph_resources') }}
 ),
 
 direct_model_relationships as (
