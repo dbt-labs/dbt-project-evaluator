@@ -98,13 +98,13 @@ We recommend you describe at least 75 percent of your models.
 
 `model_1` references two source tables.
 <p align = "center">
-<img width="800" alt="A DAG showing two source nodes feeding into a model" src="https://user-images.githubusercontent.com/91074396/156641049-74bd9168-e012-4d77-b343-bfde16cad0d3.png">
+<img width="800" alt="A DAG showing two sources feeding into a model" src="https://user-images.githubusercontent.com/91074396/156641049-74bd9168-e012-4d77-b343-bfde16cad0d3.png">
 
 ### Rejoining of Upstream Concepts
 
 ###### Model
 
-`fct_rejoining_of_upstream_concepts` shows all cases where one of the parent node's direct children (child) is _also_ the direct child of _another_ one of the parent node's direct children (parent_and_child). Only includes cases where the model "in between" the parent node and child node has NO other downstream dependencies.
+`fct_rejoining_of_upstream_concepts` shows all cases where one of the parent's direct children (child) is _also_ the direct child of _another_ one of the parent's direct children (parent_and_child). Only includes cases where the model "in between" the parent and child has NO other downstream dependencies.
 
 ###### Reason For Flag
 
@@ -114,7 +114,7 @@ We recommend you describe at least 75 percent of your models.
 
 `stg_model`, `int_model`, and `fct_model` create a "loop" in the DAG. `int_model` has no other downstream dependencies other than `fct_model`.
 <p align = "center">
-<img width="800" alt="A DAG showing four nodes. A source is feeding into a staging model. The staging model is referenced by both an int model and a fct model. The int model is also being referenced by the fct model. This creates a 'loop' between the staging model, the int model, and the fct model." src="https://user-images.githubusercontent.com/91074396/156642410-d402a7c0-bf91-4b9a-8b3c-815aa7cbbccb.png">
+<img width="800" alt="A DAG showing four resources. A source is feeding into a staging model. The staging model is referenced by both an int model and a fct model. The int model is also being referenced by the fct model. This creates a 'loop' between the staging model, the int model, and the fct model." src="https://user-images.githubusercontent.com/91074396/156642410-d402a7c0-bf91-4b9a-8b3c-815aa7cbbccb.png">
 
 ### Root Models
 ###### Model
@@ -129,12 +129,12 @@ We recommend you describe at least 75 percent of your models.
 
 `model_4` has no direct parents
 <p align = "center">
-<img width="800" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent node not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
+<img width="800" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
 
 ### Source Fanout
 ###### Model
 
-`fct_source_fanout` shows each parent/child relationship where a source is the direct parent of multiple nodes in the DAG.
+`fct_source_fanout` shows each parent/child relationship where a source is the direct parent of multiple resources in the DAG.
 
 ###### Reason For Flag
 

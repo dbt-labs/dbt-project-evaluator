@@ -14,7 +14,7 @@ with recursive direct_relationships as (
 -- should this be a fct_ model?
 
 -- recursive CTE
--- one record for every node and each of its downstream children (including itself)
+-- one record for every resource and each of its downstream children (including itself)
 all_relationships as (
     -- anchor 
     select distinct
@@ -32,7 +32,7 @@ all_relationships as (
         resource_name as path
 
     from direct_relationships
-    -- where direct_parent is null {# optional lever to change filtering of anchor clause to only include root nodes #}
+    -- where direct_parent is null {# optional lever to change filtering of anchor clause to only include root resources #}
     
     union all
 
@@ -104,7 +104,7 @@ with direct_relationships as (
     {% endfor %}
 )
 
-, node_info as (
+, resource_info as (
     select * from {{ ref('stg_all_graph_resources') }}
 )
 
@@ -125,9 +125,9 @@ with direct_relationships as (
         all_relationships_unioned.path
 
     from all_relationships_unioned
-    left join node_info as parent
+    left join resource_info as parent
         on all_relationships_unioned.parent_id = parent.resource_id
-    left join node_info as child
+    left join resource_info as child
         on all_relationships_unioned.child_id = child.resource_id
 )
 

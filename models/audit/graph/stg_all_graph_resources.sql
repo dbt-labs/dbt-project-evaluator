@@ -1,4 +1,4 @@
--- one row for each node in the graph
+-- one row for each resource in the graph
 with unioned as (
 
     {{ dbt_utils.union_relations([
