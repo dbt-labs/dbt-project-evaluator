@@ -7,7 +7,7 @@ with
 
 all_graph_nodes as (
     select
-        node_id,
+        resource_id,
         node_name,
         resource_type,
         file_path,
@@ -17,21 +17,21 @@ all_graph_nodes as (
 
 direct_model_relationships as (
     select  
-        node_id,
+        resource_id,
         direct_parent_id
     from {{ ref('base__node_relationships')}}
 ),
 
 direct_exposure_relationships as (
     select  
-        node_id,
+        resource_id,
         direct_parent_id
     from {{ ref('base__exposure_relationships')}}
 ),
 
 direct_metrics_relationships as (
     select  
-        node_id,
+        resource_id,
         direct_parent_id
     from {{ ref('base__metric_relationships')}}
 ),
@@ -48,9 +48,9 @@ direct_relationships as (
         END AS direct_parent_id
     from all_graph_nodes
     left join direct_model_relationships as models
-        on all_graph_nodes.node_id = models.node_id
+        on all_graph_nodes.resource_id = models.resource_id
     left join direct_exposure_relationships as exposures
-        on all_graph_nodes.node_id = exposures.node_id
+        on all_graph_nodes.resource_id = exposures.resource_id
 )
 
 select * from direct_relationships

@@ -18,12 +18,12 @@ with recursive direct_relationships as (
 all_relationships as (
     -- anchor 
     select distinct
-        node_id as parent_id,
+        resource_id as parent_id,
         node_name as parent,
         resource_type as parent_resource_type,
         model_type as parent_model_type,
         file_path as parent_file_path,
-        node_id as child_id,
+        resource_id as child_id,
         node_name as child,
         resource_type as child_resource_type,
         model_type as child_model_type,
@@ -43,7 +43,7 @@ all_relationships as (
         all_relationships.parent_resource_type as parent_resource_type,
         all_relationships.parent_model_type as parent_model_type,
         all_relationships.parent_file_path as parent_file_path,
-        direct_relationships.node_id as child_id,
+        direct_relationships.resource_id as child_id,
         direct_relationships.node_name as child,
         direct_relationships.resource_type as child_resource_type,
         direct_relationships.model_type as child_model_type,
@@ -76,8 +76,8 @@ with direct_relationships as (
 
 , cte_0 as (
     select distinct
-        node_id as parent_id,
-        node_id as child_id,
+        resource_id as parent_id,
+        resource_id as child_id,
         0 as distance,
         node_name as path
     from direct_relationships
@@ -87,7 +87,7 @@ with direct_relationships as (
 , cte_{{i}} as (
     select distinct
         cte_{{i - 1}}.parent_id as parent_id,
-        direct_relationships.node_id as child_id,
+        direct_relationships.resource_id as child_id,
         cte_{{i - 1}}.distance+1 as distance, 
         concat(cte_{{(i - 1)}}.path,' > ',direct_relationships.node_name) as path
 
@@ -111,12 +111,12 @@ with direct_relationships as (
 
 , all_relationships as (
     select
-        parent.node_id as parent_id,
+        parent.resource_id as parent_id,
         parent.node_name as parent,
         parent.resource_type as parent_resource_type,
         parent.model_type as parent_model_type,
         parent.file_path as parent_file_path,
-        child.node_id as child_id,
+        child.resource_id as child_id,
         child.node_name as child,
         child.resource_type as child_resource_type,
         child.model_type as child_model_type,
@@ -126,9 +126,9 @@ with direct_relationships as (
 
     from all_relationships_unioned
     left join node_info as parent
-        on all_relationships_unioned.parent_id = parent.node_id
+        on all_relationships_unioned.parent_id = parent.resource_id
     left join node_info as child
-        on all_relationships_unioned.child_id = child.node_id
+        on all_relationships_unioned.child_id = child.resource_id
 )
 
 {% endmacro %}

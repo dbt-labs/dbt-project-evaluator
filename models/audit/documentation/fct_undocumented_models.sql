@@ -6,7 +6,7 @@ all_nodes as (
 )
 
 select
-    node_id,
+    resource_id,
     node_name,
     is_described,
     resource_type,

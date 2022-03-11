@@ -1,5 +1,3 @@
--- TO DO: consider changing name to stg_all_graph_resources and all references to "node" to "resource" (example: node_id -> resource_id)
-    -- this would help prevent confusion between this model and base__nodes
 -- one row for each node in the graph
 with unioned as (
 
@@ -15,10 +13,10 @@ with unioned as (
 final as (
 
     select
-        unique_id as node_id, 
+        unique_id as resource_id, 
         case 
-            when resource_type = 'source' then source_name || '.' || node_name
-            else node_name 
+            when resource_type = 'source' then source_name || '.' || name
+            else name 
         end as node_name, 
         resource_type, 
         file_path, 
