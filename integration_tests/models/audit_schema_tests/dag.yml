@@ -3,10 +3,10 @@ version: 2
 models: 
     
   - name: int_all_dag_relationships
-    description: "This table shows one record for every node and each of its downstream children (including itself). It includes models, snapshots, exposures, metrics and seeds"
+    description: "This table shows one record for every resource and each of its downstream children (including itself). It includes models, snapshots, exposures, metrics and seeds"
     columns:
       - name: path
-        description: unique identifier representing a distinct path from each node to another node
+        description: unique identifier representing a distinct path from each resource to another resource
         tests:
           - unique
           - not_null 

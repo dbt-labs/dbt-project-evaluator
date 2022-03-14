@@ -31,7 +31,7 @@
             values = values,
             column_names = [
               'unique_id', 
-              'node_name', 
+              'name', 
               'resource_type', 
               'file_path', 
               'is_described', 

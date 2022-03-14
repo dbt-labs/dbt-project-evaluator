@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: fct_source_fanout
-    description: "This table shows each parent/child relationship where a source is the direct parent of multiple nodes in the DAG."
+    description: "This table shows each parent/child relationship where a source is the direct parent of multiple resources in the DAG."
     tests:
       - is_empty
   - name: fct_root_models
@@ -23,8 +23,8 @@ models:
       - is_empty
   - name: fct_rejoining_of_upstream_concepts
     description: >
-      "All cases where one of the parent node's direct children (child) is ALSO the direct child of ANOTHER one of the 
-      parent node's direct childen (parent_and_child). Only includes cases where the model "in between" the parent node and child node 
+      "All cases where one of the parent's direct children (child) is ALSO the direct child of ANOTHER one of the 
+      parent's direct childen (parent_and_child). Only includes cases where the model "in between" the parent and child 
       has NO other downstream dependencies.
   - name: fct_model_fanout
     description: "This table shows all parents with more direct leaf children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)"
