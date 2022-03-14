@@ -4,7 +4,6 @@ with direct_relationships as (
         *
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
-    and parent_resource_type = 'source'
 ),
 final as (
     select
