@@ -4,8 +4,8 @@ seeds:
   - name: test_fct_undocumented_models
     config:
       column_types:
-        NODE_ID: varchar
-        NODE_NAME: varchar
+        RESOURCE_ID: varchar
+        RESOURCE_NAME: varchar
         IS_DESCRIBED: boolean
         RESOURCE_TYOE: varchar
         FILE_PATH: varchar

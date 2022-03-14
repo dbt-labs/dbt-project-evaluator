@@ -42,7 +42,7 @@
         select_from_values(
             values = values,
             column_names = [
-                'node_id',
+                'resource_id',
                 'direct_parent_id'
             ]
          )

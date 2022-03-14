@@ -1,6 +1,4 @@
--- TO DO: consider changing name to stg_all_graph_resources and all references to "node" to "resource" (example: node_id -> resource_id)
-    -- this would help prevent confusion between this model and base__nodes
--- one row for each node in the graph
+-- one row for each resource in the graph
 with unioned as (
 
     {{ dbt_utils.union_relations([
@@ -15,16 +13,16 @@ with unioned as (
 final as (
 
     select
-        unique_id as node_id, 
+        unique_id as resource_id, 
         case 
-            when resource_type = 'source' then source_name || '.' || node_name
-            else node_name 
-        end as node_name, 
+            when resource_type = 'source' then source_name || '.' || name
+            else name 
+        end as resource_name, 
         resource_type, 
         file_path, 
         case 
             when resource_type in ('test', 'source', 'metric', 'exposure') then null
-            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or node_name like '%staging%' or node_name like '%stg%' then 'staging'
+            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or resource_name like '%staging%' or resource_name like '%stg%' then 'staging'
             when file_path like '%{{ var('marts_folder_name', 'marts') }}%' then 'marts'
             else 'intermediate'
         end as model_type, 

@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: base__exposures
-    description: base model from the graph variable, one record per exposure node
+    description: base model from the graph variable, one record per exposure resource
     columns:
       - name: unique_id
         tests:
@@ -10,7 +10,7 @@ models:
           - not_null
 
   - name: base__exposure_relationships
-    description: base model from the graph variable, one record per exposure node relationship (comes from the depends on field in the graph)
+    description: base model from the graph variable, one record per exposure resource relationship (comes from the depends on field in the graph)
     columns:
       - name: unique_id
         tests:
@@ -18,7 +18,7 @@ models:
           - not_null
 
   - name: base__metrics
-    description: base model from the graph variable, one record per metric node
+    description: base model from the graph variable, one record per metric resource
     columns:
       - name: unique_id
         tests:
@@ -49,8 +49,8 @@ models:
           - unique
           - not_null
 
-  - name: stg_all_graph_nodes
-    description: "This table shows one record for each enabled node in the graph and information about that node."
+  - name: stg_all_graph_resources
+    description: "This table shows one record for each enabled resource in the graph and information about that resource."
 
   - name: int_direct_relationships
-    description: "This table shows one record for each node in the graph and its direct parent."
+    description: "This table shows one record for each resource in the graph and its direct parent."
