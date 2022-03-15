@@ -22,7 +22,7 @@ final as (
         file_path, 
         case 
             when resource_type in ('test', 'source', 'metric', 'exposure') then null
-            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or resource_name like '%staging%' or resource_name like '%stg%' then 'staging'
+            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or name like '%staging%' or name like '%stg%' then 'staging'
             when file_path like '%{{ var('marts_folder_name', 'marts') }}%' then 'marts'
             else 'intermediate'
         end as model_type, 
