@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_model_test_summary 
+  - name: int_model_test_summary 
     columns:
       - name: resource_id
         tests:

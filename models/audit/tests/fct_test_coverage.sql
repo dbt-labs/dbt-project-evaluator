@@ -1,7 +1,7 @@
 with 
 
 test_counts as (
-    select * from {{ ref('stg_model_test_summary') }}
+    select * from {{ ref('int_model_test_summary') }}
 ), 
 
 final as (

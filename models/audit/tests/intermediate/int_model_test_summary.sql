@@ -1,6 +1,3 @@
--- should this be a fct_ model?
--- why is this in an intermediate folder / called stg_?
-
 with 
 
 all_graph_resources as (
