@@ -3,12 +3,6 @@ This package is used to flag areas within a dbt project that are misaligned with
 # Contributing
 If you'd like to add models to flag new areas, please update this README and add an integration test ([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).
 
-# Limitation with BigQuery
-
-BigQuery current support for recursive CTEs is limited.
-
-For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
-
 # Contents
 
 __[Documentation Coverage](#documentation-coverage)__
@@ -27,16 +21,18 @@ __[DAG Issues](#dag-issues)__
 ## Documentation Coverage
 
 `fct_undocumented_models` lists every model with no description configured.
+
 `fct_documentation_coverage` calculates the percent of enabled models in the project that have a configured description.
 
-We recommend you describe at least 75 percent of your models.
+Tip: We recommend you add descriptions to at least 75 percent of your models.
 
 ## Test Coverage
 
 `fct_untested_models` lists every model with no tests.
+
 `fct_test_coverage` contains metrics pertaining to project-wide test coverage.
 
-[At a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
 
 ## DAG Issues
 
@@ -166,3 +162,10 @@ This behavior may be observed in the case of a manually defined reference table 
 `source.table_4` isn't being referenced.
 <p align = "center">
 <img width="800" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png">
+
+
+# Limitation with BigQuery
+
+BigQuery current support for recursive CTEs is limited.
+
+For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
