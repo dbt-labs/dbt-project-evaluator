@@ -1,11 +1,6 @@
 version: 2 
 
 models: 
-  - name: fct_undocumented_models
-    description: >
-      This model contains all models that do not have a description configured in a YML file. 
-    tests:
-      - is_empty 
   - name: fct_documentation_coverage
     description: >
       This model calculates the percent of enabled models in the project that have a configured description. 
@@ -17,3 +12,8 @@ models:
           - dbt_utils.accepted_range:
               min_value: "{{ var('documentation_coverage_target') }}"
               severity: warn
+  - name: fct_undocumented_models
+    description: >
+      This model contains all models that do not have a description configured in a YML file. 
+    tests:
+      - is_empty

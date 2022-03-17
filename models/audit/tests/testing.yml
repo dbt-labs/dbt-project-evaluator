@@ -1,9 +1,6 @@
 version: 2 
 
 models: 
-  - name: fct_untested_models
-    tests:
-      - is_empty 
   - name: fct_test_coverage
     columns:
       - name: test_to_model_ratio
@@ -18,3 +15,6 @@ models:
           - dbt_utils.accepted_range:
               min_value: "{{ var('test_coverage_target') }}"
               severity: warn
+  - name: fct_untested_models
+    tests:
+      - is_empty 
