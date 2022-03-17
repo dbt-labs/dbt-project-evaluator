@@ -22,8 +22,8 @@ final as (
         file_path, 
         case 
             when resource_type in ('test', 'source', 'metric', 'exposure') then null
-            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or name like '%staging%' or name like '%stg%' then 'staging'
-            when file_path like '%{{ var('intermediate_folder_name', 'intermediate') }}%' or name like '%intermediate%' or name like '%int%' then 'intermediate'
+            when file_path like '%{{ var('staging_folder_name', 'staging') }}%' or name like '%{{ var('staging_designation', 'stg') }}%' or name like '%staging%' then 'staging'
+            when file_path like '%{{ var('intermediate_folder_name', 'intermediate') }}%' or name like '%{{ var('intermediate_designation', 'int') }}%' or name like '%intermediate%' then 'intermediate'
             when file_path like '%{{ var('marts_folder_name', 'marts') }}%' or name like '%fct%' or name like '%dim%' then 'marts'
             else 'other' -- is this the catch-all that we want? what about the reports folder in our example DAG?
         end as model_type, 
