@@ -9,6 +9,8 @@ __[Documentation Coverage](#documentation-coverage)__
 
 __[Test Coverage](#test-coverage)__
 
+__[Project Organization](#project-organization)__
+
 __[DAG Issues](#dag-issues)__
 - [Direct Join to Source](#direct-join-to-source)
 - [Model Fanout](#model-fanout)
@@ -33,6 +35,16 @@ Tip: We recommend you add descriptions to at least 75 percent of your models.
 `fct_test_coverage` contains metrics pertaining to project-wide test coverage.
 
 Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+
+## Project Organization
+
+`fct_unidentified_models` lists every model that doesn't fit into a [standard](https://discourse.getdbt.com/t/how-we-structure-our-dbt-projects/355) [modeling layer](https://www.youtube.com/watch?v=5W6VrnHVkCA). You can customize the names of each modeling layer by setting the following variables within your dbt_project.yml.
+
+- `staging_folder_name`: The name of the folder where staging models go (default 'staging')
+- `intermediate_folder_name`: The name of the folder where intermediate models go (default 'intermediate')
+- `marts_folder_name`: The name of the folder where marts models go (default 'marts')
+- `staging_designation`: The prefix or postfix for staging models (default 'stg')
+- `intermediate_designation`: The prefix or postfix for intermediate models (default 'int')
 
 ## DAG Issues
 
