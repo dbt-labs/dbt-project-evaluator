@@ -1,0 +1,4 @@
+FILE_PATH,RESOURCE_ID,RESOURCE_NAME
+reports/report_3.sql,model.pro_serv_dag_auditing_integration_tests.report_3,report_3
+reports/report_2.sql,model.pro_serv_dag_auditing_integration_tests.report_2,report_2
+reports/report_1.sql,model.pro_serv_dag_auditing_integration_tests.report_1,report_1

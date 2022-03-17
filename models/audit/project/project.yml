@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: fct_unidentified_models
+    description: "This table shows each model that doesn't follow the standard naming convention."
+    tests:
+      - is_empty
