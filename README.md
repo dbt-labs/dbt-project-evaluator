@@ -7,7 +7,7 @@ If you'd like to add models to flag new areas, please update this README and add
 
 ## Disabling models
 
-If there is a particular model or set of models that you *do not want this package to execute*, you can disable these models as you would any other model in your dbt_project.yml file
+If there is a particular model or set of models that you *do not want this package to execute*, you can disable these models as you would any other model in your `dbt_project.yml` file
 
 ```yml
 # dbt_project.yml
