@@ -3,6 +3,27 @@ This package is used to flag areas within a dbt project that are misaligned with
 # Contributing
 If you'd like to add models to flag new areas, please update this README and add an integration test ([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).
 
+# Usage
+
+## Disabling models
+
+If there is a particular model or set of models that you *do not want this package to execute*, you can disable these models as you would any other model in your dbt_project.yml file
+
+```yml
+# dbt_project.yml
+
+models:
+  pro-serv-dag-auditing:
+    tests:
+      # disable entire test coverage suite
+      +enabled: false
+    dag:
+      # disable single DAG model
+      fct_model_fanout:
+        +enabled: false
+
+```
+
 # Contents
 
 __[Documentation Coverage](#documentation-coverage)__
