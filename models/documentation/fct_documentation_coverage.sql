@@ -10,7 +10,7 @@ final as (
         current_timestamp as measured_at, 
         count(*) as total_models,
         sum(case when is_described then 1 else 0 end) as documented_models,
-        round(sum(case when is_described then 1 else 0 end) * 100 / count(*), 2) as documentation_coverage_pct
+        round(sum(case when is_described then 1.0 else 0 end) * 100 / count(*), 2) as documentation_coverage_pct
     from models
 )
 
