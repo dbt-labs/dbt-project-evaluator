@@ -1,0 +1,5 @@
+RESOURCE_NAME,CURRENT_FILE_PATH,CHANGE_FILE_PATH_TO
+stg_model_5,staging/stg_model_5.sql,staging/source_1/stg_model_5.sql
+stg_model_4,staging/stg_model_4.sql,staging/source_1/stg_model_4.sql
+stg_model_3,staging/source_1/stg_model_3.sql,staging/source_2/stg_model_3.sql
+source_2.table_3,models/staging/source_1/source.yml,models/staging/source_2/source.yml

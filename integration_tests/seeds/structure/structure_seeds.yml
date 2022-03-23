@@ -1,0 +1,16 @@
+version: 2
+
+seeds:
+  - name: test_fct_staging_directories
+    config:
+      column_types:
+        RESOURCE_NAME: varchar
+        CURRENT_FILE_PATH: varchar
+        CHANGE_FILE_PATH_TO: varchar
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_staging_directories')
+          compare_columns:
+            - resource_name
+            - current_file_path
+            - change_file_path_to
