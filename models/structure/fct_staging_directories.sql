@@ -30,16 +30,6 @@ staging_models as (
     and child_model_type = 'staging'
 ),
 
--- find all staging models that are NOT in their source parent's subdirectory
-inappropriate_subdirectories_staging as (
-    select 
-        child as resource_name,
-        child_file_path as current_file_path,
-        'models/staging/' || source || '/' || child_file_name as change_file_path_to
-    from staging_models
-    where child_directory_path not like '%' || source || '%'
-),
-
 sources as (
     select 
         resource_name,
@@ -59,9 +49,22 @@ inappropriate_subdirectories_sources as (
         'models/staging/' || source || '/' || file_name as change_file_path_to
     from sources
     where current_directory_path not like '%' || source || '%'
+),
+
+-- find all staging models that are NOT in their source parent's subdirectory
+inappropriate_subdirectories_staging as (
+    select 
+        child as resource_name,
+        child_file_path as current_file_path,
+        'models/staging/' || source || '/' || child_file_name as change_file_path_to
+    from staging_models
+    where child_directory_path not like '%' || source || '%'
+),
+
+unioned as (
+    select * from inappropriate_subdirectories_staging
+    union all 
+    select * from inappropriate_subdirectories_sources
 )
 
-
-select * from inappropriate_subdirectories_staging
-union all 
-select * from inappropriate_subdirectories_sources
+select * from unioned
