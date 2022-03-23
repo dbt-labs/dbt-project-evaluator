@@ -61,7 +61,7 @@ Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/tr
 ## DAG Issues
 
 ### Bending Connections
-##### Model
+###### Model
 
 `fct_bending_connections` shows each parent/child relationship where models in the staging layer are 
 dependent on each other.
@@ -129,9 +129,11 @@ You can think of dbt as our assembly line which produces expected outputs every 
 You can think of the BI layer as the place where we take the items produced from our assembly line to 
 customize them in order to meet our stakeholder's needs.
 
-Your dbt project needs a defined end point! Until the metrics server comes to fruition (TODO: edit this 
-line in 6 months!), then you cannot possible predefine every query or quandary your team might have. So 
-decide as a team where that line is and maintain it.
+<!---
+TODO: edit this line in 6 months after more progress is made on the metrics server
+-->
+Your dbt project needs a defined end point! Until the metrics server comes to fruition, you cannot possibly
+predefine every query or quandary your team might have. So decide as a team where that line is and maintain it.
 
 ### Multiple Sources Joined
 ###### Model
@@ -198,9 +200,9 @@ where the model "in between" the parent and child has NO other downstream depend
 
 ###### Graph Example
 
-`stg_model`, `int_model`, and `fct_model` create a "loop" in the DAG. `int_model` has no other downstream dependencies other than `fct_model`.
+`stg_model_1`, `int_model_4`, and `int_model_5` create a "loop" in the DAG. `int_model_4` has no other downstream dependencies other than `int_model_5`.
 <p align = "center">
-<img width="800" alt="A DAG showing four resources. A source is feeding into a staging model. The staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/91074396/156642410-d402a7c0-bf91-4b9a-8b3c-815aa7cbbccb.png">
+<img width="800" alt="A DAG showing three resources. A staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png">
 
 ###### Reason to Flag
 
@@ -216,10 +218,12 @@ simplify the DAG, potentially at the expense of more rows of SQL within the mode
 
 ###### Exceptions
   
-The one major exception to this would be when using a function from [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package (or similar functions / packages) that require a [relation](https://docs.getdbt.com/reference/dbt-classes#relation) as an argument input. If the shape of the 
-data in the output of `stg_model_1` is not the same as what you need for the input to the function 
-within `int_model_5`, then you will indeed need `int_model_4` to create that relation, in which case, 
-leave it.
+The one major exception to this would be when using a function from 
+[dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package, such as `star` or `get_column_values`, 
+(or similar functions / packages) that require a [relation](https://docs.getdbt.com/reference/dbt-classes#relation) 
+as an argument input. If the shape of the data in the output of `stg_model_1` is not the same as what you 
+need for the input to the function within `int_model_5`, then you will indeed need `int_model_4` to create 
+that relation, in which case, leave it.
   
 ###### How to Remediate
 
@@ -227,8 +231,8 @@ Barring jinja/macro/relation exceptions we mention directly above, to resolve th
   
 Post-refactor, your DAG should look like this:
   <p align = "center">
-<img width="800" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159602795-2fef9abc-bf34-4bd9-a27f-ba0de6245588.png">
-  
+<img width="800" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
+
 ### Root Models
 ###### Model
 
@@ -308,7 +312,11 @@ Post-refactor, your DAG should look like this:
   <p align = "center">
   <img width="800" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
-# Limitation with BigQuery
+-----
+
+# Limitations
+
+## BigQuery
 
 BigQuery current support for recursive CTEs is limited.
 
