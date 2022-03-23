@@ -8,6 +8,7 @@
 
 -- TO DO: consider also adding tests/documentation that are in the incorrect subdirectory?
 -- TO DO: how to handle staging models that depend on multiple sources?
+-- TO DO: how to handle base models?
 
 with all_graph_resources as (
     select * from {{ ref('stg_all_graph_resources') }}
