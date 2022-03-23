@@ -47,7 +47,7 @@ inappropriate_subdirectories_sources as (
     select 
         resource_name,
         file_path as current_file_path,
-        'models/staging/' || source || '/' || file_name as change_file_path_to
+        'models/' || '{{ var("staging_folder_name") }}' || '/' || source || '/' || file_name as change_file_path_to
     from sources
     where current_directory_path not like '%' || source || '%'
 ),
@@ -57,7 +57,7 @@ inappropriate_subdirectories_staging as (
     select distinct -- must do distinct to avoid duplicates when staging model has multiple paths to a given source
         child as resource_name,
         child_file_path as current_file_path,
-        'staging/' || source || '/' || child_file_name as change_file_path_to
+        '{{ var("staging_folder_name") }}' || '/' || source || '/' || child_file_name as change_file_path_to
     from staging_models
     where child_directory_path not like '%' || source || '%'
 ),

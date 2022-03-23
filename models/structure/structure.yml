@@ -1,7 +1,7 @@
 version: 2 
 
+models:
   - name: fct_staging_directories
-    description: >
-      This finds all cases where a staging model or source definition is NOT in the appropriate subdirectory.
+    description: This finds all cases where a staging model or source definition is NOT in the appropriate subdirectory.
     tests:
       - is_empty
