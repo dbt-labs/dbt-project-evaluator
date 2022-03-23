@@ -7,6 +7,7 @@
         -- or all direct children of source tables?
 
 -- TO DO: consider also adding tests/documentation that are in the incorrect subdirectory?
+-- TO DO: how to handle staging models that depend on multiple sources?
 
 with all_graph_resources as (
     select * from {{ ref('stg_all_graph_resources') }}
@@ -53,10 +54,10 @@ inappropriate_subdirectories_sources as (
 
 -- find all staging models that are NOT in their source parent's subdirectory
 inappropriate_subdirectories_staging as (
-    select 
+    select distinct -- must do distinct to avoid duplicates when staging model has multiple paths to a given source
         child as resource_name,
         child_file_path as current_file_path,
-        'models/staging/' || source || '/' || child_file_name as change_file_path_to
+        'staging/' || source || '/' || child_file_name as change_file_path_to
     from staging_models
     where child_directory_path not like '%' || source || '%'
 ),
