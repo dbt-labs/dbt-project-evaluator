@@ -1,5 +1,5 @@
 PARENT,PARENT_RESOURCE_TYPE,CHILD,CHILD_RESOURCE_TYPE,DISTANCE
 source_1.table_1,source,stg_model_2,model,1
 source_1.table_1,source,stg_model_1,model,1
-source_2.table_2,source,stg_model_2,model,1
-source_2.table_2,source,int_model_4,model,1
+source_1.table_2,source,stg_model_2,model,1
+source_1.table_2,source,int_model_4,model,1

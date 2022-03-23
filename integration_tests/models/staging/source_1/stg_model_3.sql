@@ -1,1 +1,1 @@
-{{ source('source_1', 'table_3') }}
+{{ source('source_2', 'table_3') }}
