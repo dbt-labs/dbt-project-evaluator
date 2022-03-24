@@ -3,7 +3,7 @@ version: 2
 models:
   - name: int_model_test_summary 
     columns:
-      - name: resource_id
+      - name: resource_name
         tests:
           - unique 
           - not_null 
