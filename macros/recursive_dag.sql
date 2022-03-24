@@ -15,7 +15,20 @@ with recursive direct_relationships as (
 
 -- recursive CTE
 -- one record for every resource and each of its downstream children (including itself)
-all_relationships as (
+all_relationships (
+    parent_id,
+    parent,
+    parent_resource_type,
+    parent_model_type,
+    parent_file_path,
+    child_id,
+    child,
+    child_resource_type,
+    child_model_type,
+    child_file_path,
+    distance,
+    path
+) as (
     -- anchor 
     select distinct
         resource_id as parent_id,

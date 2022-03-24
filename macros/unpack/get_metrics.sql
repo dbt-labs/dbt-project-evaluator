@@ -7,7 +7,7 @@
     {% for node in nodes_list %}
 
           {% set values_line %}
-            (
+            
             '{{ node.unique_id }}', 
             '{{ node.name }}', 
             '{{ node.resource_type }}', 
@@ -19,7 +19,7 @@
             '{{ node.sql }}', 
             '{{ node.timestamp }}', 
             '{{ node.package_name }}'
-            )
+            
         {% endset %}
         {% do values.append(values_line) %}
 
