@@ -1,16 +1,16 @@
 version: 2
 
 models:
-  - name: base__exposures
-    description: base model from the graph variable, one record per exposure resource
+  - name: base__exposure_relationships
+    description: base model from the graph variable, one record per exposure resource relationship (comes from the depends on field in the graph)
     columns:
       - name: unique_id
         tests:
           - unique
           - not_null
 
-  - name: base__exposure_relationships
-    description: base model from the graph variable, one record per exposure resource relationship (comes from the depends on field in the graph)
+  - name: base__exposures
+    description: base model from the graph variable, one record per exposure resource
     columns:
       - name: unique_id
         tests:
@@ -57,16 +57,16 @@ models:
           - unique
           - not_null
 
-  - name: stg_all_graph_resources
-    description: "This table shows one record for each enabled resource in the graph and information about that resource."
+  - name: int_direct_relationships
+    description: "This table shows one record for each resource in the graph and its direct parent."
     columns:
       - name: resource_id
         tests:
           - unique
           - not_null
 
-  - name: int_direct_relationships
-    description: "This table shows one record for each resource in the graph and its direct parent."
+  - name: stg_all_graph_resources
+    description: "This table shows one record for each enabled resource in the graph and information about that resource."
     columns:
       - name: resource_id
         tests:
