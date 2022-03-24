@@ -1,4 +1,4 @@
-RESOURCE_ID,RESOURCE_NAME,IS_DESCRIBED,RESOURCE_TYPE
+resource_id,resource_name,is_described,resource_type
 model.pro_serv_dag_auditing_integration_tests.stg_model_2,stg_model_2,FALSE,model
 model.pro_serv_dag_auditing_integration_tests.stg_model_3,stg_model_3,FALSE,model
 model.pro_serv_dag_auditing_integration_tests.stg_model_4,stg_model_4,FALSE,model

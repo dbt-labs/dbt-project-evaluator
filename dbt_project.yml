@@ -26,9 +26,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   pro_serv_dag_auditing:
-    audit:
-      graph:
-        +materialized: table
+    dag:
+      +materialized: table
+    graph:
+      intermediate:
+        int_direct_relationships:
+          +materialized: "{{ 'table' if target.type == 'bigquery' else 'view' }}"
 
 vars:
   documentation_coverage_target: 100

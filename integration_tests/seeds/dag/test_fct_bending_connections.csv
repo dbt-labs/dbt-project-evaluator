@@ -1,2 +1,2 @@
-PARENT,PARENT_MODEL_TYPE,CHILD,CHILD_MODEL_TYPE
+parent,parent_model_type,child,child_model_type
 stg_model_2,staging,stg_model_4,staging

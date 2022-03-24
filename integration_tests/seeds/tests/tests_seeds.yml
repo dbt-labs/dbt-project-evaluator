@@ -15,17 +15,17 @@ seeds:
   - name: test_fct_test_coverage
     config:
       column_types:
-        TOTAL_MODELS: number
-        TOTAL_TESTS: number
-        TESTED_MODELS: number
-        TEST_COVERAGE_PCT: float
-        TEST_TO_MODEL_RATIO: float
+        total_models: decimal
+        total_tests: decimal
+        tested_models: decimal
+        test_coverage_pct: float
+        test_to_model_ratio: float
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_test_coverage')
           compare_columns:
-            - TOTAL_MODELS
-            - TOTAL_TESTS
-            - TESTED_MODELS
-            - TEST_COVERAGE_PCT
-            - TEST_TO_MODEL_RATIO
+            - total_models
+            - total_tests
+            - tested_models
+            - test_coverage_pct
+            - test_to_model_ratio
