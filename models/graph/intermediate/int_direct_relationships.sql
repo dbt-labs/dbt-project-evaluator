@@ -7,7 +7,8 @@ all_graph_resources as (
         resource_name,
         resource_type,
         file_path,
-        model_type 
+        model_type,
+        source_name 
     from {{ ref('stg_all_graph_resources') }}
 ),
 
