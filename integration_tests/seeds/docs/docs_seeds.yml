@@ -14,9 +14,9 @@ seeds:
       - dbt_utils.equality:
           compare_model: ref('fct_undocumented_models')
           compare_columns:
-            - RESOURCE_ID
-            - RESOURCE_NAME
-            - IS_DESCRIBED
+            - resource_id
+            - resource_name
+            - is_described
   - name: test_fct_documentation_coverage
     config:
       column_types:
@@ -29,6 +29,6 @@ seeds:
       - dbt_utils.equality:
           compare_model: ref('fct_documentation_coverage')
           compare_columns:
-            - TOTAL_MODELS
-            - DOCUMENTED_MODELS
-            - DOCUMENTATION_COVERAGE_PCT
+            - total_models
+            - documented_models
+            - documentation_coverage_pct
