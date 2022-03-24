@@ -51,7 +51,7 @@ final as (
 
     from unioned
     where coalesce(is_enabled, True) = True
-    and not(resource_type = 'model' and package_name = 'pro_serv_dag_auditing')
+    and not(resource_type = 'model' and package_name = 'dbt_project_evaluator')
 
 )
 
