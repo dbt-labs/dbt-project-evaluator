@@ -5,7 +5,6 @@ seeds:
     config:
       column_types:
         resource_name: varchar
-        tests_per_model: int
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_untested_models')

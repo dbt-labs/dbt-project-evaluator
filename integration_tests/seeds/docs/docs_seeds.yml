@@ -4,9 +4,7 @@ seeds:
   - name: test_fct_undocumented_models
     config:
       column_types:
-        RESOURCE_NAME: varchar
-        IS_DESCRIBED: boolean
-        RESOURCE_TYOE: varchar
+        resource_name: varchar
       tags:
         - docs
     tests:
