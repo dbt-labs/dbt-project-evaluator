@@ -6,7 +6,6 @@ all_resources as (
 )
 
 select
-    resource_id,
     resource_name,
     is_described,
     resource_type,
