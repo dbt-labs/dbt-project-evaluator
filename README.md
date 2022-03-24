@@ -13,7 +13,7 @@ If there is a particular model or set of models that you *do not want this packa
 # dbt_project.yml
 
 models:
-  pro-serv-dag-auditing:
+  dbt_project_evaluator:
     tests:
       # disable entire test coverage suite
       +enabled: false
