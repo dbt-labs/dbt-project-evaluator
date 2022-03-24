@@ -28,13 +28,6 @@ models:
   pro_serv_dag_auditing_integration_tests:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
     +materialized: ephemeral
-  pro_serv_dag_auditing:
-    dag:
-      +materialized: table
-    graph:
-      intermediate:
-        int_direct_relationships:
-          +materialized: "{{ 'table' if target.type == 'bigquery' else 'view' }}"
 
 tests:
   pro_serv_dag_auditing:
