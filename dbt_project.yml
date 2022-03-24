@@ -26,8 +26,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   pro_serv_dag_auditing:
-    audit:
-  pro_serv_dag_auditing:
     dag:
       +materialized: table
     graph:
