@@ -4,19 +4,13 @@ seeds:
   - name: test_fct_undocumented_models
     config:
       column_types:
-        RESOURCE_ID: varchar
-        RESOURCE_NAME: varchar
-        IS_DESCRIBED: boolean
-        RESOURCE_TYOE: varchar
+        resource_name: varchar
       tags:
         - docs
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_undocumented_models')
-          compare_columns:
-            - RESOURCE_ID
-            - RESOURCE_NAME
-            - IS_DESCRIBED
+
   - name: test_fct_documentation_coverage
     config:
       column_types:
@@ -29,6 +23,6 @@ seeds:
       - dbt_utils.equality:
           compare_model: ref('fct_documentation_coverage')
           compare_columns:
-            - TOTAL_MODELS
-            - DOCUMENTED_MODELS
-            - DOCUMENTATION_COVERAGE_PCT
+            - total_models
+            - documented_models
+            - documentation_coverage_pct
