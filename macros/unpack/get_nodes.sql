@@ -12,14 +12,14 @@
               '{{ node.name }}', 
               '{{ node.resource_type }}', 
               '{{ node.path }}',
-              cast('{{ node.config.enabled | trim }}' as boolean), 
+              {{ node.config.enabled }} ,
               '{{ node.config.materialized }}', 
               '{{ node.config.on_schema_change}}', 
               '{{ node.database }}', 
               '{{ node.schema }}', 
               '{{ node.package_name }}', 
               '{{ node.alias }}',
-              cast('{{ is_not_empty_string(node.description) | trim }}' as boolean)
+              {{ is_not_empty_string(node.description) }}
             )
         {% endset %}
         {% do values.append(values_line) %}

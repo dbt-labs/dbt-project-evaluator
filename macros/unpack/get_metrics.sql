@@ -12,7 +12,7 @@
             '{{ node.name }}', 
             '{{ node.resource_type }}', 
             '{{ node.path }}',
-            cast('{{ is_not_empty_string(node.description) | trim }}' as boolean), 
+            {{ is_not_empty_string(node.description) }}, 
             '{{ node.type }}', 
             '{{ node.model.identifier }}', 
             '{{ node.label }}', 
