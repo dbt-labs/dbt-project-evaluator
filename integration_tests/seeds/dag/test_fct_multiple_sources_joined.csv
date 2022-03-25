@@ -1,3 +1,2 @@
-parent,parent_resource_type,child,child_resource_type,distance
-source_1.table_1,source,stg_model_2,model,1
-source_1.table_2,source,stg_model_2,model,1
+child,source_parents
+stg_model_2,"source_1.table_1, source_1.table_2"

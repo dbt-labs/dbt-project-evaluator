@@ -18,7 +18,7 @@ models:
     tests:
       - is_empty
   - name: fct_multiple_sources_joined
-    description: "This table shows each parent/child relationship where a model references more than one source."
+    description: "This table shows each instances where a model references more than one source."
     tests:
       - is_empty
   - name: fct_rejoining_of_upstream_concepts

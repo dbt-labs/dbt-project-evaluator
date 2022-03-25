@@ -4,20 +4,14 @@ seeds:
   - name: test_fct_multiple_sources_joined
     config:
       column_types:
-        PARENT: varchar
-        PARENT_RESOURCE_TYPE: varchar
         CHILD: varchar
-        CHILD_RESOURCE_TYPE: varchar
-        DISTANCE: int
+        SOURCE_PARENTS: varchar
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_multiple_sources_joined')
           compare_columns:
-            - parent
-            - parent_resource_type
             - child
-            - child_resource_type
-            - distance
+            - source_parents
 
   - name: test_fct_direct_join_to_source
     config:
