@@ -58,9 +58,9 @@ models:
           - not_null
 
   - name: int_direct_relationships
-    description: "This table shows one record for each resource in the graph and its direct parent."
+    description: "This table shows one record for each direct parent/child pair in the graph."
     columns:
-      - name: resource_id
+      - name: unique_id
         tests:
           - unique
           - not_null

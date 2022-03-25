@@ -47,6 +47,13 @@ direct_relationships as (
         on all_graph_resources.resource_id = models.resource_id
     left join direct_exposure_relationships as exposures
         on all_graph_resources.resource_id = exposures.resource_id
+),
+
+final as (
+    select
+        {{ dbt_utils.surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id,
+        *
+    from direct_relationships
 )
 
-select * from direct_relationships
+select * from final
