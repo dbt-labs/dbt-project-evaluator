@@ -19,7 +19,7 @@ models_without_children as (
 model_fanout as (
     select 
         all_dag_relationships.parent,
-        count(*) as num_of_leaf_children
+        {{ listagg('all_dag_relationships.child', ', ', 'order by all_dag_relationships.child') }} as leaf_children
     from all_dag_relationships
     inner join models_without_children
         on all_dag_relationships.child = models_without_children.parent

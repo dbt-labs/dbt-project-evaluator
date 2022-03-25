@@ -5,24 +5,16 @@ with direct_source_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
     and parent_resource_type = 'source'
+    and child_resource_type = 'model'
 ),
 
 source_fanout as (
     select
         parent,
-        count(*)
+        {{ listagg('child', ', ', 'order by child') }} as model_children
     from direct_source_relationships
     group by 1
     having count(*) > 1
-),
-
-final as (
-    select 
-        direct_source_relationships.*
-    from direct_source_relationships
-    inner join source_fanout
-    on direct_source_relationships.parent = source_fanout.parent
-    order by direct_source_relationships.parent
 )
 
-select * from final
+select * from source_fanout

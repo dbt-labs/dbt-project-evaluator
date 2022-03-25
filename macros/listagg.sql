@@ -9,7 +9,7 @@
         {{ measure }},
         '{{ delimiter_text }}'
         {% if order_by_clause %}
-        ) within group {{ order_by_clause }}
+        ) within group ( {{ order_by_clause }} )
         {% else %}
         )
         {% endif %}
