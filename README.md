@@ -12,14 +12,6 @@ Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) f
 ----
 ## Contents
 
-__[Testing](#testing)__
-- [Untested Models](#untested-models)
-- [Test Coverage](#test-coverage)
-
-__[Documentation](#documentation)__
-- [Undocumented Models](#undocumented-models)
-- [Documentation Coverage](#documentation-coverage)
-
 __[DAG Issues](#dag-issues)__
 - [Direct Join to Source](#direct-join-to-source)
 - [Model Fanout](#model-fanout)
@@ -29,64 +21,17 @@ __[DAG Issues](#dag-issues)__
 - [Source Fanout](#source-fanout)
 - [Unused Sources](#unused-sources)
 
+__[Testing](#testing)__
+- [Untested Models](#untested-models)
+- [Test Coverage](#test-coverage)
+
+__[Documentation](#documentation)__
+- [Undocumented Models](#undocumented-models)
+- [Documentation Coverage](#documentation-coverage)
+
 ----
 
 # Package Documentation
-## Testing
-### Untested Models
-
-#### Model
-`fct_untested_models` lists every model that has no tests applied.
-#### Reason to Flag
-We recommend that every model in your dbt project has tests applied to ensure accuracy in your data transformations.
-#### How to Remediate
-Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
-
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
-### Test Coverage
-#### Model
-`fct_test_coverage` contains metrics pertaining to project-wide test coverage. 
-Specifically, this models measures:
-1. `test_coverage_pct`: the percentage of your models have minimum 1 test applied. 
-2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
-
-This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%. 
-You can set your own threshold by overriding the `test_coverage_target` variable. [See variables section.](#variables)
-#### Reason to Flag
-We recommend that every model in your dbt project has tests applied to ensure accuracy in your data transformations.
-#### How to Remediate
-Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
-
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
-## Documentation
-
-### Undocumented Models
-### Model
-`fct_undocumented_models` lists every model with no description configured.
-#### Reason to Flag
-We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
-each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
-#### How to Remediate
-Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
-function in the model's `.yml` entry.
-
-### Documentation Coverage
-#### Model
-
-`fct_documentation_coverage` calculates the percent of enabled models in the project that have 
-a configured description.
-
-This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%. 
-You can set your own threshold by overriding the `test_coverage_target` variable. [See variables section.](#variables)
-#### Reason to Flag
-We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
-each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
-#### How to Remediate
-Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
-function in the model's `.yml` entry.
-
 ## DAG Issues
 
 ### Bending Connections
@@ -340,6 +285,62 @@ or any other nested information.
 Post-refactor, your DAG should look like this:
   <p align = "center">
   <img width="800" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
+
+## Testing
+### Untested Models
+
+#### Model
+`fct_untested_models` lists every model that has no tests applied.
+#### Reason to Flag
+We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
+#### How to Remediate
+Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
+in the `tests` directory of you project. 
+
+Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+### Test Coverage
+#### Model
+`fct_test_coverage` contains metrics pertaining to project-wide test coverage. 
+Specifically, this models measures:
+1. `test_coverage_pct`: the percentage of your models have minimum 1 test applied. 
+2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
+
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%. 
+You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+#### Reason to Flag
+We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
+#### How to Remediate
+Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
+in the `tests` directory of you project. 
+
+Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+## Documentation
+
+### Undocumented Models
+### Model
+`fct_undocumented_models` lists every model with no description configured.
+#### Reason to Flag
+We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
+each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
+#### How to Remediate
+Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
+function in the model's `.yml` entry.
+
+### Documentation Coverage
+#### Model
+
+`fct_documentation_coverage` calculates the percent of enabled models in the project that have 
+a configured description.
+
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%. 
+You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+#### Reason to Flag
+We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
+each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
+#### How to Remediate
+Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
+function in the model's `.yml` entry.
+
 
 -----
 
