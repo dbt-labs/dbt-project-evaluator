@@ -1,36 +1,24 @@
-This package is used to flag areas within a dbt project that are misaligned with dbt Labs' best practices.
+# dbt_project_evaluator
 
-# Contributing
-If you'd like to add models to flag new areas, please update this README and add an integration test 
-([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).
+This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
+Specifically, this package tests
+  1. your dbt DAG for model layering best practices
+  2. your models for testing and documentation best practices
+  3. your dbt project for file structure best practices
 
-# Usage
+## Installation Instructions
+Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
-## Disabling models
+----
+## Contents
 
-If there is a particular model or set of models that you *do not want this package to execute*, you can 
-disable these models as you would any other model in your `dbt_project.yml` file
+__[Testing](#testing)__
+- [Untested Models](#untested-models)
+- [Test Coverage](#test-coverage)
 
-```yml
-# dbt_project.yml
-
-models:
-  dbt_project_evaluator:
-    tests:
-      # disable entire test coverage suite
-      +enabled: false
-    dag:
-      # disable single DAG model
-      fct_model_fanout:
-        +enabled: false
-
-```
-
-# Contents
-
-__[Documentation Coverage](#documentation-coverage)__
-
-__[Test Coverage](#test-coverage)__
+__[Documentation](#documentation)__
+- [Undocumented Models](#undocumented-models)
+- [Documentation Coverage](#documentation-coverage)
 
 __[DAG Issues](#dag-issues)__
 - [Direct Join to Source](#direct-join-to-source)
@@ -41,85 +29,126 @@ __[DAG Issues](#dag-issues)__
 - [Source Fanout](#source-fanout)
 - [Unused Sources](#unused-sources)
 
-## Documentation Coverage
+----
 
+# Package Documentation
+## Testing
+### Untested Models
+
+#### Model
+`fct_untested_models` lists every model that has no tests applied.
+#### Reason to Flag
+We recommend that every model in your dbt project has tests applied to ensure accuracy in your data transformations.
+#### How to Remediate
+Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
+in the `tests` directory of you project. 
+
+Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+### Test Coverage
+#### Model
+`fct_test_coverage` contains metrics pertaining to project-wide test coverage. 
+Specifically, this models measures:
+1. `test_coverage_pct`: the percentage of your models have minimum 1 test applied. 
+2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
+
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%. 
+You can set your own threshold by overriding the `test_coverage_target` variable. [See variables section.](#variables)
+#### Reason to Flag
+We recommend that every model in your dbt project has tests applied to ensure accuracy in your data transformations.
+#### How to Remediate
+Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
+in the `tests` directory of you project. 
+
+Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+## Documentation
+
+### Undocumented Models
+### Model
 `fct_undocumented_models` lists every model with no description configured.
+#### Reason to Flag
+We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
+each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
+#### How to Remediate
+Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
+function in the model's `.yml` entry.
+
+### Documentation Coverage
+#### Model
 
 `fct_documentation_coverage` calculates the percent of enabled models in the project that have 
 a configured description.
 
-Tip: We recommend you add descriptions to at least 75 percent of your models.
-
-## Test Coverage
-
-`fct_untested_models` lists every model with no tests.
-
-`fct_test_coverage` contains metrics pertaining to project-wide test coverage.
-
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%. 
+You can set your own threshold by overriding the `test_coverage_target` variable. [See variables section.](#variables)
+#### Reason to Flag
+We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
+each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
+#### How to Remediate
+Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
+function in the model's `.yml` entry.
 
 ## DAG Issues
 
 ### Bending Connections
-###### Model
+#### Model
 
 `fct_bending_connections` shows each parent/child relationship where models in the staging layer are 
 dependent on each other.
 
-###### Graph Example
+#### Graph Example
 
 `stg_model_1` is a parent of `stg_model_2`
 <p align = "center">
 <img width="800" alt="A DAG showing stg_model_1 as a parent of stg_model_2 and int_model" src="https://user-images.githubusercontent.com/91074396/157698052-06654cb2-6a8d-45f8-a29a-7154d73edf59.png">
 
-###### Reason to Flag
+#### Reason to Flag
 
-###### How to Remediate
+#### How to Remediate
 
 
 
 ### Direct Join to Source
-###### Model
+#### Model
 
 `fct_direct_join_to_source` shows each parent/child relationship where a model has a reference to 
 both a model and a source.
 
-###### Graph Example
+#### Graph Example
 
 `model_2` is pulling in both a model and a source.
 <p align = "center">
 <img width="800" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
   
-###### Reason to Flag
+#### Reason to Flag
 
-###### How to Remediate
+#### How to Remediate
 
 
 ### Model Fanout
-###### Model
+#### Model
 
 `fct_model_fanout` shows all parents with more direct leaf children than the threshold for fanout 
 (determined by variable models_fanout_threshold, default 3)
   
-###### Graph Example
+#### Graph Example
 
 `fct_model` has three direct leaf children.
 <p align = "center">
 <img width="800" alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png">
 
-###### Reason to Flag
+#### Reason to Flag
 
 This might indicate some transformations should move to the BI layer, or a common business transformations
 should be moved upstream.
 
-###### Exceptions
+#### Exceptions
 
 Some BI tools are better than others at joining and data exploration. For example, with Looker you could 
 end your DAG after marts (i.e. fcts & dims) and join those artifacts together (with a little know how 
 and setup time) to make your reports. For others, like Tableau, model fanouts might be more 
 beneficial, as this tool prefers big tables over joins, so predefining some reports is usually more performant. 
   
-###### How to Remediate
+#### How to Remediate
 
 Queries and transformations can move around between dbt and the BI tool, so how do we try to stay 
 effortful in what we decide to put where? 
@@ -136,17 +165,17 @@ Your dbt project needs a defined end point! Until the metrics server comes to fr
 predefine every query or quandary your team might have. So decide as a team where that line is and maintain it.
 
 ### Multiple Sources Joined
-###### Model
+#### Model
 
 `fct_multiple_sources_joined` shows each parent/child relationship where a model references more than one source.
 
-###### Graph Example
+#### Graph Example
 
 `model_1` references two source tables.
 <p align = "center">
 <img width="800" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"> 
   
-###### Reason to Flag
+#### Reason to Flag
 
 We very strongly believe that a staging model is the atomic unit of data modeling. Each staging 
 model bears a one-to-one relationship with the source data table it represents. It has the same 
@@ -155,7 +184,7 @@ format. With that in mind, two `{{ source() }}` declarations in one staging mode
 not being composable enough and there are individual building blocks which could be broken out into
 their respective models. 
 
-###### Exceptions
+#### Exceptions
   
 NoSQL databases or heavily nested data sources often have so much info json packed into a table 
 that you need to break one raw data source into multiple base models.
@@ -166,7 +195,7 @@ These make total sense, and you should keep them in your project. To continue to
 count those instances, then add a [warn_if](https://docs.getdbt.com/reference/resource-configs/severity) 
 threshold to the test to account for the known examples.
   
-###### How to Remediate
+#### How to Remediate
 
 In this example specifically, those raw sources, `source_1.table_1` and `source_1.table_2` should each 
 have their own staging model (`stg_model_1` and `stg_model_2`), as transitional steps, which will 
@@ -192,19 +221,19 @@ Post-refactor, your DAG should look like this:
   <img width="800" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
 
 ### Rejoining of Upstream Concepts
-###### Model
+#### Model
 
 `fct_rejoining_of_upstream_concepts` contains all cases where one of the parent's direct children 
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases 
 where the model "in between" the parent and child has NO other downstream dependencies.
 
-###### Graph Example
+#### Graph Example
 
 `stg_model_1`, `int_model_4`, and `int_model_5` create a "loop" in the DAG. `int_model_4` has no other downstream dependencies other than `int_model_5`.
 <p align = "center">
 <img width="800" alt="A DAG showing three resources. A staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png">
 
-###### Reason to Flag
+#### Reason to Flag
 
 This could happen for a variety of reasons: Accidentally duplicating some business concepts in multiple 
 data flows, hesitance to touch (and break) someone else’s model, or perhaps trying to snowflake out 
@@ -216,7 +245,7 @@ parallel processing by being its own model. Since both `int_model_4` and `int_mo
 on `stg_model_1`, there is likely a better way to write the SQL within one model (`int_model_5`) and 
 simplify the DAG, potentially at the expense of more rows of SQL within the model.
 
-###### Exceptions
+#### Exceptions
   
 The one major exception to this would be when using a function from 
 [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package, such as `star` or `get_column_values`, 
@@ -225,7 +254,7 @@ as an argument input. If the shape of the data in the output of `stg_model_1` is
 need for the input to the function within `int_model_5`, then you will indeed need `int_model_4` to create 
 that relation, in which case, leave it.
   
-###### How to Remediate
+#### How to Remediate
 
 Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from `int_model_4` into a CTE within `int_model_5`, and swap all `{{ ref('int_model_4') }}` references to the new CTE(s).
   
@@ -234,62 +263,62 @@ Post-refactor, your DAG should look like this:
 <img width="800" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
 
 ### Root Models
-###### Model
+#### Model
 
 `fct_root_models` shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project. 
 
-###### Graph Example
+#### Graph Example
 
 `model_4` has no direct parents
 <p align = "center">
 <img width="800" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
   
-###### Reason to Flag
+#### Reason to Flag
 
 This likely means that the model (`model_4`  below) contains raw table references, either to a raw data source, or another model in the project without using the `{{ source() }}` or `{{ ref() }}` functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies. 
 
-###### How to Remediate
+#### How to Remediate
 
 Start by mapping any table references in the `FROM` clause of the model definition to the models or raw tables that they draw from, and replace those references with the `{{ ref() }}` if the dependency is another dbt model, or the `{{ source() }}` function if the table is a raw data source (this may require the declaration of a new source table). Then, visualize this model in the DAG, and refactor as appropriate according to best practices. 
 
-###### Exceptions
+#### Exceptions
 
 This behavior may be observed in the case of a manually defined reference table that does not have any dependencies. A good example of this is a `dim_calendar` table that is generated by the `{{ dbt_utils.date_spine() }}` macro — this SQL logic is completely self contained, and does not require any external data sources to execute. 
 
 ### Source Fanout
-###### Model
+#### Model
 
 `fct_source_fanout` shows each parent/child relationship where a source is the direct parent of multiple resources in the DAG.
 
-###### Graph Example
+#### Graph Example
 
 `source.table_1` has more than one direct child model.
 <p align = "center">
 <img width="800" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
  
-###### Reason to Flag
+#### Reason to Flag
 
-###### How to Remediate
+#### How to Remediate
 
 ### Unused Sources
-###### Model
+#### Model
 
 `fct_unused_sources` shows each source with 0 children.
   
-###### Graph Example
+#### Graph Example
 
 `source.table_4` isn't being referenced.
 <p align = "center">
 <img width="800" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png">
 
-###### Reason to Flag
+#### Reason to Flag
 
 This represents either a source that you have defined in YML but never brought into a model or a 
 model that was deprecated and the corresponding rows in the source block of the YML file were 
 not deleted at the same time. This simply represents the buildup of cruft in the project that 
 doesn’t need to be there.
   
-###### How to Remediate
+#### How to Remediate
 
 Navigate to the `sources.yml` file (or whatever your company has called the file) that corresponds 
 to the unused source. Within the YML file, remove the unused table name, along with descriptions 
@@ -314,6 +343,43 @@ Post-refactor, your DAG should look like this:
 
 -----
 
+## Customization
+### Disabling models
+
+If there is a particular model or set of models that you *do not want this package to execute*, you can 
+disable these models as you would any other model in your `dbt_project.yml` file
+
+```yml
+# dbt_project.yml
+
+models:
+  dbt_project_evaluator:
+    tests:
+      # disable entire test coverage suite
+      +enabled: false
+    dag:
+      # disable single DAG model
+      fct_model_fanout:
+        +enabled: false
+
+```
+
+### Overriding Variables
+
+Currently, this package uses two variables to set the targets for a project's `test_coverage_pct` and `documentation_coverage_pct`, 
+each of which are defaulted to 100% coverage. If you would like to override these defaults, you can do so by supplying your own 
+values in your dbt_project.yml
+
+```yml
+# dbt_project.yml
+# set your test and doc coverage to 75% instead
+
+vars:
+  dbt_project_evaluator:
+    documentation_coverage_target: 75
+    test_coverage_target: 75
+
+```
 # Limitations
 
 ## BigQuery
@@ -321,3 +387,8 @@ Post-refactor, your DAG should look like this:
 BigQuery current support for recursive CTEs is limited.
 
 For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
+
+
+# Contributing
+If you'd like to add models to flag new areas, please update this README and add an integration test 
+([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).
