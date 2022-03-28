@@ -2,7 +2,7 @@
 
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
 Specifically, this package tests
-  1. your dbt DAG for model layering best practices
+  1. your dbt DAG for modeling best practices
   2. your models for testing and documentation best practices
   3. your dbt project for file structure best practices
 
@@ -292,7 +292,7 @@ Post-refactor, your DAG should look like this:
 #### Model
 `fct_untested_models` lists every model that has no tests applied.
 #### Reason to Flag
-We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
+Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
 #### How to Remediate
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
 in the `tests` directory of you project. 
@@ -320,11 +320,13 @@ Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/tr
 ### Model
 `fct_undocumented_models` lists every model with no description configured.
 #### Reason to Flag
-We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
-each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
+Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
+The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
 #### How to Remediate
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
+
+Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
 
 ### Documentation Coverage
 #### Model
@@ -335,13 +337,13 @@ a configured description.
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%. 
 You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
 #### Reason to Flag
-We recommend that every model in your dbt project has at minimum a model-level description. This ensures that 
-each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. 
+Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
+The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
 #### How to Remediate
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
 
-
+Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
 -----
 
 ## Customization
@@ -381,15 +383,17 @@ vars:
     test_coverage_target: 75
 
 ```
-# Limitations
 
-## BigQuery
+----
+## Limitations
+
+### BigQuery
 
 BigQuery current support for recursive CTEs is limited.
 
 For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
 
-
-# Contributing
+----
+## Contributing
 If you'd like to add models to flag new areas, please update this README and add an integration test 
 ([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).
