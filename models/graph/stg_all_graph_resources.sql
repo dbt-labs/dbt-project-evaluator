@@ -27,31 +27,27 @@ final as (
             when file_path like '%{{ var('marts_folder_name', 'marts') }}%' or name like '%fct%' or name like '%dim%' then 'marts'
             else 'other' -- is this the catch-all that we want? what about the reports folder in our example DAG?
         end as model_type, 
-        is_enabled, 
-        materialized, 
-        on_schema_change, 
-        database, 
-        schema, 
-        package_name, 
-        alias, 
-        is_described, 
-        exposure_type, 
-        maturity, 
-        url, 
-        metric_type, 
-        model, 
-        label, 
-        sql, 
-        {% if target.type == 'redshift' %}
-        "timestamp",
-        {% else %}
-        timestamp,  
-        {% endif %} 
-        source_name, 
-        is_source_described, 
-        loaded_at_field, 
-        loader, 
-        identifier
+        is_enabled as is_enabled, 
+        materialized as materialized, 
+        on_schema_change as on_schema_change, 
+        database as database, 
+        schema as schema, 
+        package_name as package_name, 
+        alias as alias, 
+        is_described as is_described, 
+        exposure_type as exposure_type, 
+        maturity as maturity, 
+        url as url, 
+        metric_type as metric_type, 
+        model as model, 
+        label as label, 
+        sql as sql, 
+        timestamp as timestamp,
+        source_name as source_name, 
+        is_source_described as is_source_described, 
+        loaded_at_field as loaded_at_field, 
+        loader as loader, 
+        identifier as identifier
 
     from unioned
     where coalesce(is_enabled, True) = True
