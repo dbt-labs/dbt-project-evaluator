@@ -1,4 +1,4 @@
--- this model finds cases where a source node has no children
+-- this model finds cases where a source has no children
 
 with source_relationships as (
     select  

@@ -17,7 +17,7 @@
               cast('{{ is_not_empty_string(node.source_description) | trim }}' as boolean), 
               cast('{{ is_not_empty_string(node.description) | trim }}' as boolean), 
               cast('{{ node.config.enabled }}' as boolean), 
-              '{{ node.loaded_at_field}}', 
+              '{{ node.loaded_at_field | replace("'", "_") }}}}', 
               '{{ node.database }}', 
               '{{ node.schema }}', 
               '{{ node.package_name }}', 
@@ -36,7 +36,7 @@
             values = values,
             column_names = [
               'unique_id',
-              'node_name',
+              'name',
               'file_path',
               'alias',
               'resource_type',

@@ -2,12 +2,12 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'pro_serv_dag_auditing_integration_tests'
+name: 'dbt_project_evaluator_integration_tests'
 version: '1.0.0'
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'dbt-learn'
+profile: 'integration_tests'
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
@@ -25,10 +25,10 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_modules"
 
 models:
-  pro_serv_dag_auditing_integration_tests:
+  dbt_project_evaluator_integration_tests:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
     +materialized: ephemeral
 
 tests:
-  pro_serv_dag_auditing:
+  dbt_project_evaluator:
     +enabled: false

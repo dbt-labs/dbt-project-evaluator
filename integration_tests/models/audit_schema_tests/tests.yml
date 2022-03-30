@@ -1,9 +1,9 @@
 version: 2
 
 models:
-  - name: stg_model_test_summary 
+  - name: int_model_test_summary 
     columns:
-      - name: node_id
+      - name: resource_name
         tests:
           - unique 
           - not_null 
