@@ -3,7 +3,7 @@
 {{
     config(
       unique_key='path',
-      target_schema=target.schema,
+      target_schema= var('snapshot_schema'),
       strategy='check',
       check_cols='all',
       invalidate_hard_deletes=True
