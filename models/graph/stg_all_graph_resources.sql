@@ -42,7 +42,7 @@ final as (
         model, 
         label, 
         sql, 
-        {% if target.type =='redshift' -%} "timestamp" {%- else -%} timestamp {%- endif -%},  
+        timestamp as timestamp,  
         source_name, 
         is_source_described, 
         loaded_at_field, 
