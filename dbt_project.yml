@@ -34,3 +34,6 @@ vars:
   documentation_coverage_target: 100
   test_coverage_target: 100
   max_depth_bigquery: 9
+  staging_folder_name: staging
+  intermediate_folder_name: intermediate
+  marts_folder_name: marts

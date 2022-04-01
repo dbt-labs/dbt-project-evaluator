@@ -29,6 +29,8 @@ __[Documentation](#documentation)__
 - [Undocumented Models](#undocumented-models)
 - [Documentation Coverage](#documentation-coverage)
 
+__[Structure](#structure)__
+
 ----
 
 # Package Documentation
@@ -344,6 +346,63 @@ Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/d
 function in the model's `.yml` entry.
 
 Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
+
+## Structure 
+
+### Staging Directories
+#### Model
+
+`fct_staging_directories` shows all cases where a staging model or source definition is NOT in the appropriate subdirectory.
+
+#### Reason to Flag
+
+Because we often work with multiple data sources, in our staging directory, we create one directory per source. 
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+    └── staging
+        ├── braintree
+        └── stripe
+```
+
+Each staging directory contains:
+- One staging model for each raw source table
+- One .yml file which contains source definitions, tests, and documentation
+- One .yml file which contains tests & documentation for models in the same directory
+
+This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
+
+#### How to Remediate
+
+For each resource flagged, move the file from the `current_file_path` to `change_file_path_to`. 
+
+#### Example
+
+Consider `stg_model_3` which is a staging model for `source_2.table_3`:
+<p align = "center">
+<img width="800" alt="A DAG showing source_2.table_3 as a parent of stg_model_3" src="https://user-images.githubusercontent.com/53586774/161316077-31d6f2a9-2c4a-4dd8-bd18-affe8b3a7367.png">
+
+But, `stg_model_3.sql` is inappropriately nested in the subdirectory `source_1`:
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+    └── staging
+        └── source_1
+            ├── stg_model_3.sql
+```
+
+This file should be moved into the subdirectory `source_2`:
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+    └── staging
+        ├── source_1
+        └── source_2
+            ├── stg_model_3.sql
+```
 -----
 
 ## Customization
