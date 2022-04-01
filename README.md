@@ -30,6 +30,8 @@ __[Documentation Coverage](#documentation-coverage)__
 
 __[Test Coverage](#test-coverage)__
 
+__[Structure Coverage](#structure-coverage)__
+
 __[DAG Issues](#dag-issues)__
 - [Direct Join to Source](#direct-join-to-source)
 - [Model Fanout](#model-fanout)
@@ -54,6 +56,63 @@ Tip: We recommend you add descriptions to at least 75 percent of your models.
 `fct_test_coverage` contains metrics pertaining to project-wide test coverage.
 
 Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+
+## Structure Coverage
+
+### Staging Directories
+###### Model
+
+`fct_staging_directories` shows all cases where a staging model or source definition is NOT in the appropriate subdirectory.
+
+###### Reason to Flag
+
+Because we often work with multiple data sources, in our staging directory, we create one directory per source. 
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+    └── staging
+        ├── braintree
+        └── stripe
+```
+
+Each staging directory contains:
+- One staging model for each raw source table
+- One .yml file which contains source definitions, tests, and documentation
+- One .yml file which contains tests & documentation for models in the same directory
+
+This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
+
+###### How to Remediate
+
+For each resource flagged, move the file from the `current_file_path` to `change_file_path_to`. 
+
+###### Example
+
+Consider `stg_model_3` which is a staging model for `source_2.table_3`:
+<p align = "center">
+<img width="800" alt="A DAG showing source_2.table_3 as a parent of stg_model_3" src="https://user-images.githubusercontent.com/53586774/161316077-31d6f2a9-2c4a-4dd8-bd18-affe8b3a7367.png">
+
+But, `stg_model_3.sql` is inappropriately nested in the subdirectory `source_1`:
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+    └── staging
+        └── source_1
+            ├── stg_model_3.sql
+```
+
+This file should be moved into the subdirectory `source_2`:
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+    └── staging
+        ├── source_1
+        └── source_2
+            ├── stg_model_3.sql
+```
 
 ## DAG Issues
 
