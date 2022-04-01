@@ -10,7 +10,7 @@ with direct_source_relationships as (
 multiple_sources_joined as (
     select
         child,
-        {{ listagg('parent', ', ', 'order by parent') }} as source_parents
+        {{ listagg('parent', "', '", 'order by parent') }} as source_parents
     from direct_source_relationships
     group by 1
     having count(*) > 1

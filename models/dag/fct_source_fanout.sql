@@ -11,7 +11,7 @@ with direct_source_relationships as (
 source_fanout as (
     select
         parent,
-        {{ listagg('child', ', ', 'order by child') }} as model_children
+        {{ listagg('child', "', '", 'order by child') }} as model_children
     from direct_source_relationships
     group by 1
     having count(*) > 1
