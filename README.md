@@ -114,7 +114,7 @@ predefine every query or quandary your team might have. So decide as a team wher
 ### Multiple Sources Joined
 #### Model
 
-`fct_multiple_sources_joined` shows each parent/child relationship where a model references more than one source.
+`fct_multiple_sources_joined` shows each instance where a model references more than one source.
 
 #### Graph Example
 
@@ -235,7 +235,7 @@ This behavior may be observed in the case of a manually defined reference table 
 ### Source Fanout
 #### Model
 
-`fct_source_fanout` shows each parent/child relationship where a source is the direct parent of multiple resources in the DAG.
+`fct_source_fanout` shows each instance where a source is the direct parent of multiple resources in the DAG.
 
 #### Graph Example
 
