@@ -22,9 +22,21 @@ final as (
         file_path, 
         case 
             when resource_type in ('test', 'source', 'metric', 'exposure') then null
-            when file_path like '{{ var("staging_folder_name") }}' or name like '%staging%' or name like '%stg%' then 'staging'
-            when file_path like '{{ var("intermediate_folder_name") }}' or name like '%intermediate%' or name like '%int%' then 'intermediate'
-            when file_path like '{{ var("marts_folder_name") }}' or name like '%fct%' or name like '%dim%' then 'marts'
+            when file_path like '{{ var("staging_folder_name") }}' 
+                {%- for prefix in var("staging_prefixes") -%}
+                or name like '%{{ prefix }}%'
+                {% endfor %}
+                then 'staging'
+            when file_path like '{{ var("intermediate_folder_name") }}' 
+                {%- for prefix in var("intermediate_prefixes") -%}
+                or name like '%{{ prefix }}%'
+                {% endfor %}
+                then 'intermediate'
+            when file_path like '{{ var("marts_folder_name") }}' 
+                {%- for prefix in var("marts_prefixes") -%}
+                or name like '%{{ prefix }}%'
+                {% endfor %}
+                then 'marts'
             else 'other' -- is this the catch-all that we want? what about the reports folder in our example DAG?
         end as model_type, 
         is_enabled, 
