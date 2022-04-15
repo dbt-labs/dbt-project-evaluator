@@ -7,9 +7,10 @@ tests as (
 final as (
 
     select 
-        resource_name
+        resource_name,
+        primary_key_tests_per_model
     from tests
-    where tests_per_model = 0
+    where primary_key_tests_per_model < 2
 
 )
 

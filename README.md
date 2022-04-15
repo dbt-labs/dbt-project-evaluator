@@ -22,7 +22,7 @@ __[DAG Issues](#dag-issues)__
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
-- [Untested Models](#untested-models)
+- [Models without Primary Key Tests](#untested-models)
 - [Test Coverage](#test-coverage)
 
 __[Documentation](#documentation)__
@@ -289,12 +289,12 @@ Post-refactor, your DAG should look like this:
   <img width="800" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
 ## Testing
-### Untested Models
+### Models without Primary Key tests
 
 #### Model
-`fct_untested_models` lists every model that has no tests applied.
+`fct_missing_primary_key_tests` lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
 #### Reason to Flag
-Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
+Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that don't enforce the grain of every model with primary key tests are a risk to the reliability and scalability of your project. 
 #### How to Remediate
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
 in the `tests` directory of you project. 

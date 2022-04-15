@@ -26,7 +26,9 @@ final as (
             when file_path like '{{ var("intermediate_folder_name") }}' or name like '%intermediate%' or name like '%int%' then 'intermediate'
             when file_path like '{{ var("marts_folder_name") }}' or name like '%fct%' or name like '%dim%' then 'marts'
             else 'other' -- is this the catch-all that we want? what about the reports folder in our example DAG?
-        end as model_type, 
+        end as model_type,
+        resource_name ilike any ('unique%') and resource_type = 'test' as is_not_null_test,
+        resource_name ilike any ('not_null%') and resource_type = 'test' as is_unique_test,
         is_enabled, 
         materialized, 
         on_schema_change, 
