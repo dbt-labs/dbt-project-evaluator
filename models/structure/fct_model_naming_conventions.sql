@@ -16,7 +16,7 @@ models as (
             when model_type = 'staging' then '{{ var("staging_prefixes") | join(", ") }}'
             when model_type = 'intermediate' then '{{ var("intermediate_prefixes") | join(", ") }}'
             when model_type = 'marts' then '{{ var("marts_prefixes") | join(", ") }}'
-            else null
+            else null -- TO DO: how do we handle additional model types? 
         end as appropriate_prefixes
     from all_graph_resources 
     where resource_type = 'model'
@@ -26,7 +26,6 @@ inappropriate_model_names as (
     select 
         resource_name,
         model_type,
-        prefix,
         appropriate_prefixes     
     from models
     where coalesce( {{ dbt_utils.position('prefix', 'appropriate_prefixes') }}, 0) = 0

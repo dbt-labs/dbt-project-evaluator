@@ -4,7 +4,7 @@ This package highlights areas of a dbt project that are misaligned with dbt Labs
 Specifically, this package tests
   1. your dbt DAG for modeling best practices
   2. your models for testing and documentation best practices
-  3. your dbt project for file structure best practices
+  3. your dbt project for file structure and naming best practices
 
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
@@ -30,6 +30,8 @@ __[Documentation](#documentation)__
 - [Documentation Coverage](#documentation-coverage)
 
 __[Structure](#structure)__
+- [Staging Directories](#staging-directories)
+- [Model Naming Conventions](#model-naming-conventions)
 
 ----
 
@@ -75,7 +77,7 @@ both a model and a source.
 #### Model
 
 `fct_model_fanout` shows all parents with more direct leaf children than the threshold for fanout 
-(determined by variable models_fanout_threshold, default 3)
+(determined by variable `models_fanout_threshold`, default 3)
   
 #### Graph Example
 
@@ -403,6 +405,38 @@ This file should be moved into the subdirectory `source_2`:
         └── source_2
             ├── stg_model_3.sql
 ```
+
+### Model Naming Conventions
+#### Model
+
+`fct_model_naming_conventions` shows all cases where a model does NOT have the appropriate prefix. 
+
+#### Reason to Flag
+
+Without appropriate naming conventions, a user querying the data warehouse might incorrectly assume the model type of a given relation. In order to explicitly name 
+the model type in the data warehouse, we recommend appropriately prefixing your models in dbt. 
+
+| Model Type   | Appropriate Prefixes |
+| ------------ | -------------------- |
+| Staging      | `stg_`               |
+| Intermediate | `int_`               |
+| Marts        | `fct_` or `dim_`     |
+
+#### How to Remediate
+
+For each model flagged, ensure the model type is defined and the model name is prefixed appropriately. 
+
+#### Example
+
+Consider `model_8` which is nested in the `marts` subdirectory:
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+        └── model_8.sql
+```
+
+This model should be renamed to either `fct_model_8` or `dim_model_8`.
 -----
 
 ## Customization
