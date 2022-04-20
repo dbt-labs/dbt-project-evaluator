@@ -54,8 +54,8 @@
 
     {% if execute and values %}
 
-        {% set trimed_first_row = values[0] %}
-        {% set first_value_in_list = trimed_first_row[1:-1:].split(',') %}
+        {% set first_row = values[0] %}
+        {% set first_value_in_list = first_row[1:-1:].split(',') %}
         {% set following_values_string  = '(' ~ values[1:] | join("), (") ~ ')' if values[1:] | length > 0 else None %}
 
         {% set struct_header = [] %}
