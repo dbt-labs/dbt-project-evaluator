@@ -46,7 +46,7 @@ final as (
         model, 
         label, 
         sql, 
-        timestamp,  
+        timestamp as timestamp,  
         source_name, -- NULL for non-source resources
         is_source_described, 
         loaded_at_field, 

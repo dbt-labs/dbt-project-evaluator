@@ -19,7 +19,7 @@
             {%- if node.depends_on.nodes|length == 0 -%}
 
                 {% set values_line %}
-                  ('{{ node.unique_id }}',NULL)
+                  cast('{{ node.unique_id }}' as {{ dbt_utils.type_string() }}),cast(NULL as {{ dbt_utils.type_string() }})
                 {% endset %}
                 {% do values.append(values_line) %}
 
@@ -28,7 +28,7 @@
                 {%- for parent in node.depends_on.nodes -%}
 
                     {% set values_line %}
-                    ('{{ node.unique_id }}','{{ parent }}')
+                      cast('{{ node.unique_id }}' as {{ dbt_utils.type_string() }}),cast('{{ parent }}' as {{ dbt_utils.type_string() }})
                     {% endset %}
                     {% do values.append(values_line) %}
 

@@ -7,7 +7,7 @@
     {% for node in nodes_list %}
 
           {% set values_line %}
-            (
+            
               '{{ node.unique_id }}', 
               '{{ node.name }}', 
               '{{ node.resource_type }}', 

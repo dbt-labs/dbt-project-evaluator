@@ -28,7 +28,7 @@
     #}
 
     {% set column_names_string = column_names | join(', ') %}
-    {% set values_string =  values | join(", ") %}
+    {% set values_string = '(' ~ values | join("), (") ~ ')' %}
 
         with cte as (
 
@@ -54,9 +54,9 @@
 
     {% if execute and values %}
 
-        {% set trimed_first_row = values[0] | trim  %}
-        {% set first_value_in_list = trimed_first_row[1:-1:].split(',') %}
-        {% set following_values_string =  values[1:] | join(", ") %}
+        {% set first_row = values[0] %}
+        {% set first_value_in_list = first_row[1:-1:].split(',') %}
+        {% set following_values_string  = '(' ~ values[1:] | join("), (") ~ ')' if values[1:] | length > 0 else None %}
 
         {% set struct_header = [] %}
         {% for column in column_names %}
@@ -88,7 +88,7 @@
 {% macro redshift__select_from_values(values,column_names) %}
 
     {# 
-    Redshift doe not support the values keyword
+    Redshift does not support the values keyword
     The Redshift implementation falls back on using the following syntax, which had poor performance on other DWs
     
     select 
@@ -107,7 +107,7 @@
     {%- for value in values %}
 
         {%- set all_statements_in_union = [] %}
-        {%- set individual_values = value.replace('(','').replace(')','').split(',') %}
+        {%- set individual_values = value.split(',') %}
 
         {%- for column_value in individual_values %}
 
