@@ -27,6 +27,7 @@ final as (
             when file_path like '{{ var("marts_folder_name") }}' or name like '%fct%' or name like '%dim%' then 'marts'
             else 'other' -- is this the catch-all that we want? what about the reports folder in our example DAG?
         end as model_type,
+        nullif(column_name, '') as column_name,
         resource_name ilike any ('unique%') and resource_type = 'test' as is_not_null_test,
         resource_name ilike any ('not_null%') and resource_type = 'test' as is_unique_test,
         -- need to find a way to check that these tests are on a single column
