@@ -5,6 +5,8 @@ seeds:
     config:
       column_types:
         resource_name: varchar
+        is_primary_key_tested: boolean
+        tests_per_model: number
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_missing_primary_key_tests')

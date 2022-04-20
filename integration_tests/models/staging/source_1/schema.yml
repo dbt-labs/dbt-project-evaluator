@@ -7,4 +7,10 @@ models:
       - name: id 
         description: hocus pocus
         tests:
-          - fake_unique
+          - unique
+  - name: stg_model_2
+    columns:
+      - name: id 
+        tests:
+          - unique
+          - not_null
