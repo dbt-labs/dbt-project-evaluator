@@ -18,7 +18,7 @@ models:
     tests:
       - is_empty
   - name: fct_multiple_sources_joined
-    description: "This table shows each parent/child relationship where a model references more than one source."
+    description: "This table shows each instance where a model references more than one source."
     tests:
       - is_empty
   - name: fct_rejoining_of_upstream_concepts
@@ -31,7 +31,7 @@ models:
     tests:
       - is_empty
   - name: fct_source_fanout
-    description: "This table shows each parent/child relationship where a source is the direct parent of multiple resources in the DAG."
+    description: "This table shows each instance where a source is the direct parent of multiple resources in the DAG."
     tests:
       - is_empty
   - name: fct_staging_dependent_on_marts_or_intermediate
