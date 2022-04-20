@@ -11,7 +11,7 @@ final as (
         sum(tests_per_model) as total_tests,
         sum(case when tests_per_model > 0 then 1 else 0 end) as tested_models,
         round(sum(case when tests_per_model > 0 then 1.0 else 0 end) * 100 / count(*), 2) as test_coverage_pct, 
-        round(sum(tests_per_model) / count(*), 4)  as test_to_model_ratio 
+        round(sum(tests_per_model)*1.000 / count(*)*1.000, 4)  as test_to_model_ratio 
     from test_counts
 )
 
