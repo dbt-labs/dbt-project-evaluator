@@ -421,6 +421,7 @@ the model type in the data warehouse, we recommend appropriately prefixing your 
 | Staging      | `stg_`               |
 | Intermediate | `int_`               |
 | Marts        | `fct_` or `dim_`     |
+| Ohter        | `rpt_`               |
 
 #### How to Remediate
 
