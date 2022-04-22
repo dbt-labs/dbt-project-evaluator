@@ -63,7 +63,7 @@ seeds:
           compare_columns:
             - parent
             - leaf_children
-  - name: test_fct_bending_connections
+  - name: test_fct_staging_dependent_on_staging
     config:
       column_types:
         PARENT: varchar
@@ -72,7 +72,7 @@ seeds:
         CHILD_MODEL_TYPE: varchar
     tests:
       - dbt_utils.equality:
-          compare_model: ref('fct_bending_connections')
+          compare_model: ref('fct_staging_dependent_on_staging')
           compare_columns:
             - parent
             - parent_model_type

@@ -20,6 +20,7 @@ __[DAG Issues](#dag-issues)__
 - [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
 - [Root Models](#root-models)
 - [Source Fanout](#source-fanout)
+- [Staging Models Dependent on Other Staging Models](#staging-models-dependent-on-other-staging-models)
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
@@ -37,24 +38,6 @@ __[Structure](#structure)__
 ----
 
 ## DAG Issues
-
-### Bending Connections
-#### Model
-
-`fct_bending_connections` ([source](models/dag/fct_bending_connections.sql)) shows each parent/child relationship where models in the staging layer are 
-dependent on each other.
-
-#### Graph Example
-
-`stg_model_1` is a parent of `stg_model_2`
-
-<img width="500" alt="A DAG showing stg_model_1 as a parent of stg_model_2 and int_model" src="https://user-images.githubusercontent.com/91074396/157698052-06654cb2-6a8d-45f8-a29a-7154d73edf59.png">
-
-#### Reason to Flag
-
-#### How to Remediate
-
-
 
 ### Direct Join to Source
 #### Model
@@ -248,6 +231,28 @@ This behavior may be observed in the case of a manually defined reference table 
 #### Reason to Flag
 
 #### How to Remediate
+
+### Staging Models Dependent on Other Staging Models
+#### Model
+
+`fct_staging_dependent_on_staging` ([source](models/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are 
+dependent on each other.
+
+#### Graph Example
+
+`stg_model_2` is a parent of `stg_model_4`.
+
+<img width="500" alt="A DAG showing stg_model_2 as a parent of stg_model_4." src="https://user-images.githubusercontent.com/53586774/164788355-4c6e58b5-21e0-45c6-bfde-af82952bb495.png">
+
+#### Reason to Flag
+
+This may indicate a change in naming is necessary, or that the child model should instead reference a source. 
+
+#### How to Remediate
+
+You should either change the model type of the `child` (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate `{{ source() }}`. 
+
+In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate direcory and update the file name to `int_model_4`.
 
 ### Unused Sources
 #### Model
