@@ -20,6 +20,7 @@ __[DAG Issues](#dag-issues)__
 - [Root Models](#root-models)
 - [Source Fanout](#source-fanout)
 - [Unused Sources](#unused-sources)
+- [Staging Models Dependent on Downstream Models](#staging-models-dependent-on-downstream-models)
 
 __[Testing](#testing)__
 - [Untested Models](#untested-models)
@@ -248,6 +249,49 @@ This behavior may be observed in the case of a manually defined reference table 
 #### Reason to Flag
 
 #### How to Remediate
+
+### Staging Models Dependent on Downstream Models
+#### Model
+
+`fct_staging_dependent_on_marts_or_intermediate` shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables. 
+  
+#### Graph Example
+
+
+
+#### Reason to Flag
+
+This likely represents a misnamed file. According to dbt best practices, staging models should only 
+select from source nodes. Dependence on downstream models indicates that this model may need to be either 
+renamed, or reconfigured to only select from source nodes. 
+  
+#### How to Remediate
+
+Rename the file in the `child` column to use to appropriate prefix, or change the models lineage
+by using pointing the staging model to the appropriate `{{ source() }}`. 
+
+### Staging Models Dependent on Downstream Models
+#### Model
+
+`fct_marts_or_intermediate_dependent_on_source` shows each downstream model (`marts` or `intermediate`) 
+that depends directly on a source node.
+  
+#### Graph Example
+
+
+
+#### Reason to Flag
+
+We very strongly believe that a staging model is the atomic unit of data modeling. Each staging 
+model bears a one-to-one relationship with the source data table it represents. It has the same 
+granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent 
+format. With that in mind, if a `marts` or `intermediate` type model joins directly to a `{{ source() }}` 
+node, there likely is a missing model that needs to be added.  
+  
+#### How to Remediate
+
+Add the reference to the appropriate `staging` model to maintain an abstraction layer between your raw data
+and your downstream data artifacts.
 
 ### Unused Sources
 #### Model
