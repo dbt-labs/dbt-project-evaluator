@@ -21,6 +21,7 @@ __[DAG Issues](#dag-issues)__
 - [Source Fanout](#source-fanout)
 - [Unused Sources](#unused-sources)
 - [Staging Models Dependent on Downstream Models](#staging-models-dependent-on-downstream-models)
+- [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
 
 __[Testing](#testing)__
 - [Untested Models](#untested-models)
@@ -270,7 +271,7 @@ renamed, or reconfigured to only select from source nodes.
 Rename the file in the `child` column to use to appropriate prefix, or change the models lineage
 by using pointing the staging model to the appropriate `{{ source() }}`. 
 
-### Staging Models Dependent on Downstream Models
+### Downstream Models Dependent on Source
 #### Model
 
 `fct_marts_or_intermediate_dependent_on_source` shows each downstream model (`marts` or `intermediate`) 
