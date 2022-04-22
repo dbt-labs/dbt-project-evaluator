@@ -1,6 +1,10 @@
 version: 2 
 
 models:
+  - name: fct_model_naming_conventions
+    description: This finds all cases where a model does NOT have the appropriate prefix. 
+    tests:
+      - is_empty
   - name: fct_staging_directories
     description: This finds all cases where a staging model or source definition is NOT in the appropriate subdirectory.
     tests:

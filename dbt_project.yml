@@ -37,3 +37,7 @@ vars:
   staging_folder_name: staging
   intermediate_folder_name: intermediate
   marts_folder_name: marts
+  staging_prefixes: ['stg_']
+  intermediate_prefixes: ['int_']
+  marts_prefixes: ['fct_', 'dim_']
+  other_prefixes: ['rpt_']
