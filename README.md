@@ -258,6 +258,7 @@ This behavior may be observed in the case of a manually defined reference table 
   
 #### Graph Example
 
+<img width="440" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png">
 
 
 #### Reason to Flag
@@ -279,6 +280,7 @@ that depends directly on a source node.
   
 #### Graph Example
 
+<img width="493" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
 
 
 #### Reason to Flag
