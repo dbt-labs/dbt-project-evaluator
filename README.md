@@ -1,16 +1,17 @@
 # dbt_project_evaluator
 
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
-Specifically, this package tests
-  1. your dbt DAG for modeling best practices
-  2. your models for testing and documentation best practices
-  3. your dbt project for file structure and naming best practices
+Specifically, this package tests for:
+  1. __[DAG Issues](#dag-issues)__ - your dbt DAG for modeling best practices
+  2. __[Testing](#testing)__ - your models for testing best practices
+  3. __[Documentation](#documentation)__ - your models for documentation best practices
+  3. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
 
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 ----
-## Contents
+## Package Documentation
 
 __[DAG Issues](#dag-issues)__
 - [Direct Join to Source](#direct-join-to-source)
@@ -35,7 +36,6 @@ __[Structure](#structure)__
 
 ----
 
-# Package Documentation
 ## DAG Issues
 
 ### Bending Connections
@@ -47,8 +47,8 @@ dependent on each other.
 #### Graph Example
 
 `stg_model_1` is a parent of `stg_model_2`
-<p align = "center">
-<img width="800" alt="A DAG showing stg_model_1 as a parent of stg_model_2 and int_model" src="https://user-images.githubusercontent.com/91074396/157698052-06654cb2-6a8d-45f8-a29a-7154d73edf59.png">
+
+<img width="500" alt="A DAG showing stg_model_1 as a parent of stg_model_2 and int_model" src="https://user-images.githubusercontent.com/91074396/157698052-06654cb2-6a8d-45f8-a29a-7154d73edf59.png">
 
 #### Reason to Flag
 
@@ -65,8 +65,8 @@ both a model and a source.
 #### Graph Example
 
 `model_2` is pulling in both a model and a source.
-<p align = "center">
-<img width="800" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
+
+<img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
   
 #### Reason to Flag
 
@@ -82,8 +82,8 @@ both a model and a source.
 #### Graph Example
 
 `fct_model` has three direct leaf children.
-<p align = "center">
-<img width="800" alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png">
+
+<img width="500" alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png">
 
 #### Reason to Flag
 
@@ -121,8 +121,8 @@ predefine every query or quandary your team might have. So decide as a team wher
 #### Graph Example
 
 `model_1` references two source tables.
-<p align = "center">
-<img width="800" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"> 
+
+<img width="500" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"> 
   
 #### Reason to Flag
 
@@ -162,12 +162,12 @@ transformations and avoid duplicate code, so that all downstream models can leve
 set of transformations.
 
 Post-refactor, your DAG should look like this:
-  <p align = "center">
-  <img width="800" alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png">
 
-  or if you want to use base_ models and keep stg_model_2 as is:
-  <p align = "center">
-  <img width="800" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
+<img width="500" alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png">
+
+or if you want to use base_ models and keep stg_model_2 as is:
+  
+<img width="500" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
 
 ### Rejoining of Upstream Concepts
 #### Model
@@ -179,8 +179,8 @@ where the model "in between" the parent and child has NO other downstream depend
 #### Graph Example
 
 `stg_model_1`, `int_model_4`, and `int_model_5` create a "loop" in the DAG. `int_model_4` has no other downstream dependencies other than `int_model_5`.
-<p align = "center">
-<img width="800" alt="A DAG showing three resources. A staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png">
+
+<img width="500" alt="A DAG showing three resources. A staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png">
 
 #### Reason to Flag
 
@@ -208,8 +208,8 @@ that relation, in which case, leave it.
 Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from `int_model_4` into a CTE within `int_model_5`, and swap all `{{ ref('int_model_4') }}` references to the new CTE(s).
   
 Post-refactor, your DAG should look like this:
-  <p align = "center">
-<img width="800" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
+
+<img width="500" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
 
 ### Root Models
 #### Model
@@ -219,8 +219,8 @@ Post-refactor, your DAG should look like this:
 #### Graph Example
 
 `model_4` has no direct parents
-<p align = "center">
-<img width="800" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
+
+<img width="500" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
   
 #### Reason to Flag
 
@@ -242,8 +242,8 @@ This behavior may be observed in the case of a manually defined reference table 
 #### Graph Example
 
 `source.table_1` has more than one direct child model.
-<p align = "center">
-<img width="800" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
+
+<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
  
 #### Reason to Flag
 
@@ -257,8 +257,8 @@ This behavior may be observed in the case of a manually defined reference table 
 #### Graph Example
 
 `source.table_4` isn't being referenced.
-<p align = "center">
-<img width="800" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png">
+
+<img width="500" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png">
 
 #### Reason to Flag
 
@@ -287,8 +287,8 @@ or any other nested information.
   ```
 
 Post-refactor, your DAG should look like this:
-  <p align = "center">
-  <img width="800" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
+
+<img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
 ## Testing
 ### Untested Models
@@ -382,8 +382,8 @@ For each resource flagged, move the file from the `current_file_path` to `change
 #### Example
 
 Consider `stg_model_3` which is a staging model for `source_2.table_3`:
-<p align = "center">
-<img width="800" alt="A DAG showing source_2.table_3 as a parent of stg_model_3" src="https://user-images.githubusercontent.com/53586774/161316077-31d6f2a9-2c4a-4dd8-bd18-affe8b3a7367.png">
+
+<img width="500" alt="A DAG showing source_2.table_3 as a parent of stg_model_3" src="https://user-images.githubusercontent.com/53586774/161316077-31d6f2a9-2c4a-4dd8-bd18-affe8b3a7367.png">
 
 But, `stg_model_3.sql` is inappropriately nested in the subdirectory `source_1`:
 ```
@@ -438,6 +438,7 @@ Consider `model_8` which is nested in the `marts` subdirectory:
 ```
 
 This model should be renamed to either `fct_model_8` or `dim_model_8`.
+
 -----
 
 ## Customization
