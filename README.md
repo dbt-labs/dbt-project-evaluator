@@ -41,7 +41,7 @@ __[Structure](#structure)__
 ### Bending Connections
 #### Model
 
-`fct_bending_connections` shows each parent/child relationship where models in the staging layer are 
+`fct_bending_connections` ([source](models/dag/fct_bending_connections.sql)) shows each parent/child relationship where models in the staging layer are 
 dependent on each other.
 
 #### Graph Example
@@ -59,7 +59,7 @@ dependent on each other.
 ### Direct Join to Source
 #### Model
 
-`fct_direct_join_to_source` shows each parent/child relationship where a model has a reference to 
+`fct_direct_join_to_source` ([source](models/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to 
 both a model and a source.
 
 #### Graph Example
@@ -76,7 +76,7 @@ both a model and a source.
 ### Model Fanout
 #### Model
 
-`fct_model_fanout` shows all parents with more direct leaf children than the threshold for fanout 
+`fct_model_fanout` ([source](models/dag/fct_model_fanout.sql)) shows all parents with more direct leaf children than the threshold for fanout 
 (determined by variable `models_fanout_threshold`, default 3)
   
 #### Graph Example
@@ -116,7 +116,7 @@ predefine every query or quandary your team might have. So decide as a team wher
 ### Multiple Sources Joined
 #### Model
 
-`fct_multiple_sources_joined` shows each instance where a model references more than one source.
+`fct_multiple_sources_joined` ([source](models/dag/fct_multiple_sources_joined.sql)) shows each instance where a model references more than one source.
 
 #### Graph Example
 
@@ -172,7 +172,7 @@ or if you want to use base_ models and keep stg_model_2 as is:
 ### Rejoining of Upstream Concepts
 #### Model
 
-`fct_rejoining_of_upstream_concepts` contains all cases where one of the parent's direct children 
+`fct_rejoining_of_upstream_concepts` ([source](models/dag/fct_rejoining_of_upstream_concepts.sql)) contains all cases where one of the parent's direct children 
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases 
 where the model "in between" the parent and child has NO other downstream dependencies.
 
@@ -214,7 +214,7 @@ Post-refactor, your DAG should look like this:
 ### Root Models
 #### Model
 
-`fct_root_models` shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project. 
+`fct_root_models` ([source](models/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project. 
 
 #### Graph Example
 
@@ -237,7 +237,7 @@ This behavior may be observed in the case of a manually defined reference table 
 ### Source Fanout
 #### Model
 
-`fct_source_fanout` shows each instance where a source is the direct parent of multiple resources in the DAG.
+`fct_source_fanout` ([source](models/dag/fct_source_fanout.sql)) shows each instance where a source is the direct parent of multiple resources in the DAG.
 
 #### Graph Example
 
@@ -252,7 +252,7 @@ This behavior may be observed in the case of a manually defined reference table 
 ### Unused Sources
 #### Model
 
-`fct_unused_sources` shows each source with 0 children.
+`fct_unused_sources` ([source](models/dag/fct_unused_sources.sql)) shows each source with 0 children.
   
 #### Graph Example
 
@@ -291,41 +291,49 @@ Post-refactor, your DAG should look like this:
 <img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
 ## Testing
-### Untested Models
 
+### Untested Models
 #### Model
-`fct_untested_models` lists every model that has no tests applied.
+`fct_untested_models` ([source](models/tests/fct_untested_models.sql)) lists every model that has no tests applied.
+
 #### Reason to Flag
 Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
+
 #### How to Remediate
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
 in the `tests` directory of you project. 
 
 Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+
 ### Test Coverage
 #### Model
-`fct_test_coverage` contains metrics pertaining to project-wide test coverage. 
+`fct_test_coverage` ([source](models/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage. 
 Specifically, this models measures:
 1. `test_coverage_pct`: the percentage of your models have minimum 1 test applied. 
 2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%. 
 You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+
 #### Reason to Flag
 We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
+
 #### How to Remediate
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
 in the `tests` directory of you project. 
 
 Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+
 ## Documentation
 
 ### Undocumented Models
 ### Model
-`fct_undocumented_models` lists every model with no description configured.
+`fct_undocumented_models` ([source](models/documentation/fct_undocumented_models.sql)) lists every model with no description configured.
+
 #### Reason to Flag
 Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
 The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
+
 #### How to Remediate
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
@@ -335,14 +343,16 @@ Tip: We recommend that every model in your dbt project has at minimum a model-le
 ### Documentation Coverage
 #### Model
 
-`fct_documentation_coverage` calculates the percent of enabled models in the project that have 
+`fct_documentation_coverage` ([source](models/documentation/fct_documentation_coverage.sql)) calculates the percent of enabled models in the project that have 
 a configured description.
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%. 
 You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+
 #### Reason to Flag
 Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
 The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
+
 #### How to Remediate
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
@@ -354,7 +364,7 @@ Tip: We recommend that every model in your dbt project has at minimum a model-le
 ### Staging Directories
 #### Model
 
-`fct_staging_directories` shows all cases where a staging model or source definition is NOT in the appropriate subdirectory.
+`fct_staging_directories` ([source](models/structure/fct_staging_directories.sql)) shows all cases where a staging model or source definition is NOT in the appropriate subdirectory.
 
 #### Reason to Flag
 
@@ -409,7 +419,7 @@ This file should be moved into the subdirectory `source_2`:
 ### Model Naming Conventions
 #### Model
 
-`fct_model_naming_conventions` shows all cases where a model does NOT have the appropriate prefix. 
+`fct_model_naming_conventions` ([source](models/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix. 
 
 #### Reason to Flag
 
