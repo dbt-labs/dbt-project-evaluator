@@ -259,7 +259,7 @@ This behavior may be observed in the case of a manually defined reference table 
 #### Graph Example
 
 `stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
-<img width="800" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png">
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png">
 
 
 #### Reason to Flag
@@ -274,7 +274,7 @@ Rename the file in the `child` column to use to appropriate prefix, or change th
 by pointing the staging model to the appropriate `{{ source() }}`. 
 
 After updating the model to use the appropriate `{{ source() }}` function, your graph should look like this:
-<img width="523" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png">
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png">
 
 
 ### Downstream Models Dependent on Source
@@ -286,7 +286,7 @@ that depends directly on a source node.
 #### Graph Example
 
 `fct_model_9`, a marts model, builds from `source_1.table_5` a source.
-<img width="800" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
 
 
 #### Reason to Flag
@@ -303,7 +303,7 @@ Add the reference to the appropriate `staging` model to maintain an abstraction 
 and your downstream data artifacts.
   
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
-<img width="800" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
 
 
 ### Unused Sources
