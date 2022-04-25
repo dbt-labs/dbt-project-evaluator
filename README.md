@@ -273,6 +273,10 @@ renamed, or reconfigured to only select from source nodes.
 Rename the file in the `child` column to use to appropriate prefix, or change the models lineage
 by pointing the staging model to the appropriate `{{ source() }}`. 
 
+After updating the model to use the appropriate `{{ source() }}` function, your graph should look like this:
+<img width="523" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png">
+
+
 ### Downstream Models Dependent on Source
 #### Model
 
@@ -297,6 +301,10 @@ node, there likely is a missing model that needs to be added.
 
 Add the reference to the appropriate `staging` model to maintain an abstraction layer between your raw data
 and your downstream data artifacts.
+  
+After refactoring your downstream model to select from the staging layer, your DAG should look like this:
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
+
 
 ### Unused Sources
 #### Model
