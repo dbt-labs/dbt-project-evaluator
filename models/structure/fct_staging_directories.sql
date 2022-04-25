@@ -23,8 +23,8 @@ staging_models as (
         child,
         child_file_path,
         parent_source_name,
-        left(child_file_path, len(child_file_path) - charindex('/',reverse(child_file_path)) + 1) as child_directory_path,
-        {{ dbt_utils.split_part('child_file_path', "'/'", -1) }} as child_file_name
+        replace(child_file_path, child || '.sql', '') as child_directory_path,
+        regexp_replace(child_file_path,'.*/','') as child_file_name
     from all_dag_relationships
     where parent_resource_type = 'source'
     and child_resource_type = 'model'
@@ -36,8 +36,8 @@ sources as (
         resource_name,
         file_path,
         source_name,
-        left(file_path, len(file_path) - charindex('/',reverse(file_path)) + 1) as current_directory_path,
-        {{ dbt_utils.split_part('file_path', "'/'", -1) }} as file_name
+        replace(file_path, resource_name || '.sql', '') as current_directory_path,
+        regexp_replace(file_path,'.*/','') as file_name
     from all_graph_resources
     where resource_type = 'source'
 ),
