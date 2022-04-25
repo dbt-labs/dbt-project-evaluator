@@ -10,61 +10,64 @@ with unioned as (
 
 ),
 
+naming_convention_prefixes as (
+    select * from {{ ref('stg_naming_convention_prefixes') }}
+), 
+
+naming_convention_folders as (
+    select * from {{ ref('stg_naming_convention_folders') }}
+), 
+
 final as (
 
     select
-        unique_id as resource_id, 
+        unioned.unique_id as resource_id, 
         case 
-            when resource_type = 'source' then source_name || '.' || name
+            when unioned.resource_type = 'source' then  {{ dbt_utils.concat(['unioned.source_name',"'.'",'unioned.name']) }}
             else name 
         end as resource_name, 
-        resource_type, 
-        file_path, 
-        case 
-            when resource_type in ('test', 'source', 'metric', 'exposure') then null
-            when file_path like '%{{ var("staging_folder_name") }}%' 
-                {%- for prefix in var("staging_prefixes") -%}
-                or name like '%{{ prefix }}%'
-                {% endfor %}
-                then 'staging'
-            when file_path like '%{{ var("intermediate_folder_name") }}%' 
-                {%- for prefix in var("intermediate_prefixes") -%}
-                or name like '%{{ prefix }}%'
-                {% endfor %}
-                then 'intermediate'
-            when file_path like '%{{ var("marts_folder_name") }}%' 
-                {%- for prefix in var("marts_prefixes") -%}
-                or name like '%{{ prefix }}%'
-                {% endfor %}
-                then 'marts'
-            else 'other' -- is this the catch-all that we want? what about the reports folder in our example DAG?
-        end as model_type, 
-        is_enabled, 
-        materialized, 
-        on_schema_change, 
-        database, 
-        schema, 
-        package_name, 
-        alias, 
-        is_described, 
-        exposure_type, 
-        maturity, 
-        url, 
-        metric_type, 
-        model, 
-        label, 
-        sql, 
-        timestamp as timestamp,  
-        source_name, -- NULL for non-source resources
-        is_source_described, 
-        loaded_at_field, 
-        loader, 
-        identifier
+        unioned.resource_type, 
+        unioned.file_path, 
+        naming_convention_prefixes.model_type as model_type_prefix,
+        naming_convention_folders.model_type as model_type_folder,
+        unioned.is_enabled, 
+        unioned.materialized, 
+        unioned.on_schema_change, 
+        unioned.database, 
+        unioned.schema, 
+        unioned.package_name, 
+        unioned.alias, 
+        unioned.is_described, 
+        unioned.exposure_type, 
+        unioned.maturity, 
+        unioned.url, 
+        unioned.metric_type, 
+        unioned.model, 
+        unioned.label, 
+        unioned.sql, 
+        unioned.timestamp as timestamp,  
+        unioned.source_name, -- NULL for non-source resources
+        unioned.is_source_described, 
+        unioned.loaded_at_field, 
+        unioned.loader, 
+        unioned.identifier
 
     from unioned
-    where coalesce(is_enabled, True) = True
-    and not(resource_type = 'model' and package_name = 'dbt_project_evaluator')
+    left join naming_convention_prefixes
+        on unioned.name like {{ dbt_utils.concat(['naming_convention_prefixes.prefix_value',"'_%'"]) }}
+
+    left join naming_convention_folders
+        on {{ dbt_utils.concat(["'/'",'unioned.file_path']) }} like {{ dbt_utils.concat(["'%/'",'naming_convention_folders.folder_name_value',"'/%'"]) }}
+    
+    where coalesce(unioned.is_enabled, True) = True
+    and not(unioned.resource_type = 'model' and unioned.package_name = 'dbt_project_evaluator')
 
 )
 
-select * from final
+select 
+    final.*, 
+    case 
+        when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
+        else coalesce(model_type_prefix, model_type_folder, 'other') 
+    end as model_type
+from final
