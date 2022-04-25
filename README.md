@@ -258,7 +258,8 @@ This behavior may be observed in the case of a manually defined reference table 
   
 #### Graph Example
 
-<img width="440" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png">
+`stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png">
 
 
 #### Reason to Flag
@@ -270,7 +271,7 @@ renamed, or reconfigured to only select from source nodes.
 #### How to Remediate
 
 Rename the file in the `child` column to use to appropriate prefix, or change the models lineage
-by using pointing the staging model to the appropriate `{{ source() }}`. 
+by pointing the staging model to the appropriate `{{ source() }}`. 
 
 ### Downstream Models Dependent on Source
 #### Model
@@ -280,7 +281,8 @@ that depends directly on a source node.
   
 #### Graph Example
 
-<img width="493" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
+`fct_model_9`, a marts model, builds from `source_1.table_5` a source.
+<img width="800" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
 
 
 #### Reason to Flag
