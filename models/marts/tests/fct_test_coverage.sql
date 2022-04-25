@@ -25,7 +25,8 @@ final as (
         round(sum(tests_per_model) / count(*), 4) as test_to_model_ratio
 
     from test_counts
-    left join conversion using (resource_name)
+    left join conversion
+    on test_counts.resource_name = conversion.resource_name
 )
 
 select * from final

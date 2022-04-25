@@ -24,7 +24,8 @@ final as (
         round(sum(is_described_marts_model) * 100 / count(is_marts_model), 2) as marts_documentation_coverage_pct
 
     from models
-    left join conversion using (resource_id)
+    left join conversion
+    on models.resource_id = conversion.resource_id
 )
 
 select * from final
