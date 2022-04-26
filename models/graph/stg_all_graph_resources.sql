@@ -30,7 +30,7 @@ joined as (
         unioned.file_path, 
         naming_convention_prefixes.model_type as model_type_prefix,
         naming_convention_folders.model_type as model_type_folder,
-        position(naming_convention_folders.model_type in unioned.file_path) as position_folder,  
+        {{ dbt_utils.position('naming_convention_folders.model_type','unioned.file_path') }} as position_folder,  
         unioned.is_enabled, 
         unioned.materialized, 
         unioned.on_schema_change, 
