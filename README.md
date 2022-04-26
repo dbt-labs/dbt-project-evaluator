@@ -1,16 +1,17 @@
 # dbt_project_evaluator
 
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
-Specifically, this package tests
-  1. your dbt DAG for modeling best practices
-  2. your models for testing and documentation best practices
-  3. your dbt project for file structure and naming best practices
+Specifically, this package tests for:
+  1. __[DAG Issues](#dag-issues)__ - your dbt DAG for modeling best practices
+  2. __[Testing](#testing)__ - your models for testing best practices
+  3. __[Documentation](#documentation)__ - your models for documentation best practices
+  3. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
 
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 ----
-## Contents
+## Package Documentation
 
 __[DAG Issues](#dag-issues)__
 - [Direct Join to Source](#direct-join-to-source)
@@ -19,6 +20,7 @@ __[DAG Issues](#dag-issues)__
 - [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
 - [Root Models](#root-models)
 - [Source Fanout](#source-fanout)
+- [Staging Models Dependent on Other Staging Models](#staging-models-dependent-on-other-staging-models)
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
@@ -35,38 +37,19 @@ __[Structure](#structure)__
 
 ----
 
-# Package Documentation
 ## DAG Issues
-
-### Bending Connections
-#### Model
-
-`fct_bending_connections` shows each parent/child relationship where models in the staging layer are 
-dependent on each other.
-
-#### Graph Example
-
-`stg_model_1` is a parent of `stg_model_2`
-<p align = "center">
-<img width="800" alt="A DAG showing stg_model_1 as a parent of stg_model_2 and int_model" src="https://user-images.githubusercontent.com/91074396/157698052-06654cb2-6a8d-45f8-a29a-7154d73edf59.png">
-
-#### Reason to Flag
-
-#### How to Remediate
-
-
 
 ### Direct Join to Source
 #### Model
 
-`fct_direct_join_to_source` shows each parent/child relationship where a model has a reference to 
+`fct_direct_join_to_source` ([source](models/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to 
 both a model and a source.
 
 #### Graph Example
 
 `model_2` is pulling in both a model and a source.
-<p align = "center">
-<img width="800" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
+
+<img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
   
 #### Reason to Flag
 
@@ -76,14 +59,14 @@ both a model and a source.
 ### Model Fanout
 #### Model
 
-`fct_model_fanout` shows all parents with more direct leaf children than the threshold for fanout 
+`fct_model_fanout` ([source](models/dag/fct_model_fanout.sql)) shows all parents with more direct leaf children than the threshold for fanout 
 (determined by variable `models_fanout_threshold`, default 3)
   
 #### Graph Example
 
 `fct_model` has three direct leaf children.
-<p align = "center">
-<img width="800" alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png">
+
+<img width="500" alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png">
 
 #### Reason to Flag
 
@@ -116,13 +99,13 @@ predefine every query or quandary your team might have. So decide as a team wher
 ### Multiple Sources Joined
 #### Model
 
-`fct_multiple_sources_joined` shows each instance where a model references more than one source.
+`fct_multiple_sources_joined` ([source](models/dag/fct_multiple_sources_joined.sql)) shows each instance where a model references more than one source.
 
 #### Graph Example
 
 `model_1` references two source tables.
-<p align = "center">
-<img width="800" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"> 
+
+<img width="500" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"> 
   
 #### Reason to Flag
 
@@ -162,25 +145,25 @@ transformations and avoid duplicate code, so that all downstream models can leve
 set of transformations.
 
 Post-refactor, your DAG should look like this:
-  <p align = "center">
-  <img width="800" alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png">
 
-  or if you want to use base_ models and keep stg_model_2 as is:
-  <p align = "center">
-  <img width="800" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
+<img width="500" alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png">
+
+or if you want to use base_ models and keep stg_model_2 as is:
+  
+<img width="500" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
 
 ### Rejoining of Upstream Concepts
 #### Model
 
-`fct_rejoining_of_upstream_concepts` contains all cases where one of the parent's direct children 
+`fct_rejoining_of_upstream_concepts` ([source](models/dag/fct_rejoining_of_upstream_concepts.sql)) contains all cases where one of the parent's direct children 
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases 
 where the model "in between" the parent and child has NO other downstream dependencies.
 
 #### Graph Example
 
 `stg_model_1`, `int_model_4`, and `int_model_5` create a "loop" in the DAG. `int_model_4` has no other downstream dependencies other than `int_model_5`.
-<p align = "center">
-<img width="800" alt="A DAG showing three resources. A staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png">
+
+<img width="500" alt="A DAG showing three resources. A staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png">
 
 #### Reason to Flag
 
@@ -208,19 +191,19 @@ that relation, in which case, leave it.
 Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from `int_model_4` into a CTE within `int_model_5`, and swap all `{{ ref('int_model_4') }}` references to the new CTE(s).
   
 Post-refactor, your DAG should look like this:
-  <p align = "center">
-<img width="800" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
+
+<img width="500" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
 
 ### Root Models
 #### Model
 
-`fct_root_models` shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project. 
+`fct_root_models` ([source](models/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project. 
 
 #### Graph Example
 
 `model_4` has no direct parents
-<p align = "center">
-<img width="800" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
+
+<img width="500" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
   
 #### Reason to Flag
 
@@ -237,28 +220,50 @@ This behavior may be observed in the case of a manually defined reference table 
 ### Source Fanout
 #### Model
 
-`fct_source_fanout` shows each instance where a source is the direct parent of multiple resources in the DAG.
+`fct_source_fanout` ([source](models/dag/fct_source_fanout.sql)) shows each instance where a source is the direct parent of multiple resources in the DAG.
 
 #### Graph Example
 
 `source.table_1` has more than one direct child model.
-<p align = "center">
-<img width="800" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
+
+<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
  
 #### Reason to Flag
 
 #### How to Remediate
 
+### Staging Models Dependent on Other Staging Models
+#### Model
+
+`fct_staging_dependent_on_staging` ([source](models/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are 
+dependent on each other.
+
+#### Graph Example
+
+`stg_model_2` is a parent of `stg_model_4`.
+
+<img width="500" alt="A DAG showing stg_model_2 as a parent of stg_model_4." src="https://user-images.githubusercontent.com/53586774/164788355-4c6e58b5-21e0-45c6-bfde-af82952bb495.png">
+
+#### Reason to Flag
+
+This may indicate a change in naming is necessary, or that the child model should instead reference a source. 
+
+#### How to Remediate
+
+You should either change the model type of the `child` (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate `{{ source() }}`. 
+
+In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate direcory and update the file name to `int_model_4`.
+
 ### Unused Sources
 #### Model
 
-`fct_unused_sources` shows each source with 0 children.
+`fct_unused_sources` ([source](models/dag/fct_unused_sources.sql)) shows each source with 0 children.
   
 #### Graph Example
 
 `source.table_4` isn't being referenced.
-<p align = "center">
-<img width="800" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png">
+
+<img width="500" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png">
 
 #### Reason to Flag
 
@@ -287,45 +292,53 @@ or any other nested information.
   ```
 
 Post-refactor, your DAG should look like this:
-  <p align = "center">
-  <img width="800" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
+
+<img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
 ## Testing
-### Untested Models
 
+### Untested Models
 #### Model
-`fct_untested_models` lists every model that has no tests applied.
+`fct_untested_models` ([source](models/tests/fct_untested_models.sql)) lists every model that has no tests applied.
+
 #### Reason to Flag
 Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
+
 #### How to Remediate
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
 in the `tests` directory of you project. 
 
 Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+
 ### Test Coverage
 #### Model
-`fct_test_coverage` contains metrics pertaining to project-wide test coverage. 
+`fct_test_coverage` ([source](models/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage. 
 Specifically, this models measures:
 1. `test_coverage_pct`: the percentage of your models have minimum 1 test applied. 
 2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%. 
 You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+
 #### Reason to Flag
 We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
+
 #### How to Remediate
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
 in the `tests` directory of you project. 
 
 Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+
 ## Documentation
 
 ### Undocumented Models
 ### Model
-`fct_undocumented_models` lists every model with no description configured.
+`fct_undocumented_models` ([source](models/documentation/fct_undocumented_models.sql)) lists every model with no description configured.
+
 #### Reason to Flag
 Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
 The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
+
 #### How to Remediate
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
@@ -335,14 +348,16 @@ Tip: We recommend that every model in your dbt project has at minimum a model-le
 ### Documentation Coverage
 #### Model
 
-`fct_documentation_coverage` calculates the percent of enabled models in the project that have 
+`fct_documentation_coverage` ([source](models/documentation/fct_documentation_coverage.sql)) calculates the percent of enabled models in the project that have 
 a configured description.
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%. 
 You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+
 #### Reason to Flag
 Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
 The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
+
 #### How to Remediate
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
@@ -354,7 +369,7 @@ Tip: We recommend that every model in your dbt project has at minimum a model-le
 ### Staging Directories
 #### Model
 
-`fct_staging_directories` shows all cases where a staging model or source definition is NOT in the appropriate subdirectory.
+`fct_staging_directories` ([source](models/structure/fct_staging_directories.sql)) shows all cases where a staging model or source definition is NOT in the appropriate subdirectory.
 
 #### Reason to Flag
 
@@ -382,8 +397,8 @@ For each resource flagged, move the file from the `current_file_path` to `change
 #### Example
 
 Consider `stg_model_3` which is a staging model for `source_2.table_3`:
-<p align = "center">
-<img width="800" alt="A DAG showing source_2.table_3 as a parent of stg_model_3" src="https://user-images.githubusercontent.com/53586774/161316077-31d6f2a9-2c4a-4dd8-bd18-affe8b3a7367.png">
+
+<img width="500" alt="A DAG showing source_2.table_3 as a parent of stg_model_3" src="https://user-images.githubusercontent.com/53586774/161316077-31d6f2a9-2c4a-4dd8-bd18-affe8b3a7367.png">
 
 But, `stg_model_3.sql` is inappropriately nested in the subdirectory `source_1`:
 ```
@@ -409,7 +424,7 @@ This file should be moved into the subdirectory `source_2`:
 ### Model Naming Conventions
 #### Model
 
-`fct_model_naming_conventions` shows all cases where a model does NOT have the appropriate prefix. 
+`fct_model_naming_conventions` ([source](models/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix. 
 
 #### Reason to Flag
 
@@ -438,6 +453,7 @@ Consider `model_8` which is nested in the `marts` subdirectory:
 ```
 
 This model should be renamed to either `fct_model_8` or `dim_model_8`.
+
 -----
 
 ## Customization
