@@ -18,7 +18,7 @@ naming_convention_folders as (
     select * from {{ ref('stg_naming_convention_folders') }}
 ), 
 
-final as (
+joined as (
 
     select
         unioned.unique_id as resource_id, 
@@ -30,6 +30,7 @@ final as (
         unioned.file_path, 
         naming_convention_prefixes.model_type as model_type_prefix,
         naming_convention_folders.model_type as model_type_folder,
+        position(naming_convention_folders.model_type in unioned.file_path) as position_folder,  
         unioned.is_enabled, 
         unioned.materialized, 
         unioned.on_schema_change, 
@@ -62,12 +63,20 @@ final as (
     where coalesce(unioned.is_enabled, True) = True
     and not(unioned.resource_type = 'model' and unioned.package_name = 'dbt_project_evaluator')
 
+), 
+
+final as (
+    select 
+        joined.*, 
+        case 
+            when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
+            else coalesce(model_type_prefix, model_type_folder, 'other') 
+        end as model_type,
+        row_number() over (partition by resource_id order by position_folder desc) as position_rk
+    from joined
 )
 
 select 
-    final.*, 
-    case 
-        when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-        else coalesce(model_type_prefix, model_type_folder, 'other') 
-    end as model_type
+    *
 from final
+where position_rk = 1
