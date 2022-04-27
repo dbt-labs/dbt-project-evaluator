@@ -61,14 +61,13 @@ both a model and a source.
 ### Downstream Models Dependent on Source
 #### Model
 
-`fct_marts_or_intermediate_dependent_on_source` shows each downstream model (`marts` or `intermediate`) 
+`fct_marts_or_intermediate_dependent_on_source` ([source](models/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`) 
 that depends directly on a source node.
   
 #### Graph Example
 
 `fct_model_9`, a marts model, builds from `source_1.table_5` a source.
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
-
 
 #### Reason to Flag
 
@@ -263,14 +262,13 @@ This behavior may be observed in the case of a manually defined reference table 
 ### Staging Models Dependent on Downstream Models
 #### Model
 
-`fct_staging_dependent_on_marts_or_intermediate` shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables. 
+`fct_staging_dependent_on_marts_or_intermediate` ([source](models/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables. 
   
 #### Graph Example
 
 `stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png">
-
 
 #### Reason to Flag
 
@@ -286,9 +284,6 @@ by pointing the staging model to the appropriate `{{ source() }}`.
 After updating the model to use the appropriate `{{ source() }}` function, your graph should look like this:
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png">
-
-
-
 
 ### Staging Models Dependent on Other Staging Models
 #### Model
