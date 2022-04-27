@@ -15,25 +15,27 @@ Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) f
 
 __[DAG Issues](#dag-issues)__
 - [Direct Join to Source](#direct-join-to-source)
+- [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
 - [Model Fanout](#model-fanout)
 - [Multiple Sources Joined](#multiple-sources-joined)
 - [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
 - [Root Models](#root-models)
 - [Source Fanout](#source-fanout)
+- [Staging Models Dependent on Downstream Models](#staging-models-dependent-on-downstream-models)
 - [Staging Models Dependent on Other Staging Models](#staging-models-dependent-on-other-staging-models)
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
-- [Untested Models](#untested-models)
 - [Test Coverage](#test-coverage)
+- [Untested Models](#untested-models)
 
 __[Documentation](#documentation)__
-- [Undocumented Models](#undocumented-models)
 - [Documentation Coverage](#documentation-coverage)
+- [Undocumented Models](#undocumented-models)
 
 __[Structure](#structure)__
-- [Staging Directories](#staging-directories)
 - [Model Naming Conventions](#model-naming-conventions)
+- [Staging Directories](#staging-directories)
 
 ----
 
@@ -56,6 +58,33 @@ both a model and a source.
 #### How to Remediate
 
 
+### Downstream Models Dependent on Source
+#### Model
+
+`fct_marts_or_intermediate_dependent_on_source` shows each downstream model (`marts` or `intermediate`) 
+that depends directly on a source node.
+  
+#### Graph Example
+
+`fct_model_9`, a marts model, builds from `source_1.table_5` a source.
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
+
+
+#### Reason to Flag
+
+We very strongly believe that a staging model is the atomic unit of data modeling. Each staging 
+model bears a one-to-one relationship with the source data table it represents. It has the same 
+granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent 
+format. With that in mind, if a `marts` or `intermediate` type model joins directly to a `{{ source() }}` 
+node, there likely is a missing model that needs to be added.  
+  
+#### How to Remediate
+
+Add the reference to the appropriate `staging` model to maintain an abstraction layer between your raw data
+and your downstream data artifacts.
+  
+After refactoring your downstream model to select from the staging layer, your DAG should look like this:
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
 ### Model Fanout
 #### Model
 
@@ -95,7 +124,6 @@ TODO: edit this line in 6 months after more progress is made on the metrics serv
 -->
 Your dbt project needs a defined end point! Until the metrics server comes to fruition, you cannot possibly
 predefine every query or quandary your team might have. So decide as a team where that line is and maintain it.
-
 ### Multiple Sources Joined
 #### Model
 
@@ -232,6 +260,36 @@ This behavior may be observed in the case of a manually defined reference table 
 
 #### How to Remediate
 
+### Staging Models Dependent on Downstream Models
+#### Model
+
+`fct_staging_dependent_on_marts_or_intermediate` shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables. 
+  
+#### Graph Example
+
+`stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
+
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png">
+
+
+#### Reason to Flag
+
+This likely represents a misnamed file. According to dbt best practices, staging models should only 
+select from source nodes. Dependence on downstream models indicates that this model may need to be either 
+renamed, or reconfigured to only select from source nodes. 
+  
+#### How to Remediate
+
+Rename the file in the `child` column to use to appropriate prefix, or change the models lineage
+by pointing the staging model to the appropriate `{{ source() }}`. 
+
+After updating the model to use the appropriate `{{ source() }}` function, your graph should look like this:
+
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png">
+
+
+
+
 ### Staging Models Dependent on Other Staging Models
 #### Model
 
@@ -296,20 +354,6 @@ Post-refactor, your DAG should look like this:
 <img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
 ## Testing
-
-### Untested Models
-#### Model
-`fct_untested_models` ([source](models/tests/fct_untested_models.sql)) lists every model that has no tests applied.
-
-#### Reason to Flag
-Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
-
-#### How to Remediate
-Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
-
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
-
 ### Test Coverage
 #### Model
 `fct_test_coverage` ([source](models/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage. 
@@ -329,22 +373,20 @@ in the `tests` directory of you project.
 
 Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
 
-## Documentation
-
-### Undocumented Models
-### Model
-`fct_undocumented_models` ([source](models/documentation/fct_undocumented_models.sql)) lists every model with no description configured.
+### Untested Models
+#### Model
+`fct_untested_models` ([source](models/tests/fct_untested_models.sql)) lists every model that has no tests applied.
 
 #### Reason to Flag
-Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
-The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
+Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
 
 #### How to Remediate
-Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
-function in the model's `.yml` entry.
+Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
+in the `tests` directory of you project. 
 
-Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
+Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
 
+## Documentation
 ### Documentation Coverage
 #### Model
 
@@ -363,9 +405,56 @@ Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/d
 function in the model's `.yml` entry.
 
 Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
+### Undocumented Models
+#### Model
+`fct_undocumented_models` ([source](models/documentation/fct_undocumented_models.sql)) lists every model with no description configured.
+
+#### Reason to Flag
+Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
+The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.
+
+#### How to Remediate
+Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
+function in the model's `.yml` entry.
+
+Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
+
 
 ## Structure 
+### Model Naming Conventions
+#### Model
 
+`fct_model_naming_conventions` ([source](models/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix. 
+
+#### Reason to Flag
+
+Without appropriate naming conventions, a user querying the data warehouse might incorrectly assume the model type of a given relation. In order to explicitly name 
+the model type in the data warehouse, we recommend appropriately prefixing your models in dbt. 
+
+| Model Type   | Appropriate Prefixes |
+| ------------ | -------------------- |
+| Staging      | `stg_`               |
+| Intermediate | `int_`               |
+| Marts        | `fct_` or `dim_`     |
+| Other        | `rpt_`               |
+
+#### How to Remediate
+
+For each model flagged, ensure the model type is defined and the model name is prefixed appropriately. 
+
+#### Example
+
+Consider `model_8` which is nested in the `marts` subdirectory:
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+        └── model_8.sql
+```
+
+This model should be renamed to either `fct_model_8` or `dim_model_8`.
+
+-----
 ### Staging Directories
 #### Model
 
@@ -421,40 +510,7 @@ This file should be moved into the subdirectory `source_2`:
             ├── stg_model_3.sql
 ```
 
-### Model Naming Conventions
-#### Model
 
-`fct_model_naming_conventions` ([source](models/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix. 
-
-#### Reason to Flag
-
-Without appropriate naming conventions, a user querying the data warehouse might incorrectly assume the model type of a given relation. In order to explicitly name 
-the model type in the data warehouse, we recommend appropriately prefixing your models in dbt. 
-
-| Model Type   | Appropriate Prefixes |
-| ------------ | -------------------- |
-| Staging      | `stg_`               |
-| Intermediate | `int_`               |
-| Marts        | `fct_` or `dim_`     |
-| Other        | `rpt_`               |
-
-#### How to Remediate
-
-For each model flagged, ensure the model type is defined and the model name is prefixed appropriately. 
-
-#### Example
-
-Consider `model_8` which is nested in the `marts` subdirectory:
-```
-├── dbt_project.yml
-└── models
-    ├── marts
-        └── model_8.sql
-```
-
-This model should be renamed to either `fct_model_8` or `dim_model_8`.
-
------
 
 ## Customization
 ### Disabling models
