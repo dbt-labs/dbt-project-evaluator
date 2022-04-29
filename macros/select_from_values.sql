@@ -4,11 +4,11 @@
         {{ return(adapter.dispatch('select_from_values')(values, column_names)) }}
     {% else %} -- if values is an empty list, return an empty table
         {% set null_values -%}
-        (
+        
             {% for column in column_names %}
             NULL{% if not loop.last %},{% endif %}
             {% endfor %}
-        )
+        
         {%- endset %}
 
         -- Creates a one-record table with NULL for every column. Then, filters out the NULL records so the final table is empty.

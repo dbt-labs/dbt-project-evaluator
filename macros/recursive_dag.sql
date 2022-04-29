@@ -20,11 +20,13 @@ all_relationships (
     parent,
     parent_resource_type,
     parent_model_type,
+    parent_source_name,
     parent_file_path,
     child_id,
     child,
     child_resource_type,
     child_model_type,
+    child_source_name,
     child_file_path,
     distance,
     path
