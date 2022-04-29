@@ -1,4 +1,4 @@
-# dbt-project-evaluator v0.0.1
+# dbt-project-evaluator v0.1.0
 
 ## New features
 All of them!
