@@ -1,8 +1,6 @@
 -- all models with inappropriate (or lack of) pre-fix
 -- ensure dbt project has consistent naming conventions
 
--- TO DO: how to handle base models?
-
 with all_graph_resources as (
     select * from {{ ref('stg_all_graph_resources') }}
 ),
@@ -17,7 +15,7 @@ models as (
             when model_type = 'intermediate' then '{{ var("intermediate_prefixes") | join(", ") }}'
             when model_type = 'marts' then '{{ var("marts_prefixes") | join(", ") }}'
             when model_type = 'other' then '{{ var("other_prefixes") | join(", ") }}'
-            else null -- TO DO: how do we handle additional model types? 
+            else null -- TO DO: how do we handle additional model types? (example: "base" or "report")
         end as appropriate_prefixes
     from all_graph_resources 
     where resource_type = 'model'

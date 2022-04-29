@@ -36,6 +36,7 @@ agg_test_relationships as (
 final as (
     select 
         all_graph_resources.resource_name, 
+        all_graph_resources.model_type,
         coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as is_primary_key_tested,
         coalesce(agg_test_relationships.tests_per_model, 0) as tests_per_model
     from all_graph_resources

@@ -6,7 +6,7 @@ with direct_model_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
     and parent_resource_type = 'model'
-    and child_resource_type = 'model' --TO DO: pull out these common starter CTEs into int_ / ephemeral models
+    and child_resource_type = 'model'
 ),
 final as (
     select

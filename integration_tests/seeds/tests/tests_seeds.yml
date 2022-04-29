@@ -19,6 +19,7 @@ seeds:
         tested_models: decimal
         test_coverage_pct: float
         test_to_model_ratio: float
+        marts_test_coverage_pct: float
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_test_coverage')
@@ -28,3 +29,4 @@ seeds:
             - tested_models
             - test_coverage_pct
             - test_to_model_ratio
+            - marts_test_coverage_pct
