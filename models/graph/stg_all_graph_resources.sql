@@ -42,7 +42,6 @@ final as (
         nullif(column_name, '') as column_name,
         resource_name ilike any ('unique%') and resource_type = 'test' as is_not_null_test,
         resource_name ilike any ('not_null%') and resource_type = 'test' as is_unique_test,
-        -- need to find a way to check that these tests are on a single column
         is_enabled, 
         materialized, 
         on_schema_change, 
