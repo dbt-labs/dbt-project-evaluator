@@ -2,7 +2,7 @@ This is a:
 - [ ] bug fix PR with no breaking changes
 - [ ] new functionality
 
-## Link to Closed Issue 
+## Link to Issue 
 <!---
 Include this section if you are closing an open issue
 e.g. 
