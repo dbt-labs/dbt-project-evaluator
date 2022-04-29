@@ -26,7 +26,7 @@ __[DAG Issues](#dag-issues)__
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
-- [Models without Primary Key Tests](#untested-models)
+- [Models without Primary Key Tests](#models-without-primary-key-tests)
 - [Test Coverage](#test-coverage)
 
 __[Documentation](#documentation)__
@@ -369,19 +369,6 @@ You can set your own threshold by overriding the `test_coverage_target` variable
 
 #### Reason to Flag
 We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
-
-#### How to Remediate
-Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
-
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
-
-### Untested Models
-#### Model
-`fct_untested_models` ([source](models/tests/fct_untested_models.sql)) lists every model that has no tests applied.
-
-#### Reason to Flag
-Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
 
 #### How to Remediate
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
