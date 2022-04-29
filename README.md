@@ -26,12 +26,8 @@ __[DAG Issues](#dag-issues)__
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
-<<<<<<< HEAD
 - [Models without Primary Key Tests](#untested-models)
-=======
->>>>>>> main
 - [Test Coverage](#test-coverage)
-- [Untested Models](#untested-models)
 
 __[Documentation](#documentation)__
 - [Documentation Coverage](#documentation-coverage)
