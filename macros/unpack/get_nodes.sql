@@ -21,7 +21,7 @@
               '{{ node.alias }}',
               cast('{{ is_not_empty_string(node.description) | trim }}' as boolean),
               '{{ "" if not node.column_name else node.column_name }}'
-            )
+            
         {% endset %}
         {% do values.append(values_line) %}
 
