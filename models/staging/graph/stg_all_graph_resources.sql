@@ -63,7 +63,7 @@ final as (
 
     from unioned
     where coalesce(is_enabled, True) = True
-    and not(resource_type = 'model' and package_name = 'dbt_project_evaluator')
+    and package_name != 'dbt_project_evaluator'
 
 )
 
