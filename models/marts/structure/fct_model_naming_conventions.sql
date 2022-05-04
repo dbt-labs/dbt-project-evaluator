@@ -1,8 +1,6 @@
 -- all models with inappropriate (or lack of) pre-fix
 -- ensure dbt project has consistent naming conventions
 
--- TO DO: how to handle base models?
-
 with all_graph_resources as (
     select * from {{ ref('stg_all_graph_resources') }}
 ),

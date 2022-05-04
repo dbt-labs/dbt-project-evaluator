@@ -1,10 +1,6 @@
 version: 2
 
 models:
-  - name: fct_bending_connections
-    description: "This table shows each parent/child relationship where models in the staging layer are dependent on each other."
-    tests:
-      - is_empty 
   - name: fct_direct_join_to_source
     description: "This table shows each parent/child relationship where a model has a reference to both a model and a source."
     tests:
@@ -38,6 +34,10 @@ models:
     description: "This table shows each parent/child relationship where models in the staging layer are dependent on models in the marts and/or intermediate layer."
     tests:
       - is_empty
+  - name: fct_staging_dependent_on_staging
+    description: "This table shows each parent/child relationship where models in the staging layer are dependent on each other."
+    tests:
+      - is_empty 
   - name: fct_unused_sources
     description: "This table shows each source with 0 children."
     tests:

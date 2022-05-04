@@ -21,8 +21,9 @@ agg_test_relationships as (
 ),
 
 final as (
-    select 
-        all_graph_resources.resource_name, 
+    select
+        all_graph_resources.resource_name,
+        all_graph_resources.model_type,
         coalesce(agg_test_relationships.tests_per_model, 0) as tests_per_model
     from all_graph_resources
     left join agg_test_relationships

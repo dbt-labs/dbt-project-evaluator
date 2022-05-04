@@ -58,4 +58,4 @@ final as (
 )
 
 select * from final
-where is_loop_independent -- TO DO: decide if we want to include loops where the "in between" mode is has other downstream children
+where is_loop_independent
