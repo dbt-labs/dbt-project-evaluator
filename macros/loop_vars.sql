@@ -18,6 +18,7 @@
 {%- if sql_query -%}
 {{ sql_query | join('union all') }}
 {%- else -%}
-select '' as var_name, '' as var_value
+select '' as var_name, null as var_value
+where var_value is not null
 {%- endif -%}
 {% endmacro %}
