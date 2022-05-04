@@ -4,10 +4,7 @@
 -- TO DO: how to handle base models?
 
 with all_graph_resources as (
-    select 
-        *,
-        {{ dbt_utils.split_part('resource_name', "'_'", 1) }}||'_' as prefix
-    from {{ ref('stg_all_graph_resources') }}
+    select * from {{ ref('stg_all_graph_resources') }}
 ),
 
 naming_convention_prefixes as (
@@ -25,7 +22,7 @@ appropriate_prefixes as (
 models as (
     select
         all_graph_resources.resource_name,
-        {{ dbt_utils.split_part('all_graph_resources.resource_name', "'_'", 1) }}||'_' as prefix,
+        all_graph_resources.prefix,
         all_graph_resources.model_type,
         naming_convention_prefixes.prefix_value
     from all_graph_resources 
@@ -44,7 +41,7 @@ inappropriate_model_names as (
     from models
     left join appropriate_prefixes
         on models.model_type = appropriate_prefixes.model_type
-    where prefix_value is null
+    where models.prefix_value is null
 
 )
 
