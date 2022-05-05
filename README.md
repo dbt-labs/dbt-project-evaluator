@@ -55,9 +55,18 @@ both a model and a source.
 
 #### Reason to Flag
 
+We highly recommend having a one-to-one relationship between sources and their corresponding `staging` model, and not having any other model reading from the source. Those `staging` models are then the ones read from by the other downstream models.
+
+This allows renaming your columns and doing minor transformation on your source data only once and being consistent
+across all the models that will consume the source data.
 #### How to Remediate
 
+In our example, we would want to:
+1. create a `staging` model for our source data if it doesn't exist already 
+2. and join this `staging` model to other ones to create our downstream transformation instead of using the source
 
+After refactoring your downstream model to select from the staging layer, your DAG should look like this: 
+<img width="500" alt="DAG showing two models joining into a new model" src="https://todo.png">
 ### Downstream Models Dependent on Source
 #### Model
 
