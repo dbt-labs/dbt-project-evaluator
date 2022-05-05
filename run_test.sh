@@ -10,3 +10,5 @@ if [[ ! -f $VENV ]]; then
 fi
 
 . $VENV
+
+# Setup and run the actual tests here
