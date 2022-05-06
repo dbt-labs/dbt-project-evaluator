@@ -259,7 +259,7 @@ This behavior may be observed in the case of a manually defined reference table 
 
 `source.table_1` has more than one direct child model.
 
-<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
+<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png">
 
 #### Reason to Flag
 
@@ -270,7 +270,7 @@ Each source node should be referenced by a single model that performs basic oper
 Create a staging model which references the source and cleans the raw data (e.g. renaming, recasting). Any models referencing the source directly should be refactored to point towards the staging model instead.
 
 After refactoring the above example, the DAG would look something like this:
-<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/165785391-a578457b-7719-4bee-b51a-7a94c445ba20.png">
+<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png">
 
 ### Staging Models Dependent on Downstream Models
 #### Model
