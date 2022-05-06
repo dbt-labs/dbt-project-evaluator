@@ -49,9 +49,9 @@ both a model and a source.
 
 #### Graph Example
 
-`model_2` is pulling in both a model and a source.
+`int_model_4` is pulling in both a model and a source.
 
-<img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
+<img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png">
 
 #### Reason to Flag
 
@@ -59,6 +59,7 @@ We highly recommend having a one-to-one relationship between sources and their c
 
 This allows renaming your columns and doing minor transformation on your source data only once and being consistent
 across all the models that will consume the source data.
+
 #### How to Remediate
 
 In our example, we would want to:
@@ -66,7 +67,9 @@ In our example, we would want to:
 2. and join this `staging` model to other ones to create our downstream transformation instead of using the source
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this: 
-<img width="500" alt="DAG showing two models joining into a new model" src="https://todo.png">
+
+<img width="500" alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png">
+
 ### Downstream Models Dependent on Source
 #### Model
 
