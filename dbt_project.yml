@@ -31,6 +31,8 @@ models:
         intermediate:
           int_direct_relationships:
             +materialized: "{{ 'table' if target.type == 'bigquery' else 'view' }}"
+        stg_all_graph_resources:
+          +materialized: table
 
 vars:
   documentation_coverage_target: 100
