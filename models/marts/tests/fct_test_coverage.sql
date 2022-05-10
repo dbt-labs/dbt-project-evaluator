@@ -22,7 +22,7 @@ final as (
         sum(is_tested_model) as tested_models,
         round(sum(is_tested_model) * 100.0 / count(*), 2) as test_coverage_pct,
         round(sum(is_tested_marts_model) * 100.0 / count(is_marts_model), 2) as marts_test_coverage_pct,
-        round(sum(tests_per_model) / count(*), 4) as test_to_model_ratio
+        round(sum(tests_per_model) * 1.0 / count(*), 4) as test_to_model_ratio
 
     from test_counts
     left join conversion
