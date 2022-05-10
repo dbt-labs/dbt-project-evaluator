@@ -30,7 +30,14 @@ models:
       graph:
         intermediate:
           int_direct_relationships:
-            +materialized: "{{ 'table' if target.type == 'bigquery' else 'view' }}"
+            # required for BigQuery and Redshift for performance/memory reasons
+            +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
+        stg_naming_convention_folders:
+          # required for Redshift because listagg runs only on tables
+          +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
+        stg_naming_convention_prefixes:
+          # required for Redshift because listagg runs only on tables
+          +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
         stg_all_graph_resources:
           +materialized: table
 
