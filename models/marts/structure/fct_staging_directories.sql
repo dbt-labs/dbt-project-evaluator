@@ -23,7 +23,7 @@ staging_models as (
         child,
         child_file_path,
         parent_source_name,
-        replace(child_file_path, child || '.sql', '') as child_directory_path,
+        {{ dbt_utils.replace("child_file_path", "child" ~ " || '.sql'", "''") }} as child_directory_path,
         regexp_replace(child_file_path,'.*/','') as child_file_name
     from all_dag_relationships
     where parent_resource_type = 'source'
