@@ -5,30 +5,41 @@ with all_graph_resources as (
     select * from {{ ref('stg_all_graph_resources') }}
 ),
 
+naming_convention_prefixes as (
+    select * from {{ ref('stg_naming_convention_prefixes') }}
+), 
+
+appropriate_prefixes as (
+    select 
+        model_type, 
+        {{ dbt_utils.listagg('prefix_value', "', '", 'order by prefix_value') }} as appropriate_prefixes
+    from naming_convention_prefixes
+    group by model_type
+), 
+
 models as (
     select
-        resource_name,
-        {{ dbt_utils.split_part('resource_name', "'_'", 1) }}||'_' as prefix,
-        model_type,
-        case 
-            when model_type = 'staging' then '{{ var("staging_prefixes") | join(", ") }}'
-            when model_type = 'intermediate' then '{{ var("intermediate_prefixes") | join(", ") }}'
-            when model_type = 'marts' then '{{ var("marts_prefixes") | join(", ") }}'
-            when model_type = 'other' then '{{ var("other_prefixes") | join(", ") }}'
-            else null -- TO DO: how do we handle additional model types? (example: "base" or "report")
-        end as appropriate_prefixes
+        all_graph_resources.resource_name,
+        all_graph_resources.prefix,
+        all_graph_resources.model_type,
+        naming_convention_prefixes.prefix_value
     from all_graph_resources 
+    left join naming_convention_prefixes
+        on all_graph_resources.model_type = naming_convention_prefixes.model_type
+        and all_graph_resources.prefix = naming_convention_prefixes.prefix_value
     where resource_type = 'model'
 ),
 
 inappropriate_model_names as (
     select 
-        resource_name,
-        prefix,
-        model_type,
-        appropriate_prefixes
+        models.resource_name,
+        models.prefix,
+        models.model_type,
+        appropriate_prefixes.appropriate_prefixes
     from models
-    where coalesce( {{ dbt_utils.position('prefix', 'appropriate_prefixes') }}, 0) = 0
+    left join appropriate_prefixes
+        on models.model_type = appropriate_prefixes.model_type
+    where models.prefix_value is null
 
 )
 

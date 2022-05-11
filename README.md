@@ -7,6 +7,8 @@ Specifically, this package tests for:
   3. __[Documentation](#documentation)__ - your models for documentation best practices
   3. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
 
+In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
+
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
@@ -36,6 +38,10 @@ __[Documentation](#documentation)__
 __[Structure](#structure)__
 - [Model Naming Conventions](#model-naming-conventions)
 - [Staging Directories](#staging-directories)
+
+__[Querying the DAG with SQL](#querying-the-dag-with-sql)__
+
+__[Limitations](#limitations)__
 
 ----
 
@@ -305,7 +311,7 @@ This may indicate a change in naming is necessary, or that the child model shoul
 
 You should either change the model type of the `child` (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate `{{ source() }}`.
 
-In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate direcory and update the file name to `int_model_4`.
+In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate directory and update the file name to `int_model_4`.
 
 ### Unused Sources
 #### Model
@@ -540,6 +546,25 @@ vars:
     test_coverage_target: 75
 
 ```
+
+----
+
+## Querying the DAG with SQL
+
+The model `int_all_dag_relationships`, created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.
+
+Building additional models and snapshots on top of this model could allow:
+- creating a dashboard that provides 
+  - a list of all the sources used by a given exposure
+  - a list of all the exposures or metrics using a given source
+  - the dependencies between different models
+- building metrics/KPIs on top of a dbt project
+  - evolution of the number of models over time
+  - evolution of the number of metrics and exposures over time 
+- getting insights on potential refactoring work
+  - looking at the longest "chains" of models in a project
+  - reviewing models with many/few direct dependents
+  - identifying potential bottlenecks
 
 ----
 ## Limitations
