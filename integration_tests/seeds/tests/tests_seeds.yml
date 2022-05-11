@@ -2,10 +2,6 @@ version: 2
 
 seeds:
   - name: test_fct_untested_models
-    config:
-      column_types:
-        resource_name: varchar
-        model_type: varchar
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_untested_models')
