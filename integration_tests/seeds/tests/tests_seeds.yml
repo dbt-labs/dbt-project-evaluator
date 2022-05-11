@@ -2,24 +2,11 @@ version: 2
 
 seeds:
   - name: test_fct_missing_primary_key_tests
-    config:
-      column_types:
-        resource_name: varchar
-        is_primary_key_tested: boolean
-        tests_per_model: number
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_missing_primary_key_tests')
 
   - name: test_fct_test_coverage
-    config:
-      column_types:
-        total_models: decimal
-        total_tests: decimal
-        tested_models: decimal
-        test_coverage_pct: float
-        test_to_model_ratio: float
-        marts_test_coverage_pct: float
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_test_coverage')
