@@ -56,7 +56,12 @@ inappropriate_subdirectories_sources as (
 inappropriate_subdirectories_staging as (
     select distinct -- must do distinct to avoid duplicates when staging model has multiple paths to a given source
         child as resource_name,
-        child_file_path as current_file_path,
+        case
+            when {{ dbt_utils.position("'models/'", "child_file_path") }} = 1
+                then {{ dbt_utils.replace("child_file_path", "'models/'", "''") }}
+            else child_file_path
+        end as current_file_path,
+
         '{{ var("staging_folder_name") }}' || '/' || parent_source_name || '/' || child_file_name as change_file_path_to
     from staging_models
     where child_directory_path not like '%' || parent_source_name || '%'
