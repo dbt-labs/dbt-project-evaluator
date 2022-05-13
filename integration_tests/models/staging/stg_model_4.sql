@@ -1,1 +1,1 @@
-{{ ref('stg_model_2') }}
+select '{{ ref('stg_model_2') }}' as model

@@ -5,12 +5,12 @@ models:
     columns:
       - name: id
         tests:
-          - unique
-          - not_null
+          - fake_unique
+          - fake_not_null
 
   - name: int_model_4
     columns:
       - name: id
         tests:
-          - unique
-          - not_null
+          - fake_unique
+          - fake_not_null
