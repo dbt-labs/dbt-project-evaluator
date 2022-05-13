@@ -11,7 +11,6 @@
               '{{ node.unique_id }}',
               '{{ node.name }}',
               '{{ node.resource_type }}',
-              --'{{ node.path }}',
               '{{ node.original_file_path }}',
               cast('{{ node.config.enabled | trim }}' as boolean),
               '{{ node.config.materialized }}',
