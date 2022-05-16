@@ -10,6 +10,6 @@ models:
     tests:
       - is_empty
   - name: fct_tests_directories
-    description: This finds all cases where the yml file for model tests is NOT in the appropriate subdirectory (i.e. the same subdirectory as the corresponding model).
+    description: This finds all cases where the yml file for model tests is NOT in the same subdirectory as the corresponding model.
     tests:
       - is_empty
