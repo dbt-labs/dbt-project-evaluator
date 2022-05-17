@@ -3,7 +3,7 @@
 {%- endmacro %}
 
 {% macro default__array(inputs) -%}
-    [ {{ inputs }} ]
+    array[ {{ inputs }} ]
 {%- endmacro %}
 
 {% macro snowflake__array(inputs) -%}
@@ -12,4 +12,8 @@
 
 {% macro redshift__array(inputs) -%}
     array( {{ inputs }} )
+{%- endmacro %}
+
+{% macro bigquery__array(inputs) -%}
+    [ {{ inputs }} ]
 {%- endmacro %}
