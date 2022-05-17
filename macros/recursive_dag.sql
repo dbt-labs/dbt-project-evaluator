@@ -93,22 +93,32 @@ with direct_relationships as (
      where resource_type <> 'test'
 )
 
-, cte_0 as (
+-- must do distinct prior to creating array because BigQuery doesn't support distinct on array type
+, get_distinct as (
     select distinct
         resource_id as parent_id,
         resource_id as child_id,
-        0 as distance,
-        {{ create_array(resource_name) }} as path
+        resource_name
     from direct_relationships
 )
 
+, cte_0 as (
+    select 
+        parent_id,
+        child_id,
+        0 as distance,
+        {{ create_array("resource_name") }} as path
+    from get_distinct
+)
+
 {% for i in range(1,max_depth) %}
+{% set prev_cte_path %}cte_{{ i - 1 }}.path{% endset %}
 , cte_{{i}} as (
-    select distinct
+    select 
         cte_{{i - 1}}.parent_id as parent_id,
         direct_relationships.resource_id as child_id,
         cte_{{i - 1}}.distance+1 as distance, 
-        {{ array_append(cte_(i - 1).path, direct_relationships.resource_name) }} as path
+        {{ array_append(prev_cte_path, "direct_relationships.resource_name") }} as path
 
         from direct_relationships
             inner join cte_{{i - 1}}
