@@ -28,6 +28,10 @@ models:
         +materialized: table
     staging:
       graph:
+        base__nodes:
+          +materialized: table
+        base__node_relationships:
+          +materialized: table
         intermediate:
           int_direct_relationships:
             # required for BigQuery and Redshift for performance/memory reasons
