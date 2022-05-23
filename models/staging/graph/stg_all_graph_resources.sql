@@ -80,7 +80,8 @@ joined as (
         on file_path_prefixed_with_slash like {{ dbt_utils.concat(["'%/'",'naming_convention_folders.folder_name_value',"'/%'"]) }}
     
     where coalesce(unioned_with_prefix.is_enabled, True) = True
-    and not(unioned_with_prefix.resource_type = 'model' and unioned_with_prefix.package_name = 'dbt_project_evaluator')
+    and package_name != 'dbt_project_evaluator'
+    and unioned_with_prefix.package_name != 'dbt_project_evaluator'
 
 ), 
 
