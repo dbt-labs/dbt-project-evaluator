@@ -27,7 +27,7 @@ agg_test_relationships as (
     select 
         direct_parent_id, 
         sum(case when primary_key_tests_count = 2 then 1 else 0 end) >= 1 as is_primary_key_tested,
-        sum(tests_count) as tests_per_model
+        sum(tests_count) as number_of_tests_on_model
     from count_column_tests
     group by 1
 
@@ -38,7 +38,7 @@ final as (
         all_graph_resources.resource_name, 
         all_graph_resources.model_type,
         coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as is_primary_key_tested,
-        coalesce(agg_test_relationships.tests_per_model, 0) as tests_per_model
+        coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model
     from all_graph_resources
     left join agg_test_relationships
         on all_graph_resources.resource_id = agg_test_relationships.direct_parent_id
