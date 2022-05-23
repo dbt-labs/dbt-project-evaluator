@@ -356,7 +356,7 @@ or any other nested information.
 ### Models without Primary Key Tests
 
 #### Model
-`fct_missing_primary_key_tests` lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
+`fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
 #### Reason to Flag
 Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that don't enforce the grain of every model with primary key tests are a risk to the reliability and scalability of your project. 
 #### How to Remediate
