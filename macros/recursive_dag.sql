@@ -46,7 +46,7 @@ all_relationships (
         source_name as child_source_name,
         file_path as child_file_path,
         0 as distance,
-        {{ create_array("resource_name") }} as path
+        {{ create_array(['resource_name']) }} as path
 
     from direct_relationships
     -- where direct_parent is null {# optional lever to change filtering of anchor clause to only include root resources #}
@@ -68,7 +68,7 @@ all_relationships (
         direct_relationships.source_name as child_source_name,
         direct_relationships.file_path as child_file_path,
         all_relationships.distance+1 as distance, 
-        {{ array_append("all_relationships.path", "direct_relationships.resource_name") }} as path
+        {{ array_append('all_relationships.path', 'direct_relationships.resource_name') }} as path
 
     from direct_relationships
     inner join all_relationships
@@ -107,7 +107,7 @@ with direct_relationships as (
         parent_id,
         child_id,
         0 as distance,
-        {{ create_array("resource_name") }} as path
+        {{ create_array(['resource_name']) }} as path
     from get_distinct
 )
 
@@ -118,7 +118,7 @@ with direct_relationships as (
         cte_{{i - 1}}.parent_id as parent_id,
         direct_relationships.resource_id as child_id,
         cte_{{i - 1}}.distance+1 as distance, 
-        {{ array_append(prev_cte_path, "direct_relationships.resource_name") }} as path
+        {{ array_append(prev_cte_path, 'direct_relationships.resource_name') }} as path
 
         from direct_relationships
             inner join cte_{{i - 1}}
