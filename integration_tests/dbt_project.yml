@@ -32,3 +32,8 @@ models:
 tests:
   dbt_project_evaluator:
     +enabled: false
+  dbt_project_evaluator_integration_tests:
+    dbt_project_evaluator_schema_tests:
+      unique_int_all_dag_relationships_path:
+        # Grouping by expressions of type ARRAY is not allowed for BigQuery
+        +enabled: "{{ false if target.type in ['bigquery'] else true }}"
