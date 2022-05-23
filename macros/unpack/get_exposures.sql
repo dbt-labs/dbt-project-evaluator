@@ -7,15 +7,15 @@
     {% for node in nodes_list %}
 
       {% set values_line %}
-      
-        '{{ node.unique_id }}', 
-        '{{ node.name }}', 
-        '{{ node.resource_type }}', 
-        '{{ node.path }}',
-        cast('{{ is_not_empty_string(node.description) | trim }}'as boolean), 
-        '{{ node.type }}', 
-        '{{ node.maturity}}', 
-        '{{ node.package_name }}', 
+
+        '{{ node.unique_id }}',
+        '{{ node.name }}',
+        '{{ node.resource_type }}',
+        '{{ node.original_file_path }}',
+        cast('{{ is_not_empty_string(node.description) | trim }}'as boolean),
+        '{{ node.type }}',
+        '{{ node.maturity}}',
+        '{{ node.package_name }}',
         '{{ node.url }}'
       
       {% endset %}

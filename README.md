@@ -37,6 +37,7 @@ __[Documentation](#documentation)__
 
 __[Structure](#structure)__
 - [Model Naming Conventions](#model-naming-conventions)
+- [Model Test Directories](#model-test-directories)
 - [Staging Directories](#staging-directories)
 
 __[Querying the DAG with SQL](#querying-the-dag-with-sql)__
@@ -459,6 +460,43 @@ Consider `model_8` which is nested in the `marts` subdirectory:
 ```
 
 This model should be renamed to either `fct_model_8` or `dim_model_8`.
+
+-----
+### Model Test Directories
+#### Model
+
+`fct_tests_directories` ([source](models/marts/structure/fct_tests_directories.sql)) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.
+
+#### Reason to Flag
+
+Each subdirectory in `models/` should contain one .yml file that includes the tests and documentation for all models within the given subdirectory. Keeping your repository organized in this way ensures that folks can quickly access the information they need.
+
+#### How to Remediate
+
+Move flagged tests from the yml file under `current_test_directory` to the yml file under `change_test_directory_to` (create a new yml file if one does not exist).
+
+#### Example
+
+`int_model_4` is located within `marts/`. However, tests for `int_model_4` are configured in `staging/_staging.yml`:
+```
+├── dbt_project.yml
+└── models
+    └── marts
+        ├── int_model_4.sql
+    └── staging
+        ├── _staging.yml
+```
+
+A new yml file should be created in `marts/` which contains all tests and documentation for `int_model_4`, and for the rest of the models in located in the `marts/` directory:
+```
+├── dbt_project.yml
+└── models
+    └── marts
+        ├── int_model_4.sql
+        ├── _marts.yml
+    └── staging
+        ├── _staging.yml
+```
 
 -----
 ### Staging Directories
