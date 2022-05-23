@@ -12,9 +12,10 @@ seeds:
   - name: test_fct_documentation_coverage
     config:
       column_types:
-        TOTAL_MODELS: integer
-        DOCUMENTED_MODELS: integer
-        DOCUMENTATION_COVERAGE_PCT: float
+        total_models: integer
+        documented_models: integer
+        documentation_coverage_pct: float
+        marts_documentation_coverage_pct: float
       tags:
         - docs
     tests:
@@ -24,3 +25,4 @@ seeds:
             - total_models
             - documented_models
             - documentation_coverage_pct
+            - marts_documentation_coverage_pct

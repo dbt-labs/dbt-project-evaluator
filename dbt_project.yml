@@ -1,14 +1,7 @@
-
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
 name: 'dbt_project_evaluator'
 version: '1.0.0'
 config-version: 2
 
-# These configurations specify where dbt should look for different types of files.
-# The `source-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
 model-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
@@ -23,12 +16,27 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   dbt_project_evaluator:
-    dag:
-      +materialized: table
-    graph:
-      intermediate:
-        int_direct_relationships:
-          +materialized: "{{ 'table' if target.type == 'bigquery' else 'view' }}"
+    marts:
+      dag:
+        +materialized: table
+    staging:
+      graph:
+        base__nodes:
+          +materialized: table
+        base__node_relationships:
+          +materialized: table
+        intermediate:
+          int_direct_relationships:
+            # required for BigQuery and Redshift for performance/memory reasons
+            +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
+        stg_naming_convention_folders:
+          # required for Redshift because listagg runs only on tables
+          +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
+        stg_naming_convention_prefixes:
+          # required for Redshift because listagg runs only on tables
+          +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
+        stg_all_graph_resources:
+          +materialized: table
 
 vars:
   documentation_coverage_target: 100

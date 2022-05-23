@@ -7,6 +7,8 @@ Specifically, this package tests for:
   3. __[Documentation](#documentation)__ - your models for documentation best practices
   3. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
 
+In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
+
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
@@ -26,8 +28,8 @@ __[DAG Issues](#dag-issues)__
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
+- [Models without Primary Key Tests](#models-without-primary-key-tests)
 - [Test Coverage](#test-coverage)
-- [Untested Models](#untested-models)
 
 __[Documentation](#documentation)__
 - [Documentation Coverage](#documentation-coverage)
@@ -37,6 +39,10 @@ __[Structure](#structure)__
 - [Model Naming Conventions](#model-naming-conventions)
 - [Staging Directories](#staging-directories)
 
+__[Querying the DAG with SQL](#querying-the-dag-with-sql)__
+
+__[Limitations](#limitations)__
+
 ----
 
 ## DAG Issues
@@ -44,7 +50,7 @@ __[Structure](#structure)__
 ### Direct Join to Source
 #### Model
 
-`fct_direct_join_to_source` ([source](models/marts/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to 
+`fct_direct_join_to_source` ([source](models/marts/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to
 both a model and a source.
 
 #### Graph Example
@@ -52,7 +58,7 @@ both a model and a source.
 `model_2` is pulling in both a model and a source.
 
 <img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
-  
+
 #### Reason to Flag
 
 #### How to Remediate
@@ -61,9 +67,9 @@ both a model and a source.
 ### Downstream Models Dependent on Source
 #### Model
 
-`fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`) 
+`fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
-  
+
 #### Graph Example
 
 `fct_model_9`, a marts model, builds from `source_1.table_5` a source.
@@ -71,25 +77,25 @@ that depends directly on a source node.
 
 #### Reason to Flag
 
-We very strongly believe that a staging model is the atomic unit of data modeling. Each staging 
-model bears a one-to-one relationship with the source data table it represents. It has the same 
-granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent 
-format. With that in mind, if a `marts` or `intermediate` type model joins directly to a `{{ source() }}` 
-node, there likely is a missing model that needs to be added.  
-  
+We very strongly believe that a staging model is the atomic unit of data modeling. Each staging
+model bears a one-to-one relationship with the source data table it represents. It has the same
+granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent
+format. With that in mind, if a `marts` or `intermediate` type model joins directly to a `{{ source() }}`
+node, there likely is a missing model that needs to be added.
+
 #### How to Remediate
 
 Add the reference to the appropriate `staging` model to maintain an abstraction layer between your raw data
 and your downstream data artifacts.
-  
+
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
 ### Model Fanout
 #### Model
 
-`fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more direct leaf children than the threshold for fanout 
+`fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more direct leaf children than the threshold for fanout
 (determined by variable `models_fanout_threshold`, default 3)
-  
+
 #### Graph Example
 
 `fct_model` has three direct leaf children.
@@ -103,19 +109,19 @@ should be moved upstream.
 
 #### Exceptions
 
-Some BI tools are better than others at joining and data exploration. For example, with Looker you could 
-end your DAG after marts (i.e. fcts & dims) and join those artifacts together (with a little know how 
-and setup time) to make your reports. For others, like Tableau, model fanouts might be more 
-beneficial, as this tool prefers big tables over joins, so predefining some reports is usually more performant. 
-  
+Some BI tools are better than others at joining and data exploration. For example, with Looker you could
+end your DAG after marts (i.e. fcts & dims) and join those artifacts together (with a little know how
+and setup time) to make your reports. For others, like Tableau, model fanouts might be more
+beneficial, as this tool prefers big tables over joins, so predefining some reports is usually more performant.
+
 #### How to Remediate
 
-Queries and transformations can move around between dbt and the BI tool, so how do we try to stay 
-effortful in what we decide to put where? 
+Queries and transformations can move around between dbt and the BI tool, so how do we try to stay
+effortful in what we decide to put where?
 
 You can think of dbt as our assembly line which produces expected outputs every time.
 
-You can think of the BI layer as the place where we take the items produced from our assembly line to 
+You can think of the BI layer as the place where we take the items produced from our assembly line to
 customize them in order to meet our stakeholder's needs.
 
 <!---
@@ -132,43 +138,43 @@ predefine every query or quandary your team might have. So decide as a team wher
 
 `model_1` references two source tables.
 
-<img width="500" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"> 
-  
+<img width="500" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png">
+
 #### Reason to Flag
 
-We very strongly believe that a staging model is the atomic unit of data modeling. Each staging 
-model bears a one-to-one relationship with the source data table it represents. It has the same 
-granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent 
-format. With that in mind, two `{{ source() }}` declarations in one staging model likely means we are 
+We very strongly believe that a staging model is the atomic unit of data modeling. Each staging
+model bears a one-to-one relationship with the source data table it represents. It has the same
+granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent
+format. With that in mind, two `{{ source() }}` declarations in one staging model likely means we are
 not being composable enough and there are individual building blocks which could be broken out into
-their respective models. 
+their respective models.
 
 #### Exceptions
-  
-NoSQL databases or heavily nested data sources often have so much info json packed into a table 
+
+NoSQL databases or heavily nested data sources often have so much info json packed into a table
 that you need to break one raw data source into multiple base models.
 
 Also, sometimes companies will have a bunch of [identical sources across systems](https://discourse.getdbt.com/t/unioning-identically-structured-data-sources/921) and you union them once before you stage them.
 
-These make total sense, and you should keep them in your project. To continue to test your project, you can 
-count those instances, then add a [warn_if](https://docs.getdbt.com/reference/resource-configs/severity) 
+These make total sense, and you should keep them in your project. To continue to test your project, you can
+count those instances, then add a [warn_if](https://docs.getdbt.com/reference/resource-configs/severity)
 threshold to the test to account for the known examples.
-  
+
 #### How to Remediate
 
-In this example specifically, those raw sources, `source_1.table_1` and `source_1.table_2` should each 
-have their own staging model (`stg_model_1` and `stg_model_2`), as transitional steps, which will 
-then be combined into a new `int_model_2`. Alternatively, you could keep `stg_model_2` and add 
+In this example specifically, those raw sources, `source_1.table_1` and `source_1.table_2` should each
+have their own staging model (`stg_model_1` and `stg_model_2`), as transitional steps, which will
+then be combined into a new `int_model_2`. Alternatively, you could keep `stg_model_2` and add
 `base__` models as transitional steps.
 
-To fix this, try out the [codegen](https://hub.getdbt.com/dbt-labs/codegen/latest/) package! With 
-this package you can dynamically generate the SQL for a staging (what they call base) model, which 
-you will use to populate `stg_model_1` and `stg_model_2` directly from the source data. Create a 
-new model `int_model_2`. Afterwards, within `int_model_2`, update your `{{ source() }}` macros to 
-`{{ ref() }}` macros and point them to your newly built staging models. If you had type casting, 
-field aliasing, or other simple improvements made in your original `stg_model_2` SQL, then attempt 
-to move that logic back to the new staging models instead. This will help colocate those 
-transformations and avoid duplicate code, so that all downstream models can leverage the same 
+To fix this, try out the [codegen](https://hub.getdbt.com/dbt-labs/codegen/latest/) package! With
+this package you can dynamically generate the SQL for a staging (what they call base) model, which
+you will use to populate `stg_model_1` and `stg_model_2` directly from the source data. Create a
+new model `int_model_2`. Afterwards, within `int_model_2`, update your `{{ source() }}` macros to
+`{{ ref() }}` macros and point them to your newly built staging models. If you had type casting,
+field aliasing, or other simple improvements made in your original `stg_model_2` SQL, then attempt
+to move that logic back to the new staging models instead. This will help colocate those
+transformations and avoid duplicate code, so that all downstream models can leverage the same
 set of transformations.
 
 Post-refactor, your DAG should look like this:
@@ -176,14 +182,14 @@ Post-refactor, your DAG should look like this:
 <img width="500" alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png">
 
 or if you want to use base_ models and keep stg_model_2 as is:
-  
+
 <img width="500" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
 
 ### Rejoining of Upstream Concepts
 #### Model
 
-`fct_rejoining_of_upstream_concepts` ([source](models/marts/dag/fct_rejoining_of_upstream_concepts.sql)) contains all cases where one of the parent's direct children 
-is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases 
+`fct_rejoining_of_upstream_concepts` ([source](models/marts/dag/fct_rejoining_of_upstream_concepts.sql)) contains all cases where one of the parent's direct children
+is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
 where the model "in between" the parent and child has NO other downstream dependencies.
 
 #### Graph Example
@@ -194,29 +200,29 @@ where the model "in between" the parent and child has NO other downstream depend
 
 #### Reason to Flag
 
-This could happen for a variety of reasons: Accidentally duplicating some business concepts in multiple 
-data flows, hesitance to touch (and break) someone else’s model, or perhaps trying to snowflake out 
-or modularize everything without awareness of what will help build time. 
+This could happen for a variety of reasons: Accidentally duplicating some business concepts in multiple
+data flows, hesitance to touch (and break) someone else’s model, or perhaps trying to snowflake out
+or modularize everything without awareness of what will help build time.
 
-As a general rule, snowflaking out models in a thoughtful manner allows for concurrency, but in this 
-example nothing downstream can run until `int_model_4` finishes, so it is not saving any time in 
-parallel processing by being its own model. Since both `int_model_4` and `int_model_5` depend solely 
-on `stg_model_1`, there is likely a better way to write the SQL within one model (`int_model_5`) and 
+As a general rule, snowflaking out models in a thoughtful manner allows for concurrency, but in this
+example nothing downstream can run until `int_model_4` finishes, so it is not saving any time in
+parallel processing by being its own model. Since both `int_model_4` and `int_model_5` depend solely
+on `stg_model_1`, there is likely a better way to write the SQL within one model (`int_model_5`) and
 simplify the DAG, potentially at the expense of more rows of SQL within the model.
 
 #### Exceptions
-  
-The one major exception to this would be when using a function from 
-[dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package, such as `star` or `get_column_values`, 
-(or similar functions / packages) that require a [relation](https://docs.getdbt.com/reference/dbt-classes#relation) 
-as an argument input. If the shape of the data in the output of `stg_model_1` is not the same as what you 
-need for the input to the function within `int_model_5`, then you will indeed need `int_model_4` to create 
+
+The one major exception to this would be when using a function from
+[dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package, such as `star` or `get_column_values`,
+(or similar functions / packages) that require a [relation](https://docs.getdbt.com/reference/dbt-classes#relation)
+as an argument input. If the shape of the data in the output of `stg_model_1` is not the same as what you
+need for the input to the function within `int_model_5`, then you will indeed need `int_model_4` to create
 that relation, in which case, leave it.
-  
+
 #### How to Remediate
 
 Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from `int_model_4` into a CTE within `int_model_5`, and swap all `{{ ref('int_model_4') }}` references to the new CTE(s).
-  
+
 Post-refactor, your DAG should look like this:
 
 <img width="500" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
@@ -224,25 +230,25 @@ Post-refactor, your DAG should look like this:
 ### Root Models
 #### Model
 
-`fct_root_models` ([source](models/marts/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project. 
+`fct_root_models` ([source](models/marts/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.
 
 #### Graph Example
 
 `model_4` has no direct parents
 
 <img width="500" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png">
-  
+
 #### Reason to Flag
 
-This likely means that the model (`model_4`  below) contains raw table references, either to a raw data source, or another model in the project without using the `{{ source() }}` or `{{ ref() }}` functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies. 
+This likely means that the model (`model_4`  below) contains raw table references, either to a raw data source, or another model in the project without using the `{{ source() }}` or `{{ ref() }}` functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies.
 
 #### How to Remediate
 
-Start by mapping any table references in the `FROM` clause of the model definition to the models or raw tables that they draw from, and replace those references with the `{{ ref() }}` if the dependency is another dbt model, or the `{{ source() }}` function if the table is a raw data source (this may require the declaration of a new source table). Then, visualize this model in the DAG, and refactor as appropriate according to best practices. 
+Start by mapping any table references in the `FROM` clause of the model definition to the models or raw tables that they draw from, and replace those references with the `{{ ref() }}` if the dependency is another dbt model, or the `{{ source() }}` function if the table is a raw data source (this may require the declaration of a new source table). Then, visualize this model in the DAG, and refactor as appropriate according to best practices.
 
 #### Exceptions
 
-This behavior may be observed in the case of a manually defined reference table that does not have any dependencies. A good example of this is a `dim_calendar` table that is generated by the `{{ dbt_utils.date_spine() }}` macro — this SQL logic is completely self contained, and does not require any external data sources to execute. 
+This behavior may be observed in the case of a manually defined reference table that does not have any dependencies. A good example of this is a `dim_calendar` table that is generated by the `{{ dbt_utils.date_spine() }}` macro — this SQL logic is completely self contained, and does not require any external data sources to execute.
 
 ### Source Fanout
 #### Model
@@ -253,17 +259,24 @@ This behavior may be observed in the case of a manually defined reference table 
 
 `source.table_1` has more than one direct child model.
 
-<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/156636403-3bcfdbc3-cf48-4c8f-98dc-addc274ad321.png">
- 
+<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png">
+
 #### Reason to Flag
 
+Each source node should be referenced by a single model that performs basic operations, such as renaming, recasting, and other light transformations to maintain consistency through out the project. The role of this staging model is to mirror the raw data but align it with project conventions. The staging model should act as a source of truth and a buffer- any model which depends on the data from a given source should reference the cleaned data in the staging model as opposed to referencing the source directly. This approach keeps the code DRY (any light transformations that need to be done on the raw data are performed only once). Minimizing references to the raw data will also make it easier to update the project should the format of the raw data change.
+
 #### How to Remediate
+
+Create a staging model which references the source and cleans the raw data (e.g. renaming, recasting). Any models referencing the source directly should be refactored to point towards the staging model instead.
+
+After refactoring the above example, the DAG would look something like this:
+<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png">
 
 ### Staging Models Dependent on Downstream Models
 #### Model
 
-`fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables. 
-  
+`fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
+
 #### Graph Example
 
 `stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
@@ -272,14 +285,14 @@ This behavior may be observed in the case of a manually defined reference table 
 
 #### Reason to Flag
 
-This likely represents a misnamed file. According to dbt best practices, staging models should only 
-select from source nodes. Dependence on downstream models indicates that this model may need to be either 
-renamed, or reconfigured to only select from source nodes. 
-  
+This likely represents a misnamed file. According to dbt best practices, staging models should only
+select from source nodes. Dependence on downstream models indicates that this model may need to be either
+renamed, or reconfigured to only select from source nodes.
+
 #### How to Remediate
 
 Rename the file in the `child` column to use to appropriate prefix, or change the models lineage
-by pointing the staging model to the appropriate `{{ source() }}`. 
+by pointing the staging model to the appropriate `{{ source() }}`.
 
 After updating the model to use the appropriate `{{ source() }}` function, your graph should look like this:
 
@@ -288,7 +301,7 @@ After updating the model to use the appropriate `{{ source() }}` function, your 
 ### Staging Models Dependent on Other Staging Models
 #### Model
 
-`fct_staging_dependent_on_staging` ([source](models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are 
+`fct_staging_dependent_on_staging` ([source](models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are
 dependent on each other.
 
 #### Graph Example
@@ -299,19 +312,19 @@ dependent on each other.
 
 #### Reason to Flag
 
-This may indicate a change in naming is necessary, or that the child model should instead reference a source. 
+This may indicate a change in naming is necessary, or that the child model should instead reference a source.
 
 #### How to Remediate
 
-You should either change the model type of the `child` (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate `{{ source() }}`. 
+You should either change the model type of the `child` (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate `{{ source() }}`.
 
-In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate direcory and update the file name to `int_model_4`.
+In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate directory and update the file name to `int_model_4`.
 
 ### Unused Sources
 #### Model
 
 `fct_unused_sources` ([source](models/marts/dag/fct_unused_sources.sql)) shows each source with 0 children.
-  
+
 #### Graph Example
 
 `source.table_4` isn't being referenced.
@@ -320,17 +333,17 @@ In our example, we might realize that `stg_model_4` is _actually_ an intermediat
 
 #### Reason to Flag
 
-This represents either a source that you have defined in YML but never brought into a model or a 
-model that was deprecated and the corresponding rows in the source block of the YML file were 
-not deleted at the same time. This simply represents the buildup of cruft in the project that 
+This represents either a source that you have defined in YML but never brought into a model or a
+model that was deprecated and the corresponding rows in the source block of the YML file were
+not deleted at the same time. This simply represents the buildup of cruft in the project that
 doesn’t need to be there.
-  
+
 #### How to Remediate
 
-Navigate to the `sources.yml` file (or whatever your company has called the file) that corresponds 
-to the unused source. Within the YML file, remove the unused table name, along with descriptions 
+Navigate to the `sources.yml` file (or whatever your company has called the file) that corresponds
+to the unused source. Within the YML file, remove the unused table name, along with descriptions
 or any other nested information.
-  
+
   ```yaml
   version: 2
 
@@ -344,51 +357,49 @@ or any other nested information.
         - name: table_4  # <-- remove this line
   ```
 
-Post-refactor, your DAG should look like this:
-
 <img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
 ## Testing
+### Models without Primary Key Tests
+
+#### Model
+`fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
+#### Reason to Flag
+Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models without proper tests on their grain are a risk to the reliability and scalability of your project. 
+#### How to Remediate
+Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info!
+
+Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
+in the `tests` directory of you project. 
+
 ### Test Coverage
 #### Model
-`fct_test_coverage` ([source](models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage. 
+`fct_test_coverage` ([source](models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.
 Specifically, this models measures:
-1. `test_coverage_pct`: the percentage of your models have minimum 1 test applied. 
+1. `test_coverage_pct`: the percentage of your models that have minimum 1 test applied.
 2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
+3. `marts_test_coverage_pct`: the percentage of your marts models that have minimum 1 test applied.
 
-This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%. 
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%.
 You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
 
 #### Reason to Flag
 We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
 
 #### How to Remediate
-Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
+Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests)
+in the `tests` directory of you project.
 
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
-
-### Untested Models
-#### Model
-`fct_untested_models` ([source](models/marts/tests/fct_untested_models.sql)) lists every model that has no tests applied.
-
-#### Reason to Flag
-Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project. 
-
-#### How to Remediate
-Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
-
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
+As explained above, we recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
 
 ## Documentation
 ### Documentation Coverage
 #### Model
 
-`fct_documentation_coverage` ([source](models/marts/documentation/fct_documentation_coverage.sql)) calculates the percent of enabled models in the project that have 
+`fct_documentation_coverage` ([source](models/marts/documentation/fct_documentation_coverage.sql)) calculates the percent of enabled models in the project that have
 a configured description.
 
-This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%. 
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%.
 You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
 
 #### Reason to Flag
@@ -412,19 +423,19 @@ The documentation for your project includes model code, a DAG of your project, a
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
 
-Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
+Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. Missing documentation should be addressed first for marts models, then for the rest of your project, to ensure that stakeholders in the organization can understand the data which is surfaced to them.
 
 
-## Structure 
+## Structure
 ### Model Naming Conventions
 #### Model
 
-`fct_model_naming_conventions` ([source](models/marts/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix. 
+`fct_model_naming_conventions` ([source](models/marts/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix.
 
 #### Reason to Flag
 
-Without appropriate naming conventions, a user querying the data warehouse might incorrectly assume the model type of a given relation. In order to explicitly name 
-the model type in the data warehouse, we recommend appropriately prefixing your models in dbt. 
+Without appropriate naming conventions, a user querying the data warehouse might incorrectly assume the model type of a given relation. In order to explicitly name
+the model type in the data warehouse, we recommend appropriately prefixing your models in dbt.
 
 | Model Type   | Appropriate Prefixes |
 | ------------ | -------------------- |
@@ -435,7 +446,7 @@ the model type in the data warehouse, we recommend appropriately prefixing your 
 
 #### How to Remediate
 
-For each model flagged, ensure the model type is defined and the model name is prefixed appropriately. 
+For each model flagged, ensure the model type is defined and the model name is prefixed appropriately.
 
 #### Example
 
@@ -457,7 +468,7 @@ This model should be renamed to either `fct_model_8` or `dim_model_8`.
 
 #### Reason to Flag
 
-Because we often work with multiple data sources, in our staging directory, we create one directory per source. 
+Because we often work with multiple data sources, in our staging directory, we create one directory per source.
 ```
 ├── dbt_project.yml
 └── models
@@ -476,7 +487,7 @@ This provides for clear repository organization, so that analytics engineers can
 
 #### How to Remediate
 
-For each resource flagged, move the file from the `current_file_path` to `change_file_path_to`. 
+For each resource flagged, move the file from the `current_file_path` to `change_file_path_to`.
 
 #### Example
 
@@ -510,7 +521,7 @@ This file should be moved into the subdirectory `source_2`:
 ## Customization
 ### Disabling models
 
-If there is a particular model or set of models that you *do not want this package to execute*, you can 
+If there is a particular model or set of models that you *do not want this package to execute*, you can
 disable these models as you would any other model in your `dbt_project.yml` file
 
 ```yml
@@ -530,8 +541,8 @@ models:
 
 ### Overriding Variables
 
-Currently, this package uses two variables to set the targets for a project's `test_coverage_pct` and `documentation_coverage_pct`, 
-each of which are defaulted to 100% coverage. If you would like to override these defaults, you can do so by supplying your own 
+Currently, this package uses two variables to set the targets for a project's `test_coverage_pct` and `documentation_coverage_pct`,
+each of which are defaulted to 100% coverage. If you would like to override these defaults, you can do so by supplying your own
 values in your dbt_project.yml
 
 ```yml
@@ -546,6 +557,25 @@ vars:
 ```
 
 ----
+
+## Querying the DAG with SQL
+
+The model `int_all_dag_relationships`, created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.
+
+Building additional models and snapshots on top of this model could allow:
+- creating a dashboard that provides 
+  - a list of all the sources used by a given exposure
+  - a list of all the exposures or metrics using a given source
+  - the dependencies between different models
+- building metrics/KPIs on top of a dbt project
+  - evolution of the number of models over time
+  - evolution of the number of metrics and exposures over time 
+- getting insights on potential refactoring work
+  - looking at the longest "chains" of models in a project
+  - reviewing models with many/few direct dependents
+  - identifying potential bottlenecks
+
+----
 ## Limitations
 
 ### BigQuery
@@ -556,5 +586,5 @@ For BigQuery, the model `int_all_dag_relationships` needs to be created by loopi
 
 ----
 ## Contributing
-If you'd like to add models to flag new areas, please update this README and add an integration test 
+If you'd like to add models to flag new areas, please update this README and add an integration test
 ([more details here](https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test)).

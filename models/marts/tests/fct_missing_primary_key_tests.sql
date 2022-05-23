@@ -7,9 +7,9 @@ tests as (
 final as (
 
     select 
-        resource_name
+        *
     from tests
-    where tests_per_model = 0
+    where not(is_primary_key_tested)
 
 )
 
