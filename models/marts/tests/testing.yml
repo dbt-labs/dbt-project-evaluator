@@ -15,6 +15,6 @@ models:
           - dbt_utils.accepted_range:
               min_value: "{{ var('test_coverage_target') }}"
               severity: warn
-  - name: fct_untested_models
+  - name: fct_missing_primary_key_tests
     tests:
       - is_empty 

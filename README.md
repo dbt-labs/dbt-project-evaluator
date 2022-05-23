@@ -28,8 +28,8 @@ __[DAG Issues](#dag-issues)__
 - [Unused Sources](#unused-sources)
 
 __[Testing](#testing)__
+- [Models without Primary Key Tests](#models-without-primary-key-tests)
 - [Test Coverage](#test-coverage)
-- [Untested Models](#untested-models)
 
 __[Documentation](#documentation)__
 - [Documentation Coverage](#documentation-coverage)
@@ -357,11 +357,21 @@ or any other nested information.
         - name: table_4  # <-- remove this line
   ```
 
-Post-refactor, your DAG should look like this:
-
-<img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png">
+<img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
 ## Testing
+### Models without Primary Key Tests
+
+#### Model
+`fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
+#### Reason to Flag
+Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models without proper tests on their grain are a risk to the reliability and scalability of your project. 
+#### How to Remediate
+Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info!
+
+Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
+in the `tests` directory of you project. 
+
 ### Test Coverage
 #### Model
 `fct_test_coverage` ([source](models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.
@@ -380,19 +390,7 @@ We recommend that every model in your dbt project has tests applied to ensure th
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests)
 in the `tests` directory of you project.
 
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
-
-### Untested Models
-
-#### Model
-`fct_untested_models` lists every model that has no tests applied.
-#### Reason to Flag
-Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models that are missing tests are a risk to the reliability and scalability of your project.
-#### How to Remediate
-Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests)
-in the `tests` directory of you project.
-
-Tip: We recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key. We suggest addressing missing tests in marts models first, then moving on to the rest of your project, since marts models are surfaced to stakeholders and BI tools and act as a source of truth for data consumers within the organization.
+As explained above, we recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
 
 ## Documentation
 ### Documentation Coverage
