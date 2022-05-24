@@ -1,14 +1,6 @@
 -- Because we often work with multiple data sources, in our staging directory, we create one directory per source.
 
 -- This model finds all cases where a staging model or source definition is NOT in the appropriate subdirectory
-    -- how should we define "staging" model here? 
-        -- by naming convention in stg_all_graph_resource?
-        -- by being in a folder called staging?
-        -- or all direct children of source tables?
-
--- TO DO: consider also adding tests/documentation that are in the incorrect subdirectory?
--- TO DO: how to handle staging models that depend on multiple sources?
--- TO DO: how to handle base models?
 
 with all_graph_resources as (
     select * from {{ ref('stg_all_graph_resources') }}
