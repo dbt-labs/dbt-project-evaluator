@@ -591,9 +591,11 @@ models:
 
 ### Overriding Variables
 
-Currently, this package uses two variables to set the targets for a project's `test_coverage_pct` and `documentation_coverage_pct`,
-each of which are defaulted to 100% coverage. If you would like to override these defaults, you can do so by supplying your own
-values in your dbt_project.yml
+Currently, this package uses different variables to adapt the models to your objectives and naming conventions. They can all be updated directly in `dbt_project.yml`
+
+- tests and docs coverage variables
+  - `test_coverage_pct` can be updated to set a test coverage percentage (default 100% coverage)
+  - `documentation_coverage_pct` can be updated to set a documentation coverage percentage (default 100% coverage)
 
 ```yml
 # dbt_project.yml
@@ -605,6 +607,12 @@ vars:
     test_coverage_target: 75
 
 ```
+
+- naming conventions variables
+  - all the `xxx_folder_name` variables are used to parametrize the name of the folders for the `staging`, `intermediate` and `marts` layers of your DAG. Those layers are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_folders.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`
+  - all the `xxx_prefixes` variables are used to parametrize the prefixes of your models for the `staging`, `intermediate`, `marts` and any additional layer of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions. If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_prefixes.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`
+- warehouse specific variables
+  - `max_depth_bigquery` is only referred to with BigQuery as the Warehouse and is used to limit the number of nested CTEs when computing the DAG end to end. Changing this number to a higher one might prevent the package from running properly on BigQuery
 
 ----
 
