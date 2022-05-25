@@ -63,7 +63,7 @@ non_staging_models_folders_ranked as (
         all_graph_resources.model_type,
         all_graph_resources.file_path as current_file_path,
         all_graph_resources.file_name,
-        position(folders.folder_name_value, all_graph_resources.current_directory_path) as position_of_folder_name,
+        {{ dbt_utils.position("folders.folder_name_value", "all_graph_resources.current_directory_path") }} as position_of_folder_name,
         row_number() over (partition by all_graph_resources.resource_name order by position_of_folder_name desc) as folder_name_rank,
         folders.model_type as model_type_map,
         folders.folder_name_value
