@@ -3,7 +3,7 @@
 -- This model finds all cases where a staging model or source definition is NOT in the appropriate subdirectory
 
 with all_graph_resources as (
-    select * from {{ ref('stg_all_graph_resources') }}
+    select * from {{ ref('int_all_graph_resources') }}
 ),
 
 all_dag_relationships as (

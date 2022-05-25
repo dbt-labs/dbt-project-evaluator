@@ -1,7 +1,7 @@
 with 
 
 all_graph_resources as (
-    select * from {{ ref('stg_all_graph_resources') }}
+    select * from {{ ref('int_all_graph_resources') }}
 ),
 
 relationships as (

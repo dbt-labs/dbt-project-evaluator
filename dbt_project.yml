@@ -17,26 +17,27 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   dbt_project_evaluator:
     marts:
+      core:
+        int_all_graph_resources:
+          +materialized: table   
+        int_direct_relationships:
+          # required for BigQuery and Redshift for performance/memory reasons
+          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
       dag:
         +materialized: table
     staging:
       graph:
-        base__nodes:
+        stg_nodes:
           +materialized: table
-        base__node_relationships:
+        stg_node_relationships:
           +materialized: table
-        intermediate:
-          int_direct_relationships:
-            # required for BigQuery and Redshift for performance/memory reasons
-            +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
+      variables:
         stg_naming_convention_folders:
           # required for Redshift because listagg runs only on tables
           +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
         stg_naming_convention_prefixes:
           # required for Redshift because listagg runs only on tables
           +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
-        stg_all_graph_resources:
-          +materialized: table
 
 vars:
   documentation_coverage_target: 100
