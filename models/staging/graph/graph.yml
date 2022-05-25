@@ -10,9 +10,3 @@ macros:
       - name: values
         type: list
         description: The list of values to be inserted in the view/table. Each item of the list has the format "('value_col1', 'value_col2', 'value_col3')"
-  - name: loop_vars
-    description: A macro that loops through variables and returns them as a SQL query to be used in a model
-    arguments:
-      - name: vars
-        type: list|string
-        description: A list of variables from dbt_project.yml

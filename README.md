@@ -618,7 +618,7 @@ vars:
 
 ## Querying the DAG with SQL
 
-The model `int_all_dag_relationships`, created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.
+The model `int_all_dag_relationships` ([source](models/marts/core/int_all_dag_relationships.sql)), created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.
 
 Building additional models and snapshots on top of this model could allow:
 - creating a dashboard that provides 

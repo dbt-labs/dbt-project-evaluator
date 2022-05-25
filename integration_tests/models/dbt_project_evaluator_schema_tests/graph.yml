@@ -1,74 +1,58 @@
 version: 2
 
 models:
-  - name: base__exposure_relationships
-    description: "Base model from the graph variable, one record per exposure resource relationship (comes from the depends_on field in the graph)."
+  - name: stg_exposure_relationships
+    description: "Staging model from the graph variable, one record per exposure resource relationship (comes from the depends_on field in the graph)."
     columns:
       - name: unique_id
         tests:
           - unique
           - not_null
 
-  - name: base__exposures
-    description: "Base model from the graph variable, one record per exposure resource."
+  - name: stg_exposures
+    description: "Staging model from the graph variable, one record per exposure resource."
     columns:
       - name: unique_id
         tests:
           - unique
           - not_null
 
-  - name: base__metric_relationships
-    description: "Base model from the graph variable, one record per metric resource relationship (comes from the depends_on field in the graph)."
+  - name: stg_metric_relationships
+    description: "Staging model from the graph variable, one record per metric resource relationship (comes from the depends_on field in the graph)."
     columns:
       - name: unique_id
         tests:
           - unique
           - not_null
 
-  - name: base__metrics
-    description: "Base model from the graph variable, one record per metric resource."
+  - name: stg_metrics
+    description: "Staging model from the graph variable, one record per metric resource."
     columns:
       - name: unique_id
         tests:
           - unique
           - not_null
 
-  - name: base__node_relationships
-    description: "Base model from the graph variable, one record per direct node relationship (comes from the depends_on field in the graph)."
+  - name: stg_node_relationships
+    description: "Staging model from the graph variable, one record per direct node relationship (comes from the depends_on field in the graph)."
     columns:
       - name: unique_id
         tests:
           - unique
           - not_null
 
-  - name: base__nodes
-    description: "Base model from the graph variable, one record per node (analysis, model, operation, seed, snapshot, test)."
+  - name: stg_nodes
+    description: "Staging model from the graph variable, one record per node (analysis, model, operation, seed, snapshot, test)."
     columns:
       - name: unique_id
         tests:
           - unique
           - not_null
 
-  - name: base__sources
-    description: "Base model from the graph variable, one record per source resource."
+  - name: stg_sources
+    description: "Staging model from the graph variable, one record per source resource."
     columns:
       - name: unique_id
-        tests:
-          - unique
-          - not_null
-
-  - name: int_direct_relationships
-    description: "This table shows one record for each direct parent/child pair in the graph."
-    columns:
-      - name: unique_id
-        tests:
-          - unique
-          - not_null
-
-  - name: stg_all_graph_resources
-    description: "This table shows one record for each enabled resource in the graph and information about that resource."
-    columns:
-      - name: resource_id
         tests:
           - unique
           - not_null

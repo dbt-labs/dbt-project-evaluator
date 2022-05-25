@@ -9,28 +9,28 @@ all_graph_resources as (
         file_path,
         model_type,
         source_name 
-    from {{ ref('stg_all_graph_resources') }}
+    from {{ ref('int_all_graph_resources') }}
 ),
 
 direct_model_relationships as (
     select  
         resource_id,
         direct_parent_id
-    from {{ ref('base__node_relationships')}}
+    from {{ ref('stg_node_relationships')}}
 ),
 
 direct_exposure_relationships as (
     select  
         resource_id,
         direct_parent_id
-    from {{ ref('base__exposure_relationships')}}
+    from {{ ref('stg_exposure_relationships')}}
 ),
 
 direct_metrics_relationships as (
     select  
         resource_id,
         direct_parent_id
-    from {{ ref('base__metric_relationships')}}
+    from {{ ref('stg_metric_relationships')}}
 ),
 
 -- for all resources in the graph, find their direct parent

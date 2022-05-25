@@ -134,7 +134,7 @@ with direct_relationships as (
 )
 
 , resource_info as (
-    select * from {{ ref('stg_all_graph_resources') }}
+    select * from {{ ref('int_all_graph_resources') }}
 )
 
 

@@ -2,10 +2,10 @@
 with unioned as (
 
     {{ dbt_utils.union_relations([
-        ref('base__nodes'),
-        ref('base__exposures'),
-        ref('base__metrics'),
-        ref('base__sources')
+        ref('stg_nodes'),
+        ref('stg_exposures'),
+        ref('stg_metrics'),
+        ref('stg_sources')
     ])}}
 
 ),
