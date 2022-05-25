@@ -1,17 +1,9 @@
 -- Because we often work with multiple data sources, in our staging directory, we create one directory per source.
 
 -- This model finds all cases where a staging model or source definition is NOT in the appropriate subdirectory
-    -- how should we define "staging" model here? 
-        -- by naming convention in stg_all_graph_resource?
-        -- by being in a folder called staging?
-        -- or all direct children of source tables?
-
--- TO DO: consider also adding tests/documentation that are in the incorrect subdirectory?
--- TO DO: how to handle staging models that depend on multiple sources?
--- TO DO: how to handle base models?
 
 with all_graph_resources as (
-    select * from {{ ref('stg_all_graph_resources') }}
+    select * from {{ ref('int_all_graph_resources') }}
 ),
 
 all_dag_relationships as (
@@ -56,7 +48,12 @@ inappropriate_subdirectories_sources as (
 inappropriate_subdirectories_staging as (
     select distinct -- must do distinct to avoid duplicates when staging model has multiple paths to a given source
         child as resource_name,
-        child_file_path as current_file_path,
+        case
+            when {{ dbt_utils.position("'models/'", "child_file_path") }} = 1
+                then {{ dbt_utils.replace("child_file_path", "'models/'", "''") }}
+            else child_file_path
+        end as current_file_path,
+
         '{{ var("staging_folder_name") }}' || '/' || parent_source_name || '/' || child_file_name as change_file_path_to
     from staging_models
     where child_directory_path not like '%' || parent_source_name || '%'

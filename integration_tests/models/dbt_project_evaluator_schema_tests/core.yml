@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: int_all_dag_relationships
+    description: "This table shows one record for every resource and each of its downstream children (including itself). It includes models, snapshots, exposures, metrics and seeds"
+    columns:
+      - name: path
+        description: unique identifier representing a distinct path from each resource to another resource
+        tests:
+          - unique
+          - not_null 
+          
+  - name: int_all_graph_resources
+    description: "This table shows one record for each enabled resource in the graph and information about that resource."
+    columns:
+      - name: resource_id
+        tests:
+          - unique
+          - not_null
+
+  - name: int_direct_relationships
+    description: "This table shows one record for each direct parent/child pair in the graph."
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+          - not_null

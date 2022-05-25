@@ -37,6 +37,7 @@ __[Documentation](#documentation)__
 
 __[Structure](#structure)__
 - [Model Naming Conventions](#model-naming-conventions)
+- [Model Test Directories](#model-test-directories)
 - [Staging Directories](#staging-directories)
 
 __[Querying the DAG with SQL](#querying-the-dag-with-sql)__
@@ -55,14 +56,26 @@ both a model and a source.
 
 #### Graph Example
 
-`model_2` is pulling in both a model and a source.
+`int_model_4` is pulling in both a model and a source.
 
-<img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/91074396/156454034-1f516133-ae52-48d6-9204-2358441ebb44.png">
+<img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png">
 
 #### Reason to Flag
 
+We highly recommend having a one-to-one relationship between sources and their corresponding `staging` model, and not having any other model reading from the source. Those `staging` models are then the ones read from by the other downstream models.
+
+This allows renaming your columns and doing minor transformation on your source data only once and being consistent
+across all the models that will consume the source data.
+
 #### How to Remediate
 
+In our example, we would want to:
+1. create a `staging` model for our source data if it doesn't exist already 
+2. and join this `staging` model to other ones to create our downstream transformation instead of using the source
+
+After refactoring your downstream model to select from the staging layer, your DAG should look like this: 
+
+<img width="500" alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png">
 
 ### Downstream Models Dependent on Source
 #### Model
@@ -461,6 +474,43 @@ Consider `model_8` which is nested in the `marts` subdirectory:
 This model should be renamed to either `fct_model_8` or `dim_model_8`.
 
 -----
+### Model Test Directories
+#### Model
+
+`fct_tests_directories` ([source](models/marts/structure/fct_tests_directories.sql)) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.
+
+#### Reason to Flag
+
+Each subdirectory in `models/` should contain one .yml file that includes the tests and documentation for all models within the given subdirectory. Keeping your repository organized in this way ensures that folks can quickly access the information they need.
+
+#### How to Remediate
+
+Move flagged tests from the yml file under `current_test_directory` to the yml file under `change_test_directory_to` (create a new yml file if one does not exist).
+
+#### Example
+
+`int_model_4` is located within `marts/`. However, tests for `int_model_4` are configured in `staging/_staging.yml`:
+```
+├── dbt_project.yml
+└── models
+    └── marts
+        ├── int_model_4.sql
+    └── staging
+        ├── _staging.yml
+```
+
+A new yml file should be created in `marts/` which contains all tests and documentation for `int_model_4`, and for the rest of the models in located in the `marts/` directory:
+```
+├── dbt_project.yml
+└── models
+    └── marts
+        ├── int_model_4.sql
+        ├── _marts.yml
+    └── staging
+        ├── _staging.yml
+```
+
+-----
 ### Staging Directories
 #### Model
 
@@ -541,9 +591,11 @@ models:
 
 ### Overriding Variables
 
-Currently, this package uses two variables to set the targets for a project's `test_coverage_pct` and `documentation_coverage_pct`,
-each of which are defaulted to 100% coverage. If you would like to override these defaults, you can do so by supplying your own
-values in your dbt_project.yml
+Currently, this package uses different variables to adapt the models to your objectives and naming conventions. They can all be updated directly in `dbt_project.yml`
+
+- tests and docs coverage variables
+  - `test_coverage_pct` can be updated to set a test coverage percentage (default 100% coverage)
+  - `documentation_coverage_pct` can be updated to set a documentation coverage percentage (default 100% coverage)
 
 ```yml
 # dbt_project.yml
@@ -556,11 +608,17 @@ vars:
 
 ```
 
+- naming conventions variables
+  - all the `xxx_folder_name` variables are used to parametrize the name of the folders for the `staging`, `intermediate` and `marts` layers of your DAG. Those layers are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_folders.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`
+  - all the `xxx_prefixes` variables are used to parametrize the prefixes of your models for the `staging`, `intermediate`, `marts` and any additional layer of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions. If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_prefixes.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`
+- warehouse specific variables
+  - `max_depth_bigquery` is only referred to with BigQuery as the Warehouse and is used to limit the number of nested CTEs when computing the DAG end to end. Changing this number to a higher one might prevent the package from running properly on BigQuery
+
 ----
 
 ## Querying the DAG with SQL
 
-The model `int_all_dag_relationships`, created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.
+The model `int_all_dag_relationships` ([source](models/marts/core/int_all_dag_relationships.sql)), created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.
 
 Building additional models and snapshots on top of this model could allow:
 - creating a dashboard that provides 

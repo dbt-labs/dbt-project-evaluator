@@ -10,20 +10,20 @@
             
               '{{ node.unique_id }}', 
               '{{ node.name }}',
-              '{{ node.path }}',
-              '{{ node.alias }}', 
-              '{{ node.resource_type }}', 
-              '{{ node.source_name }}', 
-              cast('{{ is_not_empty_string(node.source_description) | trim }}' as boolean), 
-              cast('{{ is_not_empty_string(node.description) | trim }}' as boolean), 
-              cast('{{ node.config.enabled }}' as boolean), 
-              '{{ node.loaded_at_field | replace("'", "_") }}}}', 
-              '{{ node.database }}', 
-              '{{ node.schema }}', 
-              '{{ node.package_name }}', 
-              '{{ node.loader }}', 
+              '{{ node.original_file_path }}',
+              '{{ node.alias }}',
+              '{{ node.resource_type }}',
+              '{{ node.source_name }}',
+              cast('{{ is_not_empty_string(node.source_description) | trim }}' as boolean),
+              cast('{{ is_not_empty_string(node.description) | trim }}' as boolean),
+              cast('{{ node.config.enabled }}' as boolean),
+              '{{ node.loaded_at_field | replace("'", "_") }}}}',
+              '{{ node.database }}',
+              '{{ node.schema }}',
+              '{{ node.package_name }}',
+              '{{ node.loader }}',
               '{{ node.identifier }}'
-            
+
         {% endset %}
         {% do values.append(values_line) %}
 

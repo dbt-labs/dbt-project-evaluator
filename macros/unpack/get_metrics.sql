@@ -7,19 +7,19 @@
     {% for node in nodes_list %}
 
           {% set values_line %}
-            
-            '{{ node.unique_id }}', 
-            '{{ node.name }}', 
-            '{{ node.resource_type }}', 
-            '{{ node.path }}',
-            cast('{{ is_not_empty_string(node.description) | trim }}' as boolean), 
-            '{{ node.type }}', 
-            '{{ node.model.identifier }}', 
-            '{{ node.label }}', 
-            '{{ node.sql }}', 
-            '{{ node.timestamp }}', 
+
+            '{{ node.unique_id }}',
+            '{{ node.name }}',
+            '{{ node.resource_type }}',
+            '{{ node.original_file_path }}',
+            cast('{{ is_not_empty_string(node.description) | trim }}' as boolean),
+            '{{ node.type }}',
+            '{{ node.model.identifier }}',
+            '{{ node.label }}',
+            '{{ node.sql }}',
+            '{{ node.timestamp }}',
             '{{ node.package_name }}'
-            
+
         {% endset %}
         {% do values.append(values_line) %}
 
