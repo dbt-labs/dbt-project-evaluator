@@ -56,7 +56,7 @@ inappropriate_subdirectories_staging as (
 ),
 
 -- find all non-staging models that are NOT nested closest to their appropriate folder
-non_staging_models_folders_ranked as (
+non_staging_models_folders_position as (
     select 
         all_graph_resources.resource_name,
         all_graph_resources.resource_type,
@@ -64,12 +64,25 @@ non_staging_models_folders_ranked as (
         all_graph_resources.file_path as current_file_path,
         all_graph_resources.file_name,
         {{ dbt_utils.position("folders.folder_name_value", "all_graph_resources.current_directory_path") }} as position_of_folder_name,
-        row_number() over (partition by all_graph_resources.resource_name order by position_of_folder_name desc) as folder_name_rank,
         folders.model_type as model_type_map,
         folders.folder_name_value
     from all_graph_resources
     cross join folders
     where all_graph_resources.resource_type = 'model' and all_graph_resources.model_type <> 'staging'
+),
+
+non_staging_models_folders_ranked as (
+    select
+        resource_name,
+        resource_type,
+        model_type,
+        current_file_path,
+        file_name,
+        position_of_folder_name,
+        row_number() over (partition by resource_name order by position_of_folder_name desc) as folder_name_rank,
+        model_type_map,
+        folder_name_value
+    from non_staging_models_folders_position
 ),
 
 non_staging_models_calc_change_file_path_to as (
