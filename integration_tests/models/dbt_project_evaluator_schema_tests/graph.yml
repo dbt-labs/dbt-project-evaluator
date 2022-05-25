@@ -58,7 +58,7 @@ models:
           - not_null
 
   - name: stg_naming_convention_folders
-    description: "This table parses the folder name variables into a model to join into help define structure tests"
+    description: "This table parses the folder name variables into a model to help define structure tests"
     columns:
       - name: folder_name
         tests:
