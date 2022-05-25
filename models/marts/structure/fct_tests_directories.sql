@@ -33,7 +33,7 @@ model_file_paths as (
         models_per_test.test_id,
         models_per_test.parent_model_id
     from resources
-    join models_per_test
+    inner join models_per_test
     on models_per_test.parent_model_id = resources.resource_id
     where resource_type = 'model'
 
@@ -62,7 +62,7 @@ all_file_paths as (
         regexp_replace(test_path,'.*/','') as test_yml_name,
         {{ dbt_utils.replace("model_path", "model_name" ~ " || '.sql'", "''") }} as model_directory_path
     from model_file_paths
-    join test_file_paths
+    inner join test_file_paths
     on model_file_paths.test_id = test_file_paths.test_id
 
 ),
