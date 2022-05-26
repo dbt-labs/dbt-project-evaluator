@@ -1,4 +1,11 @@
-{% set vars_prefix = ['staging_prefixes','intermediate_prefixes','marts_prefixes', 'other_prefixes'] %}
+{% set vars_layers = var('list_layers') %}
+{% set suffix_layers = '_prefixes' %}
+
+{% set vars_prefix = [] %}
+
+{% for layer in vars_layers %}
+  {% do vars_prefix.append(layer ~ suffix_layers) %}
+{% endfor %}
 
 with vars_prefix_table as (
     {{ loop_vars(vars_prefix) }}

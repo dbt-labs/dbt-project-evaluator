@@ -1,7 +1,14 @@
-{% set vars_prefix = ['staging_folder_name','intermediate_folder_name','marts_folder_name'] %}
+{% set vars_layers = var('list_layers') %}
+{% set suffix_layers = '_folder_name' %}
+
+{% set vars_folders = [] %}
+
+{% for layer in vars_layers %}
+  {% do vars_folders.append(layer ~ suffix_layers) %}
+{% endfor %}
 
 with vars_folders_table as (
-    {{ loop_vars(vars_prefix) }}
+    {{ loop_vars(vars_folders) }}
 )
 
 select
