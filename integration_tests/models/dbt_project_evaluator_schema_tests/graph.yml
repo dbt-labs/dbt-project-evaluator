@@ -56,3 +56,20 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_naming_convention_folders
+    description: "This table parses the folder name variables into a model to help define structure tests"
+    columns:
+      - name: folder_name
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_naming_convention_prefixes
+    description: "This table shows one record for each accepted model prefix for each model type (staging, intermediate, marts) from the provided variables"
+    columns:
+      - name: unique_id
+        description: surrogate key of model_type and prefix value
+        tests:
+          - unique
+          - not_null
