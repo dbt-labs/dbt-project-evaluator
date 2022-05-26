@@ -7,6 +7,8 @@ all_graph_resources as (
         resource_name,
         resource_type,
         file_path,
+        directory_path, 
+        file_name,
         model_type,
         source_name 
     from {{ ref('int_all_graph_resources') }}

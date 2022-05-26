@@ -679,7 +679,7 @@ This definition should be moved into the subdirectory `source_2`:
 ### Test Directories
 #### Model
 
-`fct_tests_directories` ([source](models/marts/structure/fct_tests_directories.sql)) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.
+`fct_test_directories` ([source](models/marts/structure/fct_test_directories.sql)) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.
 
 #### Reason to Flag
 
