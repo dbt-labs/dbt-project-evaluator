@@ -100,40 +100,7 @@ calculate_model_type as (
 
 final as (
     select
-        resource_id, 
-        resource_name, 
-        prefix, 
-        resource_type, 
-        file_path, 
-        directory_path,
-        file_name,
-        model_type_prefix,
-        model_type_folder,
-        model_type,
-        column_name,
-        is_not_null_test,
-        is_unique_test,
-        is_enabled, 
-        materialized, 
-        on_schema_change, 
-        database, 
-        schema, 
-        package_name, 
-        alias, 
-        is_described, 
-        exposure_type, 
-        maturity, 
-        url, 
-        metric_type, 
-        model, 
-        label, 
-        sql, 
-        timestamp,  
-        source_name,
-        is_source_described, 
-        loaded_at_field, 
-        loader, 
-        identifier
+        *
     from calculate_model_type
     where folder_name_rank = 1
 )
