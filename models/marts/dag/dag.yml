@@ -22,6 +22,8 @@ models:
       "All cases where one of the parent's direct children (child) is ALSO the direct child of ANOTHER one of the 
       parent's direct childen (parent_and_child). Only includes cases where the model "in between" the parent and child 
       has NO other downstream dependencies.
+    tests:
+      - is_empty
   - name: fct_root_models
     description: "This table shows each model with 0 direct parents."
     tests:
