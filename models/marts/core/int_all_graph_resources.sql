@@ -44,8 +44,12 @@ joined as (
         unioned_with_calc.file_path, 
         unioned_with_calc.directory_path,
         unioned_with_calc.file_name,
-        naming_convention_prefixes.model_type as model_type_prefix,
         case 
+            when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
+            else naming_convention_prefixes.model_type 
+        end as as model_type_prefix,
+        case 
+            when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
             when {{ dbt_utils.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} = 0 then null
             else naming_convention_folders.model_type 
         end as model_type_folder,
