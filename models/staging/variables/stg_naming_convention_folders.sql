@@ -1,7 +1,14 @@
-{% set vars_prefix = ['staging_folder_name','intermediate_folder_name','marts_folder_name'] %}
+{% set var_model_types = var('model_types') %}
+{% set suffix_model_type = '_folder_name' %}
+
+{% set vars_folders = [] %}
+
+{% for model_type in var_model_types %}
+  {% do vars_folders.append(model_type ~ suffix_model_type) %}
+{% endfor %}
 
 with vars_folders_table as (
-    {{ loop_vars(vars_prefix) }}
+    {{ loop_vars(vars_folders) }}
 )
 
 select

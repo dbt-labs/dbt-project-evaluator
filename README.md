@@ -614,8 +614,9 @@ vars:
 ```
 
 - naming conventions variables
-  - all the `xxx_folder_name` variables are used to parametrize the name of the folders for the `staging`, `intermediate` and `marts` layers of your DAG. Those layers are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_folders.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`
-  - all the `xxx_prefixes` variables are used to parametrize the prefixes of your models for the `staging`, `intermediate`, `marts` and any additional layer of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions. If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_prefixes.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`
+  - the `model_types` variable is used to configure the different layers of your dbt Project. In conjunction with the variables `<model_type>_folder_name` and `<model_type>_prefixes`, it allows the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update this variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`
+  - all the `<model_type>_folder_name` variables are used to parameterize the name of the folders for the model types of your DAG. Each variable must be a string.
+  - all the `<model_type>_prefixes` variables are used to parameterize the prefixes of your models for the model types of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions.
 - warehouse specific variables
   - `max_depth_bigquery` is only referred to with BigQuery as the Warehouse and is used to limit the number of nested CTEs when computing the DAG end to end. Changing this number to a higher one might prevent the package from running properly on BigQuery
 
