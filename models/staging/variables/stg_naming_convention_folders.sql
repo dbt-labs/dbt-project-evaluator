@@ -1,10 +1,10 @@
-{% set vars_layers = var('list_layers') %}
-{% set suffix_layers = '_folder_name' %}
+{% set var_model_types = var('model_types') %}
+{% set suffix_model_type = '_folder_name' %}
 
 {% set vars_folders = [] %}
 
-{% for layer in vars_layers %}
-  {% do vars_folders.append(layer ~ suffix_layers) %}
+{% for model_type in var_model_types %}
+  {% do vars_folders.append(model_type ~ suffix_model_type) %}
 {% endfor %}
 
 with vars_folders_table as (

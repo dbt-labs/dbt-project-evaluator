@@ -49,7 +49,7 @@ vars:
   # -- Naming conventions variables --
   # to add a new "layer", update the variable list_layers 
   # and create new variables with the names <layer>_folder_name and/or <layer>_prefixes 
-  list_layers: ['staging', 'intermediate', 'marts', 'other']
+  model_types: ['staging', 'intermediate', 'marts', 'other']
 
   staging_folder_name: 'staging'
   intermediate_folder_name: intermediate

@@ -1,10 +1,10 @@
-{% set vars_layers = var('list_layers') %}
-{% set suffix_layers = '_prefixes' %}
+{% set var_model_types = var('model_types') %}
+{% set suffix_model_type = '_prefixes' %}
 
 {% set vars_prefix = [] %}
 
-{% for layer in vars_layers %}
-  {% do vars_prefix.append(layer ~ suffix_layers) %}
+{% for model_type in var_model_types %}
+  {% do vars_prefix.append(model_type ~ suffix_model_type) %}
 {% endfor %}
 
 with vars_prefix_table as (
