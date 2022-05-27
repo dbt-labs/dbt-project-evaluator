@@ -13,9 +13,16 @@ In addition to tests, this package creates the model `int_all_dag_relationships`
 
  This package is in its early stages! It's very likely that you could encounter bugs, and functionality will be changing quickly as we gather feedback from end users. Please do not hesitate to create new issues in this repo for bug reports and/or feature requests, and we appreciate your patience as we continue to enhance this package! 
 
-
 ## Installation Instructions
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+
+## How To Use
+This package will:
+1. Parse your `[graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph)` object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
+2. Create another series of models that each represent one type of misalignment in your project (see [models/dag](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag), [models/documentation](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation), [models/structure](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure), and [models/tests](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests))
+3. Test those models to alert you to the presence of the misalignment 
+
+Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
 
 ----
 ## Package Documentation
