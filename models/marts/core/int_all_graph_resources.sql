@@ -45,18 +45,18 @@ joined as (
         unioned_with_calc.directory_path,
         unioned_with_calc.file_name,
         case 
-            when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
+            when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
             else naming_convention_prefixes.model_type 
-        end as as model_type_prefix,
+        end as model_type_prefix,
         case 
-            when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
+            when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
             when {{ dbt_utils.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} = 0 then null
             else naming_convention_folders.model_type 
         end as model_type_folder,
         {{ dbt_utils.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} as position_folder,  
-        nullif(column_name, '') as column_name,
-        resource_name like 'unique%' and resource_type = 'test' as is_not_null_test,
-        resource_name like 'not_null%' and resource_type = 'test' as is_unique_test,
+        nullif(unioned_with_calc.column_name, '') as column_name,
+        unioned_with_calc.resource_name like 'unique%' and unioned_with_calc.resource_type = 'test' as is_not_null_test,
+        unioned_with_calc.resource_name like 'not_null%' and unioned_with_calc.resource_type = 'test' as is_unique_test,
         unioned_with_calc.is_enabled, 
         unioned_with_calc.materialized, 
         unioned_with_calc.on_schema_change, 
