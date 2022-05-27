@@ -35,12 +35,8 @@ inappropriate_subdirectories_staging as (
         child as resource_name,
         child_resource_type as resource_type,
         child_model_type as model_type,
-        case
-            when {{ dbt_utils.position("'models/'", "child_file_path") }} = 1
-                then {{ dbt_utils.replace("child_file_path", "'models/'", "''") }}
-            else child_file_path
-        end as current_file_path,
-        '{{ var("staging_folder_name") }}' || '/' || parent_source_name || '/' || child_file_name as change_file_path_to
+        child_file_path as current_file_path,
+        'models/' || '{{ var("staging_folder_name") }}' || '/' || parent_source_name || '/' || child_file_name as change_file_path_to
     from staging_models
     where child_directory_path not like '%' || parent_source_name || '%'
 ),
