@@ -19,7 +19,7 @@ Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) f
 ## How To Use
 This package will:
 1. Parse your `[graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph)` object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
-2. Create another series of models that each represent one type of misalignment in your project (see [models/dag](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag), [models/documentation](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation), [models/structure](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure), and [models/tests](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests))
+2. Create another series of models that each represent one type of misalignment in your project (see [models/marts/dag](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag), [models/marts/documentation](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation), [models/marts/structure](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure), and [models/marts/tests](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests))
 3. Test those models to alert you to the presence of the misalignment 
 
 Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
