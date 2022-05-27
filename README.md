@@ -644,28 +644,18 @@ For each source flagged, move the file from the `current_file_path` to `change_f
 
 #### Example
 
-Consider `source_2.table_3` which is a `source_2` source but it's definition is inappropriately nested in the subdirectory `source_1`:
+Consider `source_2.table_3` which is a `source_2` source but it had been defined inappropriately in a `source.yml` file nested in the subdirectory `source_1`:
+
 ```
 ├── dbt_project.yml
 └── models
     ├── marts
     └── staging
         └── source_1
-            ├── source_1.yml
+            ├── source.yml
 ```
 
-```
-version: 2
-
-sources:
-  - name: source_2
-    schema: real_schema_2
-    database: real_database
-    tables:
-      - name: table_3
-```
-
-This definition should be moved into the subdirectory `source_2`:
+This definition should be moved into a `source.yml` file nested in the subdirectory `source_2`:
 ```
 ├── dbt_project.yml
 └── models
@@ -673,7 +663,7 @@ This definition should be moved into the subdirectory `source_2`:
     └── staging
         ├── source_1
         └── source_2
-            ├── source_2.yml
+            ├── source.yml
 ```
 
 ### Test Directories
@@ -691,14 +681,14 @@ Move flagged tests from the yml file under `current_test_directory` to the yml f
 
 #### Example
 
-`int_model_4` is located within `marts/`. However, tests for `int_model_4` are configured in `staging/_staging.yml`:
+`int_model_4` is located within `marts/`. However, tests for `int_model_4` are configured in `staging/staging.yml`:
 ```
 ├── dbt_project.yml
 └── models
     └── marts
         ├── int_model_4.sql
     └── staging
-        ├── _staging.yml
+        ├── staging.yml
 ```
 
 A new yml file should be created in `marts/` which contains all tests and documentation for `int_model_4`, and for the rest of the models in located in the `marts/` directory:
@@ -707,9 +697,9 @@ A new yml file should be created in `marts/` which contains all tests and docume
 └── models
     └── marts
         ├── int_model_4.sql
-        ├── _marts.yml
+        ├── marts.yml
     └── staging
-        ├── _staging.yml
+        ├── staging.yml
 ```
 
 -----
