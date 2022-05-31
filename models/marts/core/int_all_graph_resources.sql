@@ -1,15 +1,13 @@
 -- one row for each resource in the graph
 with unioned as (
 
-    {{ dbt_utils.union_relations(
-        relations=[
+    {{ dbt_utils.union_relations([
         ref('stg_nodes'),
         ref('stg_exposures'),
         ref('stg_metrics'),
-        ref('stg_sources')],
-        where="coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'"
-    )}}
-    
+        ref('stg_sources')
+    ])}}
+
 ),
 
 naming_convention_prefixes as (
@@ -24,16 +22,17 @@ unioned_with_calc as (
     select 
         *,
         case 
-            when unioned.resource_type = 'source' then  {{ dbt_utils.concat(['unioned.source_name',"'.'",'unioned.name']) }}
+            when resource_type = 'source' then  {{ dbt_utils.concat(['source_name',"'.'",'name']) }}
             else name 
         end as resource_name,
         case
-            when unioned.resource_type = 'source' then null
+            when resource_type = 'source' then null
             else {{ dbt_utils.split_part('name', "'_'", 1) }}||'_' 
         end as prefix,
         {{ dbt_utils.replace("file_path", "regexp_replace(file_path,'.*/','')", "''") }} as directory_path,
         regexp_replace(file_path,'.*/','') as file_name 
     from unioned
+    where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
 ), 
 
 joined as (
