@@ -1,0 +1,7 @@
+resource_name,current_file_path,change_file_path_to
+stg_model_5,models/staging/stg_model_5.sql,models/staging/source_1/stg_model_5.sql
+stg_model_4,models/staging/stg_model_4.sql,models/staging/source_1/stg_model_4.sql
+stg_model_3,models/staging/source_1/stg_model_3.sql,models/staging/source_2/stg_model_3.sql
+dim_model_7,models/marts/intermediate/dim_model_7.sql,models/.../marts/.../dim_model_7.sql
+int_model_4,models/marts/int_model_4.sql,models/.../intermediate/.../int_model_4.sql
+int_model_5,models/marts/int_model_5.sql,models/.../intermediate/.../int_model_5.sql
