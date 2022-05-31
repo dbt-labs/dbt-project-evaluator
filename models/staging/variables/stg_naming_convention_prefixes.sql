@@ -1,4 +1,11 @@
-{% set vars_prefix = ['staging_prefixes','intermediate_prefixes','marts_prefixes', 'other_prefixes'] %}
+{% set var_model_types = var('model_types') %}
+{% set suffix_model_type = '_prefixes' %}
+
+{% set vars_prefix = [] %}
+
+{% for model_type in var_model_types %}
+  {% do vars_prefix.append(model_type ~ suffix_model_type) %}
+{% endfor %}
 
 with vars_prefix_table as (
     {{ loop_vars(vars_prefix) }}
