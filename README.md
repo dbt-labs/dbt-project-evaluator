@@ -488,7 +488,7 @@ This model should be renamed to either `fct_model_8` or `dim_model_8`.
 
 #### Reason to Flag
 
-Because we often work with multiple data sources, in our staging directory, we create one directory per source.
+Because we often work with multiple data sources, in our staging directory, we create one subdirectory per source.
 ```
 ├── dbt_project.yml
 └── models
@@ -501,7 +501,7 @@ Because we often work with multiple data sources, in our staging directory, we c
 Each staging directory contains:
 - One staging model for each raw source table
 - One .yml file which contains source definitions, tests, and documentation (see [Source Directories](#source-directories))
-- One .yml file which contains tests & documentation for models in the same directory (see [Tests Directories](#tests-directories))
+- One .yml file which contains tests & documentation for models in the same directory (see [Test Directories](#test-directories))
 
 This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
 
@@ -621,7 +621,7 @@ This model should be renamed to either `fct_model_8` or `dim_model_8`.
 
 #### Reason to Flag
 
-Because we often work with multiple data sources, in our staging directory, we create one directory per source.
+Because we often work with multiple data sources, in our staging directory, we create one subdirectory per source.
 ```
 ├── dbt_project.yml
 └── models
@@ -634,7 +634,7 @@ Because we often work with multiple data sources, in our staging directory, we c
 Each staging directory contains:
 - One staging model for each raw source table (see [Model Directories](#source-directories))
 - One .yml file which contains source definitions, tests, and documentation
-- One .yml file which contains tests & documentation for models in the same directory (see [Tests Directories](#tests-directories))
+- One .yml file which contains tests & documentation for models in the same directory (see [Test Directories](#test-directories))
 
 This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
 
