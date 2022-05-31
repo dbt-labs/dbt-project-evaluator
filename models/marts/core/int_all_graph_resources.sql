@@ -1,13 +1,15 @@
 -- one row for each resource in the graph
 with unioned as (
 
-    {{ dbt_utils.union_relations([
+    {{ dbt_utils.union_relations(
+        relations=[
         ref('stg_nodes'),
         ref('stg_exposures'),
         ref('stg_metrics'),
-        ref('stg_sources')
-    ])}}
-
+        ref('stg_sources')],
+        where="coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'"
+    )}}
+    
 ),
 
 naming_convention_prefixes as (
@@ -84,9 +86,6 @@ joined as (
         on unioned_with_calc.prefix = naming_convention_prefixes.prefix_value
 
     cross join naming_convention_folders   
-
-    where coalesce(unioned_with_calc.is_enabled, True) = True
-    and unioned_with_calc.package_name != 'dbt_project_evaluator'
 
 ), 
 
