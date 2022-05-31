@@ -483,7 +483,7 @@ This model should be renamed to either `fct_model_8` or `dim_model_8`.
 #### Model
 
 `fct_model_directories` ([source](models/marts/structure/fct_model_directories.sql)) shows all cases where a model is NOT in the appropriate subdirectory:
-- For staging models: The files should be in nested in the staging folder in a subfolder that matches their source parent's name.
+- For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
 - For non-staging models: The files should be nested closest to the folder name that matches their model type.  
 
 #### Reason to Flag
