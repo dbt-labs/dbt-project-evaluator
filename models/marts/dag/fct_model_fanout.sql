@@ -25,7 +25,7 @@ model_fanout as (
         on all_dag_relationships.child = models_without_children.parent
     where all_dag_relationships.distance = 1 and all_dag_relationships.child_resource_type = 'model'
     group by 1
-    having count(*) >= {{ var('models_fanout_threshold', 3) }}
+    having count(*) >= {{ var('models_fanout_threshold') }}
 )
 
 select * from model_fanout

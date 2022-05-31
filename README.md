@@ -45,9 +45,16 @@ __[Structure](#structure)__
 - [Model Test Directories](#model-test-directories)
 - [Staging Directories](#staging-directories)
 
+__[Customization](#customization)__
+- [Disabling Models](#disabling-models)
+- [Overriding Variables](#overriding-variables)
+
 __[Querying the DAG with SQL](#querying-the-dag-with-sql)__
 
 __[Limitations](#limitations)__
+- [BigQuery](#bigquery)
+
+__[Contributing](#contributing)__
 
 ----
 
@@ -613,6 +620,8 @@ vars:
 
 ```
 
+- dag variables
+  - `models_fanout_threshold` can be updated to set a preferred threshold for model fanout in `fct_model_fanout` (default 3 models)
 - naming conventions variables
   - all the `xxx_folder_name` variables are used to parametrize the name of the folders for the `staging`, `intermediate` and `marts` layers of your DAG. Those layers are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_folders.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`
   - all the `xxx_prefixes` variables are used to parametrize the prefixes of your models for the `staging`, `intermediate`, `marts` and any additional layer of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions. If you want to setup more layers or different ones, you could create new variables, override the model `stg_naming_convention_prefixes.sql` with the new list of variables and deactivate the model from the package in `dbt_project.yml`

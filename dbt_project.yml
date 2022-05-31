@@ -42,6 +42,7 @@ models:
 vars:
   documentation_coverage_target: 100
   test_coverage_target: 100
+  models_fanout_threshold: 3
   max_depth_bigquery: 9
   staging_folder_name: staging
   intermediate_folder_name: intermediate
