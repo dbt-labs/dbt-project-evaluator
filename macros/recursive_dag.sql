@@ -1,5 +1,5 @@
 {% macro recursive_dag() %}
-    {{ return(adapter.dispatch('recursive_dag')()) }}
+    {{ return(adapter.dispatch('recursive_dag', 'dbt_project_evaluator')()) }}
 {% endmacro %}
 
 {% macro default__recursive_dag() %}
