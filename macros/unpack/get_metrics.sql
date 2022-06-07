@@ -1,4 +1,8 @@
 {% macro get_metrics() %}
+    {{ return(adapter.dispatch('get_metrics', 'dbt_project_evaluator')()) }}
+{% endmacro %}
+
+{% macro default__get_metrics() %}
 
     {% if execute %}
     {% set nodes_list = graph.metrics.values() %}
@@ -12,7 +16,7 @@
             '{{ node.name }}',
             '{{ node.resource_type }}',
             '{{ node.original_file_path }}',
-            cast('{{ is_not_empty_string(node.description) | trim }}' as boolean),
+            cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
             '{{ node.type }}',
             '{{ node.model.identifier }}',
             '{{ node.label }}',
@@ -27,7 +31,7 @@
     {% endif %}
 
     {{ return(
-        select_from_values(
+        dbt_project_evaluator.select_from_values(
             values = values,
             column_names = [
               'unique_id', 

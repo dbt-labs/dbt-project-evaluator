@@ -1,4 +1,8 @@
 {% macro loop_vars(vars) %}
+    {{ return(adapter.dispatch('loop_vars', 'dbt_project_evaluator')(vars)) }}
+{% endmacro %}
+
+{% macro default__loop_vars(vars) %}
 {%- set sql_query = [] -%}
 {%- for var_name in vars -%}
     {%- if var(var_name,[]) is not string -%}

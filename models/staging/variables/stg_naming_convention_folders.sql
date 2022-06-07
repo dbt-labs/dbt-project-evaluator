@@ -8,7 +8,7 @@
 {% endfor %}
 
 with vars_folders_table as (
-    {{ loop_vars(vars_folders) }}
+    {{ dbt_project_evaluator.loop_vars(vars_folders) }}
 )
 
 select

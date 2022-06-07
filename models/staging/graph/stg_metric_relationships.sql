@@ -1,7 +1,7 @@
 with relationships as (
 
     {{
-        get_relationships("metrics")
+        dbt_project_evaluator.get_relationships("metrics")
     }}
 
 ),
