@@ -12,14 +12,21 @@
             '{{ node.name }}',
             '{{ node.resource_type }}',
             '{{ node.original_file_path }}',
-            cast('{{ is_not_empty_string(node.description) | trim }}' as boolean),
+            cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
             '{{ node.type }}',
-            '{{ node.model.identifier }}',
             '{{ node.label }}',
             '{{ node.sql }}',
             '{{ node.timestamp }}',
-            '{{ node.package_name }}'
-
+            '{{ node.package_name }}',
+            '{{ node.dimensions|join(', ') }}',
+            {% if node.filters|length %}
+              {% for filt in node.filters %}
+                '{{ filt.field }}'||'{{ filt.operator }}'||'''{{ filt.value }}'''
+                {% if not loop.last %}|| ', '{% else %}{% endif %}
+              {% endfor %}
+            {% else %}
+                ''
+            {% endif %}
         {% endset %}
         {% do values.append(values_line) %}
 
@@ -27,7 +34,7 @@
     {% endif %}
 
     {{ return(
-        select_from_values(
+        dbt_project_evaluator.select_from_values(
             values = values,
             column_names = [
               'unique_id', 
@@ -36,11 +43,12 @@
               'file_path', 
               'is_described', 
               'metric_type', 
-              'model', 
               'label', 
               'sql', 
               'timestamp', 
-              'package_name'
+              'package_name',
+              'dimensions',
+              'filters'
             ]
          )
     ) }}
