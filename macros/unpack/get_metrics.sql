@@ -27,7 +27,7 @@
             {% if node.filters|length %}
               {% for filt in node.filters %}
                 '{{ filt.field }}'||'{{ filt.operator }}'||'''{{ filt.value }}'''
-                {% if not loop.last %}|| ', '{% else %}{% endif %}
+                {% if not loop.last %}|| ' - '{% else %}{% endif %}
               {% endfor %}
             {% else %}
                 ''
