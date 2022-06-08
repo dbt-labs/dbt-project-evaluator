@@ -23,7 +23,7 @@
             '{{ node.sql }}',
             '{{ node.timestamp }}',
             '{{ node.package_name }}',
-            '{{ node.dimensions|join(', ') }}',
+            '{{ node.dimensions|join(' - ') }}',
             {% if node.filters|length %}
               {% for filt in node.filters %}
                 '{{ filt.field }}'||'{{ filt.operator }}'||'''{{ filt.value }}'''
