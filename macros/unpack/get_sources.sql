@@ -1,4 +1,8 @@
 {% macro get_sources() %}
+    {{ return(adapter.dispatch('get_sources', 'dbt_project_evaluator')()) }}
+{% endmacro %}
+
+{% macro default__get_sources() %}
 
     {% if execute %}
     {% set nodes_list = graph.sources.values() %}
@@ -14,8 +18,8 @@
               '{{ node.alias }}',
               '{{ node.resource_type }}',
               '{{ node.source_name }}',
-              cast('{{ is_not_empty_string(node.source_description) | trim }}' as boolean),
-              cast('{{ is_not_empty_string(node.description) | trim }}' as boolean),
+              cast('{{ dbt_project_evaluator.is_not_empty_string(node.source_description) | trim }}' as boolean),
+              cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
               cast('{{ node.config.enabled }}' as boolean),
               '{{ node.loaded_at_field | replace("'", "_") }}}}',
               '{{ node.database }}',
@@ -32,7 +36,7 @@
 
 
     {{ return(
-        select_from_values(
+        dbt_project_evaluator.select_from_values(
             values = values,
             column_names = [
               'unique_id',

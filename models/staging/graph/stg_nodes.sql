@@ -1,4 +1,4 @@
 
 {{
-    get_nodes()
+    dbt_project_evaluator.get_nodes()
 }}

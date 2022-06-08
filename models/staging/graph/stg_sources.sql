@@ -1,4 +1,4 @@
 
 {{ 
-    get_sources()
+    dbt_project_evaluator.get_sources()
 }}
