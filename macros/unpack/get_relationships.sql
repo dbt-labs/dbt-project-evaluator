@@ -1,4 +1,8 @@
 {% macro get_relationships(node_type) %}
+    {{ return(adapter.dispatch('get_relationships', 'dbt_project_evaluator')(node_type)) }}
+{% endmacro %}
+
+{% macro default__get_relationships(node_type) %}
 
     {% if execute %}
 
@@ -39,7 +43,7 @@
         {% endfor -%}
     
     {{ return(
-        select_from_values(
+        dbt_project_evaluator.select_from_values(
             values = values,
             column_names = [
                 'resource_id',

@@ -1,4 +1,8 @@
 {% macro get_nodes() %}
+    {{ return(adapter.dispatch('get_nodes', 'dbt_project_evaluator')()) }}
+{% endmacro %}
+
+{% macro default__get_nodes() %}
 
     {% if execute %}
     {% set nodes_list = graph.nodes.values() %}
@@ -19,7 +23,7 @@
               '{{ node.schema }}',
               '{{ node.package_name }}',
               '{{ node.alias }}',
-              cast('{{ is_not_empty_string(node.description) | trim }}' as boolean),
+              cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
               '{{ "" if not node.column_name else node.column_name }}'
 
         {% endset %}
@@ -29,7 +33,7 @@
     {% endif %}
 
     {{ return(
-        select_from_values(
+        dbt_project_evaluator.select_from_values(
             values = values,
             column_names = [
               'unique_id',

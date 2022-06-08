@@ -1,4 +1,8 @@
 {% macro get_metrics() %}
+    {{ return(adapter.dispatch('get_metrics', 'dbt_project_evaluator')()) }}
+{% endmacro %}
+
+{% macro default__get_metrics() %}
 
     {% if execute %}
     {% set nodes_list = graph.metrics.values() %}

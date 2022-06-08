@@ -1,4 +1,8 @@
 {% macro get_exposures() %}
+    {{ return(adapter.dispatch('get_exposures', 'dbt_project_evaluator')()) }}
+{% endmacro %}
+
+{% macro default__get_exposures() %}
 
     {% if execute %}
     {% set nodes_list = graph.exposures.values() %}
@@ -12,7 +16,7 @@
         '{{ node.name }}',
         '{{ node.resource_type }}',
         '{{ node.original_file_path }}',
-        cast('{{ is_not_empty_string(node.description) | trim }}'as boolean),
+        cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}'as boolean),
         '{{ node.type }}',
         '{{ node.maturity}}',
         '{{ node.package_name }}',
@@ -25,7 +29,7 @@
     {% endif %}
 
     {{ return(
-        select_from_values(
+        dbt_project_evaluator.select_from_values(
             values = values,
             column_names = [
               'unique_id', 

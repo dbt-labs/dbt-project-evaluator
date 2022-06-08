@@ -8,7 +8,7 @@
 {% endfor %}
 
 with vars_prefix_table as (
-    {{ loop_vars(vars_prefix) }}
+    {{ dbt_project_evaluator.loop_vars(vars_prefix) }}
 ),
 
 parsed as (

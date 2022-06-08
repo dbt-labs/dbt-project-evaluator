@@ -1,5 +1,5 @@
 {% macro create_array(inputs=[]) -%}
-  {{ return(adapter.dispatch('array')(inputs)) }}
+  {{ return(adapter.dispatch('array', 'dbt_project_evaluator')(inputs)) }}
 {%- endmacro %}
 
 {# all inputs must be the same data type to match postgres functionality #}
