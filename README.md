@@ -19,6 +19,38 @@ In addition to tests, this package creates the model `int_all_dag_relationships`
   <summary>Installation Instructions</summary>
   <p></p>
 
+  ### Cloning via local packages
+
+    1. Clone [repository](https://github.com/dbt-labs/dbt-project-evaluator) locally via normal git workflow
+    2. Add package to your `packages.yml` in your project:
+        
+        ```yaml
+        # in packages.yml
+        
+        packages:
+          - local: <path/to/package> # use a local path
+        ```
+    3. Run `dbt deps` to install
+    4. Execute a `dbt build --select package:dbt_project_evaluator`!
+
+  ### Cloning via git address
+
+    1. Add package to your `packages.yml` in your project:
+        
+        ```yaml
+        # in packages.yml
+        
+        packages:
+          - git: "https://github.com/dbt-labs/dbt-project-evaluator.git"
+            revision: v0.1.0
+        ```
+        
+    2. Run `dbt deps` to install
+    3. Execute a `dbt build --select package:dbt_project_evaluator`!
+    
+
+  
+  *Coming to the dbt hub soon!*
   Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 </details>
