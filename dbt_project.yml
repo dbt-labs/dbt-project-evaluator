@@ -46,6 +46,9 @@ vars:
   documentation_coverage_target: 100
   test_coverage_target: 100
 
+  # -- DAG variables --
+  models_fanout_threshold: 3
+
   # -- Naming conventions variables --
   # to add a new "layer", update the variable list_layers 
   # and create new variables with the names <layer>_folder_name and/or <layer>_prefixes 

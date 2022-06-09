@@ -66,9 +66,16 @@ __[Structure](#structure)__
 - [Source Directories](#model-directories)
 - [Test Directories](#test-directories)
 
+__[Customization](#customization)__
+- [Disabling Models](#disabling-models)
+- [Overriding Variables](#overriding-variables)
+
 __[Querying the DAG with SQL](#querying-the-dag-with-sql)__
 
 __[Limitations](#limitations)__
+- [BigQuery](#bigquery)
+
+__[Contributing](#contributing)__
 
 ----
 
@@ -763,6 +770,8 @@ vars:
 
 ```
 
+- dag variables
+  - `models_fanout_threshold` can be updated to set a preferred threshold for model fanout in `fct_model_fanout` (default 3 models)
 - naming conventions variables
   - the `model_types` variable is used to configure the different layers of your dbt Project. In conjunction with the variables `<model_type>_folder_name` and `<model_type>_prefixes`, it allows the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update this variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`
   - all the `<model_type>_folder_name` variables are used to parameterize the name of the folders for the model types of your DAG. Each variable must be a string.
