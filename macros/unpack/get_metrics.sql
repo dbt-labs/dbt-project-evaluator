@@ -22,8 +22,16 @@
             '{{ node.label }}',
             '{{ node.sql }}',
             '{{ node.timestamp }}',
-            '{{ node.package_name }}'
-
+            '{{ node.package_name }}',
+            '{{ node.dimensions|join(' - ') }}',
+            {% if node.filters|length %}
+              {% for filt in node.filters %}
+                '{{ filt.field }}'||'{{ filt.operator }}'||'''{{ filt.value }}'''
+                {% if not loop.last %}|| ' - '{% endif %}
+              {% endfor %}
+            {% else %}
+                ''
+            {% endif %}
         {% endset %}
         {% do values.append(values_line) %}
 
@@ -40,11 +48,13 @@
               'file_path', 
               'is_described', 
               'metric_type', 
-              'model', 
+              'model',
               'label', 
               'sql', 
               'timestamp', 
-              'package_name'
+              'package_name',
+              'dimensions',
+              'filters'
             ]
          )
     ) }}
