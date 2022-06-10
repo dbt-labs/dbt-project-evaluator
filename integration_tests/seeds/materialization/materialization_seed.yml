@@ -1,0 +1,16 @@
+version: 2
+
+seeds:
+  - name: tst_fct_chained_views
+    config:
+      tags:
+        - materialization
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_chained_views')
+          compare_columns:
+            - parent_id
+            - parent
+            - child_id
+            - child
+            - distance
