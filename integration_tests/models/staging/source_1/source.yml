@@ -12,7 +12,6 @@ sources:
       - name: table_5
 
   - name: source_2
-    schema: real_schema_2
-    database: real_database
+    schema: "{{ target.schema }}"
     tables:
       - name: table_3

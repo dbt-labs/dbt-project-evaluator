@@ -1,1 +1,1 @@
-{{ source('source_2', 'table_3') }}
+select * from {{ source('source_2', 'table_3') }}
