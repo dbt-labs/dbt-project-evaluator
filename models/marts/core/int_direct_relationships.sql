@@ -10,7 +10,8 @@ all_graph_resources as (
         directory_path, 
         file_name,
         model_type,
-        source_name 
+        source_name,
+        materialized 
     from {{ ref('int_all_graph_resources') }}
 ),
 
@@ -52,11 +53,21 @@ direct_relationships as (
         on all_graph_resources.resource_id = exposures.resource_id
 ),
 
+-- getting the materializationof the parent model to be able to track back chains of views
+direct_relationships_with_materialization as (
+    select
+        direct_relationships.*,
+        all_graph_resources.materialized as direct_parent_materialized
+    from direct_relationships
+    left join all_graph_resources
+        on direct_relationships.direct_parent_id = all_graph_resources.resource_id
+),
+
 final as (
     select
         {{ dbt_utils.surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id,
         *
-    from direct_relationships
+    from direct_relationships_with_materialization
 )
 
 select * from final
