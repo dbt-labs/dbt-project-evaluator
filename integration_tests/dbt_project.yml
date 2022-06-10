@@ -24,7 +24,7 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
-on-run-start: "create schema if not exists {{ target.schema }} ; create table if not exists {{ target.schema }}.table_3 as (select 1 as id)"
+on-run-start: "create schema if not exists {{ target.schema }} ; create table if not exists {{ target.schema }}.table_3 (id int)"
 
 models:
   dbt_project_evaluator_integration_tests:
