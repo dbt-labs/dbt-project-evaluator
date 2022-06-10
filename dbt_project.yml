@@ -23,6 +23,9 @@ models:
         int_direct_relationships:
           # required for BigQuery and Redshift for performance/memory reasons
           +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
+        int_all_dag_relationships:
+          # required for BigQuery and Redshift for performance/memory reasons
+          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
       dag:
         +materialized: table
     staging:
