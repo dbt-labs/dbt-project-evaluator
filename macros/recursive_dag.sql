@@ -1,14 +1,25 @@
-{% macro recursive_dag() %}
-    {{ return(adapter.dispatch('recursive_dag', 'dbt_project_evaluator')()) }}
+{% macro recursive_dag(filter_views=false) %}
+    {{ return(adapter.dispatch('recursive_dag', 'dbt_project_evaluator')(filter_views)) }}
 {% endmacro %}
 
-{% macro default__recursive_dag() %}
+{% macro default__recursive_dag(filter_views) %}
 
 with recursive direct_relationships as (
     select  
         *
     from {{ ref('int_direct_relationships') }}
+
+    {% if not filter_views %}
+    -- when not filtering on views, we want all nodes, except tests
     where resource_type <> 'test'
+    {% else %}
+    -- when filtering on views, we only want models and consider relationships that are
+    -- either views, ephemerals or sources
+    where 
+        resource_type = 'model'
+        and coalesce(direct_parent_materialized, 'source') in ('view', 'ephemeral', 'source')
+    {% endif %}
+    
 ),
 
 -- should this be a fct_ model?
@@ -93,7 +104,7 @@ all_relationships (
 
 
 
-{% macro bigquery__recursive_dag() %}
+{% macro bigquery__recursive_dag(filter_views) %}
 
 -- as of Feb 2022 BigQuery doesn't support with recursive in the same way as other DWs
 {% set max_depth = var('max_depth_bigquery',9) %}
@@ -102,7 +113,17 @@ with direct_relationships as (
     select  
         *
     from {{ ref('int_direct_relationships') }}
-     where resource_type <> 'test'
+
+    {% if not filter_views %}
+    -- when not filtering on views, we want all nodes, except tests
+    where resource_type <> 'test'
+    {% else %}
+    -- when filtering on views, we only want models and consider relationships that are
+    -- either views, ephemerals or sources
+    where 
+        resource_type = 'model'
+        and coalesce(direct_parent_materialized, 'source') in ('view', 'ephemeral', 'source')
+    {% endif %}
 )
 
 -- must do distinct prior to creating array because BigQuery doesn't support distinct on array type
