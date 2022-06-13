@@ -437,6 +437,20 @@ or any other nested information.
 
 <img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
+### Exposure Materializations
+#### Model
+
+`fct_exposure_materializations` ([source](models/marts/dag/fct_exposure_materializations.sql)) shows each model with a direct relationship to an exposure that is *not* materialized as a table in the warehouse. 
+
+#### Reason to Flag
+
+Models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried. This model highlights instances where the models referenced by exposures are not either a `table` or `incremental` materialization.
+
+#### How to Remediate
+
+If necessary, update the `materialized` configuration on the models returned in `fct_exposure_materializations` to either `table` or `incremental`. This con be done in individual model files using a ocnfig block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
+
+
 ## Testing
 ### Models without Primary Key Tests
 
