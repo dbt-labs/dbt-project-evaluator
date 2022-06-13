@@ -1,0 +1,3 @@
+model_name,exposure_name,parent_model_materialization,parent_model_type
+fct_model_6,exposure_1,ephemeral,marts
+dim_model_7,exposure_1,ephemeral,marts
