@@ -639,40 +639,6 @@ This file should be moved closest to the subdirectory `intermediate`:
             ├── int_model_4.sql
 ```
 
-## Structure
-### Model Naming Conventions
-#### Model
-
-`fct_model_naming_conventions` ([source](models/marts/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix.
-
-#### Reason to Flag
-
-Without appropriate naming conventions, a user querying the data warehouse might incorrectly assume the model type of a given relation. In order to explicitly name
-the model type in the data warehouse, we recommend appropriately prefixing your models in dbt.
-
-| Model Type   | Appropriate Prefixes |
-| ------------ | -------------------- |
-| Staging      | `stg_`               |
-| Intermediate | `int_`               |
-| Marts        | `fct_` or `dim_`     |
-| Other        | `rpt_`               |
-
-#### How to Remediate
-
-For each model flagged, ensure the model type is defined and the model name is prefixed appropriately.
-
-#### Example
-
-Consider `model_8` which is nested in the `marts` subdirectory:
-```
-├── dbt_project.yml
-└── models
-    ├── marts
-        └── model_8.sql
-```
-
-This model should be renamed to either `fct_model_8` or `dim_model_8`.
-
 ### Source Directories
 #### Model
 
