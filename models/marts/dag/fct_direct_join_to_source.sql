@@ -28,3 +28,22 @@ final as (
 )
 
 select * from final
+
+
+
+
+{% set query_filters %}
+select 
+    column_name, 
+    id_to_exclude 
+from {{ ref('dbt_project_evaluator_exceptions') }}
+where fct_name = '{{ this.name }}'
+{% endset %}
+
+{% if execute %}
+where 1 = 1
+{% for row_filter in run_query(query_filters) %}
+    and {{ row_filter["column_name"] }} <> '{{ row_filter["id_to_exclude"] }}'
+{% endfor %}
+
+{% endif %}
