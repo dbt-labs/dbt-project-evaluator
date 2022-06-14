@@ -6,7 +6,7 @@ direct_exposure_relationships as (
         distance = 1
         and child_resource_type = 'exposure'
         and parent_resource_type = 'model'
-        and parent_materialized not in ('table', 'incremental')
+        and parent_materialized in ('view', 'ephemeral')
 ),
 
 final as (
