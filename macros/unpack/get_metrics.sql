@@ -8,6 +8,25 @@
     {% set nodes_list = graph.metrics.values() %}
     {% set values = [] %}
 
+    {% set values0 %}
+
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as boolean),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }})
+
+    {% endset %}
+    {% do values.append(values0) %}
+
     {% for node in nodes_list %}
 
           {% set values_line %}
@@ -55,7 +74,8 @@
               'package_name',
               'dimensions',
               'filters'
-            ]
+            ],
+            where_condition='unique_id is not null'
          )
     ) }}
 

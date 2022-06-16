@@ -18,6 +18,14 @@
         
         {% set values = [] %}
 
+        {% set values0 %}
+
+            cast(null as {{ dbt_utils.type_string() }}),
+            cast(null as {{ dbt_utils.type_string() }})
+
+        {% endset %}
+        {% do values.append(values0) %}
+
         {%- for node in nodes_list -%}
 
             {%- if node.depends_on.nodes|length == 0 -%}
@@ -27,7 +35,7 @@
                 {% endset %}
                 {% do values.append(values_line) %}
 
-            {%- else -%}       
+            {%- else -%}
 
                 {%- for parent in node.depends_on.nodes -%}
 
@@ -48,7 +56,8 @@
             column_names = [
                 'resource_id',
                 'direct_parent_id'
-            ]
+            ],
+            where_condition='resource_id is not null'
          )
     ) }}
 
