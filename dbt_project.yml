@@ -69,3 +69,4 @@ vars:
 
   # -- Warehouse specific variables --
   max_depth_bigquery: 9
+  
