@@ -12,10 +12,9 @@ direct_exposure_relationships as (
 final as (
 
     select 
-        parent as model_name,
+        parent as parent_model_name,
         child as exposure_name,
-        parent_materialized as parent_model_materialization,
-        parent_model_type as parent_model_type
+        parent_materialized as parent_model_materialization
 
     
     from direct_exposure_relationships
