@@ -2,6 +2,8 @@ name: 'dbt_project_evaluator'
 version: '1.0.0'
 config-version: 2
 
+require-dbt-version: [">=1.1.0", "<2.0.0"]
+
 model-paths: ["models"]
 analysis-paths: ["analysis"]
 test-paths: ["tests"]
@@ -14,6 +16,10 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+
 models:
   dbt_project_evaluator:
     marts:
@@ -22,10 +28,10 @@ models:
           +materialized: table   
         int_direct_relationships:
           # required for BigQuery and Redshift for performance/memory reasons
-          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
+          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
         int_all_dag_relationships:
           # required for BigQuery and Redshift for performance/memory reasons
-          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
+          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
       dag:
         +materialized: table
     staging:

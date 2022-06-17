@@ -187,3 +187,8 @@ with direct_relationships as (
 )
 
 {% endmacro %}
+
+
+{% macro spark__recursive_dag() %}
+    {{ return(bigquery__recursive_dag()) }}
+{% endmacro %}

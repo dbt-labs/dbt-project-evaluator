@@ -18,3 +18,7 @@
 {% macro bigquery__array(inputs) -%}
     [ {{ inputs|join(' , ') }} ]
 {%- endmacro %}
+
+{% macro spark__array(inputs) -%}
+    array( {{ inputs|join(' , ') }} )
+{%- endmacro %}

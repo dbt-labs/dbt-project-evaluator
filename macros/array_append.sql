@@ -14,3 +14,7 @@
 {% macro redshift__array_append(array, new_element) -%}
     array_concat({{ array }}, {{ dbt_project_evaluator.create_array([new_element]) }})
 {%- endmacro %}
+
+{% macro spark__array_append(array, new_element) -%}
+    concat({{ array }}, {{ dbt_project_evaluator.create_array([new_element]) }})
+{%- endmacro %}
