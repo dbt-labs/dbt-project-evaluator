@@ -45,6 +45,6 @@ models:
     tests:
       - is_empty
   - name: fct_exposure_materializations
-    description: "This table shows each model that has a direct parent relationship with an exposure that is not materialized as a table."
+    description: "This table shows each direct parent of an exposure that is not materialized as a table or incremental."
     tests:
       - is_empty
