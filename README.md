@@ -448,7 +448,7 @@ Models that are referenced by an exposure are likely to be used heavily in downs
 
 #### How to Remediate
 
-If necessary, update the `materialized` configuration on the models returned in `fct_exposure_materializations` to either `table` or `incremental`. This con be done in individual model files using a ocnfig block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
+If necessary, update the `materialized` configuration on the models returned in `fct_exposure_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
 
 
 ## Testing
