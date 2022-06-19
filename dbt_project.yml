@@ -33,10 +33,7 @@ models:
         +materialized: table
     staging:
       graph:
-        stg_nodes:
-          +materialized: table
-        stg_node_relationships:
-          +materialized: table
+        +materialized: table
       variables:
         stg_naming_convention_folders:
           # required for Redshift because listagg runs only on tables
