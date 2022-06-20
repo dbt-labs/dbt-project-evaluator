@@ -5,9 +5,9 @@
 {% macro default__is_not_empty_string(str) %}
 
     {% if str %}
-    {{ true }}
+    'true'
     {% else %}
-    {{ false }}
+    'false'
     {% endif %}
 
 {% endmacro %}
