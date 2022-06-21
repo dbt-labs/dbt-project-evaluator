@@ -4,7 +4,7 @@ macros:
   - name: select_from_values
     description: A macro to generate the SQL to create models where the data comes from a Jinja variable
     arguments:
-      - name: column_names
+      - name: columns
         type: list
         description: |
           The names of the columns, in the same order as the values.
