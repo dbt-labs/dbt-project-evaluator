@@ -18,3 +18,11 @@
     )
 
 {%- endmacro %}
+
+{% macro spark__array_construct(inputs) -%}
+    array( {{ inputs|join(' , ') }} )
+{%- endmacro %} 
+
+{% macro spark__array_append(array, new_element) -%}
+    concat({{ array }}, {{ dbt_project_evaluator.create_array([new_element]) }})
+{%- endmacro %}
