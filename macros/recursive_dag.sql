@@ -96,7 +96,7 @@ all_relationships (
 {% macro bigquery__recursive_dag() %}
 
 -- as of Feb 2022 BigQuery doesn't support with recursive in the same way as other DWs
-{% set max_depth = var('max_depth_bigquery',9) %}
+{% set max_depth = var('max_depth_dag',9) %}
 
 with direct_relationships as (
     select  
@@ -182,5 +182,6 @@ with direct_relationships as (
 
 
 {% macro spark__recursive_dag() %}
+-- as of June 2022 databricks SQL doesn't support "with recursive" in the same way as other DWs
     {{ return(bigquery__recursive_dag()) }}
 {% endmacro %}
