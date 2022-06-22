@@ -17,7 +17,7 @@
             '{{ node.name }}',
             '{{ node.resource_type }}',
             '{{ node.original_file_path }}',
-            cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}'as boolean),
+            cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
             '{{ node.type }}',
             '{{ node.maturity}}',
             '{{ node.package_name }}',
