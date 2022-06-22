@@ -24,5 +24,5 @@
 {%- endmacro %} 
 
 {% macro spark__array_append(array, new_element) -%}
-    concat({{ array }}, {{ dbt_project_evaluator.create_array([new_element]) }})
+    concat({{ array }}, {{ spark__array_construct([new_element]) }})
 {%- endmacro %}
