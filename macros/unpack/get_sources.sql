@@ -21,7 +21,7 @@
               cast('{{ dbt_project_evaluator.is_not_empty_string(node.source_description) | trim }}' as boolean),
               cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
               cast('{{ node.config.enabled }}' as boolean),
-              '{{ node.loaded_at_field | replace("'", "_") }}}}',
+              '{{ node.loaded_at_field | replace("'", "_") }}',
               '{{ node.database }}',
               '{{ node.schema }}',
               '{{ node.package_name }}',
