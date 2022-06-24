@@ -24,12 +24,13 @@
             '{{ node.timestamp }}',
             '{{ node.package_name }}',
             '{{ node.dimensions|join(' - ') }}',
-            {%- if node.filters|length -%}
-              {%- for filt in node.filters %}
-                '{{ filt.field }}'||'{{ filt.operator }}'||'''{{ filt.value }}'''
-                {% if not loop.last %}|| ' - '{% endif %}
-              {% endfor -%}
-            {%- else -%}
+
+            {% if node.filters|length %}
+              {% for filt in node.filters %}
+                '{{ filt.field }}'||'{{ filt.operator }}'||'''{{ dbt_utils.escape_single_quotes(filt.value) }}'''
+                {% if not loop.last %}|| ' - ' ||{% endif %}
+              {% endfor %}
+            {% else %}
                 ''
             {% endif -%}
         {%- endset -%}

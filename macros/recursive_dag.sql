@@ -54,7 +54,7 @@ all_relationships (
         directory_path as child_directory_path,
         file_name as child_file_name,
         0 as distance,
-        {{ dbt_project_evaluator.create_array(['resource_name']) }} as path
+        {{ dbt_utils.array_construct(['resource_name']) }} as path
 
     from direct_relationships
     -- where direct_parent is null {# optional lever to change filtering of anchor clause to only include root resources #}
@@ -80,7 +80,7 @@ all_relationships (
         direct_relationships.directory_path as child_directory_path,
         direct_relationships.file_name as child_file_name,
         all_relationships.distance+1 as distance, 
-        {{ dbt_project_evaluator.array_append('all_relationships.path', 'direct_relationships.resource_name') }} as path
+        {{ dbt_utils.array_append('all_relationships.path', 'direct_relationships.resource_name') }} as path
 
     from direct_relationships
     inner join all_relationships
@@ -96,7 +96,7 @@ all_relationships (
 {% macro bigquery__recursive_dag() %}
 
 -- as of Feb 2022 BigQuery doesn't support with recursive in the same way as other DWs
-{% set max_depth = var('max_depth_bigquery',9) %}
+{% set max_depth = var('max_depth_dag',9) %}
 
 with direct_relationships as (
     select  
@@ -119,7 +119,7 @@ with direct_relationships as (
         parent_id,
         child_id,
         0 as distance,
-        {{ dbt_project_evaluator.create_array(['resource_name']) }} as path
+        {{ dbt_utils.array_construct(['resource_name']) }} as path
     from get_distinct
 )
 
@@ -130,7 +130,7 @@ with direct_relationships as (
         cte_{{i - 1}}.parent_id as parent_id,
         direct_relationships.resource_id as child_id,
         cte_{{i - 1}}.distance+1 as distance, 
-        {{ dbt_project_evaluator.array_append(prev_cte_path, 'direct_relationships.resource_name') }} as path
+        {{ dbt_utils.array_append(prev_cte_path, 'direct_relationships.resource_name') }} as path
 
         from direct_relationships
             inner join cte_{{i - 1}}
@@ -182,5 +182,6 @@ with direct_relationships as (
 
 
 {% macro spark__recursive_dag() %}
+-- as of June 2022 databricks SQL doesn't support "with recursive" in the same way as other DWs
     {{ return(bigquery__recursive_dag()) }}
 {% endmacro %}

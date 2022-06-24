@@ -18,3 +18,15 @@
     )
 
 {%- endmacro %}
+
+{% macro spark__array_construct(inputs, data_type) -%}
+    array( {{ inputs|join(' , ') }} )
+{%- endmacro %} 
+
+{% macro spark__array_concat(array_1, array_2) -%}
+    concat({{ array_1 }}, {{ array_2 }})
+{%- endmacro %}
+
+{% macro spark__array_append(array, new_element) -%}
+    {{ dbt_utils.array_concat(array, dbt_utils.array_construct([new_element])) }}
+{%- endmacro %}
