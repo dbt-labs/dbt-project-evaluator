@@ -13,6 +13,13 @@ In addition to tests, this package creates the model `int_all_dag_relationships`
 
  This package is in its early stages! It's very likely that you could encounter bugs, and functionality will be changing quickly as we gather feedback from end users. Please do not hesitate to create new issues in this repo for bug reports and/or feature requests, and we appreciate your patience as we continue to enhance this package! 
 
+Currently, the following adapters are supported:
+- BigQuery
+- Databricks/Spark
+- PostgreSQL
+- Redshift
+- Snowflake
+
 ## Using This Package
 
 <details>
@@ -21,35 +28,45 @@ In addition to tests, this package creates the model `int_all_dag_relationships`
 
   ### Cloning via local packages
 
-    1. Clone [repository](https://github.com/dbt-labs/dbt-project-evaluator) locally via normal git workflow
-    2. Add package to your `packages.yml` in your project:
-        
-        ```yaml
-        # in packages.yml
-        
-        packages:
-          - local: <path/to/package> # use a local path
-        ```
-    3. Run `dbt deps` to install
-    4. Execute a `dbt build --select package:dbt_project_evaluator`!
+  1. Clone the [repository](https://github.com/dbt-labs/dbt-project-evaluator) locally via normal git workflow
+  2. Add package to your `packages.yml` in your project:
+      
+      ```yaml
+      # in packages.yml
+      
+      packages:
+        - local: <path/to/package> # use a local path
+      ```
+  3. Run `dbt deps` to install
+  4. Execute a `dbt build --select package:dbt_project_evaluator`!
 
   ### Cloning via git address
 
-    1. Add package to your `packages.yml` in your project:
-        
-        ```yaml
-        # in packages.yml
-        
-        packages:
-          - git: "https://github.com/dbt-labs/dbt-project-evaluator.git"
-            revision: v0.1.0
-        ```
-        
-    2. Run `dbt deps` to install
-    3. Execute a `dbt build --select package:dbt_project_evaluator`!
+  1. Add package to your `packages.yml` in your project:
+      
+      ```yaml
+      # in packages.yml
+      
+      packages:
+        - git: "https://github.com/dbt-labs/dbt-project-evaluator.git"
+          revision: v0.1.0
+      ```
+      
+  2. Run `dbt deps` to install
+  3. Execute a `dbt build --select package:dbt_project_evaluator`!
     
+  ### Additional setup for Databricks/Spark
 
+  In your `dbt_project.yml`, add the following config:
+  ```yaml
+  dispatch:
+    - macro_namespace: dbt_utils
+      search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+  ```
+
+  This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
   
+
   *Coming to the dbt hub soon!*
   Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
@@ -105,7 +122,7 @@ __[Customization](#customization)__
 __[Querying the DAG with SQL](#querying-the-dag-with-sql)__
 
 __[Limitations](#limitations)__
-- [BigQuery](#bigquery)
+- [BigQuery and Databricks](#bigquery-and-databricks)
 
 __[Contributing](#contributing)__
 
@@ -775,7 +792,7 @@ vars:
   - all the `<model_type>_folder_name` variables are used to parameterize the name of the folders for the model types of your DAG. Each variable must be a string.
   - all the `<model_type>_prefixes` variables are used to parameterize the prefixes of your models for the model types of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions.
 - warehouse specific variables
-  - `max_depth_bigquery` is only referred to with BigQuery as the Warehouse and is used to limit the number of nested CTEs when computing the DAG end to end. Changing this number to a higher one might prevent the package from running properly on BigQuery
+  - `max_depth_dag` is only referred to with BigQuery and Databricks/Spark as the Warehouse and is used to limit the number of looped CTEs when computing the DAG end to end. Changing this number to a higher one might prevent the package from running properly on BigQuery
 
 ----
 
@@ -799,11 +816,11 @@ Building additional models and snapshots on top of this model could allow:
 ----
 ## Limitations
 
-### BigQuery
+### BigQuery and Databricks
 
-BigQuery current support for recursive CTEs is limited.
+BigQuery current support for recursive CTEs is limited and Databricks SQL doesn't support recursive CTEs.
 
-For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
+For those Data Warehouses, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is configured with `max_depth_dag` and defaulted to 9. This means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
 
 ----
 ## Contributing

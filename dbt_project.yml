@@ -70,4 +70,4 @@ vars:
   other_prefixes: ['rpt_']
 
   # -- Warehouse specific variables --
-  max_depth_bigquery: 9
+  max_depth_dag: 9
