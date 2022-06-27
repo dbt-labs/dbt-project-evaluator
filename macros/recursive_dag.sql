@@ -92,7 +92,7 @@ all_relationships (
         case 
             when 
                 all_relationships.child_materialized in ('view', 'ephemeral') 
-                and ifnull(all_relationships.is_dependent_on_chain_of_views, true) 
+                and coalesce(all_relationships.is_dependent_on_chain_of_views, true) 
                 then true
             else false
         end as is_dependent_on_chain_of_views
@@ -150,7 +150,7 @@ with direct_relationships as (
         case 
             when 
                 cte_{{i - 1}}.child_materialized in ('view', 'ephemeral') 
-                and ifnull(cte_{{i - 1}}.is_dependent_on_chain_of_views, true) 
+                and coalesce(cte_{{i - 1}}.is_dependent_on_chain_of_views, true) 
                 then true
             else false
         end as is_dependent_on_chain_of_views
