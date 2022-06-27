@@ -42,6 +42,7 @@ direct_relationships as (
         CASE 
             WHEN all_graph_resources.resource_type = 'source' THEN NULL
             WHEN all_graph_resources.resource_type = 'exposure' THEN exposures.direct_parent_id
+            WHEN all_graph_resources.resource_type = 'metric' THEN metrics.direct_parent_id
             WHEN all_graph_resources.resource_type IN ('model', 'snapshot', 'test') THEN models.direct_parent_id
             ELSE NULL
         END AS direct_parent_id
@@ -50,6 +51,8 @@ direct_relationships as (
         on all_graph_resources.resource_id = models.resource_id
     left join direct_exposure_relationships as exposures
         on all_graph_resources.resource_id = exposures.resource_id
+    left join direct_metrics_relationships as metrics
+        on all_graph_resources.resource_id = metrics.resource_id
 ),
 
 final as (
