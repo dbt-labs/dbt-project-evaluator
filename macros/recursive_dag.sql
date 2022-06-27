@@ -60,7 +60,7 @@ all_relationships (
         file_name as child_file_name,
         0 as distance,
         {{ dbt_utils.array_construct(['resource_name']) }} as path,
-        null::boolean as is_dependent_on_chain_of_views
+        cast(null as boolean) as is_dependent_on_chain_of_views
 
     from direct_relationships
     -- where direct_parent_id is null {# optional lever to change filtering of anchor clause to only include root resources #}
@@ -122,7 +122,8 @@ with direct_relationships as (
     select distinct
         resource_id as parent_id,
         resource_id as child_id,
-        resource_name
+        resource_name,
+        materialized as child_materialized
     from direct_relationships
 )
 
@@ -130,8 +131,10 @@ with direct_relationships as (
     select 
         parent_id,
         child_id,
+        child_materialized,
         0 as distance,
-        {{ dbt_utils.array_construct(['resource_name']) }} as path
+        {{ dbt_utils.array_construct(['resource_name']) }} as path,
+        cast(null as boolean) as is_dependent_on_chain_of_views
     from get_distinct
 )
 
@@ -141,8 +144,16 @@ with direct_relationships as (
     select 
         cte_{{i - 1}}.parent_id as parent_id,
         direct_relationships.resource_id as child_id,
+        direct_relationships.materialized as child_materialized,
         cte_{{i - 1}}.distance+1 as distance, 
-        {{ dbt_utils.array_append(prev_cte_path, 'direct_relationships.resource_name') }} as path
+        {{ dbt_utils.array_append(prev_cte_path, 'direct_relationships.resource_name') }} as path,
+        case 
+            when 
+                cte_{{i - 1}}.child_materialized in ('view', 'ephemeral') 
+                and ifnull(cte_{{i - 1}}.is_dependent_on_chain_of_views, true) 
+                then true
+            else false
+        end as is_dependent_on_chain_of_views
 
         from direct_relationships
             inner join cte_{{i - 1}}
@@ -183,7 +194,8 @@ with direct_relationships as (
         child.directory_path as child_directory_path,
         child.file_name as child_file_name,
         all_relationships_unioned.distance,
-        all_relationships_unioned.path
+        all_relationships_unioned.path,
+        all_relationships_unioned.is_dependent_on_chain_of_views
 
     from all_relationships_unioned
     left join resource_info as parent

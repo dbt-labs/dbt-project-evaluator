@@ -4,4 +4,5 @@
     )
 }}
 
-select 1 from {{ ref('stg_model_3') }}
+select 1 as id 
+-- depends on: {{ ref('stg_model_3') }}
