@@ -72,5 +72,8 @@ vars:
   marts_prefixes: ['fct_', 'dim_']
   other_prefixes: ['rpt_']
 
+  # -- Performance variables --
+  chained_views_threshold: 5
+
   # -- Warehouse specific variables --
   max_depth_dag: 9

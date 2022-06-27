@@ -5,7 +5,8 @@ Specifically, this package tests for:
   1. __[DAG Issues](#dag-issues)__ - your dbt DAG for modeling best practices
   2. __[Testing](#testing)__ - your models for testing best practices
   3. __[Documentation](#documentation)__ - your models for documentation best practices
-  3. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
+  4. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
+  5. __[Performance](#performance)__ - your model materializations for performance best practices
 
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 
@@ -114,6 +115,9 @@ __[Structure](#structure)__
 - [Model Directories](#model-directories)
 - [Source Directories](#model-directories)
 - [Test Directories](#test-directories)
+
+__[Performance](#performance)__
+- [Chained View Dependencies](#chained-view-dependencies)
 
 __[Customization](#customization)__
 - [Disabling Models](#disabling-models)
@@ -743,6 +747,13 @@ A new yml file should be created in `marts/` which contains all tests and docume
     └── staging
         ├── staging.yml
 ```
+
+## Performance
+### Chained View Dependencies
+#### Model
+#### Reason to Flag
+#### How to Remediate
+#### Example
 
 -----
 ## Customization
