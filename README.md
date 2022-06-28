@@ -750,6 +750,12 @@ A new yml file should be created in `marts/` which contains all tests and docume
 
 ## Performance
 ### Chained View Dependencies
+
+`fct_chained_views_dependencies` ([source](models/marts/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental. 
+
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `distance` between a given `parent` and `child` is greater than 5.
+You can set your own threshold by overriding the `chained_views_threshold` variable. [See overriding variables section.](#overriding-variables)
+
 #### Model
 #### Reason to Flag
 #### How to Remediate
