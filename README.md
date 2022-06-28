@@ -23,69 +23,28 @@ Currently, the following adapters are supported:
 
 ## Using This Package
 
-<details>
-  <summary>Installation Instructions</summary>
-  <p></p>
-
-  ### Cloning via local packages
-
-  1. Clone the [repository](https://github.com/dbt-labs/dbt-project-evaluator) locally via normal git workflow
-  2. Add package to your `packages.yml` in your project:
-      
-      ```yaml
-      # in packages.yml
-      
-      packages:
-        - local: <path/to/package> # use a local path
-      ```
-  3. Run `dbt deps` to install
-  4. Execute a `dbt build --select package:dbt_project_evaluator`!
-
-  ### Cloning via git address
-
-  1. Add package to your `packages.yml` in your project:
-      
-      ```yaml
-      # in packages.yml
-      
-      packages:
-        - git: "https://github.com/dbt-labs/dbt-project-evaluator.git"
-          revision: v0.1.0
-      ```
-      
-  2. Run `dbt deps` to install
-  3. Execute a `dbt build --select package:dbt_project_evaluator`!
-    
-  ### Additional setup for Databricks/Spark
-
-  In your `dbt_project.yml`, add the following config:
-  ```yaml
-  dispatch:
-    - macro_namespace: dbt_utils
-      search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
-  ```
-
-  This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
+### Cloning via dbt Package Hub
   
+Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+### Additional setup for Databricks/Spark
 
-  *Coming to the dbt hub soon!*
-  Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+In your `dbt_project.yml`, add the following config:
+```yaml
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+```
 
-</details>
+This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
+  
+### How It Works
 
-<details>
+This package will:
+1. Parse your [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
+2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
+3. Test those models to alert you to the presence of the misalignment 
 
-  <summary>How It Works</summary>
-  <p></p>
-
-  This package will:
-  1. Parse your [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
-  2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
-  3. Test those models to alert you to the presence of the misalignment 
-
-  Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
-
-</details>
+Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
 
 ----
 ## Package Documentation
@@ -763,7 +722,7 @@ You can set your own threshold by overriding the `chained_views_threshold` varia
 
 -----
 ## Customization
-### Disabling models
+### Disabling Models
 
 If there is a particular model or set of models that you *do not want this package to execute*, you can
 disable these models as you would any other model in your `dbt_project.yml` file
@@ -787,9 +746,12 @@ models:
 
 Currently, this package uses different variables to adapt the models to your objectives and naming conventions. They can all be updated directly in `dbt_project.yml`
 
-- tests and docs coverage variables
-  - `test_coverage_pct` can be updated to set a test coverage percentage (default 100% coverage)
-  - `documentation_coverage_pct` can be updated to set a documentation coverage percentage (default 100% coverage)
+#### Coverage Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
+| `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
 
 ```yml
 # dbt_project.yml
@@ -799,17 +761,54 @@ vars:
   dbt_project_evaluator:
     documentation_coverage_target: 75
     test_coverage_target: 75
-
 ```
 
-- dag variables
-  - `models_fanout_threshold` can be updated to set a preferred threshold for model fanout in `fct_model_fanout` (default 3 models)
-- naming conventions variables
-  - the `model_types` variable is used to configure the different layers of your dbt Project. In conjunction with the variables `<model_type>_folder_name` and `<model_type>_prefixes`, it allows the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update this variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`
-  - all the `<model_type>_folder_name` variables are used to parameterize the name of the folders for the model types of your DAG. Each variable must be a string.
-  - all the `<model_type>_prefixes` variables are used to parameterize the prefixes of your models for the model types of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions.
-- warehouse specific variables
-  - `max_depth_dag` is only referred to with BigQuery and Databricks/Spark as the Warehouse and is used to limit the number of looped CTEs when computing the DAG end to end. Changing this number to a higher one might prevent the package from running properly on BigQuery
+#### DAG Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `models_fanout_threshold` | maximum threshold for acceptable model fanout for `fct_model_fanout` | 3 models |
+
+```yml
+# dbt_project.yml
+# set your model fanout threshold to 10 instead of 3
+
+vars:
+  dbt_project_evaluator:
+    models_fanout_threshold: 10
+```
+
+#### Naming Convention Variables:
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `model_types` | a list of the different types of models that define the layers of your dbt project | staging, intermediate, marts, other |
+| `staging_folder_name` | the name of the folder that contains your staging models | staging |
+| `intermediate_folder_name` | the name of the folder that contains your intermediate models | intermediate |
+| `marts_folder_name` | the name of the folder that contains your marts models | marts |
+| `staging_prefixes` | the list of acceptable prefixes for your staging models | stg_ |
+| `intermediate_prefixes` | the list of acceptable prefixes for your intermediate models | int_ |
+| `marts_prefixes` | the list of acceptable prefixes for your marts models | fct_, dim_ |
+| `other_prefixes` | the list of acceptable prefixes for your other models | rpt_ |
+
+The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`.
+
+```yml
+# dbt_project.yml
+# add an additional model type "util"
+
+vars:
+  dbt_project_evaluator:
+    model_types: ['staging', 'intermediate', 'marts', 'other', 'util']
+    util_folder_name: 'util'
+    util_prefixes: ['util_']
+```
+
+#### Warehouse Specific Variables:
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `max_depth_dag` | limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility | 9 |
+
+Changing `max_depth_dag` number to a higher one might prevent the package from running properly on BigQuery and Databricks/Spark.
 
 ----
 
