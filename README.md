@@ -709,13 +709,13 @@ A new yml file should be created in `marts/` which contains all tests and docume
 
 ## Performance
 ### Chained View Dependencies
+#### Model
 
 `fct_chained_views_dependencies` ([source](models/marts/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental. 
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `distance` between a given `parent` and `child` is greater than 5.
 You can set your own threshold by overriding the `chained_views_threshold` variable. [See overriding variables section.](#overriding-variables)
 
-#### Model
 #### Reason to Flag
 #### How to Remediate
 #### Example
@@ -779,6 +779,7 @@ vars:
 ```
 
 #### Naming Convention Variables:
+
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `model_types` | a list of the different types of models that define the layers of your dbt project | staging, intermediate, marts, other |
@@ -803,7 +804,22 @@ vars:
     util_prefixes: ['util_']
 ```
 
+#### Performance Variables:
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `chained_views_threshold` | maximum threshold for acceptable length of chain of views for `fct_chained_views_dependencies` | 5 |
+
+```yml
+# dbt_project.yml
+# set your chained views threshold to 8 instead of 5
+
+vars:
+  dbt_project_evaluator:
+    chained_views_threshold: 8
+```
+
 #### Warehouse Specific Variables:
+
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `max_depth_dag` | limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility | 9 |
