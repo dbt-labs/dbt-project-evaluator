@@ -11,4 +11,5 @@ models:
         tests:
           - dbt_utils.accepted_range:
               max_value: "{{ var('chained_views_threshold') }}"
+              inclusive: false
               severity: warn
