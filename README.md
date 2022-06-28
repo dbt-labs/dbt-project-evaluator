@@ -22,69 +22,28 @@ Currently, the following adapters are supported:
 
 ## Using This Package
 
-<details>
-  <summary>Installation Instructions</summary>
-  <p></p>
-
-  ### Cloning via local packages
-
-  1. Clone the [repository](https://github.com/dbt-labs/dbt-project-evaluator) locally via normal git workflow
-  2. Add package to your `packages.yml` in your project:
-      
-      ```yaml
-      # in packages.yml
-      
-      packages:
-        - local: <path/to/package> # use a local path
-      ```
-  3. Run `dbt deps` to install
-  4. Execute a `dbt build --select package:dbt_project_evaluator`!
-
-  ### Cloning via git address
-
-  1. Add package to your `packages.yml` in your project:
-      
-      ```yaml
-      # in packages.yml
-      
-      packages:
-        - git: "https://github.com/dbt-labs/dbt-project-evaluator.git"
-          revision: v0.1.0
-      ```
-      
-  2. Run `dbt deps` to install
-  3. Execute a `dbt build --select package:dbt_project_evaluator`!
-    
-  ### Additional setup for Databricks/Spark
-
-  In your `dbt_project.yml`, add the following config:
-  ```yaml
-  dispatch:
-    - macro_namespace: dbt_utils
-      search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
-  ```
-
-  This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
+### Cloning via dbt Package Hub
   
+Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+### Additional setup for Databricks/Spark
 
-  *Coming to the dbt hub soon!*
-  Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+In your `dbt_project.yml`, add the following config:
+```yaml
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+```
 
-</details>
+This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
+  
+### How It Works
 
-<details>
+This package will:
+1. Parse your [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
+2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
+3. Test those models to alert you to the presence of the misalignment 
 
-  <summary>How It Works</summary>
-  <p></p>
-
-  This package will:
-  1. Parse your [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
-  2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
-  3. Test those models to alert you to the presence of the misalignment 
-
-  Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
-
-</details>
+Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
 
 ----
 ## Package Documentation
