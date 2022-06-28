@@ -61,8 +61,8 @@ vars:
   model_types: ['staging', 'intermediate', 'marts', 'other']
 
   staging_folder_name: 'staging'
-  intermediate_folder_name: intermediate
-  marts_folder_name: marts
+  intermediate_folder_name: 'intermediate'
+  marts_folder_name: 'marts'
   
   staging_prefixes: ['stg_']
   intermediate_prefixes: ['int_']
