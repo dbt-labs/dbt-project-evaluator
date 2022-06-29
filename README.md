@@ -826,7 +826,7 @@ vars:
 
 ```yml
 # dbt_project.yml
-# set your chained views threshold to 8 instead of 5
+# set your chained views threshold to 8 instead of 4
 
 vars:
   dbt_project_evaluator:

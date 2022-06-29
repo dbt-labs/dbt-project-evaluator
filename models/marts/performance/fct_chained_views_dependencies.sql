@@ -10,8 +10,7 @@ final as (
         parent,
         child, -- the model with potentially long run time / compilation time, improve performance by breaking the upstream chain of views
         distance,
-        path,
-        is_dependent_on_chain_of_views
+        path
     from all_relationships
     where is_dependent_on_chain_of_views
     and child_resource_type = 'model'
