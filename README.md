@@ -724,7 +724,7 @@ You can set your own threshold for chained views by overriding the `chained_view
 
 #### Reason to Flag
 
-You may experience a long runtime for a model when it is build on top of a long chain of "non-physically-materialized" models (views and ephemerals). Most of this runtime is actually *compilation* time. In the example above, nothing is really computed until you get to `table_1`. At which point, it is going to run the query within `view_4`, which will then have to run the query within `view_3`, which will then have the run the query within `view_2`, which will then have to run the query within `view_1`. These will all be running at the same time, which creates a long runtime for `table_3` and potential storage issues if the data is sufficiently large. 
+You may experience a long runtime for a model when it is build on top of a long chain of "non-physically-materialized" models (views and ephemerals). In the example above, nothing is really computed until you get to `table_1`. At which point, it is going to run the query within `view_4`, which will then have to run the query within `view_3`, which will then have the run the query within `view_2`, which will then have to run the query within `view_1`. These will all be running at the same time, which creates a long runtime for `table_3`. 
 
 #### How to Remediate
 
