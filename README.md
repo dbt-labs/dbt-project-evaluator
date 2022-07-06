@@ -5,7 +5,8 @@ Specifically, this package tests for:
   1. __[DAG Issues](#dag-issues)__ - your dbt DAG for modeling best practices
   2. __[Testing](#testing)__ - your models for testing best practices
   3. __[Documentation](#documentation)__ - your models for documentation best practices
-  3. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
+  4. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
+  5. __[Performance](#performance)__ - your model materializations for performance best practices
 
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 
@@ -74,6 +75,9 @@ __[Structure](#structure)__
 - [Source Directories](#model-directories)
 - [Test Directories](#test-directories)
 
+__[Performance](#performance)__
+- [Chained View Dependencies](#chained-view-dependencies)
+
 __[Customization](#customization)__
 - [Disabling Models](#disabling-models)
 - [Overriding Variables](#overriding-variables)
@@ -95,7 +99,7 @@ __[Contributing](#contributing)__
 `fct_direct_join_to_source` ([source](models/marts/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to
 both a model and a source.
 
-#### Graph Example
+#### Example
 
 `int_model_4` is pulling in both a model and a source.
 
@@ -124,7 +128,7 @@ After refactoring your downstream model to select from the staging layer, your D
 `fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
 
-#### Graph Example
+#### Example
 
 `fct_model_9`, a marts model, builds from `source_1.table_5` a source.
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
@@ -147,10 +151,10 @@ After refactoring your downstream model to select from the staging layer, your D
 ### Model Fanout
 #### Model
 
-`fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more direct leaf children than the threshold for fanout
-(determined by variable `models_fanout_threshold`, default 3)
+`fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more than 3 direct leaf children.
+You can set your own threshold for model fanout by overriding the `models_fanout_threshold` variable. [See overriding variables section.](#overriding-variables)
 
-#### Graph Example
+#### Example
 
 `fct_model` has three direct leaf children.
 
@@ -188,7 +192,7 @@ predefine every query or quandary your team might have. So decide as a team wher
 
 `fct_multiple_sources_joined` ([source](models/marts/dag/fct_multiple_sources_joined.sql)) shows each instance where a model references more than one source.
 
-#### Graph Example
+#### Example
 
 `model_1` references two source tables.
 
@@ -246,7 +250,7 @@ or if you want to use base_ models and keep stg_model_2 as is:
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
 where the model "in between" the parent and child has NO other downstream dependencies.
 
-#### Graph Example
+#### Example
 
 `stg_model_1`, `int_model_4`, and `int_model_5` create a "loop" in the DAG. `int_model_4` has no other downstream dependencies other than `int_model_5`.
 
@@ -286,7 +290,7 @@ Post-refactor, your DAG should look like this:
 
 `fct_root_models` ([source](models/marts/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.
 
-#### Graph Example
+#### Example
 
 `model_4` has no direct parents
 
@@ -309,7 +313,7 @@ This behavior may be observed in the case of a manually defined reference table 
 
 `fct_source_fanout` ([source](models/marts/dag/fct_source_fanout.sql)) shows each instance where a source is the direct parent of multiple resources in the DAG.
 
-#### Graph Example
+#### Example
 
 `source.table_1` has more than one direct child model.
 
@@ -331,7 +335,7 @@ After refactoring the above example, the DAG would look something like this:
 
 `fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
 
-#### Graph Example
+#### Example
 
 `stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
 
@@ -358,7 +362,7 @@ After updating the model to use the appropriate `{{ source() }}` function, your 
 `fct_staging_dependent_on_staging` ([source](models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are
 dependent on each other.
 
-#### Graph Example
+#### Example
 
 `stg_model_2` is a parent of `stg_model_4`.
 
@@ -379,7 +383,7 @@ In our example, we might realize that `stg_model_4` is _actually_ an intermediat
 
 `fct_unused_sources` ([source](models/marts/dag/fct_unused_sources.sql)) shows each source with 0 children.
 
-#### Graph Example
+#### Example
 
 `source.table_4` isn't being referenced.
 
@@ -703,6 +707,33 @@ A new yml file should be created in `marts/` which contains all tests and docume
         ├── staging.yml
 ```
 
+## Performance
+### Chained View Dependencies
+#### Model
+
+`fct_chained_views_dependencies` ([source](models/marts/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental. 
+
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `distance` between a given `parent` and `child` is greater than or equal to 4.
+You can set your own threshold for chained views by overriding the `chained_views_threshold` variable. [See overriding variables section.](#overriding-variables)
+
+#### Example
+
+`table_1` depends on a chain of 4 views (`view_1`, `view_2`, `view_3`, and `view_4`).
+
+<img width="500" alt="dag of chain of 4 views, then a table" src="https://user-images.githubusercontent.com/53586774/176299679-39028eb1-f9e3-492a-bdb7-b72d9d7958b7.png">
+
+#### Reason to Flag
+
+You may experience a long runtime for a model when it is build on top of a long chain of "non-physically-materialized" models (views and ephemerals). In the example above, nothing is really computed until you get to `table_1`. At which point, it is going to run the query within `view_4`, which will then have to run the query within `view_3`, which will then have the run the query within `view_2`, which will then have to run the query within `view_1`. These will all be running at the same time, which creates a long runtime for `table_3`. 
+
+#### How to Remediate
+
+We can reduce this compilation time by changing the materialization strategy of some key upstream models to table or incremental to keep a minimum amount of compute in memory and preventing nesting of views. If, for example, we change the materialization of `view_4` from a view to a table, `table_1` will have a shorter runtime as it will have less compilation to do. 
+
+The best practice to determine top candidates for changing materialization from `view` to `table`:
+- if a view is used downstream my *many* models, change materialization to table
+- if a view has more complex calculations (window functions, joins between *many* tables, etc.), change materialization to table
+
 -----
 ## Customization
 ### Disabling Models
@@ -750,7 +781,7 @@ vars:
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `models_fanout_threshold` | maximum threshold for acceptable model fanout for `fct_model_fanout` | 3 models |
+| `models_fanout_threshold` | threshold for unacceptable model fanout for `fct_model_fanout` | 3 models |
 
 ```yml
 # dbt_project.yml
@@ -762,6 +793,7 @@ vars:
 ```
 
 #### Naming Convention Variables:
+
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `model_types` | a list of the different types of models that define the layers of your dbt project | staging, intermediate, marts, other |
@@ -786,7 +818,23 @@ vars:
     util_prefixes: ['util_']
 ```
 
+#### Performance Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `chained_views_threshold` | threshold for unacceptable length of chain of views for `fct_chained_views_dependencies` | 4 |
+
+```yml
+# dbt_project.yml
+# set your chained views threshold to 8 instead of 4
+
+vars:
+  dbt_project_evaluator:
+    chained_views_threshold: 8
+```
+
 #### Warehouse Specific Variables:
+
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `max_depth_dag` | limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility | 9 |

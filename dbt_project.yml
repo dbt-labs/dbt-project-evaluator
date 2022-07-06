@@ -29,6 +29,9 @@ models:
         int_direct_relationships:
           # required for BigQuery and Redshift for performance/memory reasons
           +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
+        int_all_dag_relationships:
+          # required for BigQuery and Redshift for performance/memory reasons
+          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift'] else 'view' }}"
       dag:
         +materialized: table
     staging:
@@ -68,6 +71,9 @@ vars:
   intermediate_prefixes: ['int_']
   marts_prefixes: ['fct_', 'dim_']
   other_prefixes: ['rpt_']
+
+  # -- Performance variables --
+  chained_views_threshold: 5
 
   # -- Warehouse specific variables --
   max_depth_dag: 9
