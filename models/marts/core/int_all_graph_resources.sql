@@ -69,6 +69,8 @@ joined as (
         unioned_with_calc.exposure_type, 
         unioned_with_calc.maturity, 
         unioned_with_calc.url, 
+        unioned_with_calc.owner_name,
+        unioned_with_calc.owner_email,
         unioned_with_calc.metric_type, 
         unioned_with_calc.model, 
         unioned_with_calc.label, 

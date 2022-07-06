@@ -21,7 +21,9 @@
             '{{ node.type }}',
             '{{ node.maturity}}',
             '{{ node.package_name }}',
-            '{{ node.url }}'
+            '{{ node.url }}',
+            '{{ node.owner.name }}',
+            '{{ node.owner.email }}'
 
           {% endset -%}
           {%- do values.append(values_line) -%}
@@ -41,7 +43,9 @@
               'exposure_type', 
               'maturity', 
               'package_name', 
-              'url'
+              'url',
+              'owner_name',
+              'owner_email'
             ]
          )
     ) }}
