@@ -1,0 +1,15 @@
+version: 2 
+
+models: 
+  - name: fct_chained_views_dependencies
+    description: >
+      This returns models dependent on chains of "non-physically-materialized" models (views and ephemerals),
+      highlighting potential cases for improving performance by switching the materialization of model(s) within 
+      the chain to table or incremental. 
+    columns:
+      - name: distance
+        tests:
+          - dbt_utils.accepted_range:
+              max_value: "{{ var('chained_views_threshold') }}"
+              inclusive: false
+              severity: warn

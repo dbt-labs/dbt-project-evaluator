@@ -1,48 +1,53 @@
-{% macro get_exposures() %}
+{%- macro get_exposures() -%}
     {{ return(adapter.dispatch('get_exposures', 'dbt_project_evaluator')()) }}
-{% endmacro %}
+{%- endmacro -%}
 
-{% macro default__get_exposures() %}
+{%- macro default__get_exposures() -%}
 
-    {% if execute %}
-    {% set nodes_list = graph.exposures.values() %}
-    {% set values = [] %}
+    {%- if execute -%}
 
-    {% for node in nodes_list %}
+        {%- set nodes_list = graph.exposures.values() -%}
+        {%- set values = [] -%}
 
-      {% set values_line %}
+        {%- for node in nodes_list -%}
 
-        '{{ node.unique_id }}',
-        '{{ node.name }}',
-        '{{ node.resource_type }}',
-        '{{ node.original_file_path }}',
-        cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}'as boolean),
-        '{{ node.type }}',
-        '{{ node.maturity}}',
-        '{{ node.package_name }}',
-        '{{ node.url }}'
-      
-      {% endset %}
-      {% do values.append(values_line) %}
+          {%- set values_line %}
 
-    {% endfor %}
-    {% endif %}
+            '{{ node.unique_id }}',
+            '{{ node.name }}',
+            '{{ node.resource_type }}',
+            '{{ node.original_file_path }}',
+            cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}'as boolean),
+            '{{ node.type }}',
+            '{{ node.maturity}}',
+            '{{ node.package_name }}',
+            '{{ node.url }}',
+            '{{ node.owner.name }}',
+            '{{ node.owner.email }}'
+
+          {% endset -%}
+          {%- do values.append(values_line) -%}
+
+    {%- endfor -%}
+    {%- endif -%}
 
     {{ return(
         dbt_project_evaluator.select_from_values(
             values = values,
-            column_names = [
+            columns = [
               'unique_id', 
               'name', 
               'resource_type',
               'file_path', 
-              'is_described', 
+              ('is_described', 'boolean'),
               'exposure_type', 
               'maturity', 
               'package_name', 
-              'url'
+              'url',
+              'owner_name',
+              'owner_email'
             ]
          )
     ) }}
 
-{% endmacro %}
+{%- endmacro -%}

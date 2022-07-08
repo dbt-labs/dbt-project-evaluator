@@ -20,3 +20,8 @@ fi
 
 dbt deps --target $1 || exit 1
 dbt build -x --target $1 --full-refresh || exit 1
+
+# test without exposures or metrics
+rm models/marts/exposures.yml
+rm models/marts/metrics.yml
+dbt run -x --target $1 --select +int_direct_relationships +int_all_graph_resources || exit 1

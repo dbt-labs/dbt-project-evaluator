@@ -5,7 +5,8 @@ Specifically, this package tests for:
   1. __[DAG Issues](#dag-issues)__ - your dbt DAG for modeling best practices
   2. __[Testing](#testing)__ - your models for testing best practices
   3. __[Documentation](#documentation)__ - your models for documentation best practices
-  3. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
+  4. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
+  5. __[Performance](#performance)__ - your model materializations for performance best practices
 
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 
@@ -13,61 +14,37 @@ In addition to tests, this package creates the model `int_all_dag_relationships`
 
  This package is in its early stages! It's very likely that you could encounter bugs, and functionality will be changing quickly as we gather feedback from end users. Please do not hesitate to create new issues in this repo for bug reports and/or feature requests, and we appreciate your patience as we continue to enhance this package! 
 
+Currently, the following adapters are supported:
+- BigQuery
+- Databricks/Spark
+- PostgreSQL
+- Redshift
+- Snowflake
+
 ## Using This Package
 
-<details>
-  <summary>Installation Instructions</summary>
-  <p></p>
-
-  ### Cloning via local packages
-
-    1. Clone [repository](https://github.com/dbt-labs/dbt-project-evaluator) locally via normal git workflow
-    2. Add package to your `packages.yml` in your project:
-        
-        ```yaml
-        # in packages.yml
-        
-        packages:
-          - local: <path/to/package> # use a local path
-        ```
-    3. Run `dbt deps` to install
-    4. Execute a `dbt build --select package:dbt_project_evaluator`!
-
-  ### Cloning via git address
-
-    1. Add package to your `packages.yml` in your project:
-        
-        ```yaml
-        # in packages.yml
-        
-        packages:
-          - git: "https://github.com/dbt-labs/dbt-project-evaluator.git"
-            revision: v0.1.0
-        ```
-        
-    2. Run `dbt deps` to install
-    3. Execute a `dbt build --select package:dbt_project_evaluator`!
-    
-
+### Cloning via dbt Package Hub
   
-  *Coming to the dbt hub soon!*
-  Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
+### Additional setup for Databricks/Spark
 
-</details>
+In your `dbt_project.yml`, add the following config:
+```yaml
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+```
 
-<details>
+This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
+  
+### How It Works
 
-  <summary>How It Works</summary>
-  <p></p>
+This package will:
+1. Parse your [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
+2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
+3. Test those models to alert you to the presence of the misalignment 
 
-  This package will:
-  1. Parse your [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
-  2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
-  3. Test those models to alert you to the presence of the misalignment 
-
-  Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
-
-</details>
+Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
 
 ----
 ## Package Documentation
@@ -98,6 +75,9 @@ __[Structure](#structure)__
 - [Source Directories](#model-directories)
 - [Test Directories](#test-directories)
 
+__[Performance](#performance)__
+- [Chained View Dependencies](#chained-view-dependencies)
+
 __[Customization](#customization)__
 - [Disabling Models](#disabling-models)
 - [Overriding Variables](#overriding-variables)
@@ -105,7 +85,7 @@ __[Customization](#customization)__
 __[Querying the DAG with SQL](#querying-the-dag-with-sql)__
 
 __[Limitations](#limitations)__
-- [BigQuery](#bigquery)
+- [BigQuery and Databricks](#bigquery-and-databricks)
 
 __[Contributing](#contributing)__
 
@@ -119,7 +99,7 @@ __[Contributing](#contributing)__
 `fct_direct_join_to_source` ([source](models/marts/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to
 both a model and a source.
 
-#### Graph Example
+#### Example
 
 `int_model_4` is pulling in both a model and a source.
 
@@ -148,7 +128,7 @@ After refactoring your downstream model to select from the staging layer, your D
 `fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
 
-#### Graph Example
+#### Example
 
 `fct_model_9`, a marts model, builds from `source_1.table_5` a source.
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png">
@@ -171,10 +151,10 @@ After refactoring your downstream model to select from the staging layer, your D
 ### Model Fanout
 #### Model
 
-`fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more direct leaf children than the threshold for fanout
-(determined by variable `models_fanout_threshold`, default 3)
+`fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more than 3 direct leaf children.
+You can set your own threshold for model fanout by overriding the `models_fanout_threshold` variable. [See overriding variables section.](#overriding-variables)
 
-#### Graph Example
+#### Example
 
 `fct_model` has three direct leaf children.
 
@@ -212,7 +192,7 @@ predefine every query or quandary your team might have. So decide as a team wher
 
 `fct_multiple_sources_joined` ([source](models/marts/dag/fct_multiple_sources_joined.sql)) shows each instance where a model references more than one source.
 
-#### Graph Example
+#### Example
 
 `model_1` references two source tables.
 
@@ -270,7 +250,7 @@ or if you want to use base_ models and keep stg_model_2 as is:
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
 where the model "in between" the parent and child has NO other downstream dependencies.
 
-#### Graph Example
+#### Example
 
 `stg_model_1`, `int_model_4`, and `int_model_5` create a "loop" in the DAG. `int_model_4` has no other downstream dependencies other than `int_model_5`.
 
@@ -310,7 +290,7 @@ Post-refactor, your DAG should look like this:
 
 `fct_root_models` ([source](models/marts/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.
 
-#### Graph Example
+#### Example
 
 `model_4` has no direct parents
 
@@ -333,7 +313,7 @@ This behavior may be observed in the case of a manually defined reference table 
 
 `fct_source_fanout` ([source](models/marts/dag/fct_source_fanout.sql)) shows each instance where a source is the direct parent of multiple resources in the DAG.
 
-#### Graph Example
+#### Example
 
 `source.table_1` has more than one direct child model.
 
@@ -355,7 +335,7 @@ After refactoring the above example, the DAG would look something like this:
 
 `fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
 
-#### Graph Example
+#### Example
 
 `stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
 
@@ -382,7 +362,7 @@ After updating the model to use the appropriate `{{ source() }}` function, your 
 `fct_staging_dependent_on_staging` ([source](models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are
 dependent on each other.
 
-#### Graph Example
+#### Example
 
 `stg_model_2` is a parent of `stg_model_4`.
 
@@ -403,7 +383,7 @@ In our example, we might realize that `stg_model_4` is _actually_ an intermediat
 
 `fct_unused_sources` ([source](models/marts/dag/fct_unused_sources.sql)) shows each source with 0 children.
 
-#### Graph Example
+#### Example
 
 `source.table_4` isn't being referenced.
 
@@ -741,9 +721,36 @@ A new yml file should be created in `marts/` which contains all tests and docume
         ├── staging.yml
 ```
 
+## Performance
+### Chained View Dependencies
+#### Model
+
+`fct_chained_views_dependencies` ([source](models/marts/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental. 
+
+This model will raise a `warn` error on a `dbt build` or `dbt test` if the `distance` between a given `parent` and `child` is greater than or equal to 4.
+You can set your own threshold for chained views by overriding the `chained_views_threshold` variable. [See overriding variables section.](#overriding-variables)
+
+#### Example
+
+`table_1` depends on a chain of 4 views (`view_1`, `view_2`, `view_3`, and `view_4`).
+
+<img width="500" alt="dag of chain of 4 views, then a table" src="https://user-images.githubusercontent.com/53586774/176299679-39028eb1-f9e3-492a-bdb7-b72d9d7958b7.png">
+
+#### Reason to Flag
+
+You may experience a long runtime for a model when it is build on top of a long chain of "non-physically-materialized" models (views and ephemerals). In the example above, nothing is really computed until you get to `table_1`. At which point, it is going to run the query within `view_4`, which will then have to run the query within `view_3`, which will then have the run the query within `view_2`, which will then have to run the query within `view_1`. These will all be running at the same time, which creates a long runtime for `table_1`. 
+
+#### How to Remediate
+
+We can reduce this compilation time by changing the materialization strategy of some key upstream models to table or incremental to keep a minimum amount of compute in memory and preventing nesting of views. If, for example, we change the materialization of `view_4` from a view to a table, `table_1` will have a shorter runtime as it will have less compilation to do. 
+
+The best practice to determine top candidates for changing materialization from `view` to `table`:
+- if a view is used downstream my *many* models, change materialization to table
+- if a view has more complex calculations (window functions, joins between *many* tables, etc.), change materialization to table
+
 -----
 ## Customization
-### Disabling models
+### Disabling Models
 
 If there is a particular model or set of models that you *do not want this package to execute*, you can
 disable these models as you would any other model in your `dbt_project.yml` file
@@ -767,9 +774,12 @@ models:
 
 Currently, this package uses different variables to adapt the models to your objectives and naming conventions. They can all be updated directly in `dbt_project.yml`
 
-- tests and docs coverage variables
-  - `test_coverage_pct` can be updated to set a test coverage percentage (default 100% coverage)
-  - `documentation_coverage_pct` can be updated to set a documentation coverage percentage (default 100% coverage)
+#### Coverage Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
+| `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
 
 ```yml
 # dbt_project.yml
@@ -779,17 +789,71 @@ vars:
   dbt_project_evaluator:
     documentation_coverage_target: 75
     test_coverage_target: 75
-
 ```
 
-- dag variables
-  - `models_fanout_threshold` can be updated to set a preferred threshold for model fanout in `fct_model_fanout` (default 3 models)
-- naming conventions variables
-  - the `model_types` variable is used to configure the different layers of your dbt Project. In conjunction with the variables `<model_type>_folder_name` and `<model_type>_prefixes`, it allows the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update this variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`
-  - all the `<model_type>_folder_name` variables are used to parameterize the name of the folders for the model types of your DAG. Each variable must be a string.
-  - all the `<model_type>_prefixes` variables are used to parameterize the prefixes of your models for the model types of your DAG. Each parameter contains the list of prefixes that are allowed according to your naming conventions.
-- warehouse specific variables
-  - `max_depth_bigquery` is only referred to with BigQuery as the Warehouse and is used to limit the number of nested CTEs when computing the DAG end to end. Changing this number to a higher one might prevent the package from running properly on BigQuery
+#### DAG Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `models_fanout_threshold` | threshold for unacceptable model fanout for `fct_model_fanout` | 3 models |
+
+```yml
+# dbt_project.yml
+# set your model fanout threshold to 10 instead of 3
+
+vars:
+  dbt_project_evaluator:
+    models_fanout_threshold: 10
+```
+
+#### Naming Convention Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `model_types` | a list of the different types of models that define the layers of your dbt project | staging, intermediate, marts, other |
+| `staging_folder_name` | the name of the folder that contains your staging models | staging |
+| `intermediate_folder_name` | the name of the folder that contains your intermediate models | intermediate |
+| `marts_folder_name` | the name of the folder that contains your marts models | marts |
+| `staging_prefixes` | the list of acceptable prefixes for your staging models | stg_ |
+| `intermediate_prefixes` | the list of acceptable prefixes for your intermediate models | int_ |
+| `marts_prefixes` | the list of acceptable prefixes for your marts models | fct_, dim_ |
+| `other_prefixes` | the list of acceptable prefixes for your other models | rpt_ |
+
+The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`.
+
+```yml
+# dbt_project.yml
+# add an additional model type "util"
+
+vars:
+  dbt_project_evaluator:
+    model_types: ['staging', 'intermediate', 'marts', 'other', 'util']
+    util_folder_name: 'util'
+    util_prefixes: ['util_']
+```
+
+#### Performance Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `chained_views_threshold` | threshold for unacceptable length of chain of views for `fct_chained_views_dependencies` | 4 |
+
+```yml
+# dbt_project.yml
+# set your chained views threshold to 8 instead of 4
+
+vars:
+  dbt_project_evaluator:
+    chained_views_threshold: 8
+```
+
+#### Warehouse Specific Variables:
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `max_depth_dag` | limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility | 9 |
+
+Changing `max_depth_dag` number to a higher one might prevent the package from running properly on BigQuery and Databricks/Spark.
 
 ----
 
@@ -813,11 +877,11 @@ Building additional models and snapshots on top of this model could allow:
 ----
 ## Limitations
 
-### BigQuery
+### BigQuery and Databricks
 
-BigQuery current support for recursive CTEs is limited.
+BigQuery current support for recursive CTEs is limited and Databricks SQL doesn't support recursive CTEs.
 
-For BigQuery, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is defaulted to 9, which means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
+For those Data Warehouses, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is configured with `max_depth_dag` and defaulted to 9. This means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
 
 ----
 ## Contributing

@@ -64,13 +64,16 @@ vars:
   model_types: ['staging', 'intermediate', 'marts', 'other']
 
   staging_folder_name: 'staging'
-  intermediate_folder_name: intermediate
-  marts_folder_name: marts
+  intermediate_folder_name: 'intermediate'
+  marts_folder_name: 'marts'
   
   staging_prefixes: ['stg_']
   intermediate_prefixes: ['int_']
   marts_prefixes: ['fct_', 'dim_']
   other_prefixes: ['rpt_']
 
+  # -- Performance variables --
+  chained_views_threshold: 5
+
   # -- Warehouse specific variables --
-  max_depth_bigquery: 9
+  max_depth_dag: 9

@@ -1,34 +1,47 @@
-{% macro select_from_values(values,column_names) %}
+{%- macro select_from_values(values, columns) %}
 
-    {% if values %}
+    {%- set column_names = [] -%}
+
+    {%- set null_values -%}
+
+        {%- set type_string = dbt_utils.type_string() | trim -%}
+
+        {%- for column in columns %}
+
+            {%- if column is string -%}
+                {%- set column_name = column -%}
+                {%- set column_type = type_string -%}
+            {%- else -%}
+                {%- set column_name, column_type = column -%}
+            {%- endif -%}
+            {% do column_names.append(column_name) %}
+            cast(null as {{ column_type | trim }}) {% if not loop.last %},{% endif %}
+
+        {%- endfor -%}
+
+    {%- endset %}
+
+    {%- if values %}
         {{ return(adapter.dispatch('select_from_values', 'dbt_project_evaluator')(values, column_names)) }}
-    {% else %} -- if values is an empty list, return an empty table
-        {% set null_values -%}
-        
-            {% for column in column_names %}
-            NULL{% if not loop.last %},{% endif %}
-            {% endfor %}
-        
-        {%- endset %}
-
+    {%- else -%} -- if values is an empty list, return an empty table
         -- Creates a one-record table with NULL for every column. Then, filters out the NULL records so the final table is empty.
         {{ return(adapter.dispatch('select_from_values', 'dbt_project_evaluator')([null_values], column_names) ~ 'where ' ~ column_names[0] ~ ' is not null') }}
 
-    {% endif %}
+    {% endif -%}
 
-{% endmacro %}
+{% endmacro -%}
 
 
-{% macro default__select_from_values(values,column_names) %}
+{%- macro default__select_from_values(values,column_names) %}
 
-    {# 
+    {#-
     The default implementation leverages the following syntax
 
     select * from ( values ('val1a','val2a','val3a'), ('val1b','val2b','val3b') ) as t (col_name1, col_name2, col_name3)
-    #}
+    -#}
 
-    {% set column_names_string = column_names | join(', ') %}
-    {% set values_string = '(' ~ values | join("), (") ~ ')' %}
+    {%- set column_names_string = column_names | join(', ') -%}
+    {%- set values_string = '(' ~ values | join("), (") ~ ')' -%}
 
         with cte as (
 
@@ -40,11 +53,11 @@
 
         select * from cte
 
-{% endmacro %}
+{% endmacro -%}
 
 
 
-{% macro bigquery__select_from_values(values,column_names) %}
+{%- macro bigquery__select_from_values(values,column_names) -%}
 
     {# 
     The bigquery implementation leverages the following syntax
@@ -52,23 +65,23 @@
     select * from unnest( [ struct('val1a' as col_name1, 'val2a' as col_name2, 'val3a' as col_name3), ('val1b','val2b','val3b') ] )
     #}
 
-    {% if execute and values %}
+    {%- if execute and values -%}
 
-        {% set first_row = values[0] %}
-        {% set first_value_in_list = first_row[1:-1:].split(',') %}
-        {% set following_values_string  = '(' ~ values[1:] | join("), (") ~ ')' if values[1:] | length > 0 else None %}
+        {%- set first_row = values[0] -%}
+        {%- set first_value_in_list = first_row[1:-1:].split(',') -%}
+        {%- set following_values_string  = '(' ~ values[1:] | join("), (") ~ ')' if values[1:] | length > 0 else None -%}
 
-        {% set struct_header = [] %}
-        {% for column in column_names %}
+        {%- set struct_header = [] %}
+        {%- for column in column_names -%}
 
-            {% set name %}
+            {%- set name %}
                 {{ first_value_in_list[loop.index0] }} as {{ column }}
-            {% endset %}
-            {% do struct_header.append(name) %}
+            {% endset -%}
+            {%- do struct_header.append(name) -%}
         
-        {% endfor %}
+        {%- endfor -%}
 
-        {% set struct_header_string = struct_header | join(', ') %}
+        {%- set struct_header_string = struct_header | join(', ') -%}
 
         select 
             * 
@@ -80,12 +93,12 @@
                 {% endif %}
         ])
 
-    {% endif %}
+    {%- endif -%}
 
-{% endmacro %}
+{%- endmacro -%}
 
 
-{% macro redshift__select_from_values(values,column_names) %}
+{%- macro redshift__select_from_values(values,column_names) -%}
 
     {# 
     Redshift does not support the values keyword
@@ -128,4 +141,4 @@ select
     ') 
 }}
 
-{% endmacro %}
+{% endmacro -%}
