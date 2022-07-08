@@ -420,7 +420,11 @@ or any other nested information.
 ### Exposure Materializations
 #### Model
 
-`fct_exposure_materializations` ([source](models/marts/dag/fct_exposure_materializations.sql)) shows each model with a direct relationship to an exposure that is *not* materialized as a table in the warehouse. 
+`fct_exposure_parentes_materializations` ([source](models/marts/performance/fct_exposure_parentes_materializations.sql)) shows each model with a direct relationship to an exposure that is *not* materialized as a table in the warehouse. 
+
+#### Example 
+<img width="500" alt="An example exposure with a table parent (fct_model_6) and an ephemeral parent (dim_model_7)" src="https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png">
+In this case, the parents of `exposure_1` are not both materialized as tables -- `dim_model_7` is ephemeral, while `fct_model_6` is a table. This model would return a record for the `dim_model_7 --> exposure_1` relationship. 
 
 #### Reason to Flag
 
