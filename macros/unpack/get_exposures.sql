@@ -23,7 +23,8 @@
             '{{ node.package_name }}',
             '{{ node.url }}',
             '{{ node.owner.name }}',
-            '{{ node.owner.email }}'
+            '{{ node.owner.email }}',
+            '{{ node.meta | tojson }}'
 
           {% endset -%}
           {%- do values.append(values_line) -%}
@@ -45,7 +46,8 @@
               'package_name', 
               'url',
               'owner_name',
-              'owner_email'
+              'owner_email',
+              'meta'
             ]
          )
     ) }}

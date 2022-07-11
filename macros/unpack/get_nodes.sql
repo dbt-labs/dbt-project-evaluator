@@ -24,7 +24,8 @@
               '{{ node.package_name }}',
               '{{ node.alias }}',
               cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
-              '{{ "" if not node.column_name else node.column_name }}'
+              '{{ "" if not node.column_name else node.column_name }}',
+              '{{ node.meta | tojson }}'
 
         {% endset -%}
         {%- do values.append(values_line) -%}
@@ -48,7 +49,8 @@
               'package_name',
               'alias',
               ('is_described', 'boolean'),
-              'column_name'
+              'column_name',
+              'meta'
             ]
          )
     ) }}

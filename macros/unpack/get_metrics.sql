@@ -31,7 +31,8 @@
               {% endfor -%}
             {%- else -%}
                 ''
-            {% endif -%}
+            {% endif -%},
+            '{{ node.meta | tojson }}'
         {%- endset -%}
         {%- do values.append(values_line) -%}
 
@@ -54,7 +55,8 @@
               'timestamp', 
               'package_name',
               'dimensions',
-              'filters'
+              'filters',
+              'meta'
             ]
          )
     ) }}

@@ -26,7 +26,8 @@
               '{{ node.schema }}',
               '{{ node.package_name }}',
               '{{ node.loader }}',
-              '{{ node.identifier }}'
+              '{{ node.identifier }}',
+              '{{ node.meta | tojson }}'
 
         {% endset -%}
         {%- do values.append(values_line) -%}
@@ -53,7 +54,8 @@
               'schema',
               'package_name',
               'loader',
-              'identifier' 
+              'identifier',
+              'meta'
             ]
          )
     ) }}
