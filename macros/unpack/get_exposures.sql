@@ -11,21 +11,22 @@
 
         {%- for node in nodes_list -%}
 
-          {%- set values_line %}
+          {%- set values_line = 
+            [
+              "'" ~ node.unique_id ~ "'",
+              "'" ~ node.name ~ "'",
+              "'" ~ node.resource_type ~ "'",
+              "'" ~ node.original_file_path ~ "'",
+              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
+              "'" ~ node.type ~ "'",
+              "'" ~ node.maturity~ "'",
+              "'" ~ node.package_name ~ "'",
+              "'" ~ node.url ~ "'",
+              "'" ~ node.owner.name ~ "'",
+              "'" ~ node.owner.email~ "'"
+            ]
+          %}
 
-            '{{ node.unique_id }}',
-            '{{ node.name }}',
-            '{{ node.resource_type }}',
-            '{{ node.original_file_path }}',
-            cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}'as boolean),
-            '{{ node.type }}',
-            '{{ node.maturity}}',
-            '{{ node.package_name }}',
-            '{{ node.url }}',
-            '{{ node.owner.name }}',
-            '{{ node.owner.email }}'
-
-          {% endset -%}
           {%- do values.append(values_line) -%}
 
     {%- endfor -%}

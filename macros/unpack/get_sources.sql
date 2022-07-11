@@ -10,25 +10,26 @@
 
     {%- for node in nodes_list -%}
 
-         {%- set values_line %}
+         {%- set values_line = 
+            [
+              "'" ~ node.unique_id ~ "'",
+              "'" ~ node.name ~ "'",
+              "'" ~ node.original_file_path ~ "'",
+              "'" ~ node.alias ~ "'",
+              "'" ~ node.resource_type ~ "'",
+              "'" ~ node.source_name ~ "'",
+              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.source_description) | trim ~ " as boolean)",
+              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
+              "cast(" ~ node.config.enabled ~ " as boolean)",
+              "'" ~ node.loaded_at_field | replace("'", "_") ~ "'",
+              "'" ~ node.database ~ "'",
+              "'" ~ node.schema ~ "'",
+              "'" ~ node.package_name ~ "'",
+              "'" ~ node.loader ~ "'",
+              "'" ~ node.identifier ~ "'",
+            ]
+        %}
             
-              '{{ node.unique_id }}', 
-              '{{ node.name }}',
-              '{{ node.original_file_path }}',
-              '{{ node.alias }}',
-              '{{ node.resource_type }}',
-              '{{ node.source_name }}',
-              cast('{{ dbt_project_evaluator.is_not_empty_string(node.source_description) | trim }}' as boolean),
-              cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
-              cast('{{ node.config.enabled }}' as boolean),
-              '{{ node.loaded_at_field | replace("'", "_") }}',
-              '{{ node.database }}',
-              '{{ node.schema }}',
-              '{{ node.package_name }}',
-              '{{ node.loader }}',
-              '{{ node.identifier }}'
-
-        {% endset -%}
         {%- do values.append(values_line) -%}
 
     {%- endfor -%}

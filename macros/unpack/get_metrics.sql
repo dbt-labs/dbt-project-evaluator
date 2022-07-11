@@ -10,20 +10,7 @@
 
     {%- for node in nodes_list -%}
 
-          {%- set values_line %}
-
-            '{{ node.unique_id }}',
-            '{{ node.name }}',
-            '{{ node.resource_type }}',
-            '{{ node.original_file_path }}',
-            cast('{{ dbt_project_evaluator.is_not_empty_string(node.description) | trim }}' as boolean),
-            '{{ node.type }}',
-            '{{ node.model.identifier }}',
-            '{{ node.label }}',
-            '{{ node.sql }}',
-            '{{ node.timestamp }}',
-            '{{ node.package_name }}',
-            '{{ node.dimensions|join(' - ') }}',
+          {% set metric_filters %}
             {%- if node.filters|length -%}
               {%- for filt in node.filters %}
                 '{{ filt.field }}'||'{{ filt.operator }}'||'''{{ dbt_utils.escape_single_quotes(filt.value) }}'''
@@ -32,7 +19,27 @@
             {%- else -%}
                 ''
             {% endif -%}
-        {%- endset -%}
+          {% endset %}
+
+          {%- set values_line = 
+            [
+            "'" ~ node.unique_id ~ "'",
+            "'" ~ node.name ~ "'",
+            "'" ~ node.resource_type ~ "'",
+            "'" ~ node.original_file_path ~ "'",
+            "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
+            "'" ~ node.type ~ "'",
+            "'" ~ node.model.identifier ~ "'",
+            "'" ~ node.label ~ "'",
+            "'" ~ node.sql ~ "'",
+            "'" ~ node.timestamp ~ "'",
+            "'" ~ node.package_name ~ "'",
+            "'" ~ node.dimensions|join(' - ') ~ "'",
+            metric_filters,
+            "'" ~ node.meta | tojson ~ "'",
+            ]
+          %}
+
         {%- do values.append(values_line) -%}
 
     {%- endfor -%}
@@ -54,7 +61,8 @@
               'timestamp', 
               'package_name',
               'dimensions',
-              'filters'
+              'filters',
+              'meta'
             ]
          )
     ) }}
