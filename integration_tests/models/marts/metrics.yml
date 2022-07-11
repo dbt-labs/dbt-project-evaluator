@@ -24,4 +24,6 @@ metrics:
         operator: '!='
         value: "Acme' Inc"
 
-    meta: {team: Finance}
+    meta: 
+      team: "Finance"
+      refresh_rate: "Bob's weekly run"
