@@ -739,7 +739,7 @@ The best practice to determine top candidates for changing materialization from 
 ### Exposure Parents Materializations
 #### Model
 
-`fct_exposure_parentes_materializations` ([source](models/marts/performance/fct_exposure_parentes_materializations.sql)) shows each model with a direct relationship to an exposure that is *not* materialized as a table in the warehouse. 
+`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each model that is a direct parent of an exposure and is *not* materialized as a table in the warehouse. 
 
 #### Example 
 <img width="500" alt="An example exposure with a table parent (fct_model_6) and an ephemeral parent (dim_model_7)" src="https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png">
@@ -752,7 +752,7 @@ Models that are referenced by an exposure are likely to be used heavily in downs
 
 #### How to Remediate
 
-If necessary, update the `materialized` configuration on the models returned in `fct_exposure_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
+If necessary, update the `materialized` configuration on the models returned in `fct_exposure_parents_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
 
 -----
 ## Customization
