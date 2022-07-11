@@ -35,8 +35,7 @@
             "'" ~ node.timestamp ~ "'",
             "'" ~ node.package_name ~ "'",
             "'" ~ node.dimensions|join(' - ') ~ "'",
-            metric_filters,
-            "'" ~ node.meta | tojson ~ "'",
+            metric_filters
             ]
           %}
 
@@ -61,8 +60,7 @@
               'timestamp', 
               'package_name',
               'dimensions',
-              'filters',
-              'meta'
+              'filters'
             ]
          )
     ) }}
