@@ -77,6 +77,7 @@ __[Structure](#structure)__
 
 __[Performance](#performance)__
 - [Chained View Dependencies](#chained-view-dependencies)
+- [Exposure Parents Materializations](#exposure-parents-materializations)
 
 __[Customization](#customization)__
 - [Disabling Models](#disabling-models)
@@ -735,7 +736,7 @@ The best practice to determine top candidates for changing materialization from 
 - if a view is used downstream my *many* models, change materialization to table
 - if a view has more complex calculations (window functions, joins between *many* tables, etc.), change materialization to table
 
-### Exposure Materializations
+### Exposure Parents Materializations
 #### Model
 
 `fct_exposure_parentes_materializations` ([source](models/marts/performance/fct_exposure_parentes_materializations.sql)) shows each model with a direct relationship to an exposure that is *not* materialized as a table in the warehouse. 
