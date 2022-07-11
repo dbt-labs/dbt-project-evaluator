@@ -16,7 +16,6 @@ final as (
         child as exposure_name,
         parent_materialized as parent_model_materialization
 
-    
     from direct_exposure_relationships
 
 )
