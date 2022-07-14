@@ -12,19 +12,19 @@
 
         {%- set values_line  = 
             [
-                "'" ~ node.unique_id ~ "'",
-                "'" ~ node.name ~ "'",
-                "'" ~ node.resource_type ~ "'",
-                "'" ~ node.original_file_path ~ "'",
+                wrap_string_with_quotes(node.unique_id),
+                wrap_string_with_quotes(node.name),
+                wrap_string_with_quotes(node.resource_type),
+                wrap_string_with_quotes(node.original_file_path),
                 "cast(" ~ node.config.enabled | trim ~ " as boolean)",
-                "'" ~ node.config.materialized ~ "'",
-                "'" ~ node.config.on_schema_chang ~ "'",
-                "'" ~ node.database ~ "'",
-                "'" ~ node.schema ~ "'",
-                "'" ~ node.package_name ~ "'",
-                "'" ~ node.alias ~ "'",
+                wrap_string_with_quotes(node.config.materialized),
+                wrap_string_with_quotes(node.config.on_schema_chang),
+                wrap_string_with_quotes(node.database),
+                wrap_string_with_quotes(node.schema),
+                wrap_string_with_quotes(node.package_name),
+                wrap_string_with_quotes(node.alias),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
-                "''" if not node.column_name else "'" ~ node.column_name ~ "'"
+                "''" if not node.column_name else wrap_string_with_quotes(node.column_name)
             ]
         %}
 

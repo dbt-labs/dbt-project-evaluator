@@ -23,18 +23,18 @@
 
           {%- set values_line = 
             [
-            "'" ~ node.unique_id ~ "'",
-            "'" ~ node.name ~ "'",
-            "'" ~ node.resource_type ~ "'",
-            "'" ~ node.original_file_path ~ "'",
+            wrap_string_with_quotes(node.unique_id),
+            wrap_string_with_quotes(node.name),
+            wrap_string_with_quotes(node.resource_type),
+            wrap_string_with_quotes(node.original_file_path),
             "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
-            "'" ~ node.type ~ "'",
-            "'" ~ node.model.identifier ~ "'",
-            "'" ~ node.label ~ "'",
-            "'" ~ node.sql ~ "'",
-            "'" ~ node.timestamp ~ "'",
-            "'" ~ node.package_name ~ "'",
-            "'" ~ node.dimensions|join(' - ') ~ "'",
+            wrap_string_with_quotes(node.type),
+            wrap_string_with_quotes(node.model.identifier),
+            wrap_string_with_quotes(node.label),
+            wrap_string_with_quotes(node.sql),
+            wrap_string_with_quotes(node.timestamp),
+            wrap_string_with_quotes(node.package_name),
+            wrap_string_with_quotes(node.dimensions|join(' - ')),
             metric_filters
             ]
           %}
