@@ -22,6 +22,6 @@ metrics:
         value: 'true'
       - field: company_name
         operator: '!='
-        value: "Acme' Inc"
+        value: "Acme', Inc"
 
     meta: {team: Finance}

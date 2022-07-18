@@ -14,4 +14,4 @@ macros:
 
       - name: values
         type: list
-        description: The list of values to be inserted in the view/table. Each item of the list has the format "('value_col1', 'value_col2', 'value_col3')"
+        description: The list of values to be inserted in the view/table. Each item of the list is a list itself, like ['value_col1', 'value_col2', 'value_col3']

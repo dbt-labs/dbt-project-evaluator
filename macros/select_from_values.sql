@@ -2,24 +2,22 @@
 
     {%- set column_names = [] -%}
 
-    {%- set null_values -%}
+    {%- set null_values  = [] -%}
 
-        {%- set type_string = dbt_utils.type_string() | trim -%}
+    {%- set type_string = dbt_utils.type_string() | trim -%}
 
-        {%- for column in columns %}
+    {%- for column in columns %}
 
-            {%- if column is string -%}
-                {%- set column_name = column -%}
-                {%- set column_type = type_string -%}
-            {%- else -%}
-                {%- set column_name, column_type = column -%}
-            {%- endif -%}
-            {% do column_names.append(column_name) %}
-            cast(null as {{ column_type | trim }}) {% if not loop.last %},{% endif %}
-
-        {%- endfor -%}
-
-    {%- endset %}
+        {%- if column is string -%}
+            {%- set column_name = column -%}
+            {%- set column_type = type_string -%}
+        {%- else -%}
+            {%- set column_name, column_type = column -%}
+        {%- endif -%}
+        {% do column_names.append(column_name) %}
+        {% do null_values.append("cast(null as " ~ column_type | trim ~" )")  %}
+        
+    {%- endfor -%}
 
     {%- if values %}
         {{ return(adapter.dispatch('select_from_values', 'dbt_project_evaluator')(values, column_names)) }}
@@ -40,8 +38,15 @@
     select * from ( values ('val1a','val2a','val3a'), ('val1b','val2b','val3b') ) as t (col_name1, col_name2, col_name3)
     -#}
 
-    {%- set column_names_string = column_names | join(', ') -%}
-    {%- set values_string = '(' ~ values | join("), (") ~ ')' -%}
+    {%- set column_names_string = column_names | join(", \n") -%}
+
+    {%- set values_list_of_strings = [] -%}
+
+    {%- for indiv_values in values -%}
+      {%- do values_list_of_strings.append( indiv_values | join(", \n")) -%}
+    {%- endfor -%}
+
+    {%- set values_string = '(' ~ values_list_of_strings | join("), (") ~ ')' -%}
 
         with cte as (
 
@@ -68,14 +73,19 @@
     {%- if execute and values -%}
 
         {%- set first_row = values[0] -%}
-        {%- set first_value_in_list = first_row[1:-1:].split(',') -%}
-        {%- set following_values_string  = '(' ~ values[1:] | join("), (") ~ ')' if values[1:] | length > 0 else None -%}
+        {%- set following_rows_list_of_strings = [] -%}
+
+        {%- for values_row in values[1:] -%}
+            {%- do following_rows_list_of_strings.append( values_row | join(", ")) -%}
+        {%- endfor -%}
+
+        {%- set following_rows = '(' ~ following_rows_list_of_strings | join("), (") ~ ')' -%}
 
         {%- set struct_header = [] %}
         {%- for column in column_names -%}
 
             {%- set name %}
-                {{ first_value_in_list[loop.index0] }} as {{ column }}
+                {{ first_row[loop.index0] }} as {{ column }}
             {% endset -%}
             {%- do struct_header.append(name) -%}
         
@@ -88,8 +98,8 @@
         from 
             unnest([    
                 struct( {{ struct_header_string }} )
-                {% if following_values_string %}
-                , {{ following_values_string }}
+                {% if following_rows != '()' %}
+                , {{ following_rows }}
                 {% endif %}
         ])
 
@@ -120,7 +130,7 @@
     {%- for value in values %}
 
         {%- set all_statements_in_union = [] %}
-        {%- set individual_values = value.split(',') %}
+        {%- set individual_values = value %}
 
         {%- for column_value in individual_values %}
 
