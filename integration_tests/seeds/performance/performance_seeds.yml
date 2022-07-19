@@ -10,3 +10,8 @@ seeds:
             - parent
             - child
             - distance
+            
+  - name: test_fct_exposure_parents_materializations
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_exposure_parents_materializations')

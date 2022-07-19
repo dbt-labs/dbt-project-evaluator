@@ -77,6 +77,7 @@ __[Structure](#structure)__
 
 __[Performance](#performance)__
 - [Chained View Dependencies](#chained-view-dependencies)
+- [Exposure Parents Materializations](#exposure-parents-materializations)
 
 __[Customization](#customization)__
 - [Disabling Models](#disabling-models)
@@ -417,6 +418,7 @@ or any other nested information.
 
 <img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 
+
 ## Testing
 ### Models without Primary Key Tests
 
@@ -733,6 +735,24 @@ We can reduce this compilation time by changing the materialization strategy of 
 The best practice to determine top candidates for changing materialization from `view` to `table`:
 - if a view is used downstream my *many* models, change materialization to table
 - if a view has more complex calculations (window functions, joins between *many* tables, etc.), change materialization to table
+
+### Exposure Parents Materializations
+#### Model
+
+`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each model that is a direct parent of an exposure and is *not* materialized as a table in the warehouse. 
+
+#### Example 
+<img width="500" alt="An example exposure with a table parent (fct_model_6) and an ephemeral parent (dim_model_7)" src="https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png">
+
+In this case, the parents of `exposure_1` are not both materialized as tables -- `dim_model_7` is ephemeral, while `fct_model_6` is a table. This model would return a record for the `dim_model_7 --> exposure_1` relationship. 
+
+#### Reason to Flag
+
+Models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried. This model highlights instances where the models referenced by exposures are not either a `table` or `incremental` materialization.
+
+#### How to Remediate
+
+If necessary, update the `materialized` configuration on the models returned in `fct_exposure_parents_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
 
 -----
 ## Customization

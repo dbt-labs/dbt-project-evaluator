@@ -42,6 +42,7 @@ seeds:
           compare_columns:
             - parent
             - model_children
+
   - name: test_fct_model_fanout
     tests:
       - dbt_utils.equality:
@@ -50,6 +51,7 @@ seeds:
           compare_columns:
             - parent
             - leaf_children
+  
   - name: test_fct_staging_dependent_on_staging
     tests:
       - dbt_utils.equality:
@@ -60,6 +62,7 @@ seeds:
             - parent_model_type
             - child
             - child_model_type
+  
   - name: test_fct_rejoining_of_upstream_concepts
     tests:
       - dbt_utils.equality:
