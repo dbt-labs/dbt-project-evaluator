@@ -1,8 +1,13 @@
-with all_relationships as (
-    select  
+with
+
+
+
+all_relationships as (
+    select
         *
-    from {{ ref('int_all_dag_relationships') }}
-    where distance <> 0
+    from {{ ref('int_filtered_dag_relationships') }}
+    where
+        distance <> 0
 ),
 
 final as (

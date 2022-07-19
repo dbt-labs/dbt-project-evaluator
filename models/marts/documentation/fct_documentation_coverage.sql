@@ -2,7 +2,9 @@ with
 
 models as (
     select * from {{ ref('int_all_graph_resources') }}
-    where resource_type = 'model'
+    where
+        resource_type = 'model' and
+        package_name != 'dbt_project_evaluator'
 ),
 
 conversion as (

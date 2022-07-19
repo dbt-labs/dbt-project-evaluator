@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: int_filtered_dag_relationships
+    description: >
+      This table shows one record for every resource and each of its
+      downstream children (including itself). It includes models, snapshots,
+      exposures, metrics and seeds. This excludes resources from the
+      `dbt_project_evaluator` package.
+    columns:
+      - name: path
+        description: unique identifier representing a distinct path from each resource to another resource
+        tests:
+          - unique
+          - not_null
+
+  - name: int_filtered_graph_resources
+    description: >
+      This table shows one record for each enabled resource in the graph and
+      information about that resource. This excludes resources from the
+      `dbt_project_evaluator` package.
+    columns:
+      - name: resource_id
+        tests:
+          - unique
+          - not_null

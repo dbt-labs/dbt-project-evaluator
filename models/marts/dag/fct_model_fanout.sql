@@ -1,7 +1,7 @@
 with all_dag_relationships as (
-    select  
+    select
         *
-    from {{ ref('int_all_dag_relationships') }}
+    from {{ ref('int_filtered_dag_relationships') }}
 ),
 
 -- find all models without children
@@ -17,7 +17,7 @@ models_without_children as (
 -- all parents with more direct children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)
     -- Note: only counts "leaf children" - direct chilren that are models AND are child-less (are at the right-most-point in the DAG)
 model_fanout as (
-    select 
+    select
         all_dag_relationships.parent,
         {{ dbt_utils.listagg(measure='all_dag_relationships.child', delimiter_text="', '", order_by_clause='order by all_dag_relationships.child') }} as leaf_children
     from all_dag_relationships

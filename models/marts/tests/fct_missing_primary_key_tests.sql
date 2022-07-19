@@ -1,12 +1,12 @@
-with 
+with
 
 tests as (
-    select * from {{ ref('int_model_test_summary') }} 
+    select * from {{ ref('int_model_test_summary') }}
 ),
 
 final as (
 
-    select 
+    select
         *
     from tests
     where not(is_primary_key_tested)

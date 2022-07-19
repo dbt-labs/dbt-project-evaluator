@@ -1,9 +1,9 @@
 -- this model finds cases where a model has 0 direct parents, likely due to a lack of source or ref function
 
 with model_relationships as (
-    select  
+    select
         *
-    from {{ ref('int_all_dag_relationships') }}
+    from {{ ref('int_filtered_dag_relationships') }}
     where child_resource_type = 'model'
 ),
 
