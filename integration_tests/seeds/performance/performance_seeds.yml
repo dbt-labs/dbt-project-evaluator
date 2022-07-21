@@ -1,0 +1,17 @@
+version: 2
+
+seeds:
+  - name: test_fct_chained_views_dependencies
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_chained_views_dependencies
+          compare_model: ref('fct_chained_views_dependencies')
+          compare_columns:
+            - parent
+            - child
+            - distance
+            
+  - name: test_fct_exposure_parents_materializations
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_exposure_parents_materializations')

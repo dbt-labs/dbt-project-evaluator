@@ -20,5 +20,10 @@ metrics:
       - field: is_paying
         operator: '='
         value: 'true'
+      - field: company_name
+        operator: '!='
+        value: "Acme', Inc"
 
-    meta: {team: Finance}
+    meta: 
+      team: "Finance"
+      refresh_rate: "Bob's weekly run"

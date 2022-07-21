@@ -60,6 +60,17 @@ jobs:
       - store_artifacts:
           path: ./integration_tests/logs
 
+  integration-databricks:
+    docker:
+      - image: cimg/python:3.9.9
+    steps:
+      - checkout
+      - run:
+          name: "Run Tests - Databricks"
+          command: ./run_test.sh databricks
+      - store_artifacts:
+          path: ./integration_tests/logs
+
 workflows:
   version: 2
   test-all:
@@ -72,5 +83,8 @@ workflows:
           requires:
             - integration-postgres
       - integration-bigquery:
+          requires:
+            - integration-postgres
+      - integration-databricks:
           requires:
             - integration-postgres

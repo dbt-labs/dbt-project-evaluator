@@ -1,0 +1,14 @@
+parent,child,distance
+stg_model_1,dim_model_7,3
+stg_model_1,int_model_5,2
+stg_model_2,dim_model_7,2
+int_model_4,dim_model_7,2
+stg_model_1,dim_model_7,2
+stg_model_4,dim_model_7,1
+stg_model_2,stg_model_4,1
+int_model_4,int_model_5,1
+int_model_5,dim_model_7,1
+stg_model_1,int_model_5,1
+stg_model_1,int_model_4,1
+fct_model_9,stg_model_5,1
+stg_model_3,fct_model_6,1

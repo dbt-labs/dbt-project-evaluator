@@ -44,3 +44,7 @@ models:
     description: "This table shows each source with 0 children."
     tests:
       - is_empty
+  - name: fct_exposure_parents_materializations
+    description: "This table shows each direct parent of an exposure that is not materialized as a table or incremental."
+    tests:
+      - is_empty
