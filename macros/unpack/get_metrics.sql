@@ -35,7 +35,8 @@
             wrap_string_with_quotes(node.timestamp),
             wrap_string_with_quotes(node.package_name),
             wrap_string_with_quotes(node.dimensions|join(' - ')),
-            metric_filters
+            metric_filters,
+            wrap_string_with_quotes(node.meta | tojson)
             ]
           %}
 
@@ -60,7 +61,8 @@
               'timestamp', 
               'package_name',
               'dimensions',
-              'filters'
+              'filters',
+              'meta'
             ]
          )
     ) }}

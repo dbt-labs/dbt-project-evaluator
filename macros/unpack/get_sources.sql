@@ -27,6 +27,7 @@
               wrap_string_with_quotes(node.package_name),
               wrap_string_with_quotes(node.loader),
               wrap_string_with_quotes(node.identifier),
+              wrap_string_with_quotes(node.meta | tojson)
             ]
         %}
             
@@ -54,7 +55,8 @@
               'schema',
               'package_name',
               'loader',
-              'identifier' 
+              'identifier',
+              'meta'
             ]
          )
     ) }}

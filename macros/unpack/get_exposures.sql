@@ -23,7 +23,8 @@
               wrap_string_with_quotes(node.package_name),
               wrap_string_with_quotes(node.url),
               wrap_string_with_quotes(node.owner.name),
-              wrap_string_with_quotes(node.owner.email)
+              wrap_string_with_quotes(node.owner.email),
+              wrap_string_with_quotes(node.meta | tojson)
             ]
           %}
 
@@ -46,7 +47,8 @@
               'package_name', 
               'url',
               'owner_name',
-              'owner_email'
+              'owner_email',
+              'meta'
             ]
          )
     ) }}
