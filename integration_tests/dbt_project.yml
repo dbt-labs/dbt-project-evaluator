@@ -41,3 +41,8 @@ tests:
       unique_int_all_dag_relationships_path:
         # Grouping by expressions of type ARRAY is not allowed for BigQuery
         +enabled: "{{ false if target.type in ['bigquery'] else true }}"
+
+seeds:
+  dbt_project_evaluator:
+    dbt_project_evaluator_exceptions:
+      +enabled: false
