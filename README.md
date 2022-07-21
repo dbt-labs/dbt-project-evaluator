@@ -766,13 +766,14 @@ disable these models as you would any other model in your `dbt_project.yml` file
 
 models:
   dbt_project_evaluator:
-    tests:
-      # disable entire test coverage suite
-      +enabled: false
-    dag:
-      # disable single DAG model
-      fct_model_fanout:
+    marts:
+      tests:
+        # disable entire test coverage suite
         +enabled: false
+      dag:
+        # disable single DAG model
+        fct_model_fanout:
+          +enabled: false
 
 ```
 
