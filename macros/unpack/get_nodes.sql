@@ -18,7 +18,7 @@
                 wrap_string_with_quotes(node.original_file_path),
                 "cast(" ~ node.config.enabled | trim ~ " as boolean)",
                 wrap_string_with_quotes(node.config.materialized),
-                wrap_string_with_quotes(node.config.on_schema_chang),
+                wrap_string_with_quotes(node.config.on_schema_change),
                 wrap_string_with_quotes(node.database),
                 wrap_string_with_quotes(node.schema),
                 wrap_string_with_quotes(node.package_name),
