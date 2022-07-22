@@ -6,6 +6,11 @@ seeds:
       - dbt_utils.equality:
           name: equality_fct_missing_primary_key_tests
           compare_model: ref('fct_missing_primary_key_tests')
+          compare_columns:
+            - resource_name
+            - model_type
+            - is_primary_key_tested
+            - number_of_tests_on_model
 
   - name: test_fct_test_coverage
     config:
@@ -17,7 +22,7 @@ seeds:
           compare_model: ref('fct_test_coverage')
           compare_columns:
             - total_models
-            - total_tests
+            - total_tests_in_project
             - tested_models
             - test_coverage_pct
             - test_to_model_ratio
