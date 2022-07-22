@@ -31,7 +31,9 @@ model_file_paths as (
         resources.resource_name as model_name,
         resources.directory_path as model_directory_path,
         models_per_test.test_id,
-        models_per_test.parent_model_id
+        models_per_test.parent_model_id,
+        {{ dbt_utils.position('model_name', 'test_name') }} as model_name_in_test_name_position,
+        min({{ dbt_utils.position('model_name', 'test_name') }}) over (partition by test_id) = {{ dbt_utils.position('model_name', 'test_name') }} as is_primary_tested_model
     from resources
     inner join models_per_test
     on models_per_test.parent_model_id = resources.resource_id
@@ -64,6 +66,7 @@ all_file_paths as (
     from model_file_paths
     inner join test_file_paths
     on model_file_paths.test_id = test_file_paths.test_id
+    where is_primary_tested_model
 
 ),
 
