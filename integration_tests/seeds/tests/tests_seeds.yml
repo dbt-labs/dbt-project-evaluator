@@ -17,7 +17,7 @@ seeds:
           compare_model: ref('fct_test_coverage')
           compare_columns:
             - total_models
-            - total_tests
+            - total_tests_in_project
             - tested_models
             - test_coverage_pct
             - test_to_model_ratio
