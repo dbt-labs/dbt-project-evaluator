@@ -8,7 +8,7 @@ relationships as (
     select * from {{ ref('int_direct_relationships') }}
 ),
 
-count_column_tests as (
+parse_tests as (
     
     select 
         relationships.direct_parent_id, 
@@ -24,16 +24,29 @@ count_column_tests as (
     group by 1,2,3
 ),
 
+count_column_tests as (
+
+    select 
+        direct_parent_id, 
+        column_name,
+        sum(primary_key_tests_count) as primary_key_tests_count,
+        sum(tests_count) as total_test_count,
+        sum(distinct_test_counter) as distinct_test_counter
+    from parse_tests
+    group by 1,2
+
+),
+
 agg_test_relationships as (
 
     select 
         direct_parent_id, 
         sum(case when primary_key_tests_count = 2 then 1 else 0 end) >= 1 as is_primary_key_tested,
-        sum(tests_count) as number_of_tests_on_model,
+        sum(total_test_count) as number_of_tests_on_model,
         sum(distinct_test_counter) as distinct_test_counter
     from count_column_tests
     group by 1
-
+  
 ),
 
 final as (
