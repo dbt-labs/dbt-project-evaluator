@@ -40,13 +40,13 @@ direct_metrics_relationships as (
 direct_relationships as (
     select
         all_graph_resources.*,
-        CASE 
-            WHEN all_graph_resources.resource_type = 'source' THEN NULL
-            WHEN all_graph_resources.resource_type = 'exposure' THEN exposures.direct_parent_id
-            WHEN all_graph_resources.resource_type = 'metric' THEN metrics.direct_parent_id
-            WHEN all_graph_resources.resource_type IN ('model', 'snapshot', 'test') THEN models.direct_parent_id
-            ELSE NULL
-        END AS direct_parent_id
+        case 
+            when all_graph_resources.resource_type = 'source' then null
+            when all_graph_resources.resource_type = 'exposure' then exposures.direct_parent_id
+            when all_graph_resources.resource_type = 'metric' then metrics.direct_parent_id
+            when all_graph_resources.resource_type in ('model', 'snapshot', 'test') then models.direct_parent_id
+            else null
+        end as direct_parent_id
     from all_graph_resources
     left join direct_model_relationships as models
         on all_graph_resources.resource_id = models.resource_id
@@ -59,6 +59,14 @@ direct_relationships as (
 final as (
     select
         {{ dbt_utils.surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id,
+        {{ dbt_utils.split_part('direct_parent_id', "'.'", 3) }} as parent_resource_name,
+        case 
+            when resource_type = 'test'
+                    then min({{ dbt_utils.position(dbt_utils.split_part('direct_parent_id', "'.'", 3), 'resource_name') }}) 
+                        over (partition by resource_name) = 
+                        {{ dbt_utils.position(dbt_utils.split_part('direct_parent_id', "'.'", 3), 'resource_name') }} 
+            else false
+        end as is_primary_test_relationship,
         *
     from direct_relationships
 )

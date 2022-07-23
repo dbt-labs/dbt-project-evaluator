@@ -21,6 +21,7 @@ models_per_test as (
         direct_parent_id as parent_model_id
     from relationships
     where resource_type = 'test'
+    and is_primary_test_relationship
 
 ),
 
