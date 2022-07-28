@@ -15,7 +15,7 @@
                 wrap_string_with_quotes(node.unique_id),
                 wrap_string_with_quotes(node.name),
                 wrap_string_with_quotes(node.resource_type),
-                wrap_string_with_quotes(node.original_file_path),
+                wrap_string_with_quotes(node.original_file_path | replace("\\","\\\\")),
                 "cast(" ~ node.config.enabled | trim ~ " as boolean)",
                 wrap_string_with_quotes(node.config.materialized),
                 wrap_string_with_quotes(node.config.on_schema_change),

@@ -14,7 +14,7 @@
             [
               wrap_string_with_quotes(node.unique_id),
               wrap_string_with_quotes(node.name),
-              wrap_string_with_quotes(node.original_file_path),
+              wrap_string_with_quotes(node.original_file_path | replace("\\","\\\\")),
               wrap_string_with_quotes(node.alias),
               wrap_string_with_quotes(node.resource_type),
               wrap_string_with_quotes(node.source_name),
