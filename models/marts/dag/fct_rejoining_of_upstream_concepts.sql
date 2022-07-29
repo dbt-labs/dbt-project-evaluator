@@ -55,7 +55,13 @@ final as (
     from triad_relationships
     left join single_use_resources 
         on triad_relationships.parent_and_child = single_use_resources.parent
+),
+
+final_filtered as (
+    select * from final
+    where is_loop_independent
 )
 
-select * from final
-where is_loop_independent
+select * from final_filtered
+
+{{ filter_exceptions(this) }}
