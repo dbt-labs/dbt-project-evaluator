@@ -49,46 +49,44 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
 ----
 ## Package Documentation
 
-__[DAG Issues](#dag-issues)__
-- [Direct Join to Source](#direct-join-to-source)
-- [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
-- [Model Fanout](#model-fanout)
-- [Multiple Sources Joined](#multiple-sources-joined)
-- [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
-- [Root Models](#root-models)
-- [Source Fanout](#source-fanout)
-- [Staging Models Dependent on Downstream Models](#staging-models-dependent-on-downstream-models)
-- [Staging Models Dependent on Other Staging Models](#staging-models-dependent-on-other-staging-models)
-- [Unused Sources](#unused-sources)
+### Rules
+- __[DAG Issues](#dag-issues)__
+  - [Direct Join to Source](#direct-join-to-source)
+  - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
+  - [Model Fanout](#model-fanout)
+  - [Multiple Sources Joined](#multiple-sources-joined)
+  - [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
+  - [Root Models](#root-models)
+  - [Source Fanout](#source-fanout)
+  - [Staging Models Dependent on Downstream Models](#staging-models-dependent-on-downstream-models)
+  - [Staging Models Dependent on Other Staging Models](#staging-models-dependent-on-other-staging-models)
+  - [Unused Sources](#unused-sources)
+- __[Testing](#testing)__
+  - [Models without Primary Key Tests](#models-without-primary-key-tests)
+  - [Test Coverage](#test-coverage)
+- __[Documentation](#documentation)__
+  - [Documentation Coverage](#documentation-coverage)
+  - [Undocumented Models](#undocumented-models)
+- __[Structure](#structure)__
+  - [Model Naming Conventions](#model-naming-conventions)
+  - [Model Directories](#model-directories)
+  - [Source Directories](#model-directories)
+  - [Test Directories](#test-directories)
+- __[Performance](#performance)__
+  - [Chained View Dependencies](#chained-view-dependencies)
+  - [Exposure Parents Materializations](#exposure-parents-materializations)
 
-__[Testing](#testing)__
-- [Models without Primary Key Tests](#models-without-primary-key-tests)
-- [Test Coverage](#test-coverage)
-
-__[Documentation](#documentation)__
-- [Documentation Coverage](#documentation-coverage)
-- [Undocumented Models](#undocumented-models)
-
-__[Structure](#structure)__
-- [Model Naming Conventions](#model-naming-conventions)
-- [Model Directories](#model-directories)
-- [Source Directories](#model-directories)
-- [Test Directories](#test-directories)
-
-__[Performance](#performance)__
-- [Chained View Dependencies](#chained-view-dependencies)
-- [Exposure Parents Materializations](#exposure-parents-materializations)
-
-__[Customization](#customization)__
+### [Customization](#customization)
 - [Disabling Models](#disabling-models)
 - [Overriding Variables](#overriding-variables)
+- [Configuring exceptions to the rules](#configuring-exceptions-to-the-rules)
 
-__[Querying the DAG with SQL](#querying-the-dag-with-sql)__
+### [Querying the DAG with SQL](#querying-the-dag-with-sql)
 
-__[Limitations](#limitations)__
+### [Limitations](#limitations)
 - [BigQuery and Databricks](#bigquery-and-databricks)
 
-__[Contributing](#contributing)__
+### [Contributing](#contributing)
 
 ----
 
@@ -860,6 +858,54 @@ vars:
 | `max_depth_dag` | limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility | 9 |
 
 Changing `max_depth_dag` number to a higher one might prevent the package from running properly on BigQuery and Databricks/Spark.
+
+
+### Configuring exceptions to the rules
+
+While the rules defined in this package are considered best practices, we realize that there might be exceptions to those rules and people might want to exclude given results to get passing tests despite not following all the recommendations.
+
+An example would be excluding all models with names matching with `stg_..._unioned` from `fct_multiple_sources_joined` as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the test to fail for those models.
+
+The package offers the ability to define a seed called `dbt_project_evaluator_exceptions.csv` to list those exceptions we don't want to be reported. This seed must contain the following columns:
+- `fct_name`: the name of the fact table for which we want to define exceptions
+- `column_name`: the column name from `fct_name` we will be looking at to define exceptions
+- `id_to_exclude`: the values (or `like` pattern) we want to exclude for `column_name`
+- `comment`: a field where people can document why a given exception is legitimate
+
+The following section describes the steps to follow to configure exceptions.
+
+#### 1. Create a new seed
+
+With our previous example, the seed `dbt_project_evaluator_exceptions.csv` would look like:
+```
+fct_name,column_name,id_to_exclude,comment
+fct_multiple_sources_joined,child,stg_%_unioned,Models called _unioned can union multiple sources
+```
+
+which looks like the following when loaded in the warehouse
+
+|fct_name                   |column_name|id_to_exclude   |comment                                           |
+|---------------------------|-----------|----------------|--------------------------------------------------|
+|fct_multiple_sources_joined|child      |stg\_%\_unioned |Models called \_unioned can union multiple sources|
+
+
+#### 2. Deactivate the seed from the original package
+
+Only a single seed can exist with a given name. When using a custom one, we need to deactivate the one from the package by adding the following to our `dbt_project.yml`
+```
+seeds:
+  dbt_project_evaluator:
+    dbt_project_evaluator_exceptions:
+      +enabled: false
+```
+
+#### 3. Run the seed and the package
+
+We then run both the seed and the package by executing the following command:
+```
+dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions
+```
+
 
 ----
 
