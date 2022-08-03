@@ -8,9 +8,6 @@ seeds:
           compare_model: ref('fct_missing_primary_key_tests')
 
   - name: test_fct_test_coverage
-    config:
-      column_types:
-        marts_test_coverage_pct: float
     tests:
       - dbt_utils.equality:
           name: equality_fct_test_coverage

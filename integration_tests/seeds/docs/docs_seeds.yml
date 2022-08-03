@@ -12,8 +12,6 @@ seeds:
 
   - name: test_fct_documentation_coverage
     config:
-      column_types:
-        marts_documentation_coverage_pct: float
       tags:
         - docs
     tests:
