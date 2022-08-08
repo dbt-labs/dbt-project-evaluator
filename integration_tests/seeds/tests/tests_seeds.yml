@@ -10,7 +10,10 @@ seeds:
   - name: test_fct_test_coverage
     config:
       column_types:
+        staging_test_coverage_pct: float
+        intermediate_test_coverage_pct: float
         marts_test_coverage_pct: float
+        other_test_coverage_pct: float
     tests:
       - dbt_utils.equality:
           name: equality_fct_test_coverage
@@ -21,4 +24,7 @@ seeds:
             - tested_models
             - test_coverage_pct
             - test_to_model_ratio
+            - staging_test_coverage_pct
+            - intermediate_test_coverage_pct
             - marts_test_coverage_pct
+            - other_test_coverage_pct

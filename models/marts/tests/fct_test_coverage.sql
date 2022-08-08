@@ -8,8 +8,10 @@ conversion as (
     select
         resource_name,
         case when number_of_tests_on_model > 0 then 1 else 0 end as is_tested_model,
-        case when model_type = 'marts' then 1.0 else NULL end as is_marts_model,
-        case when number_of_tests_on_model > 0 and model_type = 'marts' then 1.0 else 0 end as is_tested_marts_model
+        {% for model_type in var('model_types') %}
+            case when model_type = '{{ model_type }}' then 1.0 else NULL end as is_{{ model_type }}_model,
+            case when number_of_tests_on_model > 0 and model_type = '{{ model_type }}' then 1.0 else 0 end as is_tested_{{ model_type }}_model{% if not loop.last %},{% endif %}
+        {% endfor %}
 
     from test_counts
 ),
@@ -21,7 +23,9 @@ final as (
         sum(number_of_tests_on_model) as total_tests,
         sum(is_tested_model) as tested_models,
         round(sum(is_tested_model) * 100.0 / count(*), 2) as test_coverage_pct,
-        round(sum(is_tested_marts_model) * 100.0 / count(is_marts_model), 2) as marts_test_coverage_pct,
+        {% for model_type in var('model_types') %}
+            round(sum(is_tested_{{ model_type }}_model) * 100.0 / count(is_{{ model_type }}_model), 2) as {{ model_type }}_test_coverage_pct,
+        {% endfor %}
         round(sum(number_of_tests_on_model) * 1.0 / count(*), 4) as test_to_model_ratio
 
     from test_counts

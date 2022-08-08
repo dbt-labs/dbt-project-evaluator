@@ -1,2 +1,2 @@
-﻿total_models,total_tests,tested_models,test_coverage_pct,test_to_model_ratio,marts_test_coverage_pct
-14,7,4,28.57,0.5,0.00
+﻿total_models,total_tests,tested_models,test_coverage_pct,staging_test_coverage_pct,intermediate_test_coverage_pct,marts_test_coverage_pct,other_test_coverage_pct,test_to_model_ratio
+14,7,4,28.57,60.00,50.00,0.00,0.00,0.5
