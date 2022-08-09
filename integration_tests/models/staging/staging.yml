@@ -7,6 +7,9 @@ models:
         tests:
           - unique
           - not_null
+      - name: "concat(coalesce(id,1),' - ','test_sql_column')"
+        tests:
+          - unique
 
   - name: int_model_4
     columns:
