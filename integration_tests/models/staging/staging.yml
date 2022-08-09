@@ -7,7 +7,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: "concat('fake','column','for','testing')"
+      - name: "concat(coalesce('fake_column', ' '),'for_testing')"
         tests:
           - not_null
 
