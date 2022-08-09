@@ -46,7 +46,7 @@
       {%- do values_list_of_strings.append( indiv_values | join(", \n")) -%}
     {%- endfor -%}
 
-    {%- set values_string = '(' ~ values_list_of_strings | join("), (") ~ ')' -%}
+    {%- set values_string = '(' ~ values_list_of_strings | join("), \n\n(") ~ ')' -%}
 
         with cte as (
 
@@ -76,10 +76,10 @@
         {%- set following_rows_list_of_strings = [] -%}
 
         {%- for values_row in values[1:] -%}
-            {%- do following_rows_list_of_strings.append( values_row | join(", ")) -%}
+            {%- do following_rows_list_of_strings.append( values_row | join(", \n")) -%}
         {%- endfor -%}
 
-        {%- set following_rows = '(' ~ following_rows_list_of_strings | join("), (") ~ ')' -%}
+        {%- set following_rows = '(' ~ following_rows_list_of_strings | join("), \n\n(") ~ ')' -%}
 
         {%- set struct_header = [] %}
         {%- for column in column_names -%}
