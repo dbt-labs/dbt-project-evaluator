@@ -10,6 +10,13 @@ Specifically, this package tests for:
 
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 
+Currently, the following adapters are supported:
+- BigQuery
+- Databricks/Spark
+- PostgreSQL
+- Redshift
+- Snowflake
+
 ## Using This Package
 
 ### Cloning via dbt Package Hub
