@@ -10,6 +10,9 @@ models:
           - relationships:
               to: ref('stg_model_2')
               field: id
+      - name: "concat(coalesce('fake_column', ' '),'for_testing')"
+        tests:
+          - not_null
 
   - name: int_model_4
     columns:

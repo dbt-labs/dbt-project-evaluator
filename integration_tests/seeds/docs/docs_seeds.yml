@@ -13,7 +13,10 @@ seeds:
   - name: test_fct_documentation_coverage
     config:
       column_types:
-        marts_documentation_coverage_pct: float
+        staging_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
+        intermediate_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
+        marts_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
+        other_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
       tags:
         - docs
     tests:
@@ -24,4 +27,7 @@ seeds:
             - total_models
             - documented_models
             - documentation_coverage_pct
+            - staging_documentation_coverage_pct
+            - intermediate_documentation_coverage_pct
             - marts_documentation_coverage_pct
+            - other_documentation_coverage_pct

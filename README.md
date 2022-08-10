@@ -10,10 +10,6 @@ Specifically, this package tests for:
 
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 
-## ⚠️ NEW PACKAGE WARNING ⚠️
-
- This package is in its early stages! It's very likely that you could encounter bugs, and functionality will be changing quickly as we gather feedback from end users. Please do not hesitate to create new issues in this repo for bug reports and/or feature requests, and we appreciate your patience as we continue to enhance this package! 
-
 Currently, the following adapters are supported:
 - BigQuery
 - Databricks/Spark
@@ -438,10 +434,11 @@ in the `tests` directory of you project.
 Specifically, this models measures:
 1. `test_coverage_pct`: the percentage of your models that have minimum 1 test applied.
 2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
-3. `marts_test_coverage_pct`: the percentage of your marts models that have minimum 1 test applied.
+3. `< model_type >_test_coverage_pct`: the percentage of each of your model types that have minimum 1 test applied.
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%.
-You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+You can set your own threshold by overriding the `test_coverage_target` variable. 
+You can adjust your own model types by overriding the `model_types` variable. [See overriding variables section.](#overriding-variables)
 
 #### Reason to Flag
 We recommend that every model in your dbt project has tests applied to ensure the accuracy of your data transformations.
