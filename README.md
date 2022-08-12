@@ -867,7 +867,7 @@ While the rules defined in this package are considered best practices, we realiz
 An example would be excluding all models with names matching with `stg_..._unioned` from `fct_multiple_sources_joined` as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the test to fail for those models.
 
 The package offers the ability to define a seed called `dbt_project_evaluator_exceptions.csv` to list those exceptions we don't want to be reported. This seed must contain the following columns:
-- `fct_name`: the name of the fact table for which we want to define exceptions
+- `fct_name`: the name of the fact table for which we want to define exceptions (Please note that it is not possible to exclude specific models for all the `coverage` tests, but there are variables available to configure those to the particular users' needs)
 - `column_name`: the column name from `fct_name` we will be looking at to define exceptions
 - `id_to_exclude`: the values (or `like` pattern) we want to exclude for `column_name`
 - `comment`: a field where people can document why a given exception is legitimate
