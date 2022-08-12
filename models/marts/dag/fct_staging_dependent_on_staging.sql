@@ -20,3 +20,5 @@ bending_connections as (
 )
 
 select * from bending_connections
+
+{{ filter_exceptions(this) }}

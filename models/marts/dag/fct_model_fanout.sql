@@ -29,3 +29,5 @@ model_fanout as (
 )
 
 select * from model_fanout
+
+{{ filter_exceptions(this) }}

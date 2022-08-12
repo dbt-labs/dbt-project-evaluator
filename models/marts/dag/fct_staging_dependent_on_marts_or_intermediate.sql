@@ -19,3 +19,5 @@ final as (
     and parent_model_type in ('marts', 'intermediate')
 )
 select * from final
+
+{{ filter_exceptions(this) }}

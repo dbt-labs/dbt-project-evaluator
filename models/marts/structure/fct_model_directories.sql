@@ -63,3 +63,5 @@ unioned as (
 )
 
 select * from unioned
+
+{{ filter_exceptions(this) }}
