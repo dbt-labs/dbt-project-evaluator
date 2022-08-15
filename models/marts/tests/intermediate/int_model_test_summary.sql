@@ -19,6 +19,7 @@ count_column_tests as (
     left join relationships
         on all_graph_resources.resource_id = relationships.resource_id
     where all_graph_resources.resource_type = 'test'
+    and relationships.is_primary_test_relationship
     group by 1,2
 ),
 
