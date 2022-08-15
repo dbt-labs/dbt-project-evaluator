@@ -5,7 +5,6 @@
 {%- macro default__get_relationships(node_type) -%}
 
     {%- if execute -%}
-
         {%- if node_type == 'nodes' %}
             {% set nodes_list = graph.nodes.values() %}   
         {%- elif node_type == 'exposures' -%}
@@ -25,7 +24,8 @@
                 {%- set values_line = 
                   [
                     "cast('" ~ node.unique_id ~ "' as " ~ dbt_utils.type_string() ~ ")",
-                    "cast(NULL as " ~ dbt_utils.type_string() ~ ")"
+                    "cast(NULL as " ~ dbt_utils.type_string() ~ ")",
+                    "FALSE",
                   ] 
                 %}
                   
@@ -38,7 +38,8 @@
                     {%- set values_line = 
                         [
                             "cast('" ~ node.unique_id ~ "' as " ~ dbt_utils.type_string() ~ ")",
-                            "cast('" ~ parent ~ "' as " ~ dbt_utils.type_string() ~ ")"
+                            "cast('" ~ parent ~ "' as " ~ dbt_utils.type_string() ~ ")",
+                            "" ~ loop.last ~ ""
                         ]
                     %}
                       
@@ -55,7 +56,8 @@
             values = values,
             columns = [
                 'resource_id',
-                'direct_parent_id'
+                'direct_parent_id',
+                'is_primary_relationship'
             ]
          )
     ) }}
