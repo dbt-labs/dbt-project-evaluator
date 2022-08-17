@@ -1,0 +1,10 @@
+version: 2
+
+seeds:
+  - name: dbt_project_evaluator_exceptions
+    config:
+      column_types:
+        fct_name: varchar
+        column_name: varchar
+        id_to_exclude: varchar
+        comment: varchar
