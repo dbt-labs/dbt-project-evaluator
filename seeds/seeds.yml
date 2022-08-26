@@ -1,0 +1,10 @@
+version: 2
+
+seeds:
+  - name: dbt_project_evaluator_exceptions
+    config:
+      column_types:
+        fct_name: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake'] else 'string' }}"
+        column_name: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake'] else 'string' }}"
+        id_to_exclude: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake'] else 'string' }}"
+        comment: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake'] else 'string' }}"
