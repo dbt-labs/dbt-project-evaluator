@@ -22,7 +22,7 @@ unioned_with_calc as (
     select 
         *,
         case 
-            when resource_type = 'source' then  {{ concat(['source_name',"'.'",'name']) }}
+            when resource_type = 'source' then  {{ dbt.concat(['source_name',"'.'",'name']) }}
             else name 
         end as resource_name,
         case
