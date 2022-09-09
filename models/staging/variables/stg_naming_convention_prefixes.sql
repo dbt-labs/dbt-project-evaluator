@@ -15,7 +15,7 @@ parsed as (
 
 select
     var_name as prefix_name, 
-    {{ dbt_utils.split_part('var_name', "'_'", 1) }} as model_type,
+    {{ dbt.split_part('var_name', "'_'", 1) }} as model_type,
     var_value as prefix_value
 from vars_prefix_table
 

@@ -4,7 +4,7 @@
 
     {%- set null_values  = [] -%}
 
-    {%- set type_string = dbt_utils.type_string() | trim -%}
+    {%- set type_string = type_string() | trim -%}
 
     {%- for column in columns %}
 

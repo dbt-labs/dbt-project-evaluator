@@ -23,8 +23,8 @@
 
                 {%- set values_line = 
                   [
-                    "cast('" ~ node.unique_id ~ "' as " ~ dbt_utils.type_string() ~ ")",
-                    "cast(NULL as " ~ dbt_utils.type_string() ~ ")",
+                    "cast('" ~ node.unique_id ~ "' as " ~ type_string() ~ ")",
+                    "cast(NULL as " ~ type_string() ~ ")",
                     "FALSE",
                   ] 
                 %}
@@ -37,8 +37,8 @@
 
                     {%- set values_line = 
                         [
-                            "cast('" ~ node.unique_id ~ "' as " ~ dbt_utils.type_string() ~ ")",
-                            "cast('" ~ parent ~ "' as " ~ dbt_utils.type_string() ~ ")",
+                            "cast('" ~ node.unique_id ~ "' as " ~ type_string() ~ ")",
+                            "cast('" ~ parent ~ "' as " ~ type_string() ~ ")",
                             "" ~ loop.last ~ ""
                         ]
                     %}

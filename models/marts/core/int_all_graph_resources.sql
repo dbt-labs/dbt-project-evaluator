@@ -22,14 +22,14 @@ unioned_with_calc as (
     select 
         *,
         case 
-            when resource_type = 'source' then  {{ dbt_utils.concat(['source_name',"'.'",'name']) }}
+            when resource_type = 'source' then  {{ concat(['source_name',"'.'",'name']) }}
             else name 
         end as resource_name,
         case
             when resource_type = 'source' then null
-            else {{ dbt_utils.split_part('name', "'_'", 1) }}||'_' 
+            else {{ dbt.split_part('name', "'_'", 1) }}||'_' 
         end as prefix,
-        {{ dbt_utils.replace("file_path", "regexp_replace(file_path,'.*/','')", "''") }} as directory_path,
+        {{ dbt.replace("file_path", "regexp_replace(file_path,'.*/','')", "''") }} as directory_path,
         regexp_replace(file_path,'.*/','') as file_name 
     from unioned
     where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
@@ -51,10 +51,10 @@ joined as (
         end as model_type_prefix,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-            when {{ dbt_utils.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} = 0 then null
+            when {{ dbt.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} = 0 then null
             else naming_convention_folders.model_type 
         end as model_type_folder,
-        {{ dbt_utils.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} as position_folder,  
+        {{ dbt.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} as position_folder,  
         nullif(unioned_with_calc.column_name, '') as column_name,
         unioned_with_calc.resource_name like 'unique%' and unioned_with_calc.resource_type = 'test' as is_not_null_test,
         unioned_with_calc.resource_name like 'not_null%' and unioned_with_calc.resource_type = 'test' as is_unique_test,
