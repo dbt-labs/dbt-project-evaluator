@@ -1,6 +1,6 @@
 -- this model finds cases where a model references more than one source
 with direct_source_relationships as (
-    select  
+    select distinct
         *
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
