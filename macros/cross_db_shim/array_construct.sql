@@ -2,7 +2,7 @@
 {# These macro will be deprecated when we release a dbt-core 1.3 friendly release of this pacakge, which will include these macros#}
 
 {% macro array_construct(inputs = [], data_type = api.Column.translate_type('integer')) -%}
-  {{ return(adapter.dispatch('array_construct', 'dbt')(inputs, data_type)) }}
+  {{ return(adapter.dispatch('array_construct', 'dbt_project_evaluator')(inputs, data_type)) }}
 {%- endmacro %}
 
 {# all inputs must be the same data type to match postgres functionality #}

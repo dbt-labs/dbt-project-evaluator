@@ -2,7 +2,7 @@
 {# These macro will be deprecated when we release a dbt-core 1.3 friendly release of this pacakge, which will include these macros#}
 
 {% macro array_concat(array_1, array_2) -%}\
-  {{ return(adapter.dispatch('array_concat', 'dbt')(array_1, array_2)) }}
+  {{ return(adapter.dispatch('array_concat', 'dbt_project_evaluator')(array_1, array_2)) }}
 {%- endmacro %}
 
 {% macro default__array_concat(array_1, array_2) -%}

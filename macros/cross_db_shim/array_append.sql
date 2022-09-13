@@ -3,7 +3,7 @@
 
 
 {% macro array_append(array, new_element) -%}
-  {{ return(adapter.dispatch('array_append', 'dbt')(array, new_element)) }}
+  {{ return(adapter.dispatch('array_append', 'dbt_project_evaluator')(array, new_element)) }}
 {%- endmacro %}
 
 {% macro default__array_append(array, new_element) -%}
