@@ -32,6 +32,12 @@ models:
   dbt_project_evaluator_integration_tests:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
     +materialized: ephemeral
+  dbt_project_evaluator:
+    marts:
+      tests:
+        fct_test_coverage:
+          # materialize as a table to ensure SQL query runs successfully
+          +materialized: table
 
 tests:
   dbt_project_evaluator:
@@ -46,3 +52,7 @@ seeds:
   dbt_project_evaluator:
     dbt_project_evaluator_exceptions:
       +enabled: false
+
+vars:
+  # ensure integration tests run successfully when there are 0 of a given model type (extra)
+  model_types: ['staging', 'intermediate', 'marts', 'other', 'extra']
