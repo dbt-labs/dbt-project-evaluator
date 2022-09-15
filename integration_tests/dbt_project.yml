@@ -38,6 +38,10 @@ models:
         fct_test_coverage:
           # materialize as a table to ensure SQL query runs successfully
           +materialized: table
+      documentation:
+        fct_documentation_coverage:
+          # materialize as a table to ensure SQL query runs successfully
+          +materialized: table
 
 tests:
   dbt_project_evaluator:

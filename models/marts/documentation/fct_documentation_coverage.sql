@@ -24,7 +24,7 @@ final as (
         sum(is_described_model) as documented_models,
         round(sum(is_described_model) * 100.0 / count(*), 2) as documentation_coverage_pct,
         {% for model_type in var('model_types') %}
-            round(sum(is_described_{{ model_type }}_model) * 100 / count(is_{{ model_type }}_model), 2) as {{ model_type }}_documentation_coverage_pct{% if not loop.last %},{% endif %}
+            round(sum(is_described_{{ model_type }}_model) * 100 / nullif(count(is_{{ model_type }}_model), 0), 2) as {{ model_type }}_documentation_coverage_pct{% if not loop.last %},{% endif %}
         {% endfor %}
 
     from models
