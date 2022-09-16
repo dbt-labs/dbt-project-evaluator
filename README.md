@@ -929,6 +929,7 @@ Note: you could follow a similar process to disable the models in this package f
 ### 2. Run this package for each pull request
 
 Now, you can run this package as a step of your CI job/pipeline. In dbt Cloud, for example, you could simply add a command to your CI job:
+
 ![Add command dbt build --select package:dbt_project_evaluator to CI job in dbt Cloud](https://user-images.githubusercontent.com/53586774/190683931-5010349f-0adc-454c-bf34-66e4bf9ef2f8.png)
 
 Note: ensure you have properly set up your dbt Cloud CI job using deferral and a webhook trigger by following [this documentation](https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-enabling-continuous-integration).
