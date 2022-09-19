@@ -1,3 +1,7 @@
 {% macro wrap_string_with_quotes(str) %}
-  {{ return("'" ~ str ~ "'") }}
+  {% if not str %}
+    {{ return('cast(NULL as ' ~ dbt_utils.type_string() ~ ')') }}
+  {% else %}
+    {{ return("'" ~ str ~ "'") }}
+  {% endif %}
 {% endmacro %}
