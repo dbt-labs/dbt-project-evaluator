@@ -25,7 +25,9 @@ Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) f
 ### Additional setup for Databricks/Spark
 
 In your `dbt_project.yml`, add the following config:
-```yaml
+```yml
+# dbt_project.yml
+
 dispatch:
   - macro_namespace: dbt_utils
     search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
@@ -399,7 +401,7 @@ Navigate to the `sources.yml` file (or whatever your company has called the file
 to the unused source. Within the YML file, remove the unused table name, along with descriptions
 or any other nested information.
 
-  ```yaml
+  ```yml
   version: 2
 
   sources:
@@ -892,7 +894,9 @@ which looks like the following when loaded in the warehouse
 #### 2. Deactivate the seed from the original package
 
 Only a single seed can exist with a given name. When using a custom one, we need to deactivate the one from the package by adding the following to our `dbt_project.yml`
-```
+```yml
+# dbt_project.yml
+
 seeds:
   dbt_project_evaluator:
     dbt_project_evaluator_exceptions:
@@ -917,18 +921,36 @@ By default the tests in this package are configured with "warn" severity, we can
 1. Create an environment variable to define the appropriate severity for each environment. In dbt Cloud, for example, we can easily create an environment variable `DBT_PROJECT_EVALUATOR_SEVERITY` that is set to "error" for the Continuous Integration environment and "warn" for all other environments:
 ![Creating DBT_PROJECT_EVALUATOR_SEVERITY environment variable in dbt Cloud](https://user-images.githubusercontent.com/53586774/190683057-cf38d8dd-de70-457c-b65b-3532dc8f5ea1.png)
 
+Note: It is also possible to use an evironment variable for dbt Core, but the actual implementation will depend on how dbt is orchestrated. 
+
 2. Update you project.yml file to override the default severity for all tests in this package:
-```
+```yml
+# dbt_project.yml
+
 tests:
   dbt_project_evaluator:
     +severity: "{{ env_var('DBT_PROJECT_EVALUATOR_SEVERITY', 'warn') }}"
 ```
 
 Note: you could follow a similar process to disable the models in this package for your production environment 
+```yml
+# dbt_project.yml
+
+models:
+  dbt_project_evaluator:
+    +enabled: "{{ env_var('ENABLE_DBT_PROJECT_EVALUATOR', 'true') }}"
+```
 
 ### 2. Run this package for each pull request
 
-Now, you can run this package as a step of your CI job/pipeline. In dbt Cloud, for example, you could simply add a command to your CI job:
+Now, you can run this package as a step of your CI job/pipeline. In dbt Cloud, for example, you could simply add this command to your CI job:
+```
+dbt build --select package:dbt_project_evaluator
+```
+Or, if you've [configured any exceptions](#configuring-exceptions-to-the-rules), this command:
+```
+dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions
+```
 
 ![Add command dbt build --select package:dbt_project_evaluator to CI job in dbt Cloud](https://user-images.githubusercontent.com/53586774/190683931-5010349f-0adc-454c-bf34-66e4bf9ef2f8.png)
 
