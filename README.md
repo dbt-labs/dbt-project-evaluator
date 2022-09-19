@@ -58,7 +58,7 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
   - [Staging Models Dependent on Other Staging Models](#staging-models-dependent-on-other-staging-models)
   - [Unused Sources](#unused-sources)
 - __[Testing](#testing)__
-  - [Models without Primary Key Tests](#models-without-primary-key-tests)
+  - [Missing Primary Key Tests](#missing-primary-key-tests)
   - [Test Coverage](#test-coverage)
 - __[Documentation](#documentation)__
   - [Documentation Coverage](#documentation-coverage)
@@ -422,12 +422,13 @@ or any other nested information.
 
 
 ## Testing
-### Models without Primary Key Tests
-
+### Missing Primary Key Tests
 #### Model
 `fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
+
 #### Reason to Flag
 Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models without proper tests on their grain are a risk to the reliability and scalability of your project. 
+
 #### How to Remediate
 Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info!
 
