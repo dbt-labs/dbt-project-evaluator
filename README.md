@@ -921,7 +921,7 @@ By default the tests in this package are configured with "warn" severity, we can
 1. Create an environment variable to define the appropriate severity for each environment. In dbt Cloud, for example, we can easily create an environment variable `DBT_PROJECT_EVALUATOR_SEVERITY` that is set to "error" for the Continuous Integration environment and "warn" for all other environments:
 ![Creating DBT_PROJECT_EVALUATOR_SEVERITY environment variable in dbt Cloud](https://user-images.githubusercontent.com/53586774/190683057-cf38d8dd-de70-457c-b65b-3532dc8f5ea1.png)
 
-Note: It is also possible to use an evironment variable for dbt Core, but the actual implementation will depend on how dbt is orchestrated. 
+Note: It is also possible to use an environment variable for dbt Core, but the actual implementation will depend on how dbt is orchestrated. 
 
 2. Update you project.yml file to override the default severity for all tests in this package:
 ```yml
