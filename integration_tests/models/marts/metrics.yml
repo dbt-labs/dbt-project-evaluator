@@ -15,7 +15,7 @@ metrics:
     dimensions:
       - plan
       - country
-    
+
     filters:
       - field: is_paying
         operator: '='
