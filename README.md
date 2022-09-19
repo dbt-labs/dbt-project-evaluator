@@ -909,7 +909,7 @@ dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exception
 ----
 ## Running this package as a CI check
 
-Once you have addressed all current misalignments in your project (either by fixing them or configuring exceptions), you can use this package as a CI check to ensure code changes don't introduce new misalignments. The setup will vary based on whether you are using dbt CLoud or dbt core, but the general steps are as follows:
+Once you have addressed all current misalignments in your project (either by fixing them or configuring exceptions), you can use this package as a CI check to ensure code changes don't introduce new misalignments. The setup will vary based on whether you are using dbt Cloud or dbt Core, but the general steps are as follows:
 
 ### 1. Override test severity with an environment variable
 
