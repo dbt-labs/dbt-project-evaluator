@@ -2,7 +2,7 @@ name: 'dbt_project_evaluator'
 version: '1.0.0'
 config-version: 2
 
-require-dbt-version: [">=1.1.0", "<2.0.0"]
+require-dbt-version: [">=1.2.0", "<2.0.0"]
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
@@ -16,9 +16,10 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+
 dispatch:
-  - macro_namespace: dbt_utils
-    search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+  - macro_namespace: dbt
+    search_order: ['dbt_project_evaluator', 'dbt']
 
 models:
   dbt_project_evaluator:

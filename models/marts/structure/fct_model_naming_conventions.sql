@@ -12,7 +12,7 @@ naming_convention_prefixes as (
 appropriate_prefixes as (
     select 
         model_type, 
-        {{ dbt_utils.listagg('prefix_value', "', '", 'order by prefix_value') }} as appropriate_prefixes
+        {{ dbt.listagg('prefix_value', "', '", 'order by prefix_value') }} as appropriate_prefixes
     from naming_convention_prefixes
     group by model_type
 ), 
