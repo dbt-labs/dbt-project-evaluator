@@ -7,6 +7,7 @@ with all_graph_resources as (
 
 naming_convention_prefixes as (
     select * from {{ ref('stg_naming_convention_prefixes') }}
+    order by prefix_value
 ), 
 
 appropriate_prefixes as (

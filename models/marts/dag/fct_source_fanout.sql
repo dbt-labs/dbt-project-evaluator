@@ -6,6 +6,7 @@ with direct_source_relationships as (
     where distance = 1
     and parent_resource_type = 'source'
     and child_resource_type = 'model'
+    order by child
 ),
 
 source_fanout as (
