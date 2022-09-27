@@ -881,7 +881,8 @@ models:
 
 Currently, this package uses different variables to adapt the models to your objectives and naming conventions. They can all be updated directly in `dbt_project.yml`
 
-#### Coverage Variables:
+<details>
+<summary><b>Coverage Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
@@ -897,8 +898,10 @@ vars:
     documentation_coverage_target: 75
     test_coverage_target: 75
 ```
+</details>
 
-#### DAG Variables:
+<details>
+<summary><b>DAG Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
@@ -912,8 +915,10 @@ vars:
   dbt_project_evaluator:
     models_fanout_threshold: 10
 ```
+</details>
 
-#### Naming Convention Variables:
+<details>
+<summary><b>Naming Convention Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
@@ -938,8 +943,10 @@ vars:
     util_folder_name: 'util'
     util_prefixes: ['util_']
 ```
+</details>
 
-#### Performance Variables:
+<details>
+<summary><b>Performance Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
@@ -953,8 +960,10 @@ vars:
   dbt_project_evaluator:
     chained_views_threshold: 8
 ```
+</details>
 
-#### Warehouse Specific Variables:
+<details>
+<summary><b>Warehouse Specific Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
