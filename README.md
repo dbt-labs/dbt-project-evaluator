@@ -93,25 +93,29 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
 ## DAG Issues
 
 ### Direct Join to Source
-#### Model
 
 `fct_direct_join_to_source` ([source](models/marts/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to
 both a model and a source.
 
-#### Example
+<details>
+<summary><b>Example</b></summary>
 
 `int_model_4` is pulling in both a model and a source.
 
 <img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png">
+</details>
 
-#### Reason to Flag
+<details>
+<summary><b>Reason to Flag</b></summary>
 
 We highly recommend having a one-to-one relationship between sources and their corresponding `staging` model, and not having any other model reading from the source. Those `staging` models are then the ones read from by the other downstream models.
 
 This allows renaming your columns and doing minor transformation on your source data only once and being consistent
 across all the models that will consume the source data.
+</details>
 
-#### How to Remediate
+<details>
+<summary><b>How to Remediate</b></summary>
 
 In our example, we would want to:
 1. create a `staging` model for our source data if it doesn't exist already 
@@ -120,9 +124,10 @@ In our example, we would want to:
 After refactoring your downstream model to select from the staging layer, your DAG should look like this: 
 
 <img width="500" alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png">
+</details>
+&nbsp;
 
 ### Downstream Models Dependent on Source
-#### Model
 
 `fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
