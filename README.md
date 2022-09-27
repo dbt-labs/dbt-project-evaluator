@@ -47,7 +47,7 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
 ----
 ## Package Documentation
 
-### Rules(#rules)
+### [Rules](#rules)
 - __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
@@ -158,7 +158,7 @@ After refactoring your downstream model to select from the staging layer, your D
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
 </details>
 
-### Model Fanout
+#### Model Fanout
 `fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more than 3 direct leaf children.
 You can set your own threshold for model fanout by overriding the `models_fanout_threshold` variable. [See overriding variables section.](#overriding-variables)
 
@@ -206,7 +206,7 @@ Your dbt project needs a defined end point! Until the metrics server comes to fr
 predefine every query or quandary your team might have. So decide as a team where that line is and maintain it.
 </details>
 
-### Multiple Sources Joined
+#### Multiple Sources Joined
 `fct_multiple_sources_joined` ([source](models/marts/dag/fct_multiple_sources_joined.sql)) shows each instance where a model references more than one source.
 
 <details>
@@ -263,7 +263,7 @@ or if you want to use base_ models and keep stg_model_2 as is:
 <img width="500" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
 </details>
 
-### Rejoining of Upstream Concepts
+#### Rejoining of Upstream Concepts
 `fct_rejoining_of_upstream_concepts` ([source](models/marts/dag/fct_rejoining_of_upstream_concepts.sql)) contains all cases where one of the parent's direct children
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
 where the model "in between" the parent and child has NO other downstream dependencies.
@@ -313,7 +313,7 @@ Post-refactor, your DAG should look like this:
 <img width="500" alt="A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png">
 </details>
 
-### Root Models
+#### Root Models
 `fct_root_models` ([source](models/marts/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.
 
 <details>
@@ -344,7 +344,7 @@ To exclude specific cases, check out the instructions in [Configuring exceptions
 Start by mapping any table references in the `FROM` clause of the model definition to the models or raw tables that they draw from, and replace those references with the `{{ ref() }}` if the dependency is another dbt model, or the `{{ source() }}` function if the table is a raw data source (this may require the declaration of a new source table). Then, visualize this model in the DAG, and refactor as appropriate according to best practices.
 </details>
 
-### Source Fanout
+#### Source Fanout
 `fct_source_fanout` ([source](models/marts/dag/fct_source_fanout.sql)) shows each instance where a source is the direct parent of multiple resources in the DAG.
 
 <details>
@@ -379,7 +379,7 @@ After refactoring the above example, the DAG would look something like this:
 <img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png">
 </details>
 
-### Staging Models Dependent on Downstream Models
+#### Staging Models Dependent on Downstream Models
 `fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
 
 <details>
@@ -409,7 +409,7 @@ After updating the model to use the appropriate `{{ source() }}` function, your 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png">
 </details>
 
-### Staging Models Dependent on Other Staging Models
+#### Staging Models Dependent on Other Staging Models
 `fct_staging_dependent_on_staging` ([source](models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are
 dependent on each other.
 
@@ -435,7 +435,7 @@ You should either change the model type of the `child` (maybe to an intermediate
 In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate directory and update the file name to `int_model_4`.
 </details>
 
-### Unused Sources
+#### Unused Sources
 `fct_unused_sources` ([source](models/marts/dag/fct_unused_sources.sql)) shows each source with 0 children.
 
 <details>
@@ -478,8 +478,8 @@ or any other nested information.
 <img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"> 
 </details>
 
-## Testing
-### Missing Primary Key Tests
+### Testing
+#### Missing Primary Key Tests
 `fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
 
 <details>
@@ -495,7 +495,7 @@ Additional tests can be configured by applying a [generic test](https://docs.get
 in the `tests` directory of you project. 
 </details>
 
-### Test Coverage
+#### Test Coverage
 `fct_test_coverage` ([source](models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.
 Specifically, this models measures:
 1. `test_coverage_pct`: the percentage of your models that have minimum 1 test applied.
@@ -519,8 +519,8 @@ in the `tests` directory of you project.
 As explained above, we recommend [at a minimum](https://www.getdbt.com/analytics-engineering/transformation/data-testing/#what-should-you-test), every model should have `not_null` and `unique` tests set up on a primary key.
 </details>
 
-## Documentation
-### Documentation Coverage
+### Documentation
+#### Documentation Coverage
 `fct_documentation_coverage` ([source](models/marts/documentation/fct_documentation_coverage.sql)) calculates the percent of enabled models in the project that have
 a configured description.
 
@@ -541,7 +541,7 @@ function in the model's `.yml` entry.
 Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.
 </details>
 
-### Undocumented Models
+#### Undocumented Models
 `fct_undocumented_models` ([source](models/marts/documentation/fct_undocumented_models.sql)) lists every model with no description configured.
 
 <details>
@@ -558,8 +558,8 @@ function in the model's `.yml` entry.
 Tip: We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. Missing documentation should be addressed first for marts models, then for the rest of your project, to ensure that stakeholders in the organization can understand the data which is surfaced to them.
 </details>
 
-## Structure
-### Model Naming Conventions
+### Structure
+#### Model Naming Conventions
 `fct_model_naming_conventions` ([source](models/marts/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix.
 
 <details>
@@ -595,7 +595,7 @@ the model type in the data warehouse, we recommend appropriately prefixing your 
 For each model flagged, ensure the model type is defined and the model name is prefixed appropriately.
 </details>
 
-### Model Directories
+#### Model Directories
 
 `fct_model_directories` ([source](models/marts/structure/fct_model_directories.sql)) shows all cases where a model is NOT in the appropriate subdirectory:
 - For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
@@ -701,7 +701,7 @@ We might create additional folders for intermediate models but each file should 
 For each resource flagged, move the file from the `current_file_path` to `change_file_path_to`.
 </details>
 
-### Source Directories
+#### Source Directories
 
 `fct_source_directories` ([source](models/marts/structure/fct_source_directories.sql)) shows all cases where a source definition is NOT in the appropriate subdirectory:
 
@@ -758,7 +758,7 @@ This provides for clear repository organization, so that analytics engineers can
 For each source flagged, move the file from the `current_file_path` to `change_file_path_to`.
 </details>
 
-### Test Directories
+#### Test Directories
 
 `fct_test_directories` ([source](models/marts/structure/fct_test_directories.sql)) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.
 
@@ -799,8 +799,8 @@ Each subdirectory in `models/` should contain one .yml file that includes the te
 Move flagged tests from the yml file under `current_test_directory` to the yml file under `change_test_directory_to` (create a new yml file if one does not exist).
 </details>
 
-## Performance
-### Chained View Dependencies
+### Performance
+#### Chained View Dependencies
 
 `fct_chained_views_dependencies` ([source](models/marts/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental. 
 
@@ -831,7 +831,7 @@ The best practice to determine top candidates for changing materialization from 
 - if a view has more complex calculations (window functions, joins between *many* tables, etc.), change materialization to table
 </details>
 
-### Exposure Parents Materializations
+#### Exposure Parents Materializations
 
 `fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each model that is a direct parent of an exposure and is *not* materialized as a table in the warehouse. 
 
