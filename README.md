@@ -2,7 +2,7 @@
 
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
 Specifically, this package tests for:
-  1. __[DAG Issues](#dag-issues)__ - your dbt DAG for modeling best practices
+  1. __[Modeling](#modeling)__ - your dbt DAG for modeling best practices
   2. __[Testing](#testing)__ - your models for testing best practices
   3. __[Documentation](#documentation)__ - your models for documentation best practices
   4. __[Structure](#structure)__ - your dbt project for file structure and naming best practices
@@ -47,8 +47,8 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
 ----
 ## Package Documentation
 
-### Rules
-- __[DAG Issues](#dag-issues)__
+### Rules(#rules)
+- __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
   - [Model Fanout](#model-fanout)
@@ -89,10 +89,10 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
 ### [Contributing](#contributing)
 
 ----
+## Rules
+### Modeling
 
-## DAG Issues
-
-### Direct Join to Source
+#### Direct Join to Source
 
 `fct_direct_join_to_source` ([source](models/marts/dag/fct_direct_join_to_source.sql)) shows each parent/child relationship where a model has a reference to
 both a model and a source.
@@ -126,7 +126,7 @@ After refactoring your downstream model to select from the staging layer, your D
 <img width="500" alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png">
 </details>
 
-### Downstream Models Dependent on Source
+#### Downstream Models Dependent on Source
 
 `fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
@@ -151,7 +151,8 @@ and your downstream data artifacts.
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
-### Model Fanout
+
+#### Model Fanout
 #### Model
 
 `fct_model_fanout` ([source](models/marts/dag/fct_model_fanout.sql)) shows all parents with more than 3 direct leaf children.
