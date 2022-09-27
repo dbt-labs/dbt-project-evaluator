@@ -596,46 +596,13 @@ For each model flagged, ensure the model type is defined and the model name is p
 </details>
 
 ### Model Directories
-#### Model
 
 `fct_model_directories` ([source](models/marts/structure/fct_model_directories.sql)) shows all cases where a model is NOT in the appropriate subdirectory:
 - For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
 - For non-staging models: The files should be nested closest to the folder name that matches their model type.  
 
-#### Reason to Flag
-
-Because we often work with multiple data sources, in our staging directory, we create one subdirectory per source.
-```
-├── dbt_project.yml
-└── models
-    ├── marts
-    └── staging
-        ├── braintree
-        └── stripe
-```
-
-Each staging directory contains:
-- One staging model for each raw source table
-- One .yml file which contains source definitions, tests, and documentation (see [Source Directories](#source-directories))
-- One .yml file which contains tests & documentation for models in the same directory (see [Test Directories](#test-directories))
-
-This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
-
-We might create additional folders for intermediate models but each file should always be nested closest to the folder name that matches their model type.
-```
-├── dbt_project.yml
-└── models
-    └── marts
-        └── fct_model_6.sql
-        └── intermediate
-            └── int_model_5.sql
-```
-
-#### How to Remediate
-
-For each resource flagged, move the file from the `current_file_path` to `change_file_path_to`.
-
-#### Example
+<details>
+<summary><b>Example</b></summary>
 
 Consider `stg_model_3` which is a staging model for `source_2.table_3`:
 
@@ -695,13 +662,10 @@ This file should be moved closest to the subdirectory `intermediate`:
         └── intermediate
             ├── int_model_4.sql
 ```
+</details>
 
-### Source Directories
-#### Model
-
-`fct_source_directories` ([source](models/marts/structure/fct_source_directories.sql)) shows all cases where a source definition is NOT in the appropriate subdirectory:
-
-#### Reason to Flag
+<details>
+<summary><b>Reason to Flag</b></summary>
 
 Because we often work with multiple data sources, in our staging directory, we create one subdirectory per source.
 ```
@@ -714,17 +678,35 @@ Because we often work with multiple data sources, in our staging directory, we c
 ```
 
 Each staging directory contains:
-- One staging model for each raw source table (see [Model Directories](#source-directories))
-- One .yml file which contains source definitions, tests, and documentation
+- One staging model for each raw source table
+- One .yml file which contains source definitions, tests, and documentation (see [Source Directories](#source-directories))
 - One .yml file which contains tests & documentation for models in the same directory (see [Test Directories](#test-directories))
 
 This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
 
-#### How to Remediate
+We might create additional folders for intermediate models but each file should always be nested closest to the folder name that matches their model type.
+```
+├── dbt_project.yml
+└── models
+    └── marts
+        └── fct_model_6.sql
+        └── intermediate
+            └── int_model_5.sql
+```
+</details>
 
-For each source flagged, move the file from the `current_file_path` to `change_file_path_to`.
+<details>
+<summary><b>How to Remediate</b></summary>
 
-#### Example
+For each resource flagged, move the file from the `current_file_path` to `change_file_path_to`.
+</details>
+
+### Source Directories
+
+`fct_source_directories` ([source](models/marts/structure/fct_source_directories.sql)) shows all cases where a source definition is NOT in the appropriate subdirectory:
+
+<details>
+<summary><b>Example</b></summary>
 
 Consider `source_2.table_3` which is a `source_2` source but it had been defined inappropriately in a `source.yml` file nested in the subdirectory `source_1`:
 
@@ -747,21 +729,41 @@ This definition should be moved into a `source.yml` file nested in the subdirect
         └── source_2
             ├── source.yml
 ```
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+Because we often work with multiple data sources, in our staging directory, we create one subdirectory per source.
+```
+├── dbt_project.yml
+└── models
+    ├── marts
+    └── staging
+        ├── braintree
+        └── stripe
+```
+
+Each staging directory contains:
+- One staging model for each raw source table (see [Model Directories](#source-directories))
+- One .yml file which contains source definitions, tests, and documentation
+- One .yml file which contains tests & documentation for models in the same directory (see [Test Directories](#test-directories))
+
+This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+For each source flagged, move the file from the `current_file_path` to `change_file_path_to`.
+</details>
 
 ### Test Directories
-#### Model
 
 `fct_test_directories` ([source](models/marts/structure/fct_test_directories.sql)) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.
 
-#### Reason to Flag
-
-Each subdirectory in `models/` should contain one .yml file that includes the tests and documentation for all models within the given subdirectory. Keeping your repository organized in this way ensures that folks can quickly access the information they need.
-
-#### How to Remediate
-
-Move flagged tests from the yml file under `current_test_directory` to the yml file under `change_test_directory_to` (create a new yml file if one does not exist).
-
-#### Example
+<details>
+<summary><b>Example</b></summary>
 
 `int_model_4` is located within `marts/`. However, tests for `int_model_4` are configured in `staging/staging.yml`:
 ```
@@ -783,51 +785,74 @@ A new yml file should be created in `marts/` which contains all tests and docume
     └── staging
         ├── staging.yml
 ```
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+Each subdirectory in `models/` should contain one .yml file that includes the tests and documentation for all models within the given subdirectory. Keeping your repository organized in this way ensures that folks can quickly access the information they need.
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+Move flagged tests from the yml file under `current_test_directory` to the yml file under `change_test_directory_to` (create a new yml file if one does not exist).
+</details>
 
 ## Performance
 ### Chained View Dependencies
-#### Model
 
 `fct_chained_views_dependencies` ([source](models/marts/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental. 
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `distance` between a given `parent` and `child` is greater than or equal to 4.
 You can set your own threshold for chained views by overriding the `chained_views_threshold` variable. [See overriding variables section.](#overriding-variables)
 
-#### Example
+<details>
+<summary><b>Example</b></summary>
 
 `table_1` depends on a chain of 4 views (`view_1`, `view_2`, `view_3`, and `view_4`).
 
 <img width="500" alt="dag of chain of 4 views, then a table" src="https://user-images.githubusercontent.com/53586774/176299679-39028eb1-f9e3-492a-bdb7-b72d9d7958b7.png">
+</details>
 
-#### Reason to Flag
+<details>
+<summary><b>Reason to Flag</b></summary>
 
 You may experience a long runtime for a model when it is build on top of a long chain of "non-physically-materialized" models (views and ephemerals). In the example above, nothing is really computed until you get to `table_1`. At which point, it is going to run the query within `view_4`, which will then have to run the query within `view_3`, which will then have the run the query within `view_2`, which will then have to run the query within `view_1`. These will all be running at the same time, which creates a long runtime for `table_1`. 
+</details>
 
-#### How to Remediate
+<details>
+<summary><b>How to Remediate</b></summary>
 
 We can reduce this compilation time by changing the materialization strategy of some key upstream models to table or incremental to keep a minimum amount of compute in memory and preventing nesting of views. If, for example, we change the materialization of `view_4` from a view to a table, `table_1` will have a shorter runtime as it will have less compilation to do. 
 
 The best practice to determine top candidates for changing materialization from `view` to `table`:
 - if a view is used downstream my *many* models, change materialization to table
 - if a view has more complex calculations (window functions, joins between *many* tables, etc.), change materialization to table
+</details>
 
 ### Exposure Parents Materializations
-#### Model
 
 `fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each model that is a direct parent of an exposure and is *not* materialized as a table in the warehouse. 
 
-#### Example 
+<details>
+<summary><b>Example</b></summary>
 <img width="500" alt="An example exposure with a table parent (fct_model_6) and an ephemeral parent (dim_model_7)" src="https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png">
 
 In this case, the parents of `exposure_1` are not both materialized as tables -- `dim_model_7` is ephemeral, while `fct_model_6` is a table. This model would return a record for the `dim_model_7 --> exposure_1` relationship. 
+</details>
 
-#### Reason to Flag
+<details>
+<summary><b>Reason to Flag</b></summary>
 
 Models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried. This model highlights instances where the models referenced by exposures are not either a `table` or `incremental` materialization.
+</details>
 
-#### How to Remediate
+<details>
+<summary><b>How to Remediate</b></summary>
 
 If necessary, update the `materialized` configuration on the models returned in `fct_exposure_parents_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
+</details>
 
 -----
 ## Customization
