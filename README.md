@@ -125,7 +125,6 @@ After refactoring your downstream model to select from the staging layer, your D
 
 <img width="500" alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png">
 </details>
-&nbsp;
 
 ### Downstream Models Dependent on Source
 
