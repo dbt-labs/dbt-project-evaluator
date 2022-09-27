@@ -970,7 +970,7 @@ vars:
 | `max_depth_dag` | limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility | 9 |
 
 Changing `max_depth_dag` number to a higher one might prevent the package from running properly on BigQuery and Databricks/Spark.
-
+</details>
 
 ### Configuring exceptions to the rules
 
