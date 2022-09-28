@@ -31,7 +31,11 @@ model_fanout as (
 model_fanout_agg as (
     select
         parent,
-        {{ dbt.listagg(measure='child', delimiter_text="', '", order_by_clause='order by child') }} as leaf_children
+        {{ dbt.listagg(
+            measure='child', 
+            delimiter_text="', '", 
+            order_by_clause='order by child' if target.type not in ['databricks','duckdb','spark']) 
+        }} as leaf_children
     from model_fanout
     group by 1
     having count(*) >= {{ var('models_fanout_threshold') }}

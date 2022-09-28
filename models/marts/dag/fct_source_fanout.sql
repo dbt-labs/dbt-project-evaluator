@@ -12,7 +12,11 @@ with direct_source_relationships as (
 source_fanout as (
     select
         parent,
-        {{ dbt.listagg(measure='child', delimiter_text="', '", order_by_clause='order by child') }} as model_children
+        {{ dbt.listagg(
+            measure='child', 
+            delimiter_text="', '", 
+            order_by_clause='order by child' if target.type not in ['databricks','duckdb','spark']) 
+        }} as model_children
     from direct_source_relationships
     group by 1
     having count(*) > 1
