@@ -12,7 +12,11 @@
     #}
 
     {% if limit_num -%}
-        {%- do exceptions.raise_compiler_error("listagg on databricks doesn't support limit_num") -%}
+        {%- do exceptions.raise_compiler_error("listagg on DuckDB doesn't support limit_num") -%}
+    {%- endif %}
+    
+    {% if order_by_clause -%}
+        {%- do exceptions.warn("listagg on DuckDB doesn't support order_by_clause, you should order your data beforehand") -%}
     {%- endif %}
 
     string_agg(
