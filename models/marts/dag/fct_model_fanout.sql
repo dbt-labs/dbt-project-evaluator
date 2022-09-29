@@ -35,7 +35,7 @@ model_fanout_agg as (
         {{ dbt.listagg(
             measure='child', 
             delimiter_text="', '", 
-            order_by_clause='order by child' if target.type in ['snowflake']) 
+            order_by_clause='order by child' if target.type in ['snowflake','redshift']) 
         }} as leaf_children
     from model_fanout
     group by 1
