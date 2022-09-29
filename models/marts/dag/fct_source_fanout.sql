@@ -16,7 +16,7 @@ source_fanout as (
         {{ dbt.listagg(
             measure='child', 
             delimiter_text="', '", 
-            order_by_clause='order by child' if target.type not in ['databricks','duckdb','spark']) 
+            order_by_clause='order by child' if target.type in ['snowflake']) 
         }} as model_children
     from direct_source_relationships
     group by 1

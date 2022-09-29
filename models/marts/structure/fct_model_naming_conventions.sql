@@ -17,7 +17,7 @@ appropriate_prefixes as (
         {{ dbt.listagg(
             measure='prefix_value', 
             delimiter_text="', '", 
-            order_by_clause='order by prefix_value' if target.type not in ['databricks','duckdb','spark']) 
+            order_by_clause='order by prefix_value' if target.type in ['snowflake']) 
         }} as appropriate_prefixes
     from naming_convention_prefixes
     group by model_type

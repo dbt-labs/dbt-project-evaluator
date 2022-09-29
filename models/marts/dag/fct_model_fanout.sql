@@ -35,7 +35,7 @@ model_fanout_agg as (
         {{ dbt.listagg(
             measure='child', 
             delimiter_text="', '", 
-            order_by_clause='order by child' if target.type not in ['databricks','duckdb','spark']) 
+            order_by_clause='order by child' if target.type in ['snowflake']) 
         }} as leaf_children
     from model_fanout
     group by 1
@@ -45,3 +45,4 @@ model_fanout_agg as (
 select * from model_fanout_agg
 
 {{ filter_exceptions(this) }}
+-- {{ log(flags.WHICH,1) }}
