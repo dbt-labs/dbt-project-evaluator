@@ -6,6 +6,7 @@ with direct_source_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
     and parent_resource_type = 'source'
+    -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by 1, 2
 ),
 

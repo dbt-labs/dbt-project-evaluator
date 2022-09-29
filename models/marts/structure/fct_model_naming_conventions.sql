@@ -7,6 +7,7 @@ with all_graph_resources as (
 
 naming_convention_prefixes as (
     select * from {{ ref('stg_naming_convention_prefixes') }}
+    -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by prefix_value
 ), 
 
