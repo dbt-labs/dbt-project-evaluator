@@ -13,10 +13,10 @@ seeds:
   - name: test_fct_documentation_coverage
     config:
       column_types:
-        staging_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
-        intermediate_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
-        marts_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
-        other_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks'] else 'decimal(10,2)' }}" 
+        staging_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks','duckdb'] else 'decimal(10,2)' }}" 
+        intermediate_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks','duckdb'] else 'decimal(10,2)' }}" 
+        marts_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks','duckdb'] else 'decimal(10,2)' }}" 
+        other_documentation_coverage_pct: "{{ 'float' if target.type not in ['spark','databricks','duckdb'] else 'decimal(10,2)' }}" 
       tags:
         - docs
     tests:
