@@ -1,9 +1,13 @@
-{% macro filter_exceptions(model_ref) %}
+{% macro filter_exceptions(model_ref) -%}
+  {{ return(adapter.dispatch('filter_exceptions', 'dbt_project_evaluator')(model_ref)) }}
+{%- endmacro %}
+
+{% macro default__filter_exceptions(model_ref) %}
 
 {% set query_filters %}
-select 
-    column_name, 
-    id_to_exclude 
+select
+    column_name,
+    id_to_exclude
 from {{ ref('dbt_project_evaluator_exceptions') }}
 where fct_name = '{{ model_ref.name }}'
 {% endset %}
@@ -14,5 +18,5 @@ where fct_name = '{{ model_ref.name }}'
         and {{ row_filter[0] }} not like '{{ row_filter[1] }}'
     {% endfor %}
 {% endif %}
-  
+
 {% endmacro %}

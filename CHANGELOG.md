@@ -5,6 +5,7 @@
 * Change list column_names in select_from_values to column that can be … by @VasiliiSurov in https://github.com/dbt-labs/dbt-project-evaluator/pull/144
 * add metrics to int_direct_relationships by @graciegoheen in https://github.com/dbt-labs/dbt-project-evaluator/pull/159
 * add databricks CI step by @dave-connors-3 in https://github.com/dbt-labs/dbt-project-evaluator/pull/141
+* Dispatching the macro filter_exceptions by @larssnek in https://github.com/dbt-labs/dbt-project-evaluator/pull/213
 
 ## Fixes + Docs
 * Fix/add package name to dispatch by @graciegoheen in https://github.com/dbt-labs/dbt-project-evaluator/pull/124

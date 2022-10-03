@@ -60,8 +60,8 @@ vars:
   models_fanout_threshold: 3
 
   # -- Naming conventions variables --
-  # to add a new "layer", update the variable list_layers 
-  # and create new variables with the names <layer>_folder_name and/or <layer>_prefixes 
+  # to add a new "model type", update the variable model_types 
+  # and create new variables with the names <model_type>_folder_name and/or <model_type>_prefixes 
   model_types: ['staging', 'intermediate', 'marts', 'other']
 
   staging_folder_name: 'staging'
