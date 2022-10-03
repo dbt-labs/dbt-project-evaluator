@@ -7,12 +7,18 @@ with all_graph_resources as (
 
 naming_convention_prefixes as (
     select * from {{ ref('stg_naming_convention_prefixes') }}
+    -- we order the CTE so that listagg returns values correctly sorted for some warehouses
+    order by prefix_value
 ), 
 
 appropriate_prefixes as (
     select 
         model_type, 
-        {{ dbt.listagg('prefix_value', "', '", 'order by prefix_value') }} as appropriate_prefixes
+        {{ dbt.listagg(
+            measure='prefix_value', 
+            delimiter_text="', '", 
+            order_by_clause='order by prefix_value' if target.type in ['snowflake','redshift']) 
+        }} as appropriate_prefixes
     from naming_convention_prefixes
     group by model_type
 ), 

@@ -55,3 +55,7 @@ integration_tests:
       http_path: "{{ env_var('DATABRICKS_TEST_HTTP_PATH') }}"
       token: "{{ env_var('DATABRICKS_TEST_ACCESS_TOKEN') }}"
       threads: 10
+
+    duckdb:
+      type: duckdb
+      path: ./duck.db

@@ -22,6 +22,17 @@ jobs:
       - store_artifacts:
           path: ./integration_tests/logs
 
+  integration-duckdb:
+    docker:
+      - image: cimg/python:3.9.9
+    steps:
+      - checkout
+      - run:
+          name: "Run Tests - DuckDB"
+          command: ./run_test.sh duckdb
+      - store_artifacts:
+          path: ./integration_tests/logs
+
   integration-redshift:
     docker:
       - image: cimg/python:3.9.9
@@ -76,6 +87,7 @@ workflows:
   test-all:
     jobs:
       - integration-postgres
+      - integration-duckdb
       - integration-redshift:
           requires:
             - integration-postgres
