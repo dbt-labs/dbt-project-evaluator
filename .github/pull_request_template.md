@@ -26,6 +26,7 @@ Screenshot of passing integration tests locally
     - [ ] Postgres
     - [ ] Redshift
     - [ ] Snowflake
+    - [ ] Databricks
+    - [ ] DuckDB
 - [ ] I have updated the README.md (if applicable)
 - [ ] I have added tests & descriptions to my models (and macros if applicable)
-- [ ] I have added an entry to CHANGELOG.md
