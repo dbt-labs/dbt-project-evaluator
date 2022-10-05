@@ -1029,11 +1029,12 @@ Once you have addressed all current misalignments in your project (either by fix
 
 By default the tests in this package are configured with "warn" severity, we can override that for our CI jobs with an environment variable:
 1. Create an environment variable to define the appropriate severity for each environment. In dbt Cloud, for example, we can easily create an environment variable `DBT_PROJECT_EVALUATOR_SEVERITY` that is set to "error" for the Continuous Integration environment and "warn" for all other environments:
+
 ![Creating DBT_PROJECT_EVALUATOR_SEVERITY environment variable in dbt Cloud](https://user-images.githubusercontent.com/53586774/190683057-cf38d8dd-de70-457c-b65b-3532dc8f5ea1.png)
 
 Note: It is also possible to use an environment variable for dbt Core, but the actual implementation will depend on how dbt is orchestrated. 
 
-2. Update you project.yml file to override the default severity for all tests in this package:
+1. Update you project.yml file to override the default severity for all tests in this package:
 ```yml
 # dbt_project.yml
 
@@ -1067,7 +1068,7 @@ dbt build --select state:modified+ --exclude package:dbt_project_evaluator
 dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions
 ```
 
-![Add commands dbt build --select state:modified+ --exclude package:dbt_project_evaluator && dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions to CI job in dbt Cloud](https://user-images.githubusercontent.com/53586774/194086949-281cec1b-e6bf-4df2-a63f-302dc3bc4ba6.png)
+<img width="500" alt="Add commands dbt build --select state:modified+ --exclude package:dbt_project_evaluator && dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions to CI job in dbt Cloud" src="https://user-images.githubusercontent.com/53586774/194086949-281cec1b-e6bf-4df2-a63f-302dc3bc4ba6.png">
 
 Note: ensure you have properly set up your dbt Cloud CI job using deferral and a webhook trigger by following [this documentation](https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-enabling-continuous-integration).
 
