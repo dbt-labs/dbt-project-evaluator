@@ -1053,19 +1053,23 @@ models:
 
 ### 2. Run this package for each pull request
 
-Now, you can run this package as a step of your CI job/pipeline. In dbt Cloud, for example, you could simply add this command to your CI job:
+Now, you can run this package as a step of your CI job/pipeline. In dbt Cloud, for example, you could update the commands of your CI job to:
+
 ```
+dbt build --select state:modified+ --exclude package:dbt_project_evaluator
 dbt build --select package:dbt_project_evaluator
 ```
-Or, if you've [configured any exceptions](#configuring-exceptions-to-the-rules), this command:
+
+Or, if you've [configured any exceptions](#configuring-exceptions-to-the-rules), to:
+
 ```
+dbt build --select state:modified+ --exclude package:dbt_project_evaluator
 dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions
 ```
 
-![Add command dbt build --select package:dbt_project_evaluator to CI job in dbt Cloud](https://user-images.githubusercontent.com/53586774/190683931-5010349f-0adc-454c-bf34-66e4bf9ef2f8.png)
+![Add commands dbt build --select state:modified+ --exclude package:dbt_project_evaluator && dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions to CI job in dbt Cloud](https://user-images.githubusercontent.com/53586774/194086949-281cec1b-e6bf-4df2-a63f-302dc3bc4ba6.png)
 
 Note: ensure you have properly set up your dbt Cloud CI job using deferral and a webhook trigger by following [this documentation](https://docs.getdbt.com/docs/dbt-cloud/using-dbt-cloud/cloud-enabling-continuous-integration).
-
 
 ----
 
