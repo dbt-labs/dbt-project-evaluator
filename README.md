@@ -16,6 +16,7 @@ Currently, the following adapters are supported:
 - PostgreSQL
 - Redshift
 - Snowflake
+- DuckDB
 
 ## Using This Package
 
