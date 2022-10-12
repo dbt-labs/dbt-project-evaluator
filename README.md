@@ -45,6 +45,11 @@ This package will:
 
 Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
 
+Each test warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
+1. Locate the related documentation below
+2. Query the associated model to find the specific instances of the issue within your project
+3. Either fix the issue(s) or [customize](#customization) the package to exclude them
+
 ----
 ## Package Documentation
 
