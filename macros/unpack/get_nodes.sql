@@ -3,11 +3,11 @@
 {%- endmacro -%}
 
 {%- macro default__get_nodes() -%}
-
+    {{ log("Running some_macro called get nodes", True) }}
     {%- if execute -%}
     {%- set nodes_list = graph.nodes.values() -%}
     {%- set values = [] -%}
-
+    {{ log(nodes_list["model.jaffle_shop.stg_payments"], True) }}
     {%- for node in nodes_list -%}
 
         {%- set values_line  = 

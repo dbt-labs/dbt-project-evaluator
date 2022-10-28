@@ -1,9 +1,0 @@
-version: 2
-
-macros:
-  - name: loop_vars
-    description: A macro that loops through variables and returns them as a SQL query to be used in a model
-    arguments:
-      - name: vars
-        type: list|string
-        description: A list of variables from dbt_project.yml

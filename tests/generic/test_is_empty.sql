@@ -8,4 +8,7 @@
     select count(*) as n_records
     from {{ model }}
 
+    {{ log("Hello! I'm Kyle!") }}
+
+
 {% endtest %}
