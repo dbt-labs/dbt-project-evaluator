@@ -19,26 +19,28 @@ models_without_children as (
 model_fanout as (
     select 
         all_dag_relationships.parent,
+        all_dag_relationships.parent_model_type,
         all_dag_relationships.child
     from all_dag_relationships
     inner join models_without_children
         on all_dag_relationships.child = models_without_children.parent
     where all_dag_relationships.distance = 1 and all_dag_relationships.child_resource_type = 'model'
-    group by 1, 2
+    group by 1, 2, 3
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
-    order by 1, 2
+    order by 1, 2, 3
 ),
 
 model_fanout_agg as (
     select
         parent,
+        parent_model_type,
         {{ dbt.listagg(
-            measure='child', 
-            delimiter_text="', '", 
-            order_by_clause='order by child' if target.type in ['snowflake','redshift']) 
+            measure = 'child', 
+            delimiter_text = "', '", 
+            order_by_clause = 'order by child' if target.type in ['snowflake','redshift']) 
         }} as leaf_children
     from model_fanout
-    group by 1
+    group by 1, 2
     having count(*) >= {{ var('models_fanout_threshold') }}
 )
 
