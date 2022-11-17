@@ -16,8 +16,11 @@
         {% endif -%}
         
         {%- set values = [] -%}
-
-        {%- for node in nodes_list -%}
+        
+        {{ get_paths(dbt_project_evaluator_path_pattern='(^marts)(^staging)(^intermediate)') }}
+          
+        {%- for node in nodes_list
+             | selectattr("path", "in", paths) -%}
 
             {%- if node.depends_on.nodes|length == 0 -%}
 
