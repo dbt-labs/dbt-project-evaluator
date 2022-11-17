@@ -9,10 +9,10 @@
         {%- set nodes_list = graph.exposures.values() -%}
         {%- set values = [] -%}
         
-        {{ get_paths(dbt_project_evaluator_path_pattern='(^marts)(^staging)(^intermediate)') }}
-        
-        {%- for node in nodes_list -%}
-          | selectattr("path", "in", paths) %}
+    {{ get_paths(dbt_project_evaluator_path_pattern='(^marts)(^staging)(^intermediate)') }}
+          
+        {%- for node in nodes_list
+          | selectattr("path", "in", paths) -%}
           {%- set values_line = 
             [
               wrap_string_with_quotes(node.unique_id),
