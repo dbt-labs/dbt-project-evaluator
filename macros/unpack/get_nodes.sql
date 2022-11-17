@@ -8,7 +8,10 @@
     {%- set nodes_list = graph.nodes.values() -%}
     {%- set values = [] -%}
 
-    {%- for node in nodes_list -%}
+    {%- set paths = get_paths(path_pattern = var('path_pattern') ) -%}
+          
+    {%- for node in nodes_list
+        | selectattr("path", "in", paths) -%}
 
         {%- set values_line  = 
             [

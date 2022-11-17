@@ -7,9 +7,12 @@
     {%- if execute -%}
     {%- set nodes_list = graph.metrics.values() -%}
     {%- set values = [] -%}
-
-    {%- for node in nodes_list -%}
-
+    
+    {%- set paths = get_paths(path_pattern = var('path_pattern') ) -%}
+          
+    {%- for node in nodes_list
+        | selectattr("path", "in", paths) -%}
+        
           {% set metric_filters %}
             {%- if node.filters|length -%}
               {%- for filt in node.filters %}

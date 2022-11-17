@@ -16,8 +16,11 @@
         {% endif -%}
         
         {%- set values = [] -%}
-
-        {%- for node in nodes_list -%}
+        
+        {%- set paths = get_paths(path_pattern = var('path_pattern') ) -%}
+          
+        {%- for node in nodes_list
+             | selectattr("path", "in", paths) -%}
 
             {%- if node.depends_on.nodes|length == 0 -%}
 
