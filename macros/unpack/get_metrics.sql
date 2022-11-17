@@ -7,9 +7,11 @@
     {%- if execute -%}
     {%- set nodes_list = graph.metrics.values() -%}
     {%- set values = [] -%}
-
+    
+    {{ get_paths(dbt_project_evaluator_path_pattern='(^marts)(^staging)(^intermediate)') }}
+          
     {%- for node in nodes_list -%}
-
+          | selectattr("path", "in", paths) %}
           {% set metric_filters %}
             {%- if node.filters|length -%}
               {%- for filt in node.filters %}
