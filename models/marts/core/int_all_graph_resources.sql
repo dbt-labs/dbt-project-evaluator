@@ -59,6 +59,7 @@ joined as (
         unioned_with_calc.macro_dependencies like '%macro.dbt.test_unique%' and unioned_with_calc.resource_type = 'test' as is_not_null_test,
         unioned_with_calc.macro_dependencies like '%macro.dbt.test_not_null%' and unioned_with_calc.resource_type = 'test' as is_unique_test,
         unioned_with_calc.macro_dependencies like '%macro.dbt_utils.test_unique_combination_of_columns%' and unioned_with_calc.resource_type = 'test' as is_unique_combo_test,
+        unioned_with_calc.macro_dependencies like '%macro.dbt_constraints.test_primary_key%' and unioned_with_calc.resource_type = 'test' as is_pk_constraint_test,
         unioned_with_calc.is_enabled, 
         unioned_with_calc.materialized, 
         unioned_with_calc.on_schema_change, 
