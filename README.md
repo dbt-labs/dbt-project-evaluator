@@ -84,6 +84,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 - [Disabling Models](#disabling-models)
 - [Overriding Variables](#overriding-variables)
 - [Configuring exceptions to the rules](#configuring-exceptions-to-the-rules)
+- [Evaluate specific project folders](#evaluate-specific-project-folders)
 
 ### [Running this package as a CI check](#running-this-package-as-a-ci-check)
 
@@ -1027,6 +1028,18 @@ dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exception
 ```
 
 ----
+
+### Evaluate specific project folders
+
+Limit the folder paths for the evaluator.  Uses re.match() to map regex string.
+Update the 'path_pattern' var in the `dbt_project.yml` file.
+```yml
+# dbt_project.yml
+vars:
+  dbt_project_evaluator:
+    path_pattern: '(^marts)|(^staging)|(^intermediate)'
+```
+
 ## Running this package as a CI check
 
 Once you have addressed all current misalignments in your project (either by fixing them or configuring exceptions), you can use this package as a CI check to ensure code changes don't introduce new misalignments. The setup will vary based on whether you are using dbt Cloud or dbt Core, but the general steps are as follows:
