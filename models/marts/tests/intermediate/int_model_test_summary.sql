@@ -13,9 +13,19 @@ count_column_tests as (
     select 
         relationships.direct_parent_id, 
         all_graph_resources.column_name,
-        count(distinct case when all_graph_resources.is_unique_test or all_graph_resources.is_not_null_test then relationships.resource_id else null end) unique_and_not_null_test_count,
-        count(distinct case when all_graph_resources.is_unique_combo_test then relationships.resource_id else null end) unique_combo_test_count,
-        count(distinct case when all_graph_resources.is_pk_constraint_test then relationships.resource_id else null end) pk_constraint_test_count,
+        {%- for test_set in var('primary_key_test_macros') %}
+            {%- set outer_loop = loop -%}
+            {%- if test_set is iterable and (test_set is not string and test_set is not mapping) %}
+        count(distinct case when 
+                {%- for test in test_set %} 
+                all_graph_resources.is_{{ test.split('.')[2] }} {%- if not loop.last %} or {% endif %} 
+                {%- endfor %}
+            then relationships.resource_id else null end
+        ) as primary_key_method_{{ outer_loop.index }}_count,
+            {%- else %}
+        count(distinct case when all_graph_resources.is_{{ test_set.split('.')[2] }} then relationships.resource_id else null end) primary_key_method_{{ outer_loop.index }}_count,
+            {%- endif %}
+        {%- endfor %}
         count(distinct relationships.resource_id) as tests_count
     from all_graph_resources
     left join relationships
@@ -30,10 +40,13 @@ agg_test_relationships as (
     select 
         direct_parent_id, 
         sum(case 
-                when unique_and_not_null_test_count = 2 
-                    or unique_combo_test_count = 1 
-                    or pk_constraint_test_count = 1 
-                        then 1 
+                when (
+                    {%- for test_set in var('primary_key_test_macros') %}
+                        {%- set compare_value = test_set | length if (test_set is not string and test_set is not mapping) else 1 %}
+                    primary_key_method_{{ loop.index }}_count = {{ compare_value}}
+                        {%- if not loop.last %} or {% endif %}
+                    {%- endfor %} 
+                ) then 1 
                 else 0 
             end
         ) >= 1 as is_primary_key_tested,

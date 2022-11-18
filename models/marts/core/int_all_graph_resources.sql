@@ -1,4 +1,17 @@
 -- one row for each resource in the graph
+
+{# flatten the sets of permissable primary key test sets to one level for later iteration #}
+{%- set test_macro_list = [] %}
+{%- for test_set in var('primary_key_test_macros') -%}
+    {%- if test_set is iterable and (test_set is not string and test_set is not mapping) -%}
+      {%- for test in test_set %}
+        {%- do test_macro_list.append(test) -%}
+      {%- endfor %}
+    {%- else %}
+        {%- do test_macro_list.append(test_set) -%}
+    {%- endif-%}
+{%- endfor -%}
+
 with unioned as (
 
     {{ dbt_utils.union_relations([
@@ -56,10 +69,9 @@ joined as (
         end as model_type_folder,
         {{ dbt.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} as position_folder,  
         nullif(unioned_with_calc.column_name, '') as column_name,
-        unioned_with_calc.macro_dependencies like '%macro.dbt.test_unique%' and unioned_with_calc.resource_type = 'test' as is_not_null_test,
-        unioned_with_calc.macro_dependencies like '%macro.dbt.test_not_null%' and unioned_with_calc.resource_type = 'test' as is_unique_test,
-        unioned_with_calc.macro_dependencies like '%macro.dbt_utils.test_unique_combination_of_columns%' and unioned_with_calc.resource_type = 'test' as is_unique_combo_test,
-        unioned_with_calc.macro_dependencies like '%macro.dbt_constraints.test_primary_key%' and unioned_with_calc.resource_type = 'test' as is_pk_constraint_test,
+        {% for test in test_macro_list %}
+        unioned_with_calc.macro_dependencies like '%{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[2] }},  
+        {% endfor %}
         unioned_with_calc.is_enabled, 
         unioned_with_calc.materialized, 
         unioned_with_calc.on_schema_change, 
