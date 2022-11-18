@@ -73,7 +73,10 @@ vars:
   intermediate_prefixes: ['int_']
   marts_prefixes: ['fct_', 'dim_']
   other_prefixes: ['rpt_']
-
+  
+  # -- Folder paths to limit evaluator, uses re.match() to map regex string --
+  path_pattern: '.*'
+  
   # -- Performance variables --
   chained_views_threshold: 5
 
