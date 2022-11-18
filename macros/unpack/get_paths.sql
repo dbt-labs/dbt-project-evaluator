@@ -7,5 +7,5 @@
       {%- if modules.re.match(dbt_project_evaluator_path_pattern, path.path) is not none -%} {%-do paths.append(path.path) -%} {% endif %}
     {%- endfor %}
   {% endif %}
-  {% return(paths) %}
+  {{ return(paths) }}
 {%- endmacro -%}
