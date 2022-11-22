@@ -18,12 +18,12 @@ count_column_tests as (
             {%- if test_set is iterable and (test_set is not string and test_set is not mapping) %}
         count(distinct case when 
                 {%- for test in test_set %} 
-                all_graph_resources.is_{{ test.split('.')[2] }} {%- if not loop.last %} or {% endif %} 
+                all_graph_resources.is_{{ test.split('.')[1] }} {%- if not loop.last %} or {% endif %} 
                 {%- endfor %}
             then relationships.resource_id else null end
         ) as primary_key_method_{{ outer_loop.index }}_count,
             {%- else %}
-        count(distinct case when all_graph_resources.is_{{ test_set.split('.')[2] }} then relationships.resource_id else null end) primary_key_method_{{ outer_loop.index }}_count,
+        count(distinct case when all_graph_resources.is_{{ test_set.split('.')[1] }} then relationships.resource_id else null end) primary_key_method_{{ outer_loop.index }}_count,
             {%- endif %}
         {%- endfor %}
         count(distinct relationships.resource_id) as tests_count

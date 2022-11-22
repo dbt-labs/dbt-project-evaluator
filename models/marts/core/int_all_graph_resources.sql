@@ -70,7 +70,7 @@ joined as (
         {{ dbt.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} as position_folder,  
         nullif(unioned_with_calc.column_name, '') as column_name,
         {% for test in test_macro_list %}
-        unioned_with_calc.macro_dependencies like '%{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[2] }},  
+        unioned_with_calc.macro_dependencies like '%macro.{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[1] }},  
         {% endfor %}
         unioned_with_calc.is_enabled, 
         unioned_with_calc.materialized, 
