@@ -495,6 +495,7 @@ Tests are assertions you make about your models and other resources in your dbt 
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info!
 
 Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
@@ -519,6 +520,7 @@ We recommend that every model in your dbt project has tests applied to ensure th
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests)
 in the `tests` directory of you project.
 
@@ -541,6 +543,7 @@ The documentation for your project includes model code, a DAG of your project, a
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
 
@@ -558,6 +561,7 @@ The documentation for your project includes model code, a DAG of your project, a
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
 
