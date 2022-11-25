@@ -53,7 +53,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 ----
 ## Package Documentation
 
-### [Rules](#rules)
+### [Rules](#rules-1)
 - __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
@@ -80,19 +80,19 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
   - [Chained View Dependencies](#chained-view-dependencies)
   - [Exposure Parents Materializations](#exposure-parents-materializations)
 
-### [Customization](#customization)
+### [Customization](#customization-1)
 - [Disabling Models](#disabling-models)
 - [Overriding Variables](#overriding-variables)
 - [Configuring exceptions to the rules](#configuring-exceptions-to-the-rules)
 
-### [Running this package as a CI check](#running-this-package-as-a-ci-check)
+### [Running this package as a CI check](#running-this-package-as-a-ci-check-1)
 
-### [Querying the DAG with SQL](#querying-the-dag-with-sql)
+### [Querying the DAG with SQL](#querying-the-dag-with-sql-1)
 
-### [Limitations](#limitations)
+### [Limitations](#limitations-1)
 - [BigQuery and Databricks](#bigquery-and-databricks)
 
-### [Contributing](#contributing)
+### [Contributing](#contributing-1)
 
 ----
 ## Rules
