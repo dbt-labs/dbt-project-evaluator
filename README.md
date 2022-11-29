@@ -53,7 +53,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 ----
 ## Package Documentation
 
-### [Rules](#rules)
+### [Rules](#rules-1)
 - __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
@@ -80,20 +80,20 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
   - [Chained View Dependencies](#chained-view-dependencies)
   - [Exposure Parents Materializations](#exposure-parents-materializations)
 
-### [Customization](#customization)
+### [Customization](#customization-1)
 - [Disabling Models](#disabling-models)
 - [Overriding Variables](#overriding-variables)
 - [Configuring exceptions to the rules](#configuring-exceptions-to-the-rules)
 - [Evaluate specific project folders](#evaluate-specific-project-folders)
 
-### [Running this package as a CI check](#running-this-package-as-a-ci-check)
+### [Running this package as a CI check](#running-this-package-as-a-ci-check-1)
 
-### [Querying the DAG with SQL](#querying-the-dag-with-sql)
+### [Querying the DAG with SQL](#querying-the-dag-with-sql-1)
 
-### [Limitations](#limitations)
+### [Limitations](#limitations-1)
 - [BigQuery and Databricks](#bigquery-and-databricks)
 
-### [Contributing](#contributing)
+### [Contributing](#contributing-1)
 
 ----
 ## Rules
@@ -496,6 +496,7 @@ Tests are assertions you make about your models and other resources in your dbt 
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info!
 
 Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
@@ -520,6 +521,7 @@ We recommend that every model in your dbt project has tests applied to ensure th
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry, or create a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests)
 in the `tests` directory of you project.
 
@@ -542,6 +544,7 @@ The documentation for your project includes model code, a DAG of your project, a
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#related-documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
 
@@ -559,6 +562,7 @@ The documentation for your project includes model code, a DAG of your project, a
 
 <details>
 <summary><b>How to Remediate</b></summary>
+
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the model's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the model's `.yml` entry.
 
