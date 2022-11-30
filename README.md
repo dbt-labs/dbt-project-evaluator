@@ -901,7 +901,7 @@ Currently, this package uses different variables to adapt the models to your obj
 | ----------- | ----------- | ----------- |
 | `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
 | `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
-| `primary_key_test_macros` | the set(s) of test macro names used to test primary key macros | [["dbt.test_unique", "dbt.test_not_null"], "dbt_utils.test_unique_combination_of_columns"] |
+| `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], "dbt_utils.test_unique_combination_of_columns"] |
 
 **Usage notes for `primary_key_test_macros:`**
 
