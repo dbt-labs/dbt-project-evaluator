@@ -923,7 +923,7 @@ Therefore, the `dbt.test_unique` and `dbt.test_not_null` are grouped together in
 ```yml
 # dbt_project.yml
 # set your test and doc coverage to 75% instead
-# use the dbt_constraints.test_primary_key test for fct_missing_primary_key_tests.sql
+# use the dbt_constraints.test_primary_key test to check for validity of your primary keys
 
 vars:
   dbt_project_evaluator:
