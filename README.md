@@ -904,21 +904,18 @@ Currently, this package uses different variables to adapt the models to your obj
 | ----------- | ----------- | ----------- |
 | `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
 | `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
-| `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], "dbt_utils.test_unique_combination_of_columns"] |
+| `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]] |
 
 **Usage notes for `primary_key_test_macros:`**
 
-The `primary_key_test_macros` variable determines how the `fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) model evaluates whether the models in your project are properly tested for their grain. This variable is a list and each entry in the list can be either:
-
-1. A single test name in `project_name.test_macro_name` format
-2. A list of test names in `project_name.test_macro_name` format, which will be evaluated as a group
+The `primary_key_test_macros` variable determines how the `fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) model evaluates whether the models in your project are properly tested for their grain. This variable is a list and each entry **must be a list of test names in `project_name.test_macro_name` format**.
 
 For each entry in the parent list, the logic in `int_model_test_summary` will evaluate whether each model has all of the tests in that entry applied. If a model meets the criteria of any of the entries in the parent list, it will be considered a pass. The default behavior for this package will check for whether each model has either:
 
-1. **Both** the `not_null` and `unique` tests applied to a single column OR
-2. The `dbt_utils.unique_combination_of_columns` applied to the model. 
+1. __Both__ the `not_null` and `unique` tests applied to a single column OR
+2. The `dbt_utils.unique_combination_of_columns` applied to the model.
 
-Therefore, the `dbt.test_unique` and `dbt.test_not_null` are grouped together in a sub-list to ensure they are evaluated together. 
+Therefore, the `dbt.test_unique` and `dbt.test_not_null` are grouped together in a sub-list to ensure they are evaluated together.
 
 *While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests.*
 
