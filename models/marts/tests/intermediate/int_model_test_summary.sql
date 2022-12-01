@@ -15,16 +15,12 @@ count_column_tests as (
         all_graph_resources.column_name,
         {%- for test_set in var('primary_key_test_macros') %}
             {%- set outer_loop = loop -%}
-            {%- if test_set is iterable and (test_set is not string and test_set is not mapping) %}
         count(distinct case when 
                 {%- for test in test_set %} 
                 all_graph_resources.is_{{ test.split('.')[1] }} {%- if not loop.last %} or {% endif %} 
                 {%- endfor %}
             then relationships.resource_id else null end
         ) as primary_key_method_{{ outer_loop.index }}_count,
-            {%- else %}
-        count(distinct case when all_graph_resources.is_{{ test_set.split('.')[1] }} then relationships.resource_id else null end) primary_key_method_{{ outer_loop.index }}_count,
-            {%- endif %}
         {%- endfor %}
         count(distinct relationships.resource_id) as tests_count
     from all_graph_resources
@@ -42,7 +38,7 @@ agg_test_relationships as (
         sum(case 
                 when (
                     {%- for test_set in var('primary_key_test_macros') %}
-                        {%- set compare_value = test_set | length if (test_set is not string and test_set is not mapping) else 1 %}
+                        {%- set compare_value = test_set | length %}
                     primary_key_method_{{ loop.index }}_count = {{ compare_value}}
                         {%- if not loop.last %} or {% endif %}
                     {%- endfor %} 

@@ -3,13 +3,9 @@
 {# flatten the sets of permissable primary key test sets to one level for later iteration #}
 {%- set test_macro_list = [] %}
 {%- for test_set in var('primary_key_test_macros') -%}
-    {%- if test_set is iterable and (test_set is not string and test_set is not mapping) -%}
       {%- for test in test_set %}
         {%- do test_macro_list.append(test) -%}
       {%- endfor %}
-    {%- else %}
-        {%- do test_macro_list.append(test_set) -%}
-    {%- endif-%}
 {%- endfor -%}
 
 with unioned as (
