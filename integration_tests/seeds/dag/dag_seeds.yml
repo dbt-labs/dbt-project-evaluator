@@ -50,6 +50,7 @@ seeds:
           compare_model: ref('fct_model_fanout')
           compare_columns:
             - parent
+            - parent_model_type
             - leaf_children
   
   - name: test_fct_staging_dependent_on_staging
