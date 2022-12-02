@@ -7,7 +7,7 @@
       {%- if modules.re.match(path_pattern, path.original_file_path) is not none -%} {%-do paths.append(path.original_file_path) -%} {% endif %}
     {%- endfor %}
     {% for path in graph.sources.values() -%}
-      {%- if modules.re.match(path_pattern, path.path) is not none -%} {%-do paths.append(path.path) -%} {% endif %}
+      {%- if modules.re.match(path_pattern, path.original_file_path) is not none -%} {%-do paths.append(path.original_file_path) -%} {% endif %}
     {%- endfor %}
   {% endif %}
   {{ return(paths) }}
