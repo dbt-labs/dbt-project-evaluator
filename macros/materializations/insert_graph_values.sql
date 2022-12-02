@@ -1,4 +1,4 @@
-{% materialization insert_values, default %}
+{% materialization insert_graph_values, default %}
 
   {%- set existing_relation = load_cached_relation(this) -%}
   {%- set target_relation = this.incorporate(type='table') %}
@@ -19,7 +19,8 @@
 
   -- get the list of values to insert
   {% set resource = config.get('resource') %}
-  {% set values = get_resource_values(resource) %}
+  {% set relationships = config.get('relationships') %}
+  {% set values = get_resource_values(resource, relationships) %}
 
   -- drop the temp relations if they exist already in the database
   -- also drop the real relation -- this will need to be full-refreshed every time
@@ -39,27 +40,29 @@
     );
   {%- endcall %}
 
-  {% call statement('insert') -%}
-    {%- set values_length = values | length -%}
-    {%- set loop_count = (values_length / 100) | round(0, 'ceil') | int -%}
+  {%- set values_length = values | length -%}
+  {%- set loop_count = (values_length / 100) | round(0, 'ceil') | int -%}
+  
+  {% set insert_statements = [] -%}
     {%- for loop_number in range(loop_count) -%}
         {%- set lower_bound = loop.index0 * 100 -%}
         {%- set upper_bound = (loop.index * 100) - 1 -%}
         {# TODO handle end of range #}
         {%- set values_subset = values[lower_bound : upper_bound] %}
-    
-    insert into {{ intermediate_relation }} values 
         {%- set values_list_of_strings = [] -%}
         {%- for indiv_values in values_subset %}
             {%- do values_list_of_strings.append( indiv_values | join(", \n")) -%}
         {%- endfor -%}
         {%- set values_string = '(' ~ values_list_of_strings | join("), \n\n(") ~ ')' %}
-        {{ values_string }}
-    ; 
-      
+        {%- set insert_statement = "insert into " ~ intermediate_relation ~ " values \n" ~  values_string ~ ";"%}
+        {%- do insert_statements.append(insert_statement) -%}
     {% endfor %}
-  {%- endcall %}
-
+    
+    {% for insert_statement in insert_statements %}
+      {% call statement('insert') -%}
+            {{ insert_statement }}
+      {%- endcall %}
+    {% endfor %}
 
   -- cleanup
   {% if existing_relation is not none %}

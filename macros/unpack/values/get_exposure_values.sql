@@ -1,8 +1,8 @@
-{%- macro get_exposures() -%}
-    {{ return(adapter.dispatch('get_exposures', 'dbt_project_evaluator')()) }}
+{%- macro get_exposure_values() -%}
+    {{ return(adapter.dispatch('get_exposure_values', 'dbt_project_evaluator')()) }}
 {%- endmacro -%}
 
-{%- macro default__get_exposures() -%}
+{%- macro default__get_exposure_values() -%}
 
     {%- if execute -%}
 
@@ -33,24 +33,6 @@
     {%- endfor -%}
     {%- endif -%}
 
-    {{ return(
-        dbt_project_evaluator.select_from_values(
-            values = values,
-            columns = [
-              'unique_id', 
-              'name', 
-              'resource_type',
-              'file_path', 
-              ('is_described', 'boolean'),
-              'exposure_type', 
-              'maturity', 
-              'package_name', 
-              'url',
-              'owner_name',
-              'owner_email',
-              'meta'
-            ]
-         )
-    ) }}
+    {{ return(values) }}
 
 {%- endmacro -%}

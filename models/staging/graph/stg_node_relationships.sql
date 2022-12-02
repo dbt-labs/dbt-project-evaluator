@@ -1,17 +1,13 @@
-with relationships as (
 
-    {{
-        dbt_project_evaluator.get_relationships("nodes")
-    }}
+{{
+    config(
+        materialized='insert_graph_values',
+        resource='nodes',
+        relationships=True
+    )
+}}
 
-),
-
-
-final as (
-    select 
-        {{ dbt_utils.surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id, 
-        *
-    from relationships
-)
-
-select distinct * from final
+select
+    cast('resource_id' as {{ dbt.type_string()}}) as  resource_id,
+    cast('direct_parent_id' as {{ dbt.type_string()}}) as  direct_parent_id,
+    cast(True as boolean) as is_primary_relationship
