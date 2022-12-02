@@ -4,7 +4,7 @@
     {% set paths = [] -%}
     {# Is just the nodes & sources graph enough? #}
     {% for path in graph.nodes.values() -%}
-      {%- if modules.re.match(path_pattern, path.original_file_path) is not none -%} {%-do paths.append(path.original_file_path) -%} {% endif %}
+      {%- if modules.re.match(path_pattern, path.path) is not none -%} {%-do paths.append(path.path) -%} {% endif %}
     {%- endfor %}
     {% for path in graph.sources.values() -%}
       {%- if modules.re.match(path_pattern, path.original_file_path) is not none -%} {%-do paths.append(path.original_file_path) -%} {% endif %}
