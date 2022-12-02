@@ -1,0 +1,2 @@
+model,raw_references
+fct_model_6,"{{ var(""my_table_reference"") }}, {{ var('my_table_reference') }}, {{ var(""my_table_reference"", ""table_d"") }}, {{ var('my_table_reference', 'table_d') }}, my_schema.raw_relation_5, 'my_schema'.'raw_relation_5', ""my_schema"".""raw_relation_5"", `my_schema`.`raw_relation_5`, [my_schema].[raw_relation_5], my_db.my_schema.my_table, 'my_db'.'my_schema'.'my_table', ""my_db"".""my_schema"".""my_table"", `my_db`.`my_schema`.`my_table`, [my_db].[my_schema].[my_table], `raw_relation_1`, ""raw_relation_2"", [raw_relation_3], 'raw_relation_4'"

@@ -10,6 +10,8 @@
 
     {%- for node in nodes_list -%}
 
+        {%- set raw_references = dbt_project_evaluator.find_all_raw_references(node) -%}
+
         {%- set values_line  = 
             [
                 wrap_string_with_quotes(node.unique_id),
@@ -25,7 +27,8 @@
                 wrap_string_with_quotes(node.alias),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
                 "''" if not node.column_name else wrap_string_with_quotes(dbt.escape_single_quotes(node.column_name)),
-                wrap_string_with_quotes(node.meta | tojson)
+                wrap_string_with_quotes(node.meta | tojson),
+                wrap_string_with_quotes(dbt.escape_single_quotes(raw_references))
             ]
         %}
 
@@ -51,7 +54,8 @@
               'alias',
               ('is_described', 'boolean'),
               'column_name',
-              'meta'
+              'meta',
+              'raw_references'
             ]
          )
     ) }}

@@ -59,6 +59,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
   - [Model Fanout](#model-fanout)
   - [Multiple Sources Joined](#multiple-sources-joined)
+  - [Raw References](#raw-references)
   - [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
   - [Root Models](#root-models)
   - [Source Fanout](#source-fanout)
@@ -267,6 +268,33 @@ Post-refactor, your DAG should look like this:
 or if you want to use base_ models and keep stg_model_2 as is:
 
 <img width="500" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png">
+</details>
+
+#### Raw References
+`fct_raw_references` ([source](models/marts/dag/fct_raw_references.sql)) shows each instance where a model contains raw references.
+
+<details>
+<summary><b>Example</b></summary>
+
+blah blah
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+blah blah
+</details>
+
+<details>
+<summary><b>Exceptions</b></summary>
+
+blah blah
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+blah blah
 </details>
 
 #### Rejoining of Upstream Concepts
