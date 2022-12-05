@@ -915,7 +915,7 @@ For each entry in the parent list, the logic in `int_model_test_summary` will ev
 1. __Both__ the `not_null` and `unique` tests applied to a single column OR
 2. The `dbt_utils.unique_combination_of_columns` applied to the model.
 
-The `dbt.test_unique` and `dbt.test_not_null` are grouped together in a sub-list, and thus will be evaluated together.
+Each set of test(s) that define a primary key requirement must be grouped together in a sub-list to ensure they are evaluated together (e.g. [`dbt.test_unique`, `dbt.test_not_null`] ).
 
 *While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests.*
 
