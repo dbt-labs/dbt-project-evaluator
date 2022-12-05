@@ -929,7 +929,7 @@ vars:
   dbt_project_evaluator:
     documentation_coverage_target: 75
     test_coverage_target: 75
-    primary_key_test_macros: ["dbt_constraints.test_primary_key"]
+    primary_key_test_macros: [["dbt_constraints.test_primary_key"]]
     
 ```
 </details>
