@@ -486,7 +486,12 @@ or any other nested information.
 
 ### Testing
 #### Missing Primary Key Tests
-`fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
+`fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either
+
+1. a `not_null` test and a `unique` test applied to a single column OR 
+2. a `dbt_utils.unique_combination_of_columns` test applied to a set of columns 
+
+will be flagged by this model. 
 
 <details>
 <summary><b>Reason to Flag</b></summary>
@@ -496,15 +501,16 @@ Tests are assertions you make about your models and other resources in your dbt 
 <details>
 <summary><b>How to Remediate</b></summary>
 
-Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info!
+Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info! Alternatively, you can use the [`dbt_utils.unique_combination_of_columns`](<https://github.com/dbt-labs/dbt-utils#unique_combination_of_columns-source>) test from `dbt_utils`. Check out the [overriding variables section](#overriding-variables) to read more about configuring other primary key tests for your project!
 
 Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
+in the `tests` directory of you project.
 </details>
 
 #### Test Coverage
 `fct_test_coverage` ([source](models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.
 Specifically, this models measures:
+
 1. `test_coverage_pct`: the percentage of your models that have minimum 1 test applied.
 2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
 3. `< model_type >_test_coverage_pct`: the percentage of each of your model types that have minimum 1 test applied.
@@ -892,21 +898,39 @@ models:
 Currently, this package uses different variables to adapt the models to your objectives and naming conventions. They can all be updated directly in `dbt_project.yml`
 
 <details>
-<summary><b>Coverage Variables</b></summary>
+<summary><b>Testing and Documentation Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
 | `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
+| `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]] |
+
+**Usage notes for `primary_key_test_macros:`**
+
+The `primary_key_test_macros` variable determines how the `fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) model evaluates whether the models in your project are properly tested for their grain. This variable is a list and each entry **must be a list of test names in `project_name.test_macro_name` format**.
+
+For each entry in the parent list, the logic in `int_model_test_summary` will evaluate whether each model has all of the tests in that entry applied. If a model meets the criteria of any of the entries in the parent list, it will be considered a pass. The default behavior for this package will check for whether each model has either:
+
+1. __Both__ the `not_null` and `unique` tests applied to a single column OR
+2. The `dbt_utils.unique_combination_of_columns` applied to the model.
+
+Each set of test(s) that define a primary key requirement must be grouped together in a sub-list to ensure they are evaluated together (e.g. [`dbt.test_unique`, `dbt.test_not_null`] ).
+
+*While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests.*
+
 
 ```yml
 # dbt_project.yml
 # set your test and doc coverage to 75% instead
+# use the dbt_constraints.test_primary_key test to check for validity of your primary keys
 
 vars:
   dbt_project_evaluator:
     documentation_coverage_target: 75
     test_coverage_target: 75
+    primary_key_test_macros: [["dbt_constraints.test_primary_key"]]
+    
 ```
 </details>
 
