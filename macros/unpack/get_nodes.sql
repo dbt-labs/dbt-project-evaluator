@@ -25,7 +25,8 @@
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
                 "''" if not node.column_name else wrap_string_with_quotes(dbt.escape_single_quotes(node.column_name)),
                 wrap_string_with_quotes(node.meta | tojson),
-                wrap_string_with_quotes(node.depends_on.macros | tojson)
+                wrap_string_with_quotes(node.depends_on.macros | tojson),
+                wrap_string_with_quotes(node.test_metadata.name if node.test_metadata else ''),
             ]
         %}
 
@@ -52,7 +53,8 @@
               ('is_described', 'boolean'),
               'column_name',
               'meta',
-              'macro_dependencies'
+              'macro_dependencies',
+              'generic_test_name'
             ]
          )
     ) }}

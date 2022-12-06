@@ -50,7 +50,7 @@ test_file_paths as (
     from resources
     where 
         resource_type = 'test'
-        and is_in_models_directory
+        and is_generic_test
 
 ),
 

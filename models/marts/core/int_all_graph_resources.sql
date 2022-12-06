@@ -53,7 +53,8 @@ joined as (
         unioned_with_calc.resource_type, 
         unioned_with_calc.file_path, 
         unioned_with_calc.directory_path,
-        unioned_with_calc.directory_path like 'models/%' as is_in_models_directory,
+        unioned_with_calc.resource_type = 'test' and unioned_with_calc.generic_test_name is not null as is_generic_test,
+        unioned_with_calc.generic_test_name,
         unioned_with_calc.file_name,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
