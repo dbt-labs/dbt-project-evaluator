@@ -1082,7 +1082,7 @@ Note: you could follow a similar process to disable the models in this package f
 
 models:
   dbt_project_evaluator:
-    +enabled: "{{ env_var('ENABLE_DBT_PROJECT_EVALUATOR', 'true') }}"
+    +enabled: "{{ env_var('DBT_ENABLE_DBT_PROJECT_EVALUATOR', 'true') == 'true' | as_bool }}"
 ```
 
 ### 2. Run this package for each pull request
