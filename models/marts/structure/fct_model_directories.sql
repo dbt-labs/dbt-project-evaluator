@@ -36,7 +36,7 @@ inappropriate_subdirectories_staging as (
         child_resource_type as resource_type,
         child_model_type as model_type,
         child_file_path as current_file_path,
-        'models{{directory_pattern()}}' || '{{ var("staging_folder_name") }}' || '{{directory_pattern()}}' || parent_source_name || '{{directory_pattern()}}' || child_file_name as change_file_path_to
+        'models{{ get_directory_pattern() }}' || '{{ var("staging_folder_name") }}' || '{{ get_directory_pattern() }}' || parent_source_name || '{{ get_directory_pattern() }}' || child_file_name as change_file_path_to
     from staging_models
     where child_directory_path not like '%' || parent_source_name || '%'
 ),
@@ -48,7 +48,7 @@ innappropriate_subdirectories_non_staging_models as (
         all_graph_resources.resource_type,
         all_graph_resources.model_type,
         all_graph_resources.file_path as current_file_path,
-        'models' || '{{directory_pattern()}}...{{directory_pattern()}}' || folders.folder_name_value || '{{directory_pattern()}}...{{directory_pattern()}}' || all_graph_resources.file_name as change_file_path_to
+        'models' || '{{ get_directory_pattern() }}...{{ get_directory_pattern() }}' || folders.folder_name_value || '{{ get_directory_pattern() }}...{{ get_directory_pattern() }}' || all_graph_resources.file_name as change_file_path_to
     from all_graph_resources
     left join folders 
         on folders.model_type = all_graph_resources.model_type 

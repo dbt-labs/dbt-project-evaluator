@@ -29,8 +29,8 @@ unioned_with_calc as (
             when resource_type = 'source' then null
             else {{ dbt.split_part('name', "'_'", 1) }}||'_' 
         end as prefix,
-        replace(file_path,regexp_replace(file_path,'.*{{regexp_directory_pattern()}}', ''),'') as directory_path,
-        regexp_replace(file_path,'.*{{regexp_directory_pattern()}}','') as file_name
+        replace(file_path,regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}', ''),'') as directory_path,
+        regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name
     from unioned
     where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
 ), 
