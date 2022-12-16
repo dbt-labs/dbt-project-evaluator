@@ -9,7 +9,6 @@
     {%- set values = [] -%}
 
     {%- for node in nodes_list -%}
-
         {%- set values_line  = 
             [
                 wrap_string_with_quotes(node.unique_id),
@@ -52,7 +51,8 @@
               'alias',
               ('is_described', 'boolean'),
               'column_name',
-              'meta'
+              'meta',
+              'macro_dependencies'
             ]
          )
     ) }}
