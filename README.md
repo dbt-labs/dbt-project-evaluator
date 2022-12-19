@@ -843,7 +843,7 @@ The best practice to determine top candidates for changing materialization from 
 
 #### Exposure Parents Materializations
 
-`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each model that is a direct parent of an exposure and is *not* materialized as a table in the warehouse. 
+`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each resource that is a direct parent of an exposure and is not a model that is materialized as a table in the warehouse.
 
 <details>
 <summary><b>Example</b></summary>
@@ -855,12 +855,18 @@ In this case, the parents of `exposure_1` are not both materialized as tables --
 <details>
 <summary><b>Reason to Flag</b></summary>
 
-Models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried. This model highlights instances where the models referenced by exposures are not either a `table` or `incremental` materialization.
+This model highlights instances where the resources referenced by exposures are either:
+
+1. a `source`
+2. a `model` that does not use the `table` or `incremental` materialization
+
+Exposures should depend on the business logic you encoded into your dbt project (e.g. models or metrics) rather than raw untransformed sources. Additionally, models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried.
 </details>
 
 <details>
 <summary><b>How to Remediate</b></summary>
 
+If you have a source parent of an exposure, you should incorporate that raw data into your project in some way, then update the exposure to point to that model. 
 If necessary, update the `materialized` configuration on the models returned in `fct_exposure_parents_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
 </details>
 
