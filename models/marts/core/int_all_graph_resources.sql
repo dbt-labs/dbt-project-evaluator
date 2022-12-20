@@ -1,5 +1,5 @@
 -- one row for each resource in the graph
-{% set regexp_directory_pattern = get_regexp_directory_pattern() %}
+
 {# flatten the sets of permissable primary key test sets to one level for later iteration #}
 {%- set test_macro_list = [] %}
 {%- for test_set in var('primary_key_test_macros') -%}
@@ -38,8 +38,8 @@ unioned_with_calc as (
             when resource_type = 'source' then null
             else {{ dbt.split_part('name', "'_'", 1) }}||'_'
         end as prefix,
-        replace(file_path,regexp_replace(file_path,'.*{{ regexp_directory_pattern }}', ''),'') as directory_path,
-       regexp_replace(file_path,'.*{{ regexp_directory_pattern }}','') as file_name
+        {{ get_dbtreplace_directory_pattern() }} as directory_path,
+       regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name
    from unioned
    where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
  
