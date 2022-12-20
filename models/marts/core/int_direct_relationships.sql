@@ -65,7 +65,7 @@ direct_relationships as (
 
 final as (
     select
-        {{ dbt_utils.surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id,
+        {{ dbt_utils.generate_surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id,
         *
     from direct_relationships
 )

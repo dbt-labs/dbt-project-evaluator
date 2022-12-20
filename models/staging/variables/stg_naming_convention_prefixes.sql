@@ -24,7 +24,7 @@ from vars_prefix_table
 final as (
 
     select
-        {{ dbt_utils.surrogate_key(['model_type', 'prefix_value']) }} as unique_id,
+        {{ dbt_utils.generate_surrogate_key(['model_type', 'prefix_value']) }} as unique_id,
         *
     from parsed
 
