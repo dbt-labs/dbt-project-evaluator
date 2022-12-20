@@ -1,4 +1,13 @@
 -- one row for each resource in the graph
+
+{# flatten the sets of permissable primary key test sets to one level for later iteration #}
+{%- set test_macro_list = [] %}
+{%- for test_set in var('primary_key_test_macros') -%}
+      {%- for test in test_set %}
+        {%- do test_macro_list.append(test) -%}
+      {%- endfor %}
+{%- endfor -%}
+
 with unioned as (
 
     {{ dbt_utils.union_relations([
@@ -44,6 +53,7 @@ joined as (
         unioned_with_calc.resource_type, 
         unioned_with_calc.file_path, 
         unioned_with_calc.directory_path,
+        unioned_with_calc.is_generic_test,
         unioned_with_calc.file_name,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
@@ -56,8 +66,9 @@ joined as (
         end as model_type_folder,
         {{ dbt.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} as position_folder,  
         nullif(unioned_with_calc.column_name, '') as column_name,
-        unioned_with_calc.resource_name like 'unique%' and unioned_with_calc.resource_type = 'test' as is_not_null_test,
-        unioned_with_calc.resource_name like 'not_null%' and unioned_with_calc.resource_type = 'test' as is_unique_test,
+        {% for test in test_macro_list %}
+        unioned_with_calc.macro_dependencies like '%macro.{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[1] }},  
+        {% endfor %}
         unioned_with_calc.is_enabled, 
         unioned_with_calc.materialized, 
         unioned_with_calc.on_schema_change, 
@@ -72,6 +83,7 @@ joined as (
         unioned_with_calc.owner_name,
         unioned_with_calc.owner_email,
         unioned_with_calc.meta,
+        unioned_with_calc.macro_dependencies,
         unioned_with_calc.metric_type, 
         unioned_with_calc.model, 
         unioned_with_calc.label, 
