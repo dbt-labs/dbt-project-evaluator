@@ -228,10 +228,8 @@
         {%- endfor -%}
 
     {% endif %}
-
-    # TO DO: consider returning in alphabetic order, and only unique values!
     
-    {% set all_raw_references = all_raw_references_list|join(', ')|trim %}
+    {% set all_raw_references = set(all_raw_references_list)|sort|join(', ')|trim %}
 
     {{ return(all_raw_references) }}
 
