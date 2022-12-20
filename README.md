@@ -202,13 +202,6 @@ The `ref` and `source` functions are part of what makes dbt so powerful! Using t
 </details>
 
 <details>
-<summary><b>Exceptions</b></summary>
-
-TO DO: Are there any exceptions anyone can think of?? I think there might be some packages that select from a variable...
-
-</details>
-
-<details>
 <summary><b>How to Remediate</b></summary>
 
 For each hard coded reference:
