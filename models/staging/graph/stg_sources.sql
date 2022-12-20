@@ -2,7 +2,7 @@
 {{
     config(
         materialized='insert_graph_values',
-        resource='source'
+        resource='sources'
     )
 }}
 

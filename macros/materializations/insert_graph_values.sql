@@ -38,7 +38,6 @@
         {{ sql }}
         where FALSE
     );
-  {%- endcall %}
 
   {%- set values_length = values | length -%}
   {%- set loop_count = (values_length / 100) | round(0, 'ceil') | int -%}
@@ -58,11 +57,11 @@
         {%- do insert_statements.append(insert_statement) -%}
     {% endfor %}
     
-    {% for insert_statement in insert_statements %}
-      {% call statement('insert') -%}
-            {{ insert_statement }}
-      {%- endcall %}
-    {% endfor %}
+  {% for insert_statement in insert_statements %}
+    {{ insert_statement }}
+  {% endfor %}
+  
+  {%- endcall %}
 
   -- cleanup
   {% if existing_relation is not none %}
