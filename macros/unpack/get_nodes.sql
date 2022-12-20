@@ -25,7 +25,7 @@
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
                 "''" if not node.column_name else wrap_string_with_quotes(dbt.escape_single_quotes(node.column_name)),
                 wrap_string_with_quotes(node.meta | tojson),
-                wrap_string_with_quotes(node.depends_on.macros | tojson),
+                wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)"
             ]
         %}
