@@ -1,4 +1,4 @@
--- this model finds cases where a model has raw references
+-- this model finds cases where a model has hard coded references
 
 with models as (
     select * from {{ ref('int_all_graph_resources') }}
@@ -8,9 +8,9 @@ with models as (
 final as (
     select
         resource_name as model,
-        raw_references
+        hard_coded_references
     from models
-    where raw_references is not null
+    where hard_coded_references is not null
 )
 
 select * from final

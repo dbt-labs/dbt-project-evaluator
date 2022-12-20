@@ -1,10 +1,10 @@
-{% macro find_all_raw_references(node) %}
-    {{ return(adapter.dispatch('find_all_raw_references', 'dbt_project_evaluator')(node)) }}
+{% macro find_all_hard_coded_references(node) %}
+    {{ return(adapter.dispatch('find_all_hard_coded_references', 'dbt_project_evaluator')(node)) }}
 {% endmacro %}
 
-{% macro default__find_all_raw_references(node) %}
+{% macro default__find_all_hard_coded_references(node) %}
 
-    {%- set all_raw_references_list = [] -%}
+    {%- set all_hard_coded_references_list = [] -%}
 
     {% if node.resource_type == 'model' %}
 
@@ -39,7 +39,7 @@
 
         {%- set re = modules.re -%}
 
-        {%- set from_raw_references = {
+        {%- set from_hard_coded_references = {
             'from_var_1':
                 '(?ix)
 
@@ -213,7 +213,7 @@
                 '
         } -%}
 
-        {%- for regex_name, regex_pattern in from_raw_references.items() -%}
+        {%- for regex_name, regex_pattern in from_hard_coded_references.items() -%}
 
             {%- set all_regex_matches = re.findall(regex_pattern, model_raw_sql) -%}
                 
@@ -221,7 +221,7 @@
 
                     {%- set raw_reference = match[1:]|join()|trim -%}
 
-                    {%- do all_raw_references_list.append(raw_reference) -%}
+                    {%- do all_hard_coded_references_list.append(raw_reference) -%}
 
                 {%- endfor -%}
         
@@ -229,8 +229,8 @@
 
     {% endif %}
     
-    {% set all_raw_references = set(all_raw_references_list)|sort|join(', ')|trim %}
+    {% set all_hard_coded_references = set(all_hard_coded_references_list)|sort|join(', ')|trim %}
 
-    {{ return(all_raw_references) }}
+    {{ return(all_hard_coded_references) }}
 
 {% endmacro %}

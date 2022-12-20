@@ -94,7 +94,7 @@ joined as (
         unioned_with_calc.loaded_at_field, 
         unioned_with_calc.loader, 
         unioned_with_calc.identifier,
-        unioned_with_calc.raw_references -- NULL for non-model resources
+        unioned_with_calc.hard_coded_references -- NULL for non-model resources
 
     from unioned_with_calc
     left join naming_convention_prefixes
