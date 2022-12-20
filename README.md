@@ -51,7 +51,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 3. Either fix the issue(s) or [customize](#customization) the package to exclude them
 
 #### Caveat Regarding Modeling Layer Assumptions
-This package assumes that you are using standard modeling layers (ie staging, intermediate, and marts) and that those layers are reflected in both the folder structure and naming prefixes used in your project. If you utilize these modeling layers but have prefixes other than `stg_`, `int_`, `fct_`, and `dim_`, you may override which prefixes the package should look for (see [Overriding Variables](#overriding-variables)). If your project doesn't use these modeling layers, you may wish to ignore or disable package models that don't apply in your case (ie [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)).
+This package assumes that you are using standard modeling layers (ie staging, intermediate, and marts) and that those layers are reflected in both the folder structure and naming prefixes used in your project. If you utilize these modeling layers but have prefixes other than `stg_`, `int_`, `fct_`, and `dim_`, you may override which prefixes the package should look for (see Naming Convention Variables in [Overriding Variables](#overriding-variables)). If your project doesn't use these modeling layers, you may wish to ignore or disable package models that don't apply in your case (ie [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)).
 
 ----
 ## Package Documentation
