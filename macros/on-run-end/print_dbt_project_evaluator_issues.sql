@@ -27,18 +27,22 @@
 
   {% for result in results | selectattr('failures') | selectattr('failures', '>', 0) %}
     
-    {{ print("\n-- " ~ result.node.alias ~ " --") }}
+    {% if result.node.fqn[0] == "dbt_project_evaluator" %}
+      
+      {{ print("\n-- " ~ result.node.alias ~ " --") }}
 
-    {% set model_checked = result.node.depends_on.nodes[0].split('.')[-1] %}
+      {% set model_checked = result.node.depends_on.nodes[0].split('.')[-1] %}
 
-    {% set sql_statement %}
-    select * from {{ schema_package ~ "." ~  model_checked if schema_package else model_checked }}
-    {% endset %}
+      {% set sql_statement %}
+      select * from {{ schema_package ~ "." ~  model_checked if schema_package else model_checked }}
+      {% endset %}
 
-    {%- set failures = dbt_project_evaluator._return_list_header_rows(sql_statement) -%}
-    {% for row in failures %}
-      {{ print(row | join(", ")) }}
-    {% endfor %}
+      {%- set failures = dbt_project_evaluator._return_list_header_rows(sql_statement) -%}
+      {% for row in failures %}
+        {{ print(row | join(", ")) }}
+      {% endfor %}
+
+    {% endif %}
 
   {% endfor %}
 
