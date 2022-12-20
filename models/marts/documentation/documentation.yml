@@ -10,6 +10,7 @@ models:
         description: the number of models in the project with a description divided by the total number of models in the project
         tests:
           - dbt_utils.accepted_range:
+              name: valid_documentation_coverage
               min_value: "{{ var('documentation_coverage_target') }}"
               severity: warn
   - name: fct_undocumented_models
