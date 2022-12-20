@@ -7,7 +7,7 @@
         {%- do test_macro_list.append(test) -%}
       {%- endfor %}
 {%- endfor -%}
-
+ 
 with unioned as (
  
     {{ dbt_utils.union_relations([
