@@ -166,12 +166,12 @@ After refactoring your downstream model to select from the staging layer, your D
 </details>
 
 #### Hard Coded References
-`fct_hard_coded_references` ([source](models/marts/dag/fct_hard_coded_references.sql)) shows each instance where a model contains hard coded references. 
+`fct_hard_coded_references` ([source](models/marts/dag/fct_hard_coded_references.sql)) shows each instance where a model contains hard coded reference(s). 
 
 <details>
 <summary><b>Example</b></summary>
 
-`fct_orders` uses hard coded direct relation references.
+`fct_orders` uses hard coded direct relation references (`my_db.my_schema.orders` and `my_schema.customers`).
 
 ```
 # fct_orders.sql
