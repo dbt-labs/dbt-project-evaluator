@@ -24,7 +24,12 @@ final as (
         sum(is_tested_model) as tested_models,
         round(sum(is_tested_model) * 100.0 / count(*), 2) as test_coverage_pct,
         {% for model_type in var('model_types') %}
-            round(sum(is_tested_{{ model_type }}_model) * 100.0 / nullif(count(is_{{ model_type }}_model), 0), 2) as {{ model_type }}_test_coverage_pct,
+            round(
+                {{ dbt_utils.safe_divide(
+                    numerator = "sum(is_tested_" ~ model_type ~ "_model) * 100.0", 
+                    denominator = "count(is_" ~ model_type ~ "_model)"
+                ) }}
+            , 2) as {{ model_type }}_test_coverage_pct,
         {% endfor %}
         round(sum(number_of_tests_on_model) * 1.0 / count(*), 4) as test_to_model_ratio
 
