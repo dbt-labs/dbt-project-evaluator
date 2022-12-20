@@ -22,7 +22,9 @@ select
     cast('alias' as {{ dbt.type_string() }}) as alias,
     cast(True as boolean) as is_described,
     cast('column_name' as {{ dbt.type_string() }}) as column_name,
-    cast('meta' as {{ dbt.type_string() }}) as meta 
+    cast('meta' as {{ dbt.type_string() }}) as meta,
+    cast('macro_dependencies' as {{ dbt.type_string() }}) as macro_dependencies,
+    cast(True as boolean) as is_generic_test
     
 
               

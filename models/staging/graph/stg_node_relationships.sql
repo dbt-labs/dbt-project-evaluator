@@ -8,7 +8,7 @@ final as (
     select 
         {{ dbt_utils.generate_surrogate_key(['resource_id', 'direct_parent_id']) }} as unique_id, 
         *
-    from relationships
+    from base_node_relationships
 )
 
 select distinct * from final
