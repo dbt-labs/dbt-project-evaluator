@@ -849,7 +849,10 @@ The best practice to determine top candidates for changing materialization from 
 
 #### Exposure Parents Materializations
 
-`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each resource that is a direct parent of an exposure and is not a model that is materialized as a table in the warehouse.
+`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) highlights instances where the resources referenced by exposures are either:
+
+1. a `source`
+2. a `model` that does not use the `table` or `incremental` materialization
 
 <details>
 <summary><b>Example</b></summary>
@@ -861,12 +864,8 @@ In this case, the parents of `exposure_1` are not both materialized as tables --
 <details>
 <summary><b>Reason to Flag</b></summary>
 
-This model highlights instances where the resources referenced by exposures are either:
-
-1. a `source`
-2. a `model` that does not use the `table` or `incremental` materialization
-
 Exposures should depend on the business logic you encoded into your dbt project (e.g. models or metrics) rather than raw untransformed sources. Additionally, models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried.
+
 </details>
 
 <details>
