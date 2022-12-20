@@ -48,3 +48,7 @@ models:
     description: "This table shows each direct parent of an exposure that is not materialized as a table or incremental."
     tests:
       - is_empty
+  - name: fct_hard_coded_references
+    description: "This table shows each model that has hard coded references."
+    tests:
+      - is_empty
