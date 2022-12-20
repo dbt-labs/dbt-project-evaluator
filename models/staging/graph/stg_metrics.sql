@@ -8,19 +8,18 @@
 
 
 -- define schema
-select 
-    cast('unique_id' as {{ dbt.type_string() }}) as unique_id, 
-    cast('name' as {{ dbt.type_string() }}) as name, 
-    cast('resource_type' as {{ dbt.type_string() }}) as resource_type, 
-    cast('file_path' as {{ dbt.type_string() }}) as file_path, 
-    cast(True as boolean) as is_described,
-    cast('metric_type' as {{ dbt.type_string() }}) as metric_type, 
-    cast('model' as {{ dbt.type_string() }}) as model,
-    cast('label' as {{ dbt.type_string() }}) as label, 
-    cast('sql' as {{ dbt.type_string() }}) as sql, 
-    cast('timestamp' as {{ dbt.type_string() }}) as timestamp, 
-    cast('package_name' as {{ dbt.type_string() }}) as package_name,
-    cast('dimensions' as {{ dbt.type_string() }}) as dimensions,
-    cast('filters' as {{ dbt.type_string() }}) as filters,
-    cast('meta' as {{ dbt.type_string() }}) as meta
+    unique_id {{ dbt.type_string() }},
+    name {{ dbt.type_string() }},
+    resource_type {{ dbt.type_string() }},
+    file_path {{ dbt.type_string() }},
+    is_described boolean,
+    metric_type {{ dbt.type_string() }},
+    model {{ dbt.type_string() }},
+    label {{ dbt.type_string() }},
+    sql {{ dbt.type_string() }},
+    timestamp {{ dbt.type_string() }},
+    package_name {{ dbt.type_string() }},
+    dimensions {{ dbt.type_string() }},
+    filters {{ dbt.type_string() }},
+    meta {{ dbt.type_string() }}
     

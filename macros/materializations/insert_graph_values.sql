@@ -34,9 +34,8 @@
 
   -- build initial model with datatypes
   {% call statement('main') -%}
-    create table {{ intermediate_relation }} as (
+    create table {{ intermediate_relation }} (
         {{ sql }}
-        where FALSE
     );
 
   {%- set values_length = values | length -%}

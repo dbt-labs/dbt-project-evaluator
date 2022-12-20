@@ -7,24 +7,23 @@
 }}
 
 
--- define schema
-select 
-    cast('unique_id' as {{ dbt.type_string() }}) as unique_id,
-    cast('name' as {{ dbt.type_string() }}) as name,
-    cast('resource_type' as {{ dbt.type_string() }}) as resource_type,
-    cast('file_path' as {{ dbt.type_string() }}) as file_path,
-    cast(True as boolean) as is_enabled,
-    cast('materialized' as {{ dbt.type_string() }}) as materialized,
-    cast('on_schema_change' as {{ dbt.type_string() }}) as on_schema_change,
-    cast('database' as {{ dbt.type_string() }}) as database,
-    cast('schema' as {{ dbt.type_string() }}) as schema,
-    cast('package_name' as {{ dbt.type_string() }}) as package_name,
-    cast('alias' as {{ dbt.type_string() }}) as alias,
-    cast(True as boolean) as is_described,
-    cast('column_name' as {{ dbt.type_string() }}) as column_name,
-    cast('meta' as {{ dbt.type_string() }}) as meta,
-    cast('macro_dependencies' as {{ dbt.type_string() }}) as macro_dependencies,
-    cast(True as boolean) as is_generic_test
+-- define schema 
+    unique_id {{ dbt.type_string() }},
+    name {{ dbt.type_string() }},
+    resource_type {{ dbt.type_string() }},
+    file_path {{ dbt.type_string() }},
+    is_enabled boolean,
+    materialized {{ dbt.type_string() }},
+    on_schema_change {{ dbt.type_string() }},
+    database {{ dbt.type_string() }},
+    schema {{ dbt.type_string() }},
+    package_name {{ dbt.type_string() }},
+    alias {{ dbt.type_string() }},
+    is_described boolean,
+    column_name {{ dbt.type_string() }},
+    meta {{ dbt.type_string() }},
+    macro_dependencies {{ dbt.type_string() }},
+    is_generic_test boolean
     
 
               

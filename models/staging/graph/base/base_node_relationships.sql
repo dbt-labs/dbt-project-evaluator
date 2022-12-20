@@ -7,7 +7,6 @@
     )
 }}
 
-select
-    cast('resource_id' as {{ dbt.type_string()}}) as  resource_id,
-    cast('direct_parent_id' as {{ dbt.type_string()}}) as  direct_parent_id,
-    cast(True as boolean) as is_primary_relationship
+    resource_id {{ dbt.type_string()}},
+    direct_parent_id {{ dbt.type_string()}},
+    is_primary_relationship boolean
