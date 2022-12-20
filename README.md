@@ -137,6 +137,8 @@ After refactoring your downstream model to select from the staging layer, your D
 `fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
 
+Note: if your naming conventions don't **correlate to modeling layer** (ie `stg`, `int`, `fct`, etc. or another custom naming pattern defined in the [Overriding Variables](#overriding-variables) section below), this check will return no results.
+
 <details>
 <summary><b>Example</b></summary>
 
@@ -388,6 +390,8 @@ After refactoring the above example, the DAG would look something like this:
 #### Staging Models Dependent on Downstream Models
 `fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
 
+Note: if your naming conventions don't **correlate to modeling layer** (ie `stg`, `int`, `fct`, etc. or another custom naming pattern defined in the [Overriding Variables](#overriding-variables) section below), this check will return no results.
+
 <details>
 <summary><b>Example</b></summary>
 
@@ -418,6 +422,8 @@ After updating the model to use the appropriate `{{ source() }}` function, your 
 #### Staging Models Dependent on Other Staging Models
 `fct_staging_dependent_on_staging` ([source](models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are
 dependent on each other.
+
+Note: if your naming conventions don't **correlate to modeling layer** (ie `stg`, `int`, `fct`, etc. or another custom naming pattern defined in the [Overriding Variables](#overriding-variables) section below), this check will return no results.
 
 <details>
 <summary><b>Example</b></summary>
@@ -578,6 +584,8 @@ Tip: We recommend that every model in your dbt project has at minimum a model-le
 #### Model Naming Conventions
 `fct_model_naming_conventions` ([source](models/marts/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix.
 
+Note: if your naming conventions don't **correlate to modeling layer** (ie `stg`, `int`, `fct`, etc. or another custom naming pattern defined in the [Overriding Variables](#overriding-variables) section below), this check will return no results.
+  
 <details>
 <summary><b>Example</b></summary>
 
@@ -615,7 +623,9 @@ For each model flagged, ensure the model type is defined and the model name is p
 
 `fct_model_directories` ([source](models/marts/structure/fct_model_directories.sql)) shows all cases where a model is NOT in the appropriate subdirectory:
 - For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
-- For non-staging models: The files should be nested closest to the folder name that matches their model type.  
+- For non-staging models: The files should be nested closest to the folder name that matches their model type.
+  
+Note: if your naming conventions don't **correlate to modeling layer** (ie `stg`, `int`, `fct`, etc. or another custom naming pattern defined in the [Overriding Variables](#overriding-variables) section below), this check will return no results.
 
 <details>
 <summary><b>Example</b></summary>
