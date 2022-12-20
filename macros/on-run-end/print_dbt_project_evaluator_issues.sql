@@ -21,7 +21,7 @@
 {% endmacro %}
 
 
-{% macro print_dbt_project_evaluator_issues(schema_package=None) %}
+{% macro print_dbt_project_evaluator_issues(schema_package=None, database_package=None) %}
 
   {{ print("\n### List of issues raised by dbt_project_evaluator ###") }}
 
@@ -32,9 +32,11 @@
       {{ print("\n-- " ~ result.node.alias ~ " --") }}
 
       {% set model_checked = result.node.depends_on.nodes[0].split('.')[-1] %}
+      {% set db_schema = database_package ~ "." ~  schema_package if database_package else schema_package %}
+      {% set db_schema_model = db_schema ~ "." ~  model_checked if db_schema else model_checked %}
 
       {% set sql_statement %}
-      select * from {{ schema_package ~ "." ~  model_checked if schema_package else model_checked }}
+      select * from {{ db_schema_model }}
       {% endset %}
 
       {%- set failures = dbt_project_evaluator._return_list_header_rows(sql_statement) -%}
