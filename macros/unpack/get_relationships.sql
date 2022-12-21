@@ -22,7 +22,7 @@
         {%- for node in nodes_list
              | selectattr("original_file_path", "in", paths) -%}
 
-            {%- if node.depends_on.nodes|length == 0 -%}
+            {%- if node.get('depends_on',{}).get('nodes',[]) |length == 0 -%}
 
                 {%- set values_line = 
                   [
@@ -36,7 +36,7 @@
 
             {%- else -%}       
 
-                {%- for parent in node.depends_on.nodes -%}
+                {%- for parent in node.get('depends_on',{}).get('nodes',[]) -%}
 
                     {%- set values_line = 
                         [

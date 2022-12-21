@@ -2,7 +2,7 @@ name: 'dbt_project_evaluator'
 version: '1.0.0'
 config-version: 2
 
-require-dbt-version: [">=1.2.0", "<2.0.0"]
+require-dbt-version: [">=1.3.0", "<2.0.0"]
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
@@ -56,6 +56,8 @@ vars:
   # -- Tests and docs coverage variables --
   documentation_coverage_target: 100
   test_coverage_target: 100
+
+  primary_key_test_macros: [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]
 
   # -- DAG variables --
   models_fanout_threshold: 3

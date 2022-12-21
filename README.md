@@ -57,6 +57,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 - __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
+  - [Hard Coded References](#hard-coded-references)
   - [Model Fanout](#model-fanout)
   - [Multiple Sources Joined](#multiple-sources-joined)
   - [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
@@ -163,6 +164,70 @@ and your downstream data artifacts.
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
+</details>
+
+#### Hard Coded References
+`fct_hard_coded_references` ([source](models/marts/dag/fct_hard_coded_references.sql)) shows each instance where a model contains hard coded reference(s). 
+
+<details>
+<summary><b>Example</b></summary>
+
+`fct_orders` uses hard coded direct relation references (`my_db.my_schema.orders` and `my_schema.customers`).
+
+```
+# fct_orders.sql
+
+with orders as (
+    select * from my_db.my_schema.orders
+),
+customers as (
+    select * from my_schema.customers
+)
+select
+    orders.order_id,
+    customers.name
+from orders
+left join customers on
+	orders.customer_id = customers.id
+```
+
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+Always use the `ref` function when selecting from another model and the `source` function when selecting from raw data, rather than using the direct relation reference (e.g. `my_schema.my_table`). Direct relation references are determined via regex mapping [here](macros/find_all_hard_coded_references.sql). 
+
+The `ref` and `source` functions are part of what makes dbt so powerful! Using these functions allows dbt to infer dependencies (and check that you haven't created any circular dependencies), properly generate your DAG, and ensure that models are built in the correct order. This also ensures that your current model selects from upstream tables and views in the same environment that you're working in.
+
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+For each hard coded reference:
+- if the hard coded reference is to a model, update the sql to instead use the [ref](https://docs.getdbt.com/reference/dbt-jinja-functions/ref) function
+- if the hard coded reference is to raw data, create any needed [sources](https://docs.getdbt.com/docs/build/sources#declaring-a-source) and update the sql to instead use the [source](https://docs.getdbt.com/reference/dbt-jinja-functions/source) function 
+
+For the above example, our updated `fct_orders.sql` file would look like:
+
+```
+# fct_orders.sql
+
+with orders as (
+    select * from {{ ref('orders') }}
+),
+customers as (
+    select * from {{ ref('customers') }}
+)
+select
+    orders.order_id,
+    customers.name
+from orders
+left join customers on
+	orders.customer_id = customers.id
+```
+
 </details>
 
 #### Model Fanout
@@ -487,7 +552,12 @@ or any other nested information.
 
 ### Testing
 #### Missing Primary Key Tests
-`fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any models that does not have both a `not_null` and `unique` test configured will be highlighted in this model. 
+`fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either
+
+1. a `not_null` test and a `unique` test applied to a single column OR 
+2. a `dbt_utils.unique_combination_of_columns` test applied to a set of columns 
+
+will be flagged by this model. 
 
 <details>
 <summary><b>Reason to Flag</b></summary>
@@ -497,15 +567,16 @@ Tests are assertions you make about your models and other resources in your dbt 
 <details>
 <summary><b>How to Remediate</b></summary>
 
-Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info!
+Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info! Alternatively, you can use the [`dbt_utils.unique_combination_of_columns`](<https://github.com/dbt-labs/dbt-utils#unique_combination_of_columns-source>) test from `dbt_utils`. Check out the [overriding variables section](#overriding-variables) to read more about configuring other primary key tests for your project!
 
 Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests) 
-in the `tests` directory of you project. 
+in the `tests` directory of you project.
 </details>
 
 #### Test Coverage
 `fct_test_coverage` ([source](models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.
 Specifically, this models measures:
+
 1. `test_coverage_pct`: the percentage of your models that have minimum 1 test applied.
 2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
 3. `< model_type >_test_coverage_pct`: the percentage of each of your model types that have minimum 1 test applied.
@@ -844,7 +915,10 @@ The best practice to determine top candidates for changing materialization from 
 
 #### Exposure Parents Materializations
 
-`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) shows each model that is a direct parent of an exposure and is *not* materialized as a table in the warehouse. 
+`fct_exposure_parents_materializations` ([source](models/marts/performance/fct_exposure_parents_materializations.sql)) highlights instances where the resources referenced by exposures are either:
+
+1. a `source`
+2. a `model` that does not use the `table` or `incremental` materialization
 
 <details>
 <summary><b>Example</b></summary>
@@ -856,12 +930,14 @@ In this case, the parents of `exposure_1` are not both materialized as tables --
 <details>
 <summary><b>Reason to Flag</b></summary>
 
-Models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried. This model highlights instances where the models referenced by exposures are not either a `table` or `incremental` materialization.
+Exposures should depend on the business logic you encoded into your dbt project (e.g. models or metrics) rather than raw untransformed sources. Additionally, models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried.
+
 </details>
 
 <details>
 <summary><b>How to Remediate</b></summary>
 
+If you have a source parent of an exposure, you should incorporate that raw data into your project in some way, then update the exposure to point to that model. 
 If necessary, update the `materialized` configuration on the models returned in `fct_exposure_parents_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
 </details>
 
@@ -893,21 +969,39 @@ models:
 Currently, this package uses different variables to adapt the models to your objectives and naming conventions. They can all be updated directly in `dbt_project.yml`
 
 <details>
-<summary><b>Coverage Variables</b></summary>
+<summary><b>Testing and Documentation Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
 | `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
+| `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]] |
+
+**Usage notes for `primary_key_test_macros:`**
+
+The `primary_key_test_macros` variable determines how the `fct_missing_primary_key_tests` ([source](models/marts/tests/fct_missing_primary_key_tests.sql)) model evaluates whether the models in your project are properly tested for their grain. This variable is a list and each entry **must be a list of test names in `project_name.test_macro_name` format**.
+
+For each entry in the parent list, the logic in `int_model_test_summary` will evaluate whether each model has all of the tests in that entry applied. If a model meets the criteria of any of the entries in the parent list, it will be considered a pass. The default behavior for this package will check for whether each model has either:
+
+1. __Both__ the `not_null` and `unique` tests applied to a single column OR
+2. The `dbt_utils.unique_combination_of_columns` applied to the model.
+
+Each set of test(s) that define a primary key requirement must be grouped together in a sub-list to ensure they are evaluated together (e.g. [`dbt.test_unique`, `dbt.test_not_null`] ).
+
+*While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests.*
+
 
 ```yml
 # dbt_project.yml
 # set your test and doc coverage to 75% instead
+# use the dbt_constraints.test_primary_key test to check for validity of your primary keys
 
 vars:
   dbt_project_evaluator:
     documentation_coverage_target: 75
     test_coverage_target: 75
+    primary_key_test_macros: [["dbt_constraints.test_primary_key"]]
+    
 ```
 </details>
 
@@ -1071,7 +1165,7 @@ Note: you could follow a similar process to disable the models in this package f
 
 models:
   dbt_project_evaluator:
-    +enabled: "{{ env_var('ENABLE_DBT_PROJECT_EVALUATOR', 'true') }}"
+    +enabled: "{{ env_var('ENABLE_DBT_PROJECT_EVALUATOR', 'true') | lower == 'true' | as_bool }}"
 ```
 
 ### 2. Run this package for each pull request
