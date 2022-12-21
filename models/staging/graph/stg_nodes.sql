@@ -22,6 +22,7 @@
     is_described boolean,
     column_name {{ dbt.type_string() }},
     meta {{ dbt.type_string() }},
+    hard_coded_references {{ dbt.type_string() }},
     macro_dependencies {{ dbt.type_string() }},
     is_generic_test boolean
     
