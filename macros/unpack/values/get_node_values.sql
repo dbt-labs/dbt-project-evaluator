@@ -6,7 +6,6 @@
 
     {%- if execute -%}
     {%- set nodes_list = graph.nodes.values() -%}
-    {{ log("LENGTH: " ~ nodes_list | length, info = True)}}
     {%- set values = [] -%}
 
     {%- for node in nodes_list -%}

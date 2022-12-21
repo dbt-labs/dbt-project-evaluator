@@ -44,7 +44,7 @@
   {% set insert_statements = [] -%}
     {%- for loop_number in range(loop_count) -%}
         {%- set lower_bound = loop.index0 * 100 -%}
-        {%- set upper_bound = (loop.index * 100) - 1 -%}
+        {%- set upper_bound = loop.index * 100 -%}
         {# TODO handle end of range #}
         {%- set values_subset = values[lower_bound : upper_bound] %}
         {%- set values_list_of_strings = [] -%}
