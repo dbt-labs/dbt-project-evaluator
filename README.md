@@ -51,7 +51,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 3. Either fix the issue(s) or [customize](#customization) the package to exclude them
 
 #### Caveat Regarding Modeling Layer Assumptions
-This package assumes that you are using dbt Labs' default modeling layers - staging, intermediate, marts, other.  These layers are reflected in both the folder structure and naming prefixes used in your project. To customize these modeling layers, see Naming Convention Variables in [Overriding Variables](#overriding-variables). If your project doesn't use our default modeling layers, you may wish to ignore or disable package models that don't apply in your case (i.e. [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)).
+This package assumes that you are using dbt Labs' default modeling layers - staging, intermediate, marts, other. These layers are reflected in both the folder structure and naming prefixes used in your project. To customize these modeling layers, see Naming Convention Variables in [Overriding Variables](#overriding-variables). If your project doesn't use our default modeling layers, you may wish to ignore or disable package models that don't apply in your case (i.e. [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)).
 
 ----
 ## Package Documentation
