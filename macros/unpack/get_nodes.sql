@@ -9,6 +9,9 @@
     {%- set values = [] -%}
 
     {%- for node in nodes_list -%}
+
+        {%- set hard_coded_references = dbt_project_evaluator.find_all_hard_coded_references(node) -%}
+
         {%- set values_line  = 
             [
                 wrap_string_with_quotes(node.unique_id),
@@ -25,6 +28,7 @@
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
                 "''" if not node.column_name else wrap_string_with_quotes(dbt.escape_single_quotes(node.column_name)),
                 wrap_string_with_quotes(node.meta | tojson),
+                wrap_string_with_quotes(dbt.escape_single_quotes(hard_coded_references)),
                 wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)"
             ]
@@ -53,6 +57,7 @@
               ('is_described', 'boolean'),
               'column_name',
               'meta',
+              'hard_coded_references',
               'macro_dependencies',
               ('is_generic_test', 'boolean')
             ]

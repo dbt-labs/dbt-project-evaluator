@@ -57,6 +57,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 - __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
+  - [Hard Coded References](#hard-coded-references)
   - [Model Fanout](#model-fanout)
   - [Multiple Sources Joined](#multiple-sources-joined)
   - [Rejoining of Upstream Concepts](#rejoining-of-upstream-concepts)
@@ -162,6 +163,70 @@ and your downstream data artifacts.
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
+</details>
+
+#### Hard Coded References
+`fct_hard_coded_references` ([source](models/marts/dag/fct_hard_coded_references.sql)) shows each instance where a model contains hard coded reference(s). 
+
+<details>
+<summary><b>Example</b></summary>
+
+`fct_orders` uses hard coded direct relation references (`my_db.my_schema.orders` and `my_schema.customers`).
+
+```
+# fct_orders.sql
+
+with orders as (
+    select * from my_db.my_schema.orders
+),
+customers as (
+    select * from my_schema.customers
+)
+select
+    orders.order_id,
+    customers.name
+from orders
+left join customers on
+	orders.customer_id = customers.id
+```
+
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+Always use the `ref` function when selecting from another model and the `source` function when selecting from raw data, rather than using the direct relation reference (e.g. `my_schema.my_table`). Direct relation references are determined via regex mapping [here](macros/find_all_hard_coded_references.sql). 
+
+The `ref` and `source` functions are part of what makes dbt so powerful! Using these functions allows dbt to infer dependencies (and check that you haven't created any circular dependencies), properly generate your DAG, and ensure that models are built in the correct order. This also ensures that your current model selects from upstream tables and views in the same environment that you're working in.
+
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+For each hard coded reference:
+- if the hard coded reference is to a model, update the sql to instead use the [ref](https://docs.getdbt.com/reference/dbt-jinja-functions/ref) function
+- if the hard coded reference is to raw data, create any needed [sources](https://docs.getdbt.com/docs/build/sources#declaring-a-source) and update the sql to instead use the [source](https://docs.getdbt.com/reference/dbt-jinja-functions/source) function 
+
+For the above example, our updated `fct_orders.sql` file would look like:
+
+```
+# fct_orders.sql
+
+with orders as (
+    select * from {{ ref('orders') }}
+),
+customers as (
+    select * from {{ ref('customers') }}
+)
+select
+    orders.order_id,
+    customers.name
+from orders
+left join customers on
+	orders.customer_id = customers.id
+```
+
 </details>
 
 #### Model Fanout
