@@ -21,6 +21,7 @@
   {% set resource = config.get('resource') %}
   {% set relationships = config.get('relationships') %}
   {% set values = get_resource_values(resource, relationships) %}
+  {% set insert_statements = generate_insert_statements(intermediate_relation, values) %}
 
   -- drop the temp relations if they exist already in the database
   -- also drop the real relation -- this will need to be full-refreshed every time
@@ -38,23 +39,6 @@
         {{ sql }}
     );
 
-  {%- set values_length = values | length -%}
-  {%- set loop_count = (values_length / 100) | round(0, 'ceil') | int -%}
-  
-  {% set insert_statements = [] -%}
-    {%- for loop_number in range(loop_count) -%}
-        {%- set lower_bound = loop.index0 * 100 -%}
-        {%- set upper_bound = loop.index * 100 -%}
-        {# TODO handle end of range #}
-        {%- set values_subset = values[lower_bound : upper_bound] %}
-        {%- set values_list_of_strings = [] -%}
-        {%- for indiv_values in values_subset %}
-            {%- do values_list_of_strings.append( indiv_values | join(", \n")) -%}
-        {%- endfor -%}
-        {%- set values_string = '(' ~ values_list_of_strings | join("), \n\n(") ~ ')' %}
-        {%- set insert_statement = "insert into " ~ intermediate_relation ~ " values \n" ~  values_string ~ ";"%}
-        {%- do insert_statements.append(insert_statement) -%}
-    {% endfor %}
     
   {% for insert_statement in insert_statements %}
     {{ insert_statement }}
@@ -87,4 +71,59 @@
   {{ run_hooks(post_hooks, inside_transaction=False) }}
 
   {{ return({'relations': [target_relation]}) }}
+{% endmaterialization %}
+
+
+{% materialization insert_graph_values, adapter='snowflake' %}
+
+  {% set original_query_tag = set_query_tag() %}
+
+  {%- set identifier = model['alias'] -%}
+
+  {% set grant_config = config.get('grants') %}
+
+  {%- set old_relation = adapter.get_relation(database=database, schema=schema, identifier=identifier) -%}
+  {%- set target_relation = api.Relation.create(identifier=identifier,
+                                                schema=schema,
+                                                database=database, type='table') -%}
+  
+    -- get the list of values to insert
+  {% set resource = config.get('resource') %}
+  {% set relationships = config.get('relationships') %}
+  {% set values = get_resource_values(resource, relationships) %}
+  {% set insert_statements = generate_insert_statements(target_relation, values) %}
+
+  {{ run_hooks(pre_hooks) }}
+
+  {#-- Drop the relation if it was a view to "convert" it in a table. This may lead to
+    -- downtime, but it should be a relatively infrequent occurrence  #}
+  {% if old_relation is not none and not old_relation.is_table %}
+    {{ log("Dropping relation " ~ old_relation ~ " because it is of type " ~ old_relation.type) }}
+    {{ drop_relation_if_exists(old_relation) }}
+  {% endif %}
+
+  --build model
+  {% call statement('main') -%}
+    begin;
+    create or replace table {{ target_relation }} (
+      {{ sql }}
+    );
+
+    {% for insert_statement in insert_statements %}
+      {{ insert_statement }}
+    {% endfor %}
+    commit;
+  {%- endcall %}
+
+  {{ run_hooks(post_hooks) }}
+
+  {% set should_revoke = should_revoke(old_relation, full_refresh_mode=True) %}
+  {% do apply_grants(target_relation, grant_config, should_revoke=should_revoke) %}
+
+  {% do persist_docs(target_relation, model) %}
+
+  {% do unset_query_tag(original_query_tag) %}
+
+  {{ return({'relations': [target_relation]}) }}
+
 {% endmaterialization %}
