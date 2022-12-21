@@ -140,7 +140,7 @@ After refactoring your downstream model to select from the staging layer, your D
 `fct_marts_or_intermediate_dependent_on_source` ([source](models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
 
-If you get no results or unexpected results, see [Modeling Layer Assumptions](#caveat-regarding-modeling-layer-assumptions) for more context.
+If this model returns no results, either your project doesn't contain any instances of this issue (hooray!) or you may need to update your [naming convention variables](#naming_convention_variables).
 
 <details>
 <summary><b>Example</b></summary>
@@ -393,7 +393,7 @@ After refactoring the above example, the DAG would look something like this:
 #### Staging Models Dependent on Downstream Models
 `fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
 
-If you get no results or unexpected results, see [Modeling Layer Assumptions](#caveat-regarding-modeling-layer-assumptions) for more context.
+If this model returns no results, either your project doesn't contain any instances of this issue (hooray!) or you may need to update your [naming convention variables](#naming_convention_variables).
 
 <details>
 <summary><b>Example</b></summary>
@@ -426,7 +426,7 @@ After updating the model to use the appropriate `{{ source() }}` function, your 
 `fct_staging_dependent_on_staging` ([source](models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are
 dependent on each other.
 
-If you get no results or unexpected results, see [Modeling Layer Assumptions](#caveat-regarding-modeling-layer-assumptions) for more context.
+If this model returns no results, either your project doesn't contain any instances of this issue (hooray!) or you may need to update your [naming convention variables](#naming_convention_variables).
 
 <details>
 <summary><b>Example</b></summary>
@@ -587,7 +587,7 @@ Tip: We recommend that every model in your dbt project has at minimum a model-le
 #### Model Naming Conventions
 `fct_model_naming_conventions` ([source](models/marts/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix.
 
-If you get no results or unexpected results, see [Modeling Layer Assumptions](#caveat-regarding-modeling-layer-assumptions) for more context.
+If this model returns no results, either your project doesn't contain any instances of this issue (hooray!) or you may need to update your [naming convention variables](#naming_convention_variables).
   
 <details>
 <summary><b>Example</b></summary>
@@ -628,7 +628,7 @@ For each model flagged, ensure the model type is defined and the model name is p
 - For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
 - For non-staging models: The files should be nested closest to the folder name that matches their model type.
   
-If you get no results or unexpected results, see [Modeling Layer Assumptions](#caveat-regarding-modeling-layer-assumptions) for more context.
+If this model returns no results, either your project doesn't contain any instances of this issue (hooray!) or you may need to update your [naming convention variables](#naming_convention_variables).
 
 <details>
 <summary><b>Example</b></summary>
@@ -978,7 +978,7 @@ vars:
 | `marts_prefixes` | the list of acceptable prefixes for your marts models | fct_, dim_ |
 | `other_prefixes` | the list of acceptable prefixes for your other models | rpt_ |
 
-The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`.
+<a name="naming_convention_variables"></a>The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`.
 
 ```yml
 # dbt_project.yml
