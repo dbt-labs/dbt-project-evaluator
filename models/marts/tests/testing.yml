@@ -14,6 +14,7 @@ models:
         description: the number of models in the project with at least one test configured divided by the total number of models in the project
         tests:
           - dbt_utils.accepted_range:
+              name: valid_test_coverage
               min_value: "{{ var('test_coverage_target') }}"
               severity: warn
   - name: fct_missing_primary_key_tests

@@ -74,3 +74,12 @@ seeds:
             - child
             - parent_and_child
             - is_loop_independent
+
+  - name: test_fct_hard_coded_references
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_hard_coded_references
+          compare_model: ref('fct_hard_coded_references')
+          compare_columns:
+            - model
+            - hard_coded_references
