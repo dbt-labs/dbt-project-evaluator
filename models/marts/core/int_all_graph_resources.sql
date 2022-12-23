@@ -7,7 +7,7 @@
         {%- do test_macro_list.append(test) -%}
       {%- endfor %}
 {%- endfor -%}
-
+ 
 with unioned as (
 
     {{ dbt_utils.union_relations([
@@ -38,8 +38,8 @@ unioned_with_calc as (
             when resource_type = 'source' then null
             else {{ dbt.split_part('name', "'_'", 1) }}||'_' 
         end as prefix,
-        {{ dbt.replace("file_path", "regexp_replace(file_path,'.*/','')", "''") }} as directory_path,
-        regexp_replace(file_path,'.*/','') as file_name 
+        {{ get_dbtreplace_directory_pattern() }} as directory_path,
+        regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name
     from unioned
     where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
 ), 
