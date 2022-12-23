@@ -1,13 +1,13 @@
 -- This model finds all cases where a model is NOT in the appropriate subdirectory:
-    -- For staging models: The files should be in nested in the staging folder in a subfolder that matches their source parent's name.
-    -- For non-staging models: The files should be nested closest to their appropriate folder.  
+    -- For staging models: The files should be in nested in the staging directory in a subdirectory that matches their source parent's name.
+    -- For non-staging models: The files should be nested closest to their appropriate directory.  
 
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
 ),
 
-folders as (
-    select * from {{ ref('stg_naming_convention_folders') }}
+directories as (
+    select * from {{ ref('stg_naming_convention_directories') }}
 ), 
 
 all_dag_relationships as (
@@ -36,24 +36,24 @@ inappropriate_subdirectories_staging as (
         child_resource_type as resource_type,
         child_model_type as model_type,
         child_file_path as current_file_path,
-        'models/' || '{{ var("staging_folder_name") }}' || '/' || parent_source_name || '/' || child_file_name as change_file_path_to
+        'models/' || '{{ var("staging_directory_name") }}' || '/' || parent_source_name || '/' || child_file_name as change_file_path_to
     from staging_models
     where child_directory_path not like '%' || parent_source_name || '%'
 ),
 
--- find all non-staging models that are NOT nested closest to their appropriate folder
+-- find all non-staging models that are NOT nested closest to their appropriate directory
 innappropriate_subdirectories_non_staging_models as (
     select 
         all_graph_resources.resource_name,
         all_graph_resources.resource_type,
         all_graph_resources.model_type,
         all_graph_resources.file_path as current_file_path,
-        'models' || '/.../' || folders.folder_name_value || '/.../' || all_graph_resources.file_name as change_file_path_to
+        'models' || '/.../' || directories.directory_name_value || '/.../' || all_graph_resources.file_name as change_file_path_to
     from all_graph_resources
-    left join folders 
-        on folders.model_type = all_graph_resources.model_type 
-    -- either appropriate folder_name is not in the current_directory_path or a inappropriate folder name is closer to the file_name
-    where all_graph_resources.model_type <> all_graph_resources.model_type_folder 
+    left join directories 
+        on directories.model_type = all_graph_resources.model_type 
+    -- either appropriate directory_name is not in the current_directory_path or a inappropriate directory name is closer to the file_name
+    where all_graph_resources.model_type <> all_graph_resources.model_type_directory 
 ),
 
 unioned as (

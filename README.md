@@ -451,7 +451,7 @@ After refactoring the above example, the DAG would look something like this:
 </details>
 
 #### Staging Models Dependent on Downstream Models
-`fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
+`fct_staging_dependent_on_marts_or_intermediate` ([source](models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and directory paths specified in your project variables.
 
 <details>
 <summary><b>Example</b></summary>
@@ -679,8 +679,8 @@ For each model flagged, ensure the model type is defined and the model name is p
 #### Model Directories
 
 `fct_model_directories` ([source](models/marts/structure/fct_model_directories.sql)) shows all cases where a model is NOT in the appropriate subdirectory:
-- For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
-- For non-staging models: The files should be nested closest to the folder name that matches their model type.  
+- For staging models: The files should be nested in the staging directory of a subdirectory that matches their source parent's name.
+- For non-staging models: The files should be nested closest to the directory name that matches their model type.  
 
 <details>
 <summary><b>Example</b></summary>
@@ -765,7 +765,7 @@ Each staging directory contains:
 
 This provides for clear repository organization, so that analytics engineers can quickly and easily find the information they need.
 
-We might create additional folders for intermediate models but each file should always be nested closest to the folder name that matches their model type.
+We might create additional directories for intermediate models but each file should always be nested closest to the directory name that matches their model type.
 ```
 ├── dbt_project.yml
 └── models
@@ -1027,15 +1027,15 @@ vars:
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `model_types` | a list of the different types of models that define the layers of your dbt project | staging, intermediate, marts, other |
-| `staging_folder_name` | the name of the folder that contains your staging models | staging |
-| `intermediate_folder_name` | the name of the folder that contains your intermediate models | intermediate |
-| `marts_folder_name` | the name of the folder that contains your marts models | marts |
+| `staging_directory_name` | the name of the directory that contains your staging models | staging |
+| `intermediate_directory_name` | the name of the directory that contains your intermediate models | intermediate |
+| `marts_directory_name` | the name of the directory that contains your marts models | marts |
 | `staging_prefixes` | the list of acceptable prefixes for your staging models | stg_ |
 | `intermediate_prefixes` | the list of acceptable prefixes for your intermediate models | int_ |
 | `marts_prefixes` | the list of acceptable prefixes for your marts models | fct_, dim_ |
 | `other_prefixes` | the list of acceptable prefixes for your other models | rpt_ |
 
-The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`.
+The `model_types`, `<model_type>_directory_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct directories and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_directory_name` and/or `<model_type>_prefixes`.
 
 ```yml
 # dbt_project.yml
@@ -1044,7 +1044,7 @@ The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` varia
 vars:
   dbt_project_evaluator:
     model_types: ['staging', 'intermediate', 'marts', 'other', 'util']
-    util_folder_name: 'util'
+    util_directory_name: 'util'
     util_prefixes: ['util_']
 ```
 </details>

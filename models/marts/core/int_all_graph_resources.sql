@@ -23,8 +23,8 @@ naming_convention_prefixes as (
     select * from {{ ref('stg_naming_convention_prefixes') }}
 ), 
 
-naming_convention_folders as (
-    select * from {{ ref('stg_naming_convention_folders') }}
+naming_convention_directories as (
+    select * from {{ ref('stg_naming_convention_directories') }}
 ), 
 
 unioned_with_calc as (
@@ -61,10 +61,10 @@ joined as (
         end as model_type_prefix,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-            when {{ dbt.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} = 0 then null
-            else naming_convention_folders.model_type 
-        end as model_type_folder,
-        {{ dbt.position('naming_convention_folders.folder_name_value','unioned_with_calc.directory_path') }} as position_folder,  
+            when {{ dbt.position('naming_convention_directories.directory_name_value','unioned_with_calc.directory_path') }} = 0 then null
+            else naming_convention_directories.model_type 
+        end as model_type_directory,
+        {{ dbt.position('naming_convention_directories.directory_name_value','unioned_with_calc.directory_path') }} as position_directory,  
         nullif(unioned_with_calc.column_name, '') as column_name,
         {% for test in test_macro_list %}
         unioned_with_calc.macro_dependencies like '%macro.{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[1] }},  
@@ -100,7 +100,7 @@ joined as (
     left join naming_convention_prefixes
         on unioned_with_calc.prefix = naming_convention_prefixes.prefix_value
 
-    cross join naming_convention_folders   
+    cross join naming_convention_directories   
 
 ), 
 
@@ -109,10 +109,10 @@ calculate_model_type as (
         *, 
         case 
             when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-            -- by default we will define the model type based on its prefix in the case prefix and folder types are different
-            else coalesce(model_type_prefix, model_type_folder, 'other') 
+            -- by default we will define the model type based on its prefix in the case prefix and directory types are different
+            else coalesce(model_type_prefix, model_type_directory, 'other') 
         end as model_type,
-        row_number() over (partition by resource_id order by position_folder desc) as folder_name_rank
+        row_number() over (partition by resource_id order by position_directory desc) as directory_name_rank
     from joined
 ),
 
@@ -120,7 +120,7 @@ final as (
     select
         *
     from calculate_model_type
-    where folder_name_rank = 1
+    where directory_name_rank = 1
 )
 
 select 

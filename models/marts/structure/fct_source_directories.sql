@@ -12,7 +12,7 @@ inappropriate_subdirectories_sources as (
         resource_name,
         resource_type,
         file_path as current_file_path,
-        'models/' || '{{ var("staging_folder_name") }}' || '/' || source_name || '/' || file_name as change_file_path_to
+        'models/' || '{{ var("staging_directory_name") }}' || '/' || source_name || '/' || file_name as change_file_path_to
     from all_graph_resources
     where resource_type = 'source'
     and directory_path not like '%' || source_name || '%'

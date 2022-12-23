@@ -57,10 +57,10 @@ models:
           - unique
           - not_null
 
-  - name: stg_naming_convention_folders
-    description: "This table parses the folder name variables into a model to help define structure tests"
+  - name: stg_naming_convention_directories
+    description: "This table parses the directory name variables into a model to help define structure tests"
     columns:
-      - name: folder_name
+      - name: directory_name
         tests:
           - unique
           - not_null

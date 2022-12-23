@@ -1,18 +1,18 @@
 {% set var_model_types = var('model_types') %}
-{% set suffix_model_type = '_folder_name' %}
+{% set suffix_model_type = '_directory_name' %}
 
-{% set vars_folders = [] %}
+{% set vars_directories = [] %}
 
 {% for model_type in var_model_types %}
-  {% do vars_folders.append(model_type ~ suffix_model_type) %}
+  {% do vars_directories.append(model_type ~ suffix_model_type) %}
 {% endfor %}
 
-with vars_folders_table as (
-    {{ dbt_project_evaluator.loop_vars(vars_folders) }}
+with vars_directories_table as (
+    {{ dbt_project_evaluator.loop_vars(vars_directories) }}
 )
 
 select
-    var_name as folder_name, 
+    var_name as directory_name, 
     {{ dbt.split_part('var_name', "'_'", 1) }} as model_type,
-    var_value as folder_name_value
-from vars_folders_table
+    var_value as directory_name_value
+from vars_directories_table

@@ -43,7 +43,7 @@ models:
         stg_node_relationships:
           +materialized: table
       variables:
-        stg_naming_convention_folders:
+        stg_naming_convention_directories:
           # required for Redshift because listagg runs only on tables
           +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
         stg_naming_convention_prefixes:
@@ -64,12 +64,12 @@ vars:
 
   # -- Naming conventions variables --
   # to add a new "model type", update the variable model_types 
-  # and create new variables with the names <model_type>_folder_name and/or <model_type>_prefixes 
+  # and create new variables with the names <model_type>_directory_name and/or <model_type>_prefixes 
   model_types: ['staging', 'intermediate', 'marts', 'other']
 
-  staging_folder_name: 'staging'
-  intermediate_folder_name: 'intermediate'
-  marts_folder_name: 'marts'
+  staging_directory_name: 'staging'
+  intermediate_directory_name: 'intermediate'
+  marts_directory_name: 'marts'
   
   staging_prefixes: ['stg_']
   intermediate_prefixes: ['int_']
