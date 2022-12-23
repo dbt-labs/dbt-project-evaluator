@@ -52,7 +52,6 @@ models:
 
 
 vars:
-
   # -- Tests and docs coverage variables --
   documentation_coverage_target: 100
   test_coverage_target: 100
