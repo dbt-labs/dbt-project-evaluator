@@ -2,8 +2,7 @@
 {{
     config(
         materialized='insert_graph_values',
-        resource='metrics',
-        file_format='delta'
+        resource='metrics'
     )
 }}
 
