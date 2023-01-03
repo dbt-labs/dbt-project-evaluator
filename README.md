@@ -47,7 +47,7 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
 
 Each test warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
 1. Locate the related documentation below
-2. Query the associated model to find the specific instances of the issue within your project
+2. Query the associated model to find the specific instances of the issue within your project or set up an [`on-run-end` hook](https://docs.getdbt.com/reference/project-configs/on-run-start-on-run-end) to display the rules violations in the dbt logs (see [displaying violations in the logs](#displaying-violations-in-the-logs))
 3. Either fix the issue(s) or [customize](#customization) the package to exclude them
 
 ----
@@ -1055,9 +1055,27 @@ seeds:
 #### 3. Run the seed and the package
 
 We then run both the seed and the package by executing the following command:
-```
+
+```bash
 dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions
 ```
+
+### Displaying violations in the logs
+
+This package provides a macro that can be executed via an `on-run-end` hook to display the package results in the logs in addition to storing those in the Data Warehouse.
+
+To use it, you can add the following line in your `dbt_project.yml`:
+
+```yml
+on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
+```
+
+In the case that you are storing the tables with the package results in a schema or database different from the default ones from your profile, the following parameters are available for `print_dbt_project_evaluator_issues()`:
+
+- `schema_project_evaluator`: the schema where the tables are stored
+- `db_project_evaluator`: the database where the tables are stored
+
+# dbt_project.yml
 
 ----
 ## Running this package as a CI check
