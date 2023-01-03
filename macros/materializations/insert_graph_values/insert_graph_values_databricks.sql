@@ -30,9 +30,16 @@
     );
   {%- endcall %}
   {% for insert_statement in insert_statements %}
-    {% call statement('main') -%}
+    {% if not loop.last %}
+      {% call statement('insert') -%}
         {{ insert_statement }}
-    {%- endcall %}
+      {%- endcall %}
+    {% else %}
+      {% call statement('main') -%}
+        {{ insert_statement }}
+      {%- endcall %}
+    {% endif %}
+    
   {% endfor %}
 
   {% set should_revoke = should_revoke(old_relation, full_refresh_mode=True) %}
