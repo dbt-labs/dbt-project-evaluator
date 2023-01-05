@@ -1,12 +1,16 @@
 
+
 {{
     config(
-        materialized='insert_graph_values',
-        resource='metrics',
-        relationships=True
+        materialized='table',
+        post_hook="{{ generate_insert_statements_post_hook(this, resource_type='metrics', relationships=True) }}"
     )
 }}
 
-    resource_id {{ dbt.type_string()}},
-    direct_parent_id {{ dbt.type_string()}},
-    is_primary_relationship boolean
+select 
+
+    cast(null as {{ dbt.type_string()}}) as resource_id,
+    cast(null as {{ dbt.type_string()}}) as direct_parent_id,
+    cast(True as boolean) as is_primary_relationship
+
+where false

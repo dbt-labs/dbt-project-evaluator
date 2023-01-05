@@ -1,30 +1,32 @@
 
 {{
     config(
-        materialized='insert_graph_values',
-        resource='nodes'
+        materialized='table',
+        post_hook="{{ generate_insert_statements_post_hook(this, resource_type='nodes') }}"
     )
 }}
 
-
+select 
 -- define schema 
-    unique_id {{ dbt.type_string() }},
-    name {{ dbt.type_string() }},
-    resource_type {{ dbt.type_string() }},
-    file_path {{ dbt.type_string() }},
-    is_enabled boolean,
-    materialized {{ dbt.type_string() }},
-    on_schema_change {{ dbt.type_string() }},
-    database {{ dbt.type_string() }},
-    schema {{ dbt.type_string() }},
-    package_name {{ dbt.type_string() }},
-    alias {{ dbt.type_string() }},
-    is_described boolean,
-    column_name {{ dbt.type_string() }},
-    meta {{ dbt.type_string() }},
-    hard_coded_references {{ dbt.type_string() }},
-    macro_dependencies {{ dbt.type_string() }},
-    is_generic_test boolean
+    cast(null as {{ dbt.type_string() }}) as unique_id,
+    cast(null as {{ dbt.type_string() }}) as name,
+    cast(null as {{ dbt.type_string() }}) as resource_type,
+    cast(null as {{ dbt.type_string() }}) as file_path,
+    cast(True as boolean) as is_enabled,
+    cast(null as {{ dbt.type_string() }}) as materialized,
+    cast(null as {{ dbt.type_string() }}) as on_schema_change,
+    cast(null as {{ dbt.type_string() }}) as database,
+    cast(null as {{ dbt.type_string() }}) as schema,
+    cast(null as {{ dbt.type_string() }}) as package_name,
+    cast(null as {{ dbt.type_string() }}) as alias,
+    cast(True as boolean) as is_described,
+    cast(null as {{ dbt.type_string() }}) as column_name,
+    cast(null as {{ dbt.type_string() }}) as meta,
+    cast(null as {{ dbt.type_string() }}) as hard_coded_references,
+    cast(null as {{ dbt.type_string() }}) as macro_dependencies,
+    cast(True as boolean) as is_generic_test
+
+where false
     
 
               

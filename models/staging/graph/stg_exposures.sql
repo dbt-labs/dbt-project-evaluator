@@ -1,22 +1,24 @@
 
 {{
     config(
-        materialized='insert_graph_values',
-        resource='exposures'
+        materialized='table',
+        post_hook="{{ generate_insert_statements_post_hook(this, resource_type='exposures') }}"
     )
 }}
 
-
+select 
 -- define schema
-    unique_id {{ dbt.type_string() }},
-    name {{ dbt.type_string() }},
-    resource_type {{ dbt.type_string() }},
-    file_path {{ dbt.type_string() }},
-    is_described boolean,
-    exposure_type {{ dbt.type_string() }},
-    maturity {{ dbt.type_string() }},
-    package_name {{ dbt.type_string() }},
-    url {{ dbt.type_string() }},
-    owner_name {{ dbt.type_string() }},
-    owner_email {{ dbt.type_string() }},
-    meta {{ dbt.type_string() }}
+    cast(null as {{ dbt.type_string() }} ) as unique_id,
+    cast(null as {{ dbt.type_string() }} ) as name,
+    cast(null as {{ dbt.type_string() }} ) as resource_type,
+    cast(null as {{ dbt.type_string() }} ) as file_path,
+    cast(True as boolean) as is_described,
+    cast(null as {{ dbt.type_string() }} ) as exposure_type,
+    cast(null as {{ dbt.type_string() }} ) as maturity,
+    cast(null as {{ dbt.type_string() }} ) as package_name,
+    cast(null as {{ dbt.type_string() }} ) as url,
+    cast(null as {{ dbt.type_string() }} ) as owner_name,
+    cast(null as {{ dbt.type_string() }} ) as owner_email,
+    cast(null as {{ dbt.type_string() }} ) as meta
+
+where false 

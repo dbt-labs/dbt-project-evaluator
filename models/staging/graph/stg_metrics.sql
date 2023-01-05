@@ -1,25 +1,28 @@
 
 {{
     config(
-        materialized='insert_graph_values',
-        resource='metrics'
+        materialized='table',
+        post_hook="{{ generate_insert_statements_post_hook(this, resource_type='metrics') }}"
     )
 }}
 
+select 
+    -- define schema
+    cast(null as {{ dbt.type_string() }}) as unique_id,
+    cast(null as {{ dbt.type_string() }}) as name,
+    cast(null as {{ dbt.type_string() }}) as resource_type,
+    cast(null as {{ dbt.type_string() }}) as file_path,
+    cast(True as boolean) as is_described,
+    cast(null as {{ dbt.type_string() }}) as metric_type,
+    cast(null as {{ dbt.type_string() }}) as model,
+    cast(null as {{ dbt.type_string() }}) as label,
+    cast(null as {{ dbt.type_string() }}) as sql,
+    cast(null as {{ dbt.type_string() }}) as timestamp,
+    cast(null as {{ dbt.type_string() }}) as package_name,
+    cast(null as {{ dbt.type_string() }}) as dimensions,
+    cast(null as {{ dbt.type_string() }}) as filters,
+    cast(null as {{ dbt.type_string() }}) as meta
 
--- define schema
-    unique_id {{ dbt.type_string() }},
-    name {{ dbt.type_string() }},
-    resource_type {{ dbt.type_string() }},
-    file_path {{ dbt.type_string() }},
-    is_described boolean,
-    metric_type {{ dbt.type_string() }},
-    model {{ dbt.type_string() }},
-    label {{ dbt.type_string() }},
-    sql {{ dbt.type_string() }},
-    timestamp {{ dbt.type_string() }},
-    package_name {{ dbt.type_string() }},
-    dimensions {{ dbt.type_string() }},
-    filters {{ dbt.type_string() }},
-    meta {{ dbt.type_string() }}
+where false 
+
     
