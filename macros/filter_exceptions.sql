@@ -9,7 +9,7 @@ select
     column_name,
     id_to_exclude
 from {{ ref('dbt_project_evaluator_exceptions') }}
-where fct_name = '{{ model_ref.name }}'
+where '{{ model_ref.name }}' like fct_name
 {% endset %}
 
 {% if execute and flags.WHICH not in ['compile'] %}
