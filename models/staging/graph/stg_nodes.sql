@@ -6,6 +6,10 @@
     )
 }}
 
+with dummy_cte as (
+    select 1 as foo
+)
+
 select 
 -- define schema 
     cast(null as {{ dbt.type_string() }}) as unique_id,
@@ -26,7 +30,8 @@ select
     cast(null as {{ dbt.type_string() }}) as macro_dependencies,
     cast(True as boolean) as is_generic_test
 
-where false
+from dummy_cte
+where false 
     
 
               

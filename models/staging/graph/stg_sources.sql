@@ -6,6 +6,11 @@
     )
 }}
 
+
+with dummy_cte as (
+    select 1 as foo
+)
+
 select 
     -- define schema 
     cast(null as {{ dbt.type_string() }}) as unique_id,
@@ -25,7 +30,7 @@ select
     cast(null as {{ dbt.type_string() }}) as identifier,
     cast(null as {{ dbt.type_string() }})  as meta
 
-
+from dummy_cte
 where false
     
 
