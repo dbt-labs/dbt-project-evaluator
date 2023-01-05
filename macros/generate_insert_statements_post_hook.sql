@@ -1,4 +1,4 @@
-{% macro generate_insert_statements_post_hook(relation, resource_type='nodes', relationships=False, batch_size=100) %}
+{% macro generate_insert_statements_post_hook(relation, resource_type='nodes', relationships=False, batch_size=var('insert_batch_size', 500)) %}
   {%- set values = get_resource_values(resource_type, relationships) -%}
   {%- set values_length = values | length -%}
   {%- set loop_count = (values_length / batch_size) | round(0, 'ceil') | int -%}
