@@ -20,7 +20,11 @@
                 ''
             {% endif -%}
           {% endset %}
-
+          
+          {% set label %}
+          {{ dbt.escape_single_quote(node.label) }}
+          {% endset %}
+          
           {%- set values_line = 
             [
             wrap_string_with_quotes(node.unique_id),
@@ -30,7 +34,7 @@
             "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
             wrap_string_with_quotes(node.type),
             wrap_string_with_quotes(node.model.identifier),
-            wrap_string_with_quotes(node.label),
+            wrap_string_with_quotes(label),
             wrap_string_with_quotes(node.sql),
             wrap_string_with_quotes(node.timestamp),
             wrap_string_with_quotes(node.package_name),
