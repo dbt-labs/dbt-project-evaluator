@@ -95,6 +95,7 @@ workflows:
           requires:
             - integration-postgres
       - integration-bigquery:
+          context: package-integration-testing
           requires:
             - integration-postgres
       - integration-databricks:
