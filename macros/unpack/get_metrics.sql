@@ -22,7 +22,7 @@
           {% endset %}
           
           {% set label %}
-          {{ dbt.escape_single_quote(node.label) }}
+          {{ dbt.escape_single_quotes(node.label) }}
           {% endset %}
           
           {%- set values_line = 
