@@ -20,10 +20,10 @@ where '{{ model_ref.name }}' like fct_name
         {% if '%' in row_filter[0] %}
             {% set column_pattern = row_filter[0] | replace('%', '.*') %}
             {% for column in all_columns if modules.re.match(column_pattern, column.name) %}
-                and {{ column.name }} not like '{{ row_filter[1] }}'
+                and cast({{ column.name }} as {{ dbt.type_string() }}) not like '{{ row_filter[1] }}'
             {% endfor %}
         {% else %}
-            and {{ row_filter[0] }} not like '{{ row_filter[1] }}'
+            and cast({{ row_filter[0] }} as {{ dbt.type_string() }}) not like '{{ row_filter[1] }}'
         {% endif %}
     {% endfor %}
 {% endif %}
