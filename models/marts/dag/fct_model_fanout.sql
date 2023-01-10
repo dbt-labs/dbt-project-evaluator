@@ -1,3 +1,4 @@
+{% set query %}
 with all_dag_relationships as (
     select  
         *
@@ -45,5 +46,7 @@ model_fanout_agg as (
 )
 
 select * from model_fanout_agg
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

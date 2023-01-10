@@ -2,7 +2,8 @@
     -- For staging models: The files should be in nested in the staging folder in a subfolder that matches their source parent's name.
     -- For non-staging models: The files should be nested closest to their appropriate folder.  
 {% set directory_pattern = get_directory_pattern() %}
- 
+
+{% set query %} 
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
 ),
@@ -64,7 +65,9 @@ unioned as (
 )
 
 select * from unioned
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}
  
 

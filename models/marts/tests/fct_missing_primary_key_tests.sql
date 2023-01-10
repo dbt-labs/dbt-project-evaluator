@@ -1,3 +1,4 @@
+{% set query %}
 with 
 
 tests as (
@@ -14,5 +15,7 @@ final as (
 )
 
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

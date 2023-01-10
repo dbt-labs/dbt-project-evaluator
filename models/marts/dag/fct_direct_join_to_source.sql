@@ -1,5 +1,6 @@
 -- this model finds cases where a model has a reference to both a model and a source
 
+{% set query %}
 with direct_model_relationships as (
     select  
         *
@@ -34,5 +35,7 @@ final as (
 )
 
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

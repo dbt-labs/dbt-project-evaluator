@@ -1,5 +1,6 @@
 -- this model finds cases where a model has 0 direct parents, likely due to a lack of source or ref function
 
+{% set query %}
 with model_relationships as (
     select  
         *
@@ -16,5 +17,7 @@ final as (
 )
 
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

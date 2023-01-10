@@ -1,4 +1,6 @@
 -- this model finds cases where a source is used in multiple direct downstream models
+
+{% set query %}
 with direct_source_relationships as (
     select  
         *
@@ -24,5 +26,7 @@ source_fanout as (
 )
 
 select * from source_fanout
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

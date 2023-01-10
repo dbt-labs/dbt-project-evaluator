@@ -1,5 +1,7 @@
 -- cases where a staging model depends on a marts/intermediate model
 -- data should flow from raw -> staging -> intermediate -> marts
+
+{% set query %}
 with direct_model_relationships as (
     select  
         *
@@ -19,5 +21,7 @@ final as (
     and parent_model_type in ('marts', 'intermediate')
 )
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

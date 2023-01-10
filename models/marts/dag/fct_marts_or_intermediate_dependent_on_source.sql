@@ -1,4 +1,6 @@
 -- cases where a marts/intermediate model directly references a raw source
+
+{% set query %}
 with direct_relationships as (
     select  
         *
@@ -16,5 +18,7 @@ final as (
     and child_model_type in ('marts', 'intermediate')
 )
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

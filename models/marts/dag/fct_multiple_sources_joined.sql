@@ -1,3 +1,4 @@
+{% set query %}
 -- this model finds cases where a model references more than one source
 with direct_source_relationships as (
     select distinct
@@ -24,5 +25,7 @@ multiple_sources_joined as (
 )
 
 select * from multiple_sources_joined
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

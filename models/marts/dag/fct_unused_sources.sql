@@ -1,5 +1,6 @@
 -- this model finds cases where a source has no children
 
+{% set query %}
 with source_relationships as (
     select  
         *
@@ -16,5 +17,7 @@ final as (
 )
 
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

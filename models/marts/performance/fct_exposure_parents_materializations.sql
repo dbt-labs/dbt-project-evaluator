@@ -1,3 +1,4 @@
+{% set query %}
 with 
 
 direct_exposure_relationships as (
@@ -28,5 +29,7 @@ final as (
 )
 
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

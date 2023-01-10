@@ -1,3 +1,4 @@
+{% set query %}
 with
 
 all_resources as (
@@ -17,5 +18,7 @@ final as (
 )
 
 select * from final
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

@@ -1,3 +1,4 @@
+{% set query %}
 with all_relationships as (
     select  
         *
@@ -63,5 +64,7 @@ final_filtered as (
 )
 
 select * from final_filtered
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

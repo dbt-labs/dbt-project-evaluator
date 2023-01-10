@@ -1,6 +1,7 @@
 -- all models with inappropriate (or lack of) pre-fix
 -- ensure dbt project has consistent naming conventions
 
+{% set query %}
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
 ),
@@ -50,5 +51,7 @@ inappropriate_model_names as (
 )
 
 select * from inappropriate_model_names
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

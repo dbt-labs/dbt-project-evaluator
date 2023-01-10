@@ -1,4 +1,6 @@
 -- check for cases where models in the staging layer are dependent on each other
+
+{% set query %}
 with direct_model_relationships as (
     select  
         *
@@ -20,5 +22,7 @@ bending_connections as (
 )
 
 select * from bending_connections
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

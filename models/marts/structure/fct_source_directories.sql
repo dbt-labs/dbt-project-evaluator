@@ -4,6 +4,7 @@
 
 {% set directory_pattern = get_directory_pattern() %}
 
+{% set query %}
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
 ),
@@ -21,5 +22,7 @@ inappropriate_subdirectories_sources as (
 )
 
 select * from inappropriate_subdirectories_sources
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}

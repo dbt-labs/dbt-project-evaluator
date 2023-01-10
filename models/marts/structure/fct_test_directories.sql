@@ -1,4 +1,4 @@
-
+{% set query %}
 with
 
 resources as (
@@ -83,5 +83,7 @@ different_directories as (
 )
 
 select * from different_directories
+{% endset %}
 
-{{ filter_exceptions(this) }}
+{{ query }}
+{{ filter_exceptions(this, query) }}
