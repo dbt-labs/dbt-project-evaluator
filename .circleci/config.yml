@@ -89,14 +89,18 @@ workflows:
       - integration-postgres
       - integration-duckdb
       - integration-redshift:
+          context: profile-redshift
           requires:
             - integration-postgres
       - integration-snowflake:
+          context: profile-snowflake
           requires:
             - integration-postgres
       - integration-bigquery:
+          context: profile-bigquery
           requires:
             - integration-postgres
       - integration-databricks:
+          context: profile-databricks
           requires:
             - integration-postgres
