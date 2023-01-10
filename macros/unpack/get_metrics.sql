@@ -21,10 +21,6 @@
             {% endif -%}
           {% endset %}
           
-          {% set label %}
-          {{ dbt.escape_single_quotes(node.label) }}
-          {% endset %}
-          
           {%- set values_line = 
             [
             wrap_string_with_quotes(node.unique_id),
