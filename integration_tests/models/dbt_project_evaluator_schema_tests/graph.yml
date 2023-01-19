@@ -64,6 +64,10 @@ models:
         tests:
           - unique
           - not_null
+      - name: model_type 
+        tests:
+          - accepted_values:
+              values: "{{ var('model_types') }}"
 
   - name: stg_naming_convention_prefixes
     description: "This table shows one record for each accepted model prefix for each model type (staging, intermediate, marts) from the provided variables"
@@ -73,3 +77,7 @@ models:
         tests:
           - unique
           - not_null
+      - name: model_type 
+        tests:
+          - accepted_values:
+              values: "{{ var('model_types') }}"
