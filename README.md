@@ -23,15 +23,15 @@ Currently, the following adapters are supported:
 ### Cloning via dbt Package Hub
   
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
-### Additional setup for Databricks/Spark
+### Additional setup for Databricks/Spark/DuckDB/Redshift
 
 In your `dbt_project.yml`, add the following config:
 ```yml
 # dbt_project.yml
 
 dispatch:
-  - macro_namespace: dbt_utils
-    search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+  - macro_namespace: dbt
+    search_order: ['dbt_project_evaluator', 'dbt']
 ```
 
 This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
@@ -1055,6 +1055,7 @@ vars:
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `chained_views_threshold` | threshold for unacceptable length of chain of views for `fct_chained_views_dependencies` | 4 |
+| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
 
 ```yml
 # dbt_project.yml
@@ -1063,6 +1064,7 @@ vars:
 vars:
   dbt_project_evaluator:
     chained_views_threshold: 8
+    insert_batch_size: 500
 ```
 </details>
 
