@@ -2,7 +2,7 @@ version: 2
 
 metrics:
   - name: new_customers
-    label: New Customers
+    label: New Customers marked 'paying'
     model: ref('dim_model_7')
     description: "The number of paid customers using the product"
 
