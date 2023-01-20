@@ -4,9 +4,13 @@
 
 {% macro default__filter_exceptions(model_ref) %}
 
-    {% set seed_exists = load_relation(ref('dbt_project_evaluator_exceptions')) is not none %}
+    {% if execute %}
+    {% set is_custom_seed = graph.nodes.values() | 
+            selectattr('resource_type', 'equalto', 'seed') | 
+            selectattr('name', 'equalto', 'dbt_project_evaluator_exceptions') | 
+            selectattr('package_name', 'equalto', 'dbt_project_evaluator') is none %}
 
-    {% if seed_exists %}
+    {% if is_custom_seed %}
 
         {% set query_filters %}
         select
@@ -23,6 +27,8 @@
             {% endfor %}
         {% endif %}
     
+    {% endif %}
+
     {% endif %}
 
 {% endmacro %}
