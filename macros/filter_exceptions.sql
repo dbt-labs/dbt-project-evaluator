@@ -4,21 +4,21 @@
 
 {% macro default__filter_exceptions(model_ref) %}
 
+    {% set query_filters %}
+    select
+        column_name,
+        id_to_exclude
+    from {{ ref('dbt_project_evaluator_exceptions') }}
+    where fct_name = '{{ model_ref.name }}'
+    {% endset %}
+
     {% if execute %}
-    {% set is_custom_seed = graph.nodes.values() | 
-            selectattr('resource_type', 'equalto', 'seed') | 
-            selectattr('name', 'equalto', 'dbt_project_evaluator_exceptions') | 
-            selectattr('package_name', 'equalto', 'dbt_project_evaluator') is none %}
+    {% set is_default_seed = 'dbt_project_evaluator' in graph.nodes.values() | 
+        selectattr('resource_type', 'equalto', 'seed') | 
+        selectattr('name', 'equalto', 'dbt_project_evaluator_exceptions') | 
+        map(attribute = 'package_name') | list %}
 
-    {% if is_custom_seed %}
-
-        {% set query_filters %}
-        select
-            column_name,
-            id_to_exclude
-        from {{ ref('dbt_project_evaluator_exceptions') }}
-        where fct_name = '{{ model_ref.name }}'
-        {% endset %}
+    {% if not is_default_seed %}
     
         {% if execute and flags.WHICH not in ['compile'] %}
             where 1 = 1
