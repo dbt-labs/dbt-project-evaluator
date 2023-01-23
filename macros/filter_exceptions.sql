@@ -20,7 +20,7 @@
 
     {% if not is_default_seed %}
     
-        {% if execute and flags.WHICH not in ['compile'] %}
+        {% if flags.WHICH not in ['compile'] %}
             where 1 = 1
             {% for row_filter in run_query(query_filters) %}
                 and {{ row_filter[0] }} not like '{{ row_filter[1] }}'
