@@ -1059,11 +1059,12 @@ vars:
 
 ```yml
 # dbt_project.yml
-# set your chained views threshold to 8 instead of 4
 
 vars:
   dbt_project_evaluator:
+    # set your chained views threshold to 8 instead of 4
     chained_views_threshold: 8
+    # update the number of records inserted from the graph from 10,000 to 500 to reduce query size
     insert_batch_size: 500
 ```
 </details>
