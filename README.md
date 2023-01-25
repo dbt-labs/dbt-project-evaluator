@@ -34,7 +34,7 @@ dispatch:
     search_order: ['dbt_project_evaluator', 'dbt']
 ```
 
-This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
+This is required because the project currently overrides a handful of dbt core macros in order to ensure the project can run across the listed adapters.
   
 ### How It Works
 
