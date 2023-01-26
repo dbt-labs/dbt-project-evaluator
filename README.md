@@ -34,7 +34,7 @@ dispatch:
     search_order: ['dbt_project_evaluator', 'dbt']
 ```
 
-This is required because the project currently overrides a handful of dbt core macros in order to ensure the project can run across the listed adapters.
+This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the [cross_db_shim directory](macros/cross_db_shim/). 
   
 ### How It Works
 
