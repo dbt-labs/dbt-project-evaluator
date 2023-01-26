@@ -1,7 +1,7 @@
 {{
     config(
         materialized='table',
-        post_hook="{{ generate_insert_statements_post_hook(this, resource_type='nodes', relationships=True) }}"
+        post_hook="{{ insert_resources_from_graph(this, resource_type='nodes', relationships=True) }}"
     )
 }}
 
