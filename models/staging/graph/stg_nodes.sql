@@ -11,7 +11,7 @@ with dummy_cte as (
 )
 
 select 
--- define schema 
+
     cast(null as {{ dbt.type_string() }}) as unique_id,
     cast(null as {{ dbt.type_string() }}) as name,
     cast(null as {{ dbt.type_string() }}) as resource_type,
