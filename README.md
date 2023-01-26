@@ -1110,7 +1110,7 @@ which looks like the following when loaded in the warehouse
 
 #### 2. Deactivate the seed from the original package
 
-Only a single seed can exist with a given name. When using a custom one, we need to deactivate the one from the package by adding the following to our `dbt_project.yml`
+Only a single seed can exist with a given name. When using a custom one, we need to deactivate the blank one from the package by adding the following to our `dbt_project.yml`
 ```yml
 # dbt_project.yml
 
