@@ -6,3 +6,4 @@ Currently, this project is used to test the package behavior when:
 - there is no exposure
 - there is no metric
 - people don't override the default seed for `dbt_project_evaluator_exceptions`
+- people don't override the default value of `insert_batch_size`
