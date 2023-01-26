@@ -1,8 +1,8 @@
-{%- macro get_metrics() -%}
-    {{ return(adapter.dispatch('get_metrics', 'dbt_project_evaluator')()) }}
+{%- macro get_metric_values() -%}
+    {{ return(adapter.dispatch('get_metric_values', 'dbt_project_evaluator')()) }}
 {%- endmacro -%}
 
-{%- macro default__get_metrics() -%}
+{%- macro default__get_metric_values() -%}
 
     {%- if execute -%}
     {%- set nodes_list = graph.metrics.values() -%}
@@ -45,26 +45,6 @@
     {%- endfor -%}
     {%- endif -%}
 
-    {{ return(
-        dbt_project_evaluator.select_from_values(
-            values = values,
-            columns = [
-              'unique_id', 
-              'name', 
-              'resource_type', 
-              'file_path', 
-              ('is_described', 'boolean'),
-              'metric_type', 
-              'model',
-              'label', 
-              'sql', 
-              'timestamp', 
-              'package_name',
-              'dimensions',
-              'filters',
-              'meta'
-            ]
-         )
-    ) }}
+    {{ return(values) }}
 
 {%- endmacro -%}

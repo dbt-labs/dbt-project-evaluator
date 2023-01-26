@@ -64,3 +64,4 @@ vars:
   my_table_reference: 'grace_table'
   new_model_type_folder_name: 'my_new_models'
   new_model_type_prefixes: 'nwmdl_'
+  insert_batch_size: 100
