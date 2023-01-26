@@ -26,7 +26,7 @@ select
     cast(True as boolean) as is_described,
     cast(null as {{ dbt.type_string() }}) as column_name,
     cast(null as {{ dbt.type_string() }}) as meta,
-    cast(null as {{ dbt.type_string() }}) as hard_coded_references,
+    {{ dbt.array_construct([], dbt.type_string()) }} as hard_coded_references,
     cast(null as {{ dbt.type_string() }}) as macro_dependencies,
     cast(True as boolean) as is_generic_test
 

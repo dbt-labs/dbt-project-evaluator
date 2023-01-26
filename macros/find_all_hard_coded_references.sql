@@ -221,7 +221,7 @@
 
                     {%- set raw_reference = match[1:]|join()|trim -%}
 
-                    {%- do all_hard_coded_references_list.append(raw_reference) -%}
+                    {%- do all_hard_coded_references_list.append("'" ~ dbt.escape_single_quotes(raw_reference) ~ "'") -%}
 
                 {%- endfor -%}
         
@@ -229,7 +229,7 @@
 
     {% endif %}
     
-    {% set all_hard_coded_references = set(all_hard_coded_references_list)|sort|join(', ')|trim %}
+    {% set all_hard_coded_references = set(all_hard_coded_references_list)|sort %}
 
     {{ return(all_hard_coded_references) }}
 
