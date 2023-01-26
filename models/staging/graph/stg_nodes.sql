@@ -32,6 +32,3 @@ select
 
 from dummy_cte
 where false 
-    
-
-              
