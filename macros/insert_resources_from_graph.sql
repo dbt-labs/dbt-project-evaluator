@@ -1,4 +1,4 @@
-{% macro insert_resources_from_graph(relation, resource_type='nodes', relationships=False, batch_size=var('insert_batch_size')) %}
+{% macro insert_resources_from_graph(relation, resource_type='nodes', relationships=False, batch_size=var('insert_batch_size') | int) %}
   {%- set values = get_resource_values(resource_type, relationships) -%}
   {%- set values_length = values | length -%}
   {%- set loop_count = (values_length / batch_size) | round(0, 'ceil') | int -%}
