@@ -28,6 +28,8 @@ dispatch:
   - macro_namespace: dbt
     search_order: ['dbt_project_evaluator', 'dbt']
 
+on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
+
 models:
   dbt_project_evaluator_integration_tests_2:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
