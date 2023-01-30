@@ -1055,7 +1055,6 @@ vars:
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `chained_views_threshold` | threshold for unacceptable length of chain of views for `fct_chained_views_dependencies` | 4 |
-| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
 
 ```yml
 # dbt_project.yml
@@ -1064,19 +1063,40 @@ vars:
   dbt_project_evaluator:
     # set your chained views threshold to 8 instead of 4
     chained_views_threshold: 8
-    # update the number of records inserted from the graph from 10,000 to 500 to reduce query size
-    insert_batch_size: 500
 ```
 </details>
 
 <details>
-<summary><b>Warehouse Specific Variables</b></summary>
+<summary><b>Execution Variables</b></summary>
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `max_depth_dag` | limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility | 9 |
+| `max_depth_dag` | limits the maximum length between nodes calculated in `int_all_dag_relationships` | 9 |
+| `generate_all_dag_paths` | boolean to limit recursive SQL for Postgres, Snowflake, Redshift, Duckdb  | see below |
+| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
 
-Changing `max_depth_dag` number to a higher one might prevent the package from running properly on BigQuery and Databricks/Spark.
+__Note on max_depth_dag and generate_all_dag_paths__
+
+The default behavior for limiting the relationships calculated in the `int_all_dag_relationships` model differs depending on your adapter. 
+
+- For Bigquery & Spark/Databricks, `int_all_dag_relationships`, the maximum DAG path length is set by the `max_depth_dag` variable, which is defaulted to 9. This is because these adapters do not currently support recursive SQL. 
+- For all other adapters `int_all_dag_relationships` by default contains a row for every single path between two nodes in your dag. If you experience long runtimes for the `int_all_dag_relationships` model, you may consider limiting the length of your generated DAG paths. To do this, set `generate_all_dag_paths: false` and `max_depth_dag: {{ whatever limit you want to enforce }}` The value of `max_depth_dag` must be greater than 2 for all DAG tests to work, and greater than `chained_views_threshold` to ensure your performance tests to work.
+
+```yml
+# dbt_project.yml
+
+vars:
+  dbt_project_evaluator:
+    # update the number of records inserted from the graph from 10,000 to 500 to reduce query size
+    insert_batch_size: 500
+    # limit the maximum distance between nodes calculated in int_all_dag_relationships 
+    generate_all_dag_paths: false
+    # set the maximum distance between nodes to 5 
+    max_depth_dag: 5
+
+
+```
+
 </details>
 
 ### Configuring exceptions to the rules
