@@ -11,4 +11,5 @@ final as (
     from _base_node_relationships
 )
 
-select  * from final
+-- we need distinct as the graph lists relationships multiple times if they are ref'd multiple times
+select distinct * from final

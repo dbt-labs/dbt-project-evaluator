@@ -39,7 +39,7 @@
                         [
                             "cast('" ~ node.unique_id ~ "' as " ~ dbt.type_string() ~ ")",
                             "cast('" ~ parent ~ "' as " ~ dbt.type_string() ~ ")",
-                            "" ~ loop.last ~ ""
+                            "" ~ loop.last ~ "" if node.unique_id.split('.')[0] == 'test' else "FALSE"
                         ]
                     %}
                       
