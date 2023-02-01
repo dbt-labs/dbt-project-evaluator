@@ -27,6 +27,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 dispatch:
   - macro_namespace: dbt
     search_order: ['dbt_project_evaluator', 'dbt']
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_project_evaluator', 'dbt_utils']
 
 on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
 

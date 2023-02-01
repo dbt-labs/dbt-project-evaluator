@@ -11,4 +11,10 @@ final as (
     from _base_node_relationships
 )
 
-select distinct * from final
+{{
+    dbt_utils.deduplicate(
+        relation='final',
+        partition_by='unique_id',
+        order_by='is_primary_relationship desc'
+    )
+}}

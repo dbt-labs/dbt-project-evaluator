@@ -82,3 +82,8 @@ vars:
 
   # -- Warehouse specific variables --
   max_depth_dag: 9
+
+
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_project_evaluator', 'dbt_utils']

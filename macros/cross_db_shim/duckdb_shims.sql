@@ -25,3 +25,9 @@
         )
 
 {%- endmacro %}
+
+{% macro duckdb__deduplicate(relation, partition_by, order_by) -%}
+
+    {{ return(dbt_utils.snowflake__deduplicate(relation, partition_by, order_by=order_by)) }}
+
+{% endmacro %}
