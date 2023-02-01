@@ -27,7 +27,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 dispatch:
   - macro_namespace: dbt
     search_order: ['dbt_project_evaluator', 'dbt']
-
+  - macro_namespace: dbt_utils
+    search_order: ['dbt_project_evaluator', 'dbt_utils']
+    
 models:
   dbt_project_evaluator_integration_tests:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
