@@ -11,4 +11,4 @@ final as (
     from _base_metric_relationships
 )
 
-select * from final
+select distinct * from final

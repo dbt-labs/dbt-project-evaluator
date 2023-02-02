@@ -14,4 +14,5 @@ exposures:
     depends_on:
       - ref('fct_model_6')
       - ref('dim_model_7')
+      - ref('dim_model_7')
       - source('source_1', 'table_1')
