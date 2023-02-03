@@ -109,8 +109,13 @@ calculate_model_type as (
         *, 
         case 
             when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-            -- by default we will define the model type based on its prefix in the case prefix and folder types are different
-            else coalesce(model_type_prefix, model_type_folder, 'other') 
+            /* use the prefer_model_folder_type_to_prefix variable to determine whether to take the prefix or
+            folder in preference in the case when they are differen */ 
+            else 
+                case
+                    when {{ var('prefer_model_folder_type_to_prefix') }} then coalesce(model_type_folder, model_type_prefix, 'other')
+                    else coalesce(model_type_prefix, model_type_folder, 'other')
+                end
         end as model_type,
         row_number() over (partition by resource_id order by position_folder desc) as folder_name_rank
     from joined

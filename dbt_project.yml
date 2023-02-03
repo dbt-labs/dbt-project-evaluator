@@ -82,3 +82,6 @@ vars:
 
   # -- Warehouse specific variables --
   max_depth_dag: 9
+
+  # -- Model type preference --
+  prefer_model_folder_type_to_prefix: false
