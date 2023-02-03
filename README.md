@@ -1034,6 +1034,7 @@ vars:
 | `intermediate_prefixes` | the list of acceptable prefixes for your intermediate models | int_ |
 | `marts_prefixes` | the list of acceptable prefixes for your marts models | fct_, dim_ |
 | `other_prefixes` | the list of acceptable prefixes for your other models | rpt_ |
+| `prefer_model_folder_type_to_prefix` | override to prefer the use of the folder name to the prefix when determining model type | false |
 
 The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md). If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`.
 
@@ -1047,6 +1048,8 @@ vars:
     util_folder_name: 'util'
     util_prefixes: ['util_']
 ```
+
+By default, we use the `<model_type>_prefixes` to determine the `model_type` where the prefix and folder name types differ, however you can set the `prefer_model_folder_type_to_prefix` to `true` to change this behaviour to take the type determined by the folder name in preference.
 </details>
 
 <details>
