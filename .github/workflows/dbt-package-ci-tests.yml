@@ -39,6 +39,9 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
       
+      # putting duckdb first since we install stable release, then pre-release dbt on subsequent adapters
+      - name: Test Duckdb
+        run: ./run_test_github.sh duckdb
       
       # docs on this postgres image are here: https://github.com/marketplace/actions/setup-postgresql-for-linux-macos-windows
       - name: Setup Postgres
@@ -46,9 +49,6 @@ jobs:
       
       - name: Test Postgres
         run: ./run_test_github.sh postgres
-
-      - name: Test Duckdb
-        run: ./run_test_github.sh duckdb
 
       - name: Test Redshift
         run: ./run_test_github.sh redshift
