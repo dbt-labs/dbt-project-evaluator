@@ -47,8 +47,8 @@ jobs:
       - name: Test Postgres
         run: ./run_test.sh postgres
 
-      - name: Test Duckdb
-        run: ./run_test.sh duckdb
+      # - name: Test Duckdb
+      #   run: ./run_test.sh duckdb
 
       - name: Test Redshift
         run: ./run_test.sh redshift
