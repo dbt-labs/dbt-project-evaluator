@@ -23,8 +23,8 @@ jobs:
       REDSHIFT_TEST_PASS: ${{ secrets.REDSHIFT_TEST_PASS }}
       REDSHIFT_TEST_DBNAME: ${{ secrets.REDSHIFT_TEST_DBNAME }}
       REDSHIFT_TEST_PORT: ${{ secrets.REDSHIFT_TEST_PORT }}
-      BIGQUERY_SERVICE_KEY_PATH: ${{ secrets.BIGQUERY_SERVICE_KEY_PATH }}
       BIGQUERY_TEST_DATABASE: ${{ secrets.BIGQUERY_TEST_DATABASE }}
+      BIGQUERY_SERVICE_ACCOUNT_JSON: ${{ secrets.BIGQUERY_SERVICE_ACCOUNT_JSON }}
       SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
       SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
       SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
@@ -52,6 +52,9 @@ jobs:
 
       - name: Test Redshift
         run: ./run_test_github.sh redshift
+
+      - name: setup BQ JSON 
+        run: echo $BIGQUERY_SERVICE_ACCOUNT_JSON > ./bigquery-service-key.json
 
       - name: Test Bigquery
         run: ./run_test_github.sh bigquery

@@ -32,7 +32,7 @@ integration_tests:
     bigquery:
       type: bigquery
       method: service-account
-      keyfile: "{{ env_var('BIGQUERY_SERVICE_KEY_PATH') }}"
+      keyfile: ./bigquery-service-key.json
       project: "{{ env_var('BIGQUERY_TEST_DATABASE') }}"
       schema: dbt_project_evaluator_integration_tests_bigquery
       threads: 10
