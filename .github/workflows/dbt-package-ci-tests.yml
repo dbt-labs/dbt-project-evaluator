@@ -45,22 +45,22 @@ jobs:
         uses: ikalnytskyi/action-setup-postgres@v4
       
       - name: Test Postgres
-        run: ./run_test.sh postgres
+        run: ./run_test_github.sh postgres
 
-      # - name: Test Duckdb
-      #   run: ./run_test.sh duckdb
+      - name: Test Duckdb
+        run: ./run_test_github.sh duckdb
 
       - name: Test Redshift
-        run: ./run_test.sh redshift
+        run: ./run_test_github.sh redshift
 
       - name: Test Bigquery
-        run: ./run_test.sh bigquery
+        run: ./run_test_github.sh bigquery
       
       - name: Test Snowflake
-        run: ./run_test.sh snowflake
+        run: ./run_test_github.sh snowflake
 
       - name: Test Databricks
-        run: ./run_test.sh databricks
+        run: ./run_test_github.sh databricks
 
 
   
