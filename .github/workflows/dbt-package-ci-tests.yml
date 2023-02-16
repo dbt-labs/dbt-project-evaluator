@@ -1,0 +1,66 @@
+name: "dbt Package CI tests"
+
+'on':
+  pull_request:
+    branches:
+    # - main
+    - github-actions-ci
+
+jobs:
+  dbt-package-ci-test:
+    name: Run CI tests 
+    runs-on: ubuntu-latest
+    
+    env:
+      DBT_PROFILES_DIR: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/.github
+      POSTGRES_TEST_HOST: ${{ secrets.POSTGRES_TEST_HOST }}
+      POSTGRES_TEST_USER: ${{ secrets.POSTGRES_TEST_USER }}
+      POSTGRES_TEST_PASS: ${{ secrets.POSTGRES_TEST_PASS }}
+      POSTGRES_TEST_PORT: ${{ secrets.POSTGRES_TEST_PORT }}
+      POSTGRES_TEST_DBNAME: ${{ secrets.POSTGRES_TEST_DBNAME }}
+      REDSHIFT_TEST_HOST: ${{ secrets.REDSHIFT_TEST_HOST }}
+      REDSHIFT_TEST_USER: ${{ secrets.REDSHIFT_TEST_USER }}
+      REDSHIFT_TEST_PASS: ${{ secrets.REDSHIFT_TEST_PASS }}
+      REDSHIFT_TEST_DBNAME: ${{ secrets.REDSHIFT_TEST_DBNAME }}
+      REDSHIFT_TEST_PORT: ${{ secrets.REDSHIFT_TEST_PORT }}
+      BIGQUERY_SERVICE_KEY_PATH: ${{ secrets.BIGQUERY_SERVICE_KEY_PATH }}
+      BIGQUERY_TEST_DATABASE: ${{ secrets.BIGQUERY_TEST_DATABASE }}
+      SNOWFLAKE_TEST_ACCOUNT: ${{ secrets.SNOWFLAKE_TEST_ACCOUNT }}
+      SNOWFLAKE_TEST_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
+      SNOWFLAKE_TEST_PASSWORD: ${{ secrets.SNOWFLAKE_TEST_PASSWORD }}
+      SNOWFLAKE_TEST_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
+      SNOWFLAKE_TEST_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
+      SNOWFLAKE_TEST_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+      DATABRICKS_TEST_HOST: ${{ secrets.DATABRICKS_TEST_HOST }}
+      DATABRICKS_TEST_HTTP_PATH: ${{ secrets.DATABRICKS_TEST_HTTP_PATH }}
+      DATABRICKS_TEST_ACCESS_TOKEN: ${{ secrets.DATABRICKS_TEST_ACCESS_TOKEN }}
+  
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      
+      
+      # docs on this postgres image are here: https://github.com/marketplace/actions/setup-postgresql-for-linux-macos-windows
+      - name: Setup Postgres
+        uses: ikalnytskyi/action-setup-postgres@v4
+      
+      - name: Test Postgres
+        run: ./run_test.sh postgres
+
+      - name: Test Duckdb
+        run: ./run_test.sh duckdb
+
+      - name: Test Redshift
+        run: ./run_test.sh redshift
+
+      - name: Test Bigquery
+        run: ./run_test.sh bigquery
+      
+      - name: Test Snowflake
+        run: ./run_test.sh snowflake
+
+      - name: Test Databricks
+        run: ./run_test.sh databricks
+
+
+  
