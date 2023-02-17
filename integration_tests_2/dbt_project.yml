@@ -36,5 +36,5 @@ models:
     +materialized: ephemeral
 
 vars:
-  generate_all_dag_paths: false
-  max_depth_dag: 5
+  max_depth_dag: 2
+  chained_views_threshold: 2

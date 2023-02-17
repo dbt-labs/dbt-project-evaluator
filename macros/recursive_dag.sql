@@ -101,10 +101,10 @@ all_relationships (
     inner join all_relationships
         on all_relationships.child_id = direct_relationships.direct_parent_id
 
-    {% if not var('generate_all_dag_paths') %}
+    {% if var('max_depth_dag') != 'infinite' and var('max_depth_dag') is integer %}
         {% if var('max_depth_dag') < 2 or var('max_depth_dag') < var('chained_views_threshold')%}
             {% do exceptions.raise_compiler_error(
-                'Variable max_depth_dag must be at least 2 and must be greater than chained_views_threshold.'
+                'Variable max_depth_dag must be at least 2 and must be greater or equal to than chained_views_threshold.'
                 ) %}
         {% else %}
         where distance <= {{ var('max_depth_dag')}}
@@ -119,7 +119,12 @@ all_relationships (
 {% macro bigquery__recursive_dag() %}
 
 -- as of Feb 2022 BigQuery doesn't support with recursive in the same way as other DWs
-{% set max_depth = var('max_depth_dag') %}
+{% set max_depth = var('max_depth_dag') if var('max_depth_dag') != 'infinite' and var('max_depth_dag') is integer else 9 %}
+{% if max_depth < 2 or max_depth < var('chained_views_threshold') %}
+    {% do exceptions.raise_compiler_error(
+        'Variable max_depth_dag must be at least 2 and must be greater or equal to than chained_views_threshold.'
+        ) %}
+{% endif %}
 
 with direct_relationships as (
     select  
