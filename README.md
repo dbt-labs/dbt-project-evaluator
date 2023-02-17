@@ -1071,7 +1071,7 @@ vars:
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `max_depth_dag` | limits the maximum length between nodes calculated in `int_all_dag_relationships` | 9 |
+| `max_depth_dag` | limits the maximum distance between nodes calculated in `int_all_dag_relationships` | 9 for bigquery and spark, `infinite` for other adatpters |
 | `generate_all_dag_paths` | boolean to limit recursive SQL for Postgres, Snowflake, Redshift, Duckdb  | see below |
 | `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
 
