@@ -1079,8 +1079,8 @@ __Note on max_depth_dag and generate_all_dag_paths__
 
 The default behavior for limiting the relationships calculated in the `int_all_dag_relationships` model differs depending on your adapter. 
 
-- For Bigquery & Spark/Databricks, `int_all_dag_relationships`, the maximum DAG path length is set by the `max_depth_dag` variable, which is defaulted to 9. This is because these adapters do not currently support recursive SQL. 
-- For all other adapters `int_all_dag_relationships` by default contains a row for every single path between two nodes in your dag. If you experience long runtimes for the `int_all_dag_relationships` model, you may consider limiting the length of your generated DAG paths. To do this, set `generate_all_dag_paths: false` and `max_depth_dag: {{ whatever limit you want to enforce }}` The value of `max_depth_dag` must be greater than 2 for all DAG tests to work, and greater than `chained_views_threshold` to ensure your performance tests to work.
+- For Bigquery & Spark/Databricks the maximum distance between two nodes in your DAG, calculated in `int_all_dag_relationships`, is set by the `max_depth_dag` variable, which is defaulted to 9. So by default, `int_all_dag_relationships` contains a row for every path less than or equal to 9 nodes in length between two nodes in your DAG. This is because these adapters do not currently support recursive SQL. 
+- For all other adapters `int_all_dag_relationships` by default contains a row for every single path between two nodes in your DAG. If you experience long runtimes for the `int_all_dag_relationships` model, you may consider limiting the length of your generated DAG paths. To do this, set `generate_all_dag_paths: false` and `max_depth_dag: {{ whatever limit you want to enforce }}`. The value of `max_depth_dag` must be greater than 2 for all DAG tests to work, and greater than `chained_views_threshold` to ensure your performance tests to work.
 
 ```yml
 # dbt_project.yml
@@ -1093,8 +1093,6 @@ vars:
     generate_all_dag_paths: false
     # set the maximum distance between nodes to 5 
     max_depth_dag: 5
-
-
 ```
 
 </details>
