@@ -38,8 +38,6 @@ models:
         +materialized: table
     staging:
       graph:
-        stg_nodes:
-          +materialized: table
         stg_node_relationships:
           +materialized: table
       variables:

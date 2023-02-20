@@ -5,7 +5,10 @@
     )
 }}
 
-{{ check_model_is_table(model) }}
+{% if execute %}
+    {{ check_model_is_table(model) }}
+{% endif %}
+
 /* Bigquery won't let us `where` without `from` so we use this workaround */
 with dummy_cte as (
     select 1 as foo
