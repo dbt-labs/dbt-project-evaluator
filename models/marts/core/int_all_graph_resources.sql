@@ -41,7 +41,14 @@ unioned_with_calc as (
         {{ get_dbtreplace_directory_pattern() }} as directory_path,
         regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name
     from unioned
-    where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
+    where 
+        coalesce(is_enabled, True) = True 
+        
+        {% if not var('include_package_models') %}
+        and package_name = '{{ project_name }}'
+        {% else %}
+        and package_name != 'dbt_project_evaluator'
+        {% endif %}
 ), 
 
 joined as (

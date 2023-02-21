@@ -61,6 +61,7 @@ vars:
 
   # -- DAG variables --
   models_fanout_threshold: 3
+  include_package_models: true
 
   # -- Naming conventions variables --
   # to add a new "model type", update the variable model_types 
