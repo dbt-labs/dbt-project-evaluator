@@ -1,8 +1,8 @@
-{%- macro get_sources() -%}
-    {{ return(adapter.dispatch('get_sources', 'dbt_project_evaluator')()) }}
+{%- macro get_source_values() -%}
+    {{ return(adapter.dispatch('get_source_values', 'dbt_project_evaluator')()) }}
 {%- endmacro -%}
 
-{%- macro default__get_sources() -%}
+{%- macro default__get_source_values() -%}
 
     {%- if execute -%}
     {%- set nodes_list = graph.sources.values() -%}
@@ -40,28 +40,6 @@
     {%- endif -%}
 
 
-    {{ return(
-        dbt_project_evaluator.select_from_values(
-            values = values,
-            columns = [
-              'unique_id',
-              'name',
-              'file_path',
-              'alias',
-              'resource_type',
-              'source_name',
-              ('is_source_described', 'boolean'),
-              ('is_described', 'boolean'),
-              ('is_enabled', 'boolean'),
-              'loaded_at_field',
-              'database',
-              'schema',
-              'package_name',
-              'loader',
-              'identifier',
-              'meta'
-            ]
-         )
-    ) }}
+    {{ return(values) }}
  
 {%- endmacro -%}

@@ -23,18 +23,18 @@ Currently, the following adapters are supported:
 ### Cloning via dbt Package Hub
   
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
-### Additional setup for Databricks/Spark
+### Additional setup for Databricks/Spark/DuckDB/Redshift
 
 In your `dbt_project.yml`, add the following config:
 ```yml
 # dbt_project.yml
 
 dispatch:
-  - macro_namespace: dbt_utils
-    search_order: ['dbt_project_evaluator', 'spark_utils', 'dbt_utils']
+  - macro_namespace: dbt
+    search_order: ['dbt_project_evaluator', 'dbt']
 ```
 
-This is required because the project currently provides limited support for arrays macros for Databricks/Spark which is not part of `spark_utils` yet.
+This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the [cross_db_shim directory](macros/cross_db_shim/). 
   
 ### How It Works
 
@@ -47,7 +47,7 @@ Once you've installed the package, all you have to do is run a `dbt build --sele
 
 Each test warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
 1. Locate the related documentation below
-2. Query the associated model to find the specific instances of the issue within your project
+2. Query the associated model to find the specific instances of the issue within your project or set up an [`on-run-end` hook](https://docs.getdbt.com/reference/project-configs/on-run-start-on-run-end) to display the rules violations in the dbt logs (see [displaying violations in the logs](#displaying-violations-in-the-logs))
 3. Either fix the issue(s) or [customize](#customization) the package to exclude them
 
 ----
@@ -605,7 +605,7 @@ As explained above, we recommend [at a minimum](https://www.getdbt.com/analytics
 a configured description.
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%.
-You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+You can set your own threshold by overriding the `documentation_coverage_target` variable. [See overriding variables section.](#overriding-variables)
 
 <details>
 <summary><b>Reason to Flag</b></summary>
@@ -973,8 +973,8 @@ Currently, this package uses different variables to adapt the models to your obj
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
-| `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
+| `test_coverage_target` | the minimum acceptable test coverage percentage | 100% |
+| `documentation_coverage_target` | the minimum acceptable documentation coverage percentage | 100% |
 | `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]] |
 
 **Usage notes for `primary_key_test_macros:`**
@@ -1056,14 +1056,17 @@ vars:
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
 | `chained_views_threshold` | threshold for unacceptable length of chain of views for `fct_chained_views_dependencies` | 4 |
+| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
 
 ```yml
 # dbt_project.yml
-# set your chained views threshold to 8 instead of 4
 
 vars:
   dbt_project_evaluator:
+    # set your chained views threshold to 8 instead of 4
     chained_views_threshold: 8
+    # update the number of records inserted from the graph from 10,000 to 500 to reduce query size
+    insert_batch_size: 500
 ```
 </details>
 
@@ -1121,9 +1124,27 @@ seeds:
 #### 3. Run the seed and the package
 
 We then run both the seed and the package by executing the following command:
-```
+
+```bash
 dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions
 ```
+
+### Displaying violations in the logs
+
+This package provides a macro that can be executed via an `on-run-end` hook to display the package results in the logs in addition to storing those in the Data Warehouse.
+
+To use it, you can add the following line in your `dbt_project.yml`:
+
+```yml
+on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
+```
+
+In the case that you are storing the tables with the package results in a schema or database different from the default ones from your profile, the following parameters are available for `print_dbt_project_evaluator_issues()`:
+
+- `schema_project_evaluator`: the schema where the tables are stored
+- `db_project_evaluator`: the database where the tables are stored
+
+# dbt_project.yml
 
 ----
 

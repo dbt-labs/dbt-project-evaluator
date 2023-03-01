@@ -1,8 +1,8 @@
-{%- macro get_relationships(node_type) -%}
-    {{ return(adapter.dispatch('get_relationships', 'dbt_project_evaluator')(node_type)) }}
+{%- macro get_relationship_values(node_type) -%}
+    {{ return(adapter.dispatch('get_relationship_values', 'dbt_project_evaluator')(node_type)) }}
 {%- endmacro -%}
 
-{%- macro default__get_relationships(node_type) -%}
+{%- macro default__get_relationship_values(node_type) -%}
 
     {%- if execute -%}
         {%- if node_type == 'nodes' %}
@@ -42,7 +42,7 @@
                         [
                             "cast('" ~ node.unique_id ~ "' as " ~ dbt.type_string() ~ ")",
                             "cast('" ~ parent ~ "' as " ~ dbt.type_string() ~ ")",
-                            "" ~ loop.last ~ ""
+                            "" ~ loop.last ~ "" if node.unique_id.split('.')[0] == 'test' else "FALSE"
                         ]
                     %}
                       
@@ -54,16 +54,7 @@
 
         {%- endfor -%}
     
-    {{ return(
-        dbt_project_evaluator.select_from_values(
-            values = values,
-            columns = [
-                'resource_id',
-                'direct_parent_id',
-                'is_primary_relationship'
-            ]
-         )
-    ) }}
+    {{ return(values) }}
 
     {%- endif -%}
   

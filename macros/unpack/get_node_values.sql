@@ -1,8 +1,8 @@
-{%- macro get_nodes() -%}
-    {{ return(adapter.dispatch('get_nodes', 'dbt_project_evaluator')()) }}
+{%- macro get_node_values() -%}
+    {{ return(adapter.dispatch('get_node_values', 'dbt_project_evaluator')()) }}
 {%- endmacro -%}
 
-{%- macro default__get_nodes() -%}
+{%- macro default__get_node_values() -%}
 
     {%- if execute -%}
     {%- set nodes_list = graph.nodes.values() -%}
@@ -42,29 +42,6 @@
     {%- endfor -%}
     {%- endif -%}
 
-    {{ return(
-        dbt_project_evaluator.select_from_values(
-            values = values,
-            columns = [
-              'unique_id',
-              'name',
-              'resource_type',
-              'file_path',
-              ('is_enabled', 'boolean'),
-              'materialized',
-              'on_schema_change',
-              'database',
-              'schema',
-              'package_name',
-              'alias',
-              ('is_described', 'boolean'),
-              'column_name',
-              'meta',
-              'hard_coded_references',
-              'macro_dependencies',
-              ('is_generic_test', 'boolean')
-            ]
-         )
-    ) }}
+    {{ return(values) }}
 
 {%- endmacro -%}
