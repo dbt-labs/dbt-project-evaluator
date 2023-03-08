@@ -604,7 +604,7 @@ As explained above, we recommend [at a minimum](https://www.getdbt.com/analytics
 a configured description.
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%.
-You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+You can set your own threshold by overriding the `documentation_coverage_target` variable. [See overriding variables section.](#overriding-variables)
 
 <details>
 <summary><b>Reason to Flag</b></summary>
@@ -972,8 +972,8 @@ Currently, this package uses different variables to adapt the models to your obj
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
-| `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
+| `test_coverage_target` | the minimum acceptable test coverage percentage | 100% |
+| `documentation_coverage_target` | the minimum acceptable documentation coverage percentage | 100% |
 | `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]] |
 
 **Usage notes for `primary_key_test_macros:`**
