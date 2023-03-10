@@ -38,3 +38,14 @@ seeds:
             - model_name
             - current_test_directory
             - change_test_directory_to
+  - name: test_fct_resource_yml_naming_conventions
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_resource_yml_naming_conventions
+          compare_model: ref('fct_resource_yml_naming_conventions')
+  - name: test_fct_resource_yml_files_with_multiple_resource_types
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_resource_yml_files_with_multiple_resource_types
+          compare_model: ref('fct_resource_yml_files_with_multiple_resource_types')
+          

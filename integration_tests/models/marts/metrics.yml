@@ -27,3 +27,7 @@ metrics:
     meta: 
       team: "Finance"
       refresh_rate: "Bob's weekly run"
+
+
+models: 
+  - name: fct_model_6

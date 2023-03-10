@@ -1,0 +1,15 @@
+resource_name,resource_type,resource_yml_file_path,resource_yml_file_name,has_leading_underscore,has_plural_resource_name,valid_filename_option_1,valid_filename_option_2
+new_customers,metric,"models/marts/metrics.yml",metrics.yml,FALSE,TRUE,_metrics.yml,_marts__metrics.yml
+int_model_4,model,"models/staging/staging.yml",staging.yml,FALSE,FALSE,_models.yml,_staging__models.yml
+report_1,model,"models/reports/reports.yml",reports.yml,FALSE,FALSE,_models.yml,_reports__models.yml
+report_2,model,"models/reports/reports.yml",reports.yml,FALSE,FALSE,_models.yml,_reports__models.yml
+stg_model_1,model,"models/staging/source_1/schema.yml",schema.yml,FALSE,FALSE,_models.yml,_source_1__models.yml
+stg_model_2,model,"models/staging/source_1/schema.yml",schema.yml,FALSE,FALSE,_models.yml,_source_1__models.yml
+stg_model_3,model,"models/staging/source_1/schema.yml",schema.yml,FALSE,FALSE,_models.yml,_source_1__models.yml
+stg_model_4,model,"models/staging/staging.yml",staging.yml,FALSE,FALSE,_models.yml,_staging__models.yml
+fct_model_6,model,"models/marts/metrics.yml",metrics.yml,FALSE,FALSE,_models.yml,_marts__models.yml
+source_1.table_1,source,"models/staging/source_1/source.yml",source.yml,FALSE,FALSE,_sources.yml,_source_1__sources.yml
+source_1.table_2,source,"models/staging/source_1/source.yml",source.yml,FALSE,FALSE,_sources.yml,_source_1__sources.yml
+source_1.table_4,source,"models/staging/source_1/source.yml",source.yml,FALSE,FALSE,_sources.yml,_source_1__sources.yml
+source_1.table_5,source,"models/staging/source_1/source.yml",source.yml,FALSE,FALSE,_sources.yml,_source_1__sources.yml
+source_2.table_3,source,"models/staging/source_1/source.yml",source.yml,FALSE,FALSE,_sources.yml,_source_1__sources.yml
