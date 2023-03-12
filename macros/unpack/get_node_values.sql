@@ -30,6 +30,7 @@
                 wrap_string_with_quotes(node.meta | tojson),
                 wrap_string_with_quotes(dbt.escape_single_quotes(hard_coded_references)),
                 wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
+                wrap_string_with_quotes(node.patch_path),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)"
             ]
         %}

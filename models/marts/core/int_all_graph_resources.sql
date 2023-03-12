@@ -39,7 +39,10 @@ unioned_with_calc as (
             else {{ dbt.split_part('name', "'_'", 1) }}||'_' 
         end as prefix,
         {{ get_dbtreplace_directory_pattern() }} as directory_path,
-        regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name
+        regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name,
+        {{ dbt.split_part("patch_path","'://'", 2) }} as resource_yml_file_path,
+        regexp_replace(patch_path,'.*{{ get_regexp_directory_pattern() }}','') as resource_yml_file_name
+        
     from unioned
     where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
 ), 
@@ -55,6 +58,19 @@ joined as (
         unioned_with_calc.directory_path,
         unioned_with_calc.is_generic_test,
         unioned_with_calc.file_name,
+        unioned_with_calc.patch_path,
+        -- use file_name when it's a yml only resource
+        case 
+            when unioned_with_calc.resource_type in ('model', 'seed', 'snapshot')
+                then unioned_with_calc.resource_yml_file_path
+            else unioned_with_calc.file_path
+        end as resource_yml_file_path,
+        -- use file_name when it's a yml only resource
+        case 
+            when unioned_with_calc.resource_type in ('model', 'seed', 'snapshot')
+                then unioned_with_calc.resource_yml_file_name
+            else unioned_with_calc.file_name
+        end as resource_yml_file_name,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
             else naming_convention_prefixes.model_type 

@@ -28,6 +28,7 @@ select
     cast(null as {{ dbt.type_string() }}) as meta,
     cast(null as {{ dbt.type_string() }}) as hard_coded_references,
     cast(null as {{ dbt.type_string() }}) as macro_dependencies,
+    cast(null as {{ dbt.type_string() }}) as patch_path,
     cast(True as boolean) as is_generic_test
 
 from dummy_cte
