@@ -7,7 +7,9 @@
         {%- do test_macro_list.append(test) -%}
       {%- endfor %}
 {%- endfor -%}
- 
+
+{%- set quoted_directory_pattern = wrap_string_with_quotes(get_directory_pattern()) %}
+
 with unioned as (
 
     {{ dbt_utils.union_relations([
@@ -61,10 +63,10 @@ joined as (
         end as model_type_prefix,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-            when {{ dbt.position(dbt.concat(["'" + get_directory_pattern() + "'",'naming_convention_folders.folder_name_value',"'" + get_directory_pattern() + "'"]),'unioned_with_calc.directory_path') }} = 0 then null
+            when {{ dbt.position(dbt.concat([quoted_directory_pattern, 'naming_convention_folders.folder_name_value', quoted_directory_pattern]),'unioned_with_calc.directory_path') }} = 0 then null
             else naming_convention_folders.model_type 
         end as model_type_folder,
-        {{ dbt.position(dbt.concat(["'" + get_directory_pattern() + "'",'naming_convention_folders.folder_name_value',"'" + get_directory_pattern() + "'"]),'unioned_with_calc.directory_path') }} as position_folder,  
+        {{ dbt.position(dbt.concat([quoted_directory_pattern, 'naming_convention_folders.folder_name_value', quoted_directory_pattern]),'unioned_with_calc.directory_path') }} as position_folder,  
         nullif(unioned_with_calc.column_name, '') as column_name,
         {% for test in test_macro_list %}
         unioned_with_calc.macro_dependencies like '%macro.{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[1] }},  
