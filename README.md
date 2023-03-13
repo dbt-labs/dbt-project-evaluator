@@ -880,6 +880,127 @@ Each subdirectory in `models/` should contain one .yml file that includes the te
 Move flagged tests from the yml file under `current_test_directory` to the yml file under `change_test_directory_to` (create a new yml file if one does not exist).
 </details>
 
+
+#### Resource YML Naming Conventions
+
+`fct_resource_yml_naming_conventions` ([source](models/marts/structure/fct_resource_yml_naming_conventions.sql)) shows all cases where resource yml files do not match the recommended naming conventions for these files. These files should:
+ 
+ - Start with a leading underscore `_` to sort them alphabetically first in their subdirectory
+ - Be named for the resource type it contains. For example, a yml file that has model schema entries should be named `_models.yml` 
+   - *Optionally, use the name of the parent subdirectory to disambiguate these files on large projects i.e.* `models/marts/finance/_finance__models.yml`
+ - Be plural! `_models.yml`, not `_model.yml`
+
+Acceptable names would follow either: 
+
+- `_[resource_type]s.yml`
+- `_[directory name]__[resource_type]s.yml`
+
+<details>
+<summary><b>Example</b></summary>
+
+Both yml files have model configurations, but have the same generic name, making it impossible to know what the files do without inspecting their contents. 
+
+```
+├── dbt_project.yml
+└── models
+    └── marts
+        ├── dim_customers.sql
+        ├── schema.yml
+    └── staging
+        ├── schema.yml
+```
+
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+Each subdirectory in your project should contain one .yml file per resource type in that directory that includes the tests, documentation, and configuration for all corresponding resources.
+
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+Rename your `yml` files to be more clear about their purpose! After remediation, the above `yml` file might look like this:
+
+```
+├── dbt_project.yml
+└── models
+    └── marts
+        ├── _marts__models.yml
+        ├── dim_customers.sql
+    └── staging
+        ├── _models_.yml
+```
+
+</details>
+
+#### Multiple Resource Types in Resource YML
+
+`fct_resource_yml_files_with_multiple_resource_types` ([source](models/marts/structure/fct_resource_yml_files_with_multiple_resource_types.sql)) shows all cases where a resource yml file contains more than one resource type. Each resource yml file should only contain one resource type for easier discovery. 
+
+<details>
+<summary><b>Example</b></summary>
+
+Consider this project:
+
+```
+├── dbt_project.yml
+└── models
+    └── staging
+        ├── schema.yml
+        ├── stg_model_1.sql
+```
+
+The contents of `schema.yml` contain both a source definition and a model entry:
+
+```yml
+
+version: 2
+
+source:
+  - name: my_source 
+    database: raw
+    schema: data
+    tables:
+      - table_1
+
+
+models: 
+  - name: stg_model_1
+    description: stage data from raw.data.table_1
+
+```
+
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+Each subdirectory in your project should contain one .yml file per resource type in that directory that includes the tests, documentation, and configuration for all corresponding resources.
+
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+Split that original yml into two appropriately named files to disambiguate those entries and make them more discoverable. 
+
+```
+```
+
+├── dbt_project.yml
+└── models
+    └── staging
+        ├── _sources.yml
+        ├── _models.yml
+        ├── stg_model_1.sql
+
+```
+
+</details>
+
 ### Performance
 #### Chained View Dependencies
 
