@@ -77,6 +77,8 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
   - [Model Directories](#model-directories)
   - [Source Directories](#model-directories)
   - [Test Directories](#test-directories)
+  - [Resource YML Naming Conventions](#resource-yml-naming-conventions)
+  - [Multiple Resource Types in Resource YML](#multiple-resource-types-in-resource-yml)
 - __[Performance](#performance)__
   - [Chained View Dependencies](#chained-view-dependencies)
   - [Exposure Parents Materializations](#exposure-parents-materializations)
