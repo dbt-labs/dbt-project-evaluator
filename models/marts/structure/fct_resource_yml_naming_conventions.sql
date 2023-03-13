@@ -35,4 +35,6 @@ check_naming_convention as (
 )
 
 select * from check_naming_convention
-where not(has_leading_underscore and has_plural_resource_name)
+where 
+    resource_yml_file_name != valid_filename_option_1
+    and resource_yml_file_name != valid_filename_option_2

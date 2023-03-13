@@ -59,15 +59,21 @@ joined as (
         unioned_with_calc.is_generic_test,
         unioned_with_calc.file_name,
         unioned_with_calc.patch_path,
-        -- use file_name when it's a yml only resource
+        -- use file_path when it's a yml only resource
         case 
-            when unioned_with_calc.resource_type in ('model', 'seed', 'snapshot')
+            when 
+                unioned_with_calc.resource_type in ('model', 'seed', 'snapshot') 
+                -- handle custom tests
+                or (unioned_with_calc.resource_type = 'test' and {{ dbt.position("'.sql'", "unioned_with_calc.file_path") }} > 0)
                 then unioned_with_calc.resource_yml_file_path
             else unioned_with_calc.file_path
         end as resource_yml_file_path,
         -- use file_name when it's a yml only resource
         case 
-            when unioned_with_calc.resource_type in ('model', 'seed', 'snapshot')
+            when 
+                unioned_with_calc.resource_type in ('model', 'seed', 'snapshot') 
+                -- handle custom tests
+                or (unioned_with_calc.resource_type = 'test' and {{ dbt.position("'.sql'", "unioned_with_calc.file_path") }} > 0)
                 then unioned_with_calc.resource_yml_file_name
             else unioned_with_calc.file_name
         end as resource_yml_file_name,
