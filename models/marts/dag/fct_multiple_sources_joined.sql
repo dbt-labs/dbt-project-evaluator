@@ -16,7 +16,7 @@ multiple_sources_joined as (
         {{ dbt.listagg(
             measure='parent', 
             delimiter_text="', '", 
-            order_by_clause='order by parent' if target.type in ['snowflake','redshift']) 
+            order_by_clause='order by parent' if target.type in ['snowflake','redshift','duckdb']) 
         }} as source_parents
     from direct_source_relationships
     group by 1
