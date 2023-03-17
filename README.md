@@ -1141,10 +1141,7 @@ To use it, you can add the following line in your `dbt_project.yml`:
 on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
 ```
 
-In the case that you are storing the tables with the package results in a schema or database different from the default ones from your profile, the following parameters are available for `print_dbt_project_evaluator_issues()`:
-
-- `schema_project_evaluator`: the schema where the tables are stored
-- `db_project_evaluator`: the database where the tables are stored
+The macro accepts a parameter to pick between 2 types of formatting, `format='table'` (default) or `format='csv'`
 
 # dbt_project.yml
 
