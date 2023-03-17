@@ -1,27 +1,4 @@
-{% macro _return_list_header_rows(query) %}
-
-    {%- call statement('get_query_results', fetch_result=True,auto_begin=false) -%}
-
-        {{ query }}
-
-    {%- endcall -%}
-
-    {% set sql_results=[] %}
-
-    {%- if execute -%}
-        {% set sql_results_table = load_result('get_query_results').table %}
-        {% do sql_results.append(sql_results_table.column_names) %}
-        {% for row_data in sql_results_table.rows %}
-            {% do sql_results.append(row_data.values()) %}
-        {% endfor %}
-    {%- endif -%}
-
-    {{ return(sql_results) }}
-
-{% endmacro %}
-
-
-{% macro print_dbt_project_evaluator_issues(schema_project_evaluator=None, db_project_evaluator=None) %}
+{% macro print_dbt_project_evaluator_issues(format='table') %}
 
   {%- if flags.WHICH in ["build","test"] -%}
     {{ print("\n### List of issues raised by dbt_project_evaluator ###") }}
@@ -32,18 +9,27 @@
         
         {{ print("\n-- " ~ result.node.alias ~ " --") }}
 
-        {% set model_checked = result.node.depends_on.nodes[0].split('.')[-1] %}
-        {% set db_schema = database_package ~ "." ~  schema_package if database_package else schema_package %}
-        {% set db_schema_model = db_schema ~ "." ~  model_checked if db_schema else model_checked %}
+        {% set unique_id_model_checked = result.node.depends_on.nodes[0] %}
+        {% set name_model_checked = unique_id_model_checked.split('.')[-1] %}
+
+        {% set model_details = graph["nodes"][unique_id_model_checked] %}
+        {% set model_schema = model_details.schema %}
+        {% set model_database = model_details.database %}
+        {% set db_schema = model_database ~ "." ~ model_schema if model_database else model_schema %}
 
         {% set sql_statement %}
-        select * from {{ db_schema_model }}
+        select * from {{db_schema}}.{{name_model_checked}}
         {% endset %}
 
-        {%- set failures = dbt_project_evaluator._return_list_header_rows(sql_statement) -%}
-        {% for row in failures %}
-          {{ print(row | join(", ")) }}
-        {% endfor %}
+        {% set query_results = run_query(sql_statement) %}
+        {% if format == 'table' %}
+          {{ print(query_results.print_table(max_column_width=80, max_rows=1000) or "") }}
+        {% elif format == 'csv' %}  
+          {{ print(query_results.print_csv() or "") }}
+        {% else %}
+            {%- do exceptions.raise_compiler_error("format can only be 'table' or 'csv'") -%}
+        {% endif %}
+
 
       {% endif %}
 
