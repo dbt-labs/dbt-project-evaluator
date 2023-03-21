@@ -5,6 +5,10 @@ models:
     description: "This table shows each parent/child relationship where a model has a reference to both a model and a source."
     tests:
       - is_empty
+  - name: fct_duplicate_sources
+    descritption: "This table shows each source database location with more than one node in your dbt project."
+    tests:
+      - is_empty
   - name: fct_marts_or_intermediate_dependent_on_source
     description: "This table shows each parent/child relationship where models in the marts and/or intermediate layer are dependent on source(s)."
     tests:
