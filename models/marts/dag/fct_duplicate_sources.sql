@@ -1,7 +1,11 @@
 with sources as (
     select
         resource_name,
-        {{ dbt.concat(["database", "'.'", "schema", "'.'", "identifier"]) }} as source_db_location 
+        case 
+            -- if you're using databricks but not the unity catalog, database will be null
+            when database is NULL then {{ dbt.concat(["schema", "'.'", "identifier"]) }} 
+            else {{ dbt.concat(["database", "'.'", "schema", "'.'", "identifier"]) }} 
+        end as source_db_location 
     from {{ ref('int_all_graph_resources') }}
     where resource_type = 'source'
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
