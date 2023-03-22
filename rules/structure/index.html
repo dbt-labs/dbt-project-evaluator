@@ -617,7 +617,7 @@
 
 <h1 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">#</a></h1>
 <h2 id="model-naming-conventions">Model Naming Conventions<a class="headerlink" href="#model-naming-conventions" title="Permanent link">#</a></h2>
-<p><code>fct_model_naming_conventions</code> (<a href="models/marts/structure/fct_model_naming_conventions.sql">source</a>) shows all cases where a model does NOT have the appropriate prefix.</p>
+<p><code>fct_model_naming_conventions</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_model_naming_conventions.sql">source</a>) shows all cases where a model does NOT have the appropriate prefix.</p>
 <p><strong>Example</strong></p>
 <p>Consider <code>model_8</code> which is nested in the <code>marts</code> subdirectory:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>├──<span class="w"> </span>dbt_project.yml
@@ -658,7 +658,7 @@ the model type in the data warehouse, we recommend appropriately prefixing your 
 <p><strong>How to Remediate</strong></p>
 <p>For each model flagged, ensure the model type is defined and the model name is prefixed appropriately.</p>
 <h2 id="model-directories">Model Directories<a class="headerlink" href="#model-directories" title="Permanent link">#</a></h2>
-<p><code>fct_model_directories</code> (<a href="models/marts/structure/fct_model_directories.sql">source</a>) shows all cases where a model is NOT in the appropriate subdirectory:</p>
+<p><code>fct_model_directories</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_model_directories.sql">source</a>) shows all cases where a model is NOT in the appropriate subdirectory:</p>
 <ul>
 <li>For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.</li>
 <li>For non-staging models: The files should be nested closest to the folder name that matches their model type.  </li>
@@ -736,7 +736,7 @@ the model type in the data warehouse, we recommend appropriately prefixing your 
 <p><strong>How to Remediate</strong></p>
 <p>For each resource flagged, move the file from the <code>current_file_path</code> to <code>change_file_path_to</code>.</p>
 <h2 id="source-directories">Source Directories<a class="headerlink" href="#source-directories" title="Permanent link">#</a></h2>
-<p><code>fct_source_directories</code> (<a href="models/marts/structure/fct_source_directories.sql">source</a>) shows all cases where a source definition is NOT in the appropriate subdirectory:</p>
+<p><code>fct_source_directories</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_source_directories.sql">source</a>) shows all cases where a source definition is NOT in the appropriate subdirectory:</p>
 <p><strong>Example</strong></p>
 <p>Consider <code>source_2.table_3</code> which is a <code>source_2</code> source but it had been defined inappropriately in a <code>source.yml</code> file nested in the subdirectory <code>source_1</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>├──<span class="w"> </span>dbt_project.yml
@@ -774,7 +774,7 @@ the model type in the data warehouse, we recommend appropriately prefixing your 
 <p><strong>How to Remediate</strong></p>
 <p>For each source flagged, move the file from the <code>current_file_path</code> to <code>change_file_path_to</code>.</p>
 <h2 id="test-directories">Test Directories<a class="headerlink" href="#test-directories" title="Permanent link">#</a></h2>
-<p><code>fct_test_directories</code> (<a href="models/marts/structure/fct_test_directories.sql">source</a>) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.</p>
+<p><code>fct_test_directories</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_test_directories.sql">source</a>) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.</p>
 <p><strong>Example</strong></p>
 <p><code>int_model_4</code> is located within <code>marts/</code>. However, tests for <code>int_model_4</code> are configured in <code>staging/staging.yml</code>:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>├──<span class="w"> </span>dbt_project.yml

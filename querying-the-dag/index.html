@@ -614,7 +614,7 @@
 
 
 <h1 id="querying-the-dag-with-sql">Querying the DAG with SQL<a class="headerlink" href="#querying-the-dag-with-sql" title="Permanent link">#</a></h1>
-<p>The model <code>int_all_dag_relationships</code> (<a href="models/marts/core/int_all_dag_relationships.sql">source</a>), created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.</p>
+<p>The model <code>int_all_dag_relationships</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core/int_all_dag_relationships.sql">source</a>), created with the package, lists all the dbt nodes (models, exposures, sources, metrics, seeds, snapshots) along with all their dependencies (including indirect ones) and the path between them.</p>
 <p>Building additional models and snapshots on top of this model could allow:</p>
 <h2 id="creating-a-dashboard-that-provides-info-on-your-project">Creating a dashboard that provides info on your project<a class="headerlink" href="#creating-a-dashboard-that-provides-info-on-your-project" title="Permanent link">#</a></h2>
 <ul>

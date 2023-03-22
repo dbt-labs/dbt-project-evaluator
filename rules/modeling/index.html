@@ -734,7 +734,7 @@ across all the models that will consume the source data.</p>
 <p><img width="500" alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png"></p>
 <hr />
 <h2 id="downstream-models-dependent-on-source">Downstream Models Dependent on Source<a class="headerlink" href="#downstream-models-dependent-on-source" title="Permanent link">#</a></h2>
-<p><code>fct_marts_or_intermediate_dependent_on_source</code> (<a href="models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql">source</a>) shows each downstream model (<code>marts</code> or <code>intermediate</code>)
+<p><code>fct_marts_or_intermediate_dependent_on_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql">source</a>) shows each downstream model (<code>marts</code> or <code>intermediate</code>)
 that depends directly on a source node.</p>
 <p><strong>Example</strong></p>
 <p><code>fct_model_9</code>, a marts model, builds from <code>source_1.table_5</code> a source.</p>
@@ -752,7 +752,7 @@ and your downstream data artifacts.</p>
 <p><img alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png" width="700" /></p>
 <hr />
 <h2 id="hard-coded-references">Hard Coded References<a class="headerlink" href="#hard-coded-references" title="Permanent link">#</a></h2>
-<p><code>fct_hard_coded_references</code> (<a href="models/marts/dag/fct_hard_coded_references.sql">source</a>) shows each instance where a model contains hard coded reference(s).</p>
+<p><code>fct_hard_coded_references</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_hard_coded_references.sql">source</a>) shows each instance where a model contains hard coded reference(s).</p>
 <p><strong>Example</strong></p>
 <p><code>fct_orders</code> uses hard coded direct relation references (<code>my_db.my_schema.orders</code> and <code>my_schema.customers</code>).</p>
 <div class="language-sql highlight"><span class="filename">fct_orders.sql</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">with</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
@@ -769,7 +769,7 @@ and your downstream data artifacts.</p>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="n">orders</span><span class="p">.</span><span class="n">customer_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">customers</span><span class="p">.</span><span class="n">id</span>
 </span></code></pre></div>
 <p><strong>Reason to Flag</strong></p>
-<p>Always use the <code>ref</code> function when selecting from another model and the <code>source</code> function when selecting from raw data, rather than using the direct relation reference (e.g. <code>my_schema.my_table</code>). Direct relation references are determined via regex mapping <a href="macros/find_all_hard_coded_references.sql">here</a>.</p>
+<p>Always use the <code>ref</code> function when selecting from another model and the <code>source</code> function when selecting from raw data, rather than using the direct relation reference (e.g. <code>my_schema.my_table</code>). Direct relation references are determined via regex mapping <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/find_all_hard_coded_references.sql">here</a>.</p>
 <p>The <code>ref</code> and <code>source</code> functions are part of what makes dbt so powerful! Using these functions allows dbt to infer dependencies (and check that you haven't created any circular dependencies), properly generate your DAG, and ensure that models are built in the correct order. This also ensures that your current model selects from upstream tables and views in the same environment that you're working in.</p>
 <p><strong>How to Remediate</strong></p>
 <p>For each hard coded reference:</p>
@@ -793,7 +793,7 @@ and your downstream data artifacts.</p>
 </span></code></pre></div>
 <hr />
 <h2 id="model-fanout">Model Fanout<a class="headerlink" href="#model-fanout" title="Permanent link">#</a></h2>
-<p><code>fct_model_fanout</code> (<a href="models/marts/dag/fct_model_fanout.sql">source</a>) shows all parents with more than 3 direct leaf children.
+<p><code>fct_model_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_model_fanout.sql">source</a>) shows all parents with more than 3 direct leaf children.
 You can set your own threshold for model fanout by overriding the <code>models_fanout_threshold</code> variable. <a href="#overriding-variables">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
 <p><code>fct_model</code> has three direct leaf children.</p>
@@ -820,7 +820,7 @@ TODO: edit this line in 6 months after more progress is made on the metrics serv
 predefine every query or quandary your team might have. So decide as a team where that line is and maintain it.</p>
 <hr />
 <h2 id="multiple-sources-joined">Multiple Sources Joined<a class="headerlink" href="#multiple-sources-joined" title="Permanent link">#</a></h2>
-<p><code>fct_multiple_sources_joined</code> (<a href="models/marts/dag/fct_multiple_sources_joined.sql">source</a>) shows each instance where a model references more than one source.</p>
+<p><code>fct_multiple_sources_joined</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_multiple_sources_joined.sql">source</a>) shows each instance where a model references more than one source.</p>
 <p><strong>Example</strong></p>
 <p><code>model_1</code> references two source tables.</p>
 <p><img width="500" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"></p>
@@ -854,7 +854,7 @@ set of transformations.</p>
 <p><img width="500" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png"></p>
 <hr />
 <h2 id="rejoining-of-upstream-concepts">Rejoining of Upstream Concepts<a class="headerlink" href="#rejoining-of-upstream-concepts" title="Permanent link">#</a></h2>
-<p><code>fct_rejoining_of_upstream_concepts</code> (<a href="models/marts/dag/fct_rejoining_of_upstream_concepts.sql">source</a>) contains all cases where one of the parent's direct children
+<p><code>fct_rejoining_of_upstream_concepts</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_rejoining_of_upstream_concepts.sql">source</a>) contains all cases where one of the parent's direct children
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
 where the model "in between" the parent and child has NO other downstream dependencies.</p>
 <p><strong>Example</strong></p>
@@ -876,14 +876,14 @@ simplify the DAG, potentially at the expense of more rows of SQL within the mode
 as an argument input. If the shape of the data in the output of <code>stg_model_1</code> is not the same as what you
 need for the input to the function within <code>int_model_5</code>, then you will indeed need <code>int_model_4</code> to create
 that relation, in which case, leave it.</p>
-<p>To exclude specific cases, check out the instructions in <a href="#configuring-exceptions-to-the-rules">Configuring exceptions to the rules</a>.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from <code>int_model_4</code> into a CTE within <code>int_model_5</code>, and swap all <code>{{ ref('int_model_4') }}</code> references to the new CTE(s).</p>
 <p>Post-refactor, your DAG should look like this:</p>
 <p><img width="500" alt="A refactored DAG removing the 'loop', by folding <code>int_model_4</code> into <code>int_model_5</code>." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png"></p>
 <hr />
 <h2 id="root-models">Root Models<a class="headerlink" href="#root-models" title="Permanent link">#</a></h2>
-<p><code>fct_root_models</code> (<a href="models/marts/dag/fct_root_models.sql">source</a>) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.</p>
+<p><code>fct_root_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_root_models.sql">source</a>) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.</p>
 <p><strong>Example</strong></p>
 <p><code>model_4</code> has no direct parents</p>
 <p><img width="500" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png"></p>
@@ -891,12 +891,12 @@ that relation, in which case, leave it.</p>
 <p>This likely means that the model (<code>model_4</code>  below) contains raw table references, either to a raw data source, or another model in the project without using the <code>{{ source() }}</code> or <code>{{ ref() }}</code> functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies.</p>
 <p><strong>Exceptions</strong></p>
 <p>This behavior may be observed in the case of a manually defined reference table that does not have any dependencies. A good example of this is a <code>dim_calendar</code> table that is generated by the <code>{{ dbt_utils.date_spine() }}</code> macro — this SQL logic is completely self contained, and does not require any external data sources to execute.</p>
-<p>To exclude specific cases, check out the instructions in <a href="#configuring-exceptions-to-the-rules">Configuring exceptions to the rules</a>.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Start by mapping any table references in the <code>FROM</code> clause of the model definition to the models or raw tables that they draw from, and replace those references with the <code>{{ ref() }}</code> if the dependency is another dbt model, or the <code>{{ source() }}</code> function if the table is a raw data source (this may require the declaration of a new source table). Then, visualize this model in the DAG, and refactor as appropriate according to best practices.</p>
 <hr />
 <h2 id="source-fanout">Source Fanout<a class="headerlink" href="#source-fanout" title="Permanent link">#</a></h2>
-<p><code>fct_source_fanout</code> (<a href="models/marts/dag/fct_source_fanout.sql">source</a>) shows each instance where a source is the direct parent of multiple resources in the DAG.</p>
+<p><code>fct_source_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_source_fanout.sql">source</a>) shows each instance where a source is the direct parent of multiple resources in the DAG.</p>
 <p><strong>Example</strong></p>
 <p><code>source.table_1</code> has more than one direct child model.</p>
 <p><img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png"></p>
@@ -905,14 +905,14 @@ that relation, in which case, leave it.</p>
 <p><strong>Exceptions</strong></p>
 <p>NoSQL databases or heavily nested data sources often have so much info json packed into a table
 that you need to break one raw data source into multiple base models.</p>
-<p>To exclude specific cases, check out the instructions in <a href="#configuring-exceptions-to-the-rules">Configuring exceptions to the rules</a>.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Create a staging model which references the source and cleans the raw data (e.g. renaming, recasting). Any models referencing the source directly should be refactored to point towards the staging model instead.</p>
 <p>After refactoring the above example, the DAG would look something like this:
 <img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png"></p>
 <hr />
 <h2 id="staging-models-dependent-on-downstream-models">Staging Models Dependent on Downstream Models<a class="headerlink" href="#staging-models-dependent-on-downstream-models" title="Permanent link">#</a></h2>
-<p><code>fct_staging_dependent_on_marts_or_intermediate</code> (<a href="models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql">source</a>) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.</p>
+<p><code>fct_staging_dependent_on_marts_or_intermediate</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql">source</a>) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_5</code>, a staging model, builds from <code>fct_model_9</code> a marts model.</p>
 <p><img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png"></p>
@@ -926,7 +926,7 @@ by pointing the staging model to the appropriate <code>{{ source() }}</code>.</p
 <p>After updating the model to use the appropriate <code>{{ source() }}</code> function, your graph should look like this:</p>
 <p><img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png"></p>
 <h2 id="staging-models-dependent-on-other-staging-models">Staging Models Dependent on Other Staging Models<a class="headerlink" href="#staging-models-dependent-on-other-staging-models" title="Permanent link">#</a></h2>
-<p><code>fct_staging_dependent_on_staging</code> (<a href="models/marts/dag/fct_staging_dependent_on_staging.sql">source</a>) shows each parent/child relationship where models in the staging layer are
+<p><code>fct_staging_dependent_on_staging</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_staging.sql">source</a>) shows each parent/child relationship where models in the staging layer are
 dependent on each other.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_2</code> is a parent of <code>stg_model_4</code>.</p>
@@ -938,7 +938,7 @@ dependent on each other.</p>
 <p>In our example, we might realize that <code>stg_model_4</code> is <em>actually</em> an intermediate model. We should move this file to the appropriate intermediate directory and update the file name to <code>int_model_4</code>.</p>
 <hr />
 <h2 id="unused-sources">Unused Sources<a class="headerlink" href="#unused-sources" title="Permanent link">#</a></h2>
-<p><code>fct_unused_sources</code> (<a href="models/marts/dag/fct_unused_sources.sql">source</a>) shows each source with 0 children.</p>
+<p><code>fct_unused_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_unused_sources.sql">source</a>) shows each source with 0 children.</p>
 <p><strong>Example</strong></p>
 <p><code>source.table_4</code> isn't being referenced.</p>
 <p><img width="500" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png"></p>

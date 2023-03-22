@@ -659,7 +659,7 @@
 </tbody>
 </table>
 <p><strong>Usage notes for <code>primary_key_test_macros:</code></strong></p>
-<p>The <code>primary_key_test_macros</code> variable determines how the <code>fct_missing_primary_key_tests</code> (<a href="models/marts/tests/fct_missing_primary_key_tests.sql">source</a>) model evaluates whether the models in your project are properly tested for their grain. This variable is a list and each entry <strong>must be a list of test names in <code>project_name.test_macro_name</code> format</strong>.</p>
+<p>The <code>primary_key_test_macros</code> variable determines how the <code>fct_missing_primary_key_tests</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_missing_primary_key_tests.sql">source</a>) model evaluates whether the models in your project are properly tested for their grain. This variable is a list and each entry <strong>must be a list of test names in <code>project_name.test_macro_name</code> format</strong>.</p>
 <p>For each entry in the parent list, the logic in <code>int_model_test_summary</code> will evaluate whether each model has all of the tests in that entry applied. If a model meets the criteria of any of the entries in the parent list, it will be considered a pass. The default behavior for this package will check for whether each model has either:</p>
 <ol>
 <li><strong>Both</strong> the <code>not_null</code> and <code>unique</code> tests applied to a single column OR</li>

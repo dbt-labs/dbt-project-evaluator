@@ -589,7 +589,7 @@
 
 <h1 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">#</a></h1>
 <h2 id="missing-primary-key-tests">Missing Primary Key Tests<a class="headerlink" href="#missing-primary-key-tests" title="Permanent link">#</a></h2>
-<p><code>fct_missing_primary_key_tests</code> (<a href="models/marts/tests/fct_missing_primary_key_tests.sql">source</a>) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either</p>
+<p><code>fct_missing_primary_key_tests</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_missing_primary_key_tests.sql">source</a>) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either</p>
 <ol>
 <li>a <code>not_null</code> test and a <code>unique</code> test applied to a single column OR</li>
 <li>a <code>dbt_utils.unique_combination_of_columns</code> test applied to a set of columns</li>
@@ -603,7 +603,7 @@
 in the <code>tests</code> directory of you project.</p>
 <hr />
 <h2 id="test-coverage">Test Coverage<a class="headerlink" href="#test-coverage" title="Permanent link">#</a></h2>
-<p><code>fct_test_coverage</code> (<a href="models/marts/tests/fct_test_coverage.sql">source</a>) contains metrics pertaining to project-wide test coverage.
+<p><code>fct_test_coverage</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_test_coverage.sql">source</a>) contains metrics pertaining to project-wide test coverage.
 Specifically, this models measures:</p>
 <ol>
 <li><code>test_coverage_pct</code>: the percentage of your models that have minimum 1 test applied.</li>

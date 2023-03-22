@@ -633,7 +633,7 @@
 </span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">final</span>
 </span></code></pre></div>
 </details>
-<p><code>fct_documentation_coverage</code> (<a href="models/marts/documentation/fct_documentation_coverage.sql">source</a>) calculates the percent of enabled models in the project that have
+<p><code>fct_documentation_coverage</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_documentation_coverage.sql">source</a>) calculates the percent of enabled models in the project that have
 a configured description.</p>
 <p>This model will raise a <code>warn</code> error on a <code>dbt build</code> or <code>dbt test</code> if the <code>documentation_coverage_pct</code> is less than 100%.
 You can set your own threshold by overriding the <code>documentation_coverage_target</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
@@ -648,7 +648,7 @@ function in the model's <code>.yml</code> entry.</p>
 <p>We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site.</p>
 </div>
 <h2 id="undocumented-models">Undocumented Models<a class="headerlink" href="#undocumented-models" title="Permanent link">#</a></h2>
-<p><code>fct_undocumented_models</code> (<a href="models/marts/documentation/fct_undocumented_models.sql">source</a>) lists every model with no description configured.</p>
+<p><code>fct_undocumented_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_models.sql">source</a>) lists every model with no description configured.</p>
 <p><strong>Reason to Flag</strong></p>
 <p>Good documentation for your dbt models will help downstream consumers discover and understand the datasets which you curate for them.
 The documentation for your project includes model code, a DAG of your project, any tests you've added to a column, and more.</p>

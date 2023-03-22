@@ -589,7 +589,7 @@
 
 <h1 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">#</a></h1>
 <h2 id="chained-view-dependencies">Chained View Dependencies<a class="headerlink" href="#chained-view-dependencies" title="Permanent link">#</a></h2>
-<p><code>fct_chained_views_dependencies</code> (<a href="models/marts/performance/fct_chained_views_dependencies.sql">source</a>) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental.</p>
+<p><code>fct_chained_views_dependencies</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/performance/fct_chained_views_dependencies.sql">source</a>) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental.</p>
 <p>This model will raise a <code>warn</code> error on a <code>dbt build</code> or <code>dbt test</code> if the <code>distance</code> between a given <code>parent</code> and <code>child</code> is greater than or equal to 4.
 You can set your own threshold for chained views by overriding the <code>chained_views_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
@@ -605,7 +605,7 @@ You can set your own threshold for chained views by overriding the <code>chained
 <li>if a view has more complex calculations (window functions, joins between <em>many</em> tables, etc.), change materialization to table</li>
 </ul>
 <h2 id="exposure-parents-materializations">Exposure Parents Materializations<a class="headerlink" href="#exposure-parents-materializations" title="Permanent link">#</a></h2>
-<p><code>fct_exposure_parents_materializations</code> (<a href="models/marts/performance/fct_exposure_parents_materializations.sql">source</a>) highlights instances where the resources referenced by exposures are either:</p>
+<p><code>fct_exposure_parents_materializations</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/performance/fct_exposure_parents_materializations.sql">source</a>) highlights instances where the resources referenced by exposures are either:</p>
 <ol>
 <li>a <code>source</code></li>
 <li>a <code>model</code> that does not use the <code>table</code> or <code>incremental</code> materialization</li>
