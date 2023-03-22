@@ -719,7 +719,7 @@
 both a model and a source.</p>
 <p><strong>Example</strong></p>
 <p><code>int_model_4</code> is pulling in both a model and a source.</p>
-<p><img width="500" alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png"></p>
+<p><img alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></p>
 <p>We highly recommend having a one-to-one relationship between sources and their corresponding <code>staging</code> model, and not having any other model reading from the source. Those <code>staging</code> models are then the ones read from by the other downstream models.</p>
 <p>This allows renaming your columns and doing minor transformation on your source data only once and being consistent
@@ -731,7 +731,7 @@ across all the models that will consume the source data.</p>
 <li>and join this <code>staging</code> model to other ones to create our downstream transformation instead of using the source</li>
 </ol>
 <p>After refactoring your downstream model to select from the staging layer, your DAG should look like this:</p>
-<p><img width="500" alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png"></p>
+<p><img alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png" width="500" /></p>
 <hr />
 <h2 id="downstream-models-dependent-on-source">Downstream Models Dependent on Source<a class="headerlink" href="#downstream-models-dependent-on-source" title="Permanent link">#</a></h2>
 <p><code>fct_marts_or_intermediate_dependent_on_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql">source</a>) shows each downstream model (<code>marts</code> or <code>intermediate</code>)
@@ -794,10 +794,10 @@ and your downstream data artifacts.</p>
 <hr />
 <h2 id="model-fanout">Model Fanout<a class="headerlink" href="#model-fanout" title="Permanent link">#</a></h2>
 <p><code>fct_model_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_model_fanout.sql">source</a>) shows all parents with more than 3 direct leaf children.
-You can set your own threshold for model fanout by overriding the <code>models_fanout_threshold</code> variable. <a href="#overriding-variables">See overriding variables section.</a></p>
+You can set your own threshold for model fanout by overriding the <code>models_fanout_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
 <p><code>fct_model</code> has three direct leaf children.</p>
-<p><img width="500" alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png"></p>
+<p><img alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></p>
 <p>This might indicate some transformations should move to the BI layer, or a common business transformations
 should be moved upstream.</p>
@@ -806,7 +806,7 @@ should be moved upstream.</p>
 end your DAG after marts (i.e. fcts &amp; dims) and join those artifacts together (with a little know how
 and setup time) to make your reports. For others, like Tableau, model fanouts might be more
 beneficial, as this tool prefers big tables over joins, so predefining some reports is usually more performant.</p>
-<p>To exclude specific cases, check out the instructions in <a href="#configuring-exceptions-to-the-rules">Configuring exceptions to the rules</a>.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Queries and transformations can move around between dbt and the BI tool, so how do we try to stay
 effortful in what we decide to put where?</p>
@@ -823,7 +823,7 @@ predefine every query or quandary your team might have. So decide as a team wher
 <p><code>fct_multiple_sources_joined</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_multiple_sources_joined.sql">source</a>) shows each instance where a model references more than one source.</p>
 <p><strong>Example</strong></p>
 <p><code>model_1</code> references two source tables.</p>
-<p><img width="500" alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png"></p>
+<p><img alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></p>
 <p>We very strongly believe that a staging model is the atomic unit of data modeling. Each staging
 model bears a one-to-one relationship with the source data table it represents. It has the same
@@ -833,7 +833,7 @@ not being composable enough and there are individual building blocks which could
 their respective models.</p>
 <p><strong>Exceptions</strong></p>
 <p>Sometimes companies have a bunch of <a href="https://discourse.getdbt.com/t/unioning-identically-structured-data-sources/921">identical sources across systems</a>. When these identical sources will only ever be used collectively, you should union them once and create a staging layer on the combined result.</p>
-<p>To exclude specific cases, check out the instructions in <a href="#configuring-exceptions-to-the-rules">Configuring exceptions to the rules</a>.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
 <p><strong>How to Remediate</strong></p>
 <p>In this example specifically, those raw sources, <code>source_1.table_1</code> and <code>source_1.table_2</code> should each
 have their own staging model (<code>stg_model_1</code> and <code>stg_model_2</code>), as transitional steps, which will
@@ -849,9 +849,9 @@ to move that logic back to the new staging models instead. This will help coloca
 transformations and avoid duplicate code, so that all downstream models can leverage the same
 set of transformations.</p>
 <p>Post-refactor, your DAG should look like this:</p>
-<p><img width="500" alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png"></p>
+<p><img alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png" width="500" /></p>
 <p>or if you want to use base_ models and keep stg_model_2 as is:</p>
-<p><img width="500" alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png"></p>
+<p><img alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png" width="500" /></p>
 <hr />
 <h2 id="rejoining-of-upstream-concepts">Rejoining of Upstream Concepts<a class="headerlink" href="#rejoining-of-upstream-concepts" title="Permanent link">#</a></h2>
 <p><code>fct_rejoining_of_upstream_concepts</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_rejoining_of_upstream_concepts.sql">source</a>) contains all cases where one of the parent's direct children
@@ -880,13 +880,13 @@ that relation, in which case, leave it.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from <code>int_model_4</code> into a CTE within <code>int_model_5</code>, and swap all <code>{{ ref('int_model_4') }}</code> references to the new CTE(s).</p>
 <p>Post-refactor, your DAG should look like this:</p>
-<p><img width="500" alt="A refactored DAG removing the 'loop', by folding <code>int_model_4</code> into <code>int_model_5</code>." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png"></p>
+<p><img alt="A refactored DAG removing the 'loop', by folding int_model_4 into int_model_5." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png" width="500" /></p>
 <hr />
 <h2 id="root-models">Root Models<a class="headerlink" href="#root-models" title="Permanent link">#</a></h2>
 <p><code>fct_root_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_root_models.sql">source</a>) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.</p>
 <p><strong>Example</strong></p>
 <p><code>model_4</code> has no direct parents</p>
-<p><img width="500" alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models " src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png"></p>
+<p><img alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models" src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></b></p>
 <p>This likely means that the model (<code>model_4</code>  below) contains raw table references, either to a raw data source, or another model in the project without using the <code>{{ source() }}</code> or <code>{{ ref() }}</code> functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies.</p>
 <p><strong>Exceptions</strong></p>
@@ -899,7 +899,7 @@ that relation, in which case, leave it.</p>
 <p><code>fct_source_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_source_fanout.sql">source</a>) shows each instance where a source is the direct parent of multiple resources in the DAG.</p>
 <p><strong>Example</strong></p>
 <p><code>source.table_1</code> has more than one direct child model.</p>
-<p><img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png"></p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></p>
 <p>Each source node should be referenced by a single model that performs basic operations, such as renaming, recasting, and other light transformations to maintain consistency through out the project. The role of this staging model is to mirror the raw data but align it with project conventions. The staging model should act as a source of truth and a buffer- any model which depends on the data from a given source should reference the cleaned data in the staging model as opposed to referencing the source directly. This approach keeps the code DRY (any light transformations that need to be done on the raw data are performed only once). Minimizing references to the raw data will also make it easier to update the project should the format of the raw data change.</p>
 <p><strong>Exceptions</strong></p>
@@ -908,14 +908,14 @@ that you need to break one raw data source into multiple base models.</p>
 <p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Create a staging model which references the source and cleans the raw data (e.g. renaming, recasting). Any models referencing the source directly should be refactored to point towards the staging model instead.</p>
-<p>After refactoring the above example, the DAG would look something like this:
-<img width="500" alt="" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png"></p>
+<p>After refactoring the above example, the DAG would look something like this:</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png" width="500" /></p>
 <hr />
 <h2 id="staging-models-dependent-on-downstream-models">Staging Models Dependent on Downstream Models<a class="headerlink" href="#staging-models-dependent-on-downstream-models" title="Permanent link">#</a></h2>
 <p><code>fct_staging_dependent_on_marts_or_intermediate</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql">source</a>) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_5</code>, a staging model, builds from <code>fct_model_9</code> a marts model.</p>
-<p><img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png"></p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></p>
 <p>This likely represents a misnamed file. According to dbt best practices, staging models should only
 select from source nodes. Dependence on downstream models indicates that this model may need to be either
@@ -924,13 +924,13 @@ renamed, or reconfigured to only select from source nodes.</p>
 <p>Rename the file in the <code>child</code> column to use to appropriate prefix, or change the models lineage
 by pointing the staging model to the appropriate <code>{{ source() }}</code>.</p>
 <p>After updating the model to use the appropriate <code>{{ source() }}</code> function, your graph should look like this:</p>
-<p><img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png"></p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png" width="500" /></p>
 <h2 id="staging-models-dependent-on-other-staging-models">Staging Models Dependent on Other Staging Models<a class="headerlink" href="#staging-models-dependent-on-other-staging-models" title="Permanent link">#</a></h2>
 <p><code>fct_staging_dependent_on_staging</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_staging.sql">source</a>) shows each parent/child relationship where models in the staging layer are
 dependent on each other.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_2</code> is a parent of <code>stg_model_4</code>.</p>
-<p><img width="500" alt="A DAG showing stg_model_2 as a parent of stg_model_4." src="https://user-images.githubusercontent.com/53586774/164788355-4c6e58b5-21e0-45c6-bfde-af82952bb495.png"></p>
+<p><img alt="A DAG showing stg_model_2 as a parent of stg_model_4." src="https://user-images.githubusercontent.com/53586774/164788355-4c6e58b5-21e0-45c6-bfde-af82952bb495.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></p>
 <p>This may indicate a change in naming is necessary, or that the child model should instead reference a source.</p>
 <p><strong>How to Remediate</strong></p>
@@ -941,7 +941,7 @@ dependent on each other.</p>
 <p><code>fct_unused_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_unused_sources.sql">source</a>) shows each source with 0 children.</p>
 <p><strong>Example</strong></p>
 <p><code>source.table_4</code> isn't being referenced.</p>
-<p><img width="500" alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png"></p>
+<p><img alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png" width="500" /></p>
 <p><strong>Reason to Flag</strong></p>
 <p>This represents either a source that you have defined in YML but never brought into a model or a
 model that was deprecated and the corresponding rows in the source block of the YML file were
@@ -962,7 +962,7 @@ or any other nested information.</p>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_3</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_4</span><span class="w">  </span><span class="c1"># &lt;-- remove this line</span>
 </span></code></pre></div>
-<p><img width="500" alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png"></p>
+<p><img alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png" width="500" /></p>
 
 
 
