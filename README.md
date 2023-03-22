@@ -168,7 +168,7 @@ After refactoring your downstream model to select from the staging layer, your D
 
 #### Duplicate Sources
 
-`fct_duplicate_sources` ([source](models/marts/dag/fct_duplicate_sources.sql)) shows  each source database location with more than one node in your dbt project.
+`fct_duplicate_sources` ([source](models/marts/dag/fct_duplicate_sources.sql)) shows each database object that corresponds to more than one source node. 
 <details>
 <summary><b>Example</b></summary>
 
