@@ -1,0 +1,64 @@
+site_name: dbt_project_evaluator
+
+
+
+theme:
+  # palette:
+  #   primary: black
+  logo: assets/dbt-logo.svg
+  name: material
+  features:
+    - navigation.footer
+    # - navigation.tabs
+    # - navigation.sections
+    - navigation.instant
+    - navigation.tracking
+    - content.action.edit
+    - toc.integrate # check feedback
+
+extra_css:
+- stylesheets/extra.css
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+  - attr_list # needed to allow providing width
+  - md_in_html # to allow Markdown in details
+  - toc:
+      toc_depth: 3
+      permalink: "#"
+
+  # all for code blocks
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details # allow collapsible blocks
+  - admonition # allow call outs
+
+repo_url: https://github.com/dbt-labs/dbt-project-evaluator
+repo_name: dbt-labs/dbt-project-evaluator
+edit_uri: edit/main/docs/
+
+nav:
+  - Home: index.md
+  - Rules: 
+    - List of rules: rules.md
+    - Modeling: rules/modeling.md
+    - Testing: rules/testing.md
+    - Documentation: rules/documentation.md
+    - Structure: rules/structure.md
+    - Performance: rules/performance.md
+  - Customization: 
+    - Disabling models: customization/customization.md
+    - Overriding variables: customization/overriding-variables.md
+    - Configuring exceptions to the rules: customization/exceptions.md
+    - Display issues in the logs: customization/issues-in-log.md
+  - Run in CI Check: ci-check.md
+  - Querying the DAG: querying-the-dag.md
+  - Contributing: contributing.md
