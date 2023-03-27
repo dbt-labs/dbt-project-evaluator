@@ -57,6 +57,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 - __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
+  - [Duplicate Sources](#duplicate-sources)
   - [Hard Coded References](#hard-coded-references)
   - [Model Fanout](#model-fanout)
   - [Multiple Sources Joined](#multiple-sources-joined)
@@ -163,6 +164,44 @@ and your downstream data artifacts.
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
+</details>
+
+#### Duplicate Sources
+
+`fct_duplicate_sources` ([source](models/marts/dag/fct_duplicate_sources.sql)) shows each database object that corresponds to more than one source node. 
+<details>
+<summary><b>Example</b></summary>
+
+Imagine you have two separate source nodes - `source_1.table_5` and `source_1.raw_table_5`.
+<img width="200" alt="two source nodes in DAG" src="https://user-images.githubusercontent.com/53586774/226765218-2302deab-8c98-49ce-968a-007ee8ba571a.png">
+
+But both source definitions point to the exact same location in your database - `real_database`.`real_schema`.`table_5`.
+
+```yml
+sources:
+  - name: source_1
+    schema: real_schema
+    database: real_database
+    tables:
+      - name: table_5
+      - name: raw_table_5
+        identifier: table_5
+```
+
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+If you dbt project has multiple source nodes pointing to the exact same location in your data warehouse, you will have an inaccurate view of your lineage.  
+
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+Combine the duplicate source nodes so that each source database location only has a single source definition in your dbt project.
+
 </details>
 
 #### Hard Coded References
