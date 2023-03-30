@@ -57,6 +57,7 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 - __[Modeling](#modeling)__
   - [Direct Join to Source](#direct-join-to-source)
   - [Downstream Models Dependent on Source](#downstream-models-dependent-on-source)
+  - [Duplicate Sources](#duplicate-sources)
   - [Hard Coded References](#hard-coded-references)
   - [Model Fanout](#model-fanout)
   - [Multiple Sources Joined](#multiple-sources-joined)
@@ -163,6 +164,44 @@ and your downstream data artifacts.
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png">
+</details>
+
+#### Duplicate Sources
+
+`fct_duplicate_sources` ([source](models/marts/dag/fct_duplicate_sources.sql)) shows each database object that corresponds to more than one source node. 
+<details>
+<summary><b>Example</b></summary>
+
+Imagine you have two separate source nodes - `source_1.table_5` and `source_1.raw_table_5`.
+<img width="200" alt="two source nodes in DAG" src="https://user-images.githubusercontent.com/53586774/226765218-2302deab-8c98-49ce-968a-007ee8ba571a.png">
+
+But both source definitions point to the exact same location in your database - `real_database`.`real_schema`.`table_5`.
+
+```yml
+sources:
+  - name: source_1
+    schema: real_schema
+    database: real_database
+    tables:
+      - name: table_5
+      - name: raw_table_5
+        identifier: table_5
+```
+
+</details>
+
+<details>
+<summary><b>Reason to Flag</b></summary>
+
+If you dbt project has multiple source nodes pointing to the exact same location in your data warehouse, you will have an inaccurate view of your lineage.  
+
+</details>
+
+<details>
+<summary><b>How to Remediate</b></summary>
+
+Combine the duplicate source nodes so that each source database location only has a single source definition in your dbt project.
+
 </details>
 
 #### Hard Coded References
@@ -604,7 +643,7 @@ As explained above, we recommend [at a minimum](https://www.getdbt.com/analytics
 a configured description.
 
 This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%.
-You can set your own threshold by overriding the `test_coverage_target` variable. [See overriding variables section.](#overriding-variables)
+You can set your own threshold by overriding the `documentation_coverage_target` variable. [See overriding variables section.](#overriding-variables)
 
 <details>
 <summary><b>Reason to Flag</b></summary>
@@ -972,8 +1011,8 @@ Currently, this package uses different variables to adapt the models to your obj
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `test_coverage_pct` | the minimum acceptable test coverage percentage | 100% |
-| `documentation_coverage_pct` | the minimum acceptable documentation coverage percentage | 100% |
+| `test_coverage_target` | the minimum acceptable test coverage percentage | 100% |
+| `documentation_coverage_target` | the minimum acceptable documentation coverage percentage | 100% |
 | `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]] |
 
 **Usage notes for `primary_key_test_macros:`**
@@ -1153,10 +1192,7 @@ To use it, you can add the following line in your `dbt_project.yml`:
 on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
 ```
 
-In the case that you are storing the tables with the package results in a schema or database different from the default ones from your profile, the following parameters are available for `print_dbt_project_evaluator_issues()`:
-
-- `schema_project_evaluator`: the schema where the tables are stored
-- `db_project_evaluator`: the database where the tables are stored
+The macro accepts a parameter to pick between 2 types of formatting, `format='table'` (default) or `format='csv'`
 
 # dbt_project.yml
 

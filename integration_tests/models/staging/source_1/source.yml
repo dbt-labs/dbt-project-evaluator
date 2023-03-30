@@ -10,6 +10,8 @@ sources:
       - name: table_2
       - name: table_4
       - name: table_5
+      - name: raw_table_5
+        identifier: table_5
 
   - name: source_2
     schema: real_schema_2
