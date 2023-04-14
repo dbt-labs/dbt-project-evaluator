@@ -42,4 +42,4 @@ This is required because the project currently overrides a small number of dbt c
   
 ## Documentation
 
-The full documentation and list of rules is available on [this website](https://dbt-labs.github.io/dbt-project-evaluator/latest/)
+The full documentation and list of rules are available on [this website](https://dbt-labs.github.io/dbt-project-evaluator/latest/)
