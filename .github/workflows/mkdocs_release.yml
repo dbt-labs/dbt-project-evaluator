@@ -41,3 +41,4 @@ jobs:
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         mike deploy --push --message "Deploy docs for release ${{ github.event.release.tag_name }}" --update-alias $MAJOR_MINOR_VERSION latest
+        mike set-default --push latest
