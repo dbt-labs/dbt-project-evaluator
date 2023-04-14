@@ -12,7 +12,7 @@ pip install mkdocs-material
 mkdocs serve
 ```
 
-Docs are then automatically pushed to the website as part of our CI/CD process
+Docs are then automatically pushed to the website as part of our CI/CD process. We use [mike](https://github.com/jimporter/mike) as part of the process to publish different versions of the docs.
 
 ## Recommended VSCode extensions to help with writing docs
 
