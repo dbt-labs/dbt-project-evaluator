@@ -34,3 +34,7 @@ models:
   dbt_project_evaluator_integration_tests_2:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
     +materialized: ephemeral
+
+vars:
+  max_depth_dag: 2
+  chained_views_threshold: 2

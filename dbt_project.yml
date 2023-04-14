@@ -38,8 +38,6 @@ models:
         +materialized: table
     staging:
       graph:
-        stg_nodes:
-          +materialized: table
         stg_node_relationships:
           +materialized: table
       variables:
@@ -78,7 +76,7 @@ vars:
 
   # -- Performance variables --
   chained_views_threshold: 5
-  insert_batch_size: "{{ 500 if target.type == 'bigquery' else 10000 }}"
 
-  # -- Warehouse specific variables --
-  max_depth_dag: 9
+  # -- Execution variables --
+  insert_batch_size: "{{ 500 if target.type == 'bigquery' else 10000 }}"
+  max_depth_dag: "{{ 9 if target.type in ['bigquery', 'spark', 'databricks'] else -1 }}"

@@ -22,6 +22,14 @@ seeds:
             - child_resource_type
             - distance
 
+  - name: test_fct_duplicate_sources
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_duplicate_sources
+          compare_model: ref('fct_duplicate_sources')
+          compare_columns:
+            - source_names
+
   - name: test_fct_root_models
     tests:
       - dbt_utils.equality:

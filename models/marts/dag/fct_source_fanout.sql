@@ -16,7 +16,7 @@ source_fanout as (
         {{ dbt.listagg(
             measure='child', 
             delimiter_text="', '", 
-            order_by_clause='order by child' if target.type in ['snowflake','redshift']) 
+            order_by_clause='order by child' if target.type in ['snowflake','redshift','duckdb']) 
         }} as model_children
     from direct_source_relationships
     group by 1
