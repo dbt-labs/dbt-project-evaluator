@@ -61,6 +61,39 @@ After refactoring your downstream model to select from the staging layer, your D
 
 ---
 
+## Duplicate Sources
+
+`fct_duplicate_sources` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_duplicate_sources.sql)) shows each database object that corresponds to more than one source node.
+
+**Example**
+
+Imagine you have two separate source nodes - `source_1.table_5` and `source_1.raw_table_5`.
+
+![two source nodes in DAG](https://user-images.githubusercontent.com/53586774/226765218-2302deab-8c98-49ce-968a-007ee8ba571a.png){ width=400 }
+
+But both source definitions point to the exact same location in your database - `real_database`.`real_schema`.`table_5`.
+
+```yaml
+sources:
+  - name: source_1
+    schema: real_schema
+    database: real_database
+    tables:
+      - name: table_5
+      - name: raw_table_5
+        identifier: table_5
+```
+
+**Reason to Flag**
+
+If you dbt project has multiple source nodes pointing to the exact same location in your data warehouse, you will have an inaccurate view of your lineage.  
+
+**How to Remediate**
+
+Combine the duplicate source nodes so that each source database location only has a single source definition in your dbt project.
+
+---
+
 ## Hard Coded References
 
 `fct_hard_coded_references` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_hard_coded_references.sql)) shows each instance where a model contains hard coded reference(s).
