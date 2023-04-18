@@ -6,7 +6,7 @@ models:
     columns:
       - name: test_to_model_ratio
         description: the total number of tests in the project divided by the total number of models in the project
-        tests:
+        # tests:
           # - dbt_utils.accepted_range:
           #     min_value: 1 
           #     severity: warn
