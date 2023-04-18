@@ -56,12 +56,16 @@
   
     
     
+      
+    
     
     
     
     <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
   
     
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -113,6 +117,26 @@
         </div>
       </div>
     </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
     
     
     
@@ -457,8 +481,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#warehouse-specific-variables" class="md-nav__link">
-    Warehouse Specific Variables
+  <a href="#execution" class="md-nav__link">
+    Execution
   </a>
   
 </li>
@@ -721,21 +745,14 @@
 <td>threshold for unacceptable length of chain of views for <code>fct_chained_views_dependencies</code></td>
 <td>4</td>
 </tr>
-<tr>
-<td><code>insert_batch_size</code></td>
-<td>number of records inserted per batch when unpacking the graph into models</td>
-<td>10000</td>
-</tr>
 </tbody>
 </table>
 <div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">vars</span><span class="p">:</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="c1"># set your chained views threshold to 8 instead of 4</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">chained_views_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="c1"># update the number of records inserted from the graph from 10,000 to 500 to reduce query size</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">insert_batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
 </span></code></pre></div>
-<h2 id="warehouse-specific-variables">Warehouse Specific Variables<a class="headerlink" href="#warehouse-specific-variables" title="Permanent link">#</a></h2>
+<h2 id="execution">Execution<a class="headerlink" href="#execution" title="Permanent link">#</a></h2>
 <table>
 <thead>
 <tr>
@@ -747,12 +764,29 @@
 <tbody>
 <tr>
 <td><code>max_depth_dag</code></td>
-<td>limits the number of looped CTEs when computing the DAG end-to-end for BigQuery and Databricks/Spark compatibility</td>
-<td>9</td>
+<td>limits the maximum distance between nodes calculated in <code>int_all_dag_relationships</code></td>
+<td>9 for bigquery and spark, -1 for other adatpters</td>
+</tr>
+<tr>
+<td><code>insert_batch_size</code></td>
+<td>number of records inserted per batch when unpacking the graph into models</td>
+<td>10000</td>
 </tr>
 </tbody>
 </table>
-<p>Changing <code>max_depth_dag</code> number to a higher one might prevent the package from running properly on BigQuery and Databricks/Spark.</p>
+<p><strong>Note on max_depth_dag</strong></p>
+<p>The default behavior for limiting the relationships calculated in the <code>int_all_dag_relationships</code> model differs depending on your adapter.</p>
+<ul>
+<li>For Bigquery &amp; Spark/Databricks the maximum distance between two nodes in your DAG, calculated in <code>int_all_dag_relationships</code>, is set by the <code>max_depth_dag</code> variable, which is defaulted to 9. So by default, <code>int_all_dag_relationships</code> contains a row for every path less than or equal to 9 nodes in length between two nodes in your DAG. This is because these adapters do not currently support recursive SQL, and queries often fail on more than 9 recursive joins.</li>
+<li>For all other adapters <code>int_all_dag_relationships</code> by default contains a row for every single path between two nodes in your DAG. If you experience long runtimes for the <code>int_all_dag_relationships</code> model, you may consider limiting the length of your generated DAG paths. To do this, set <code>max_depth_dag: {{ whatever limit you want to enforce }}</code>. The value of <code>max_depth_dag</code> must be greater than 2 for all DAG tests to work, and greater than <code>chained_views_threshold</code> to ensure your performance tests to work. By default, the value of this variable for these adapters is -1, which the package interprets as "no limit".</li>
+</ul>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">vars</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="c1"># update the number of records inserted from the graph from 10,000 to 500 to reduce query size</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">insert_batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="c1"># set the maximum distance between nodes to 5 </span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">max_depth_dag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</span></code></pre></div>
 
 
 
