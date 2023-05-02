@@ -3,6 +3,7 @@ with
 models as (
     select * from {{ ref('int_all_graph_resources') }}
     where resource_type = 'model'
+
 ),
 
 conversion as (
@@ -15,6 +16,7 @@ conversion as (
         {% endfor %}
 
     from models
+    {{ filter_exceptions(this) }}
 ),
 
 final as (

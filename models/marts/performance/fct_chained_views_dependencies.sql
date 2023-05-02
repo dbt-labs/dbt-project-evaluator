@@ -8,6 +8,7 @@ with all_relationships as (
 final as (
     select
         parent,
+        parent_package_name as package_name,
         child, -- the model with potentially long run time / compilation time, improve performance by breaking the upstream chain of views
         distance,
         path

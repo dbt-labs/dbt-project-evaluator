@@ -13,7 +13,8 @@ final as (
         parent,
         parent_model_type,
         child,
-        child_model_type
+        child_model_type,
+        child_package_name as package_name
     from direct_model_relationships
     where child_model_type = 'staging'
     and parent_model_type in ('marts', 'intermediate')

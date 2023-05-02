@@ -8,7 +8,8 @@ with models as (
 final as (
     select
         resource_name as model,
-        hard_coded_references
+        hard_coded_references,
+        package_name
     from models
     where hard_coded_references is not null
 )

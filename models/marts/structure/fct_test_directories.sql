@@ -46,7 +46,8 @@ test_file_paths as (
         resource_id as test_id,
         resource_name as test_name,
         file_name as test_yml_name,
-        directory_path as test_yml_directory_path
+        directory_path as test_yml_directory_path,
+        package_name
     from resources
     where 
         resource_type = 'test'
@@ -60,6 +61,7 @@ all_file_paths as (
         test_file_paths.test_id,
         test_file_paths.test_name,
         test_file_paths.test_yml_directory_path,
+        test_file_paths.package_name, 
         test_file_paths.test_yml_name,
         model_file_paths.model_id,
         model_file_paths.model_name,
@@ -75,6 +77,7 @@ different_directories as (
     select
         test_name,
         model_name,
+        package_name,
         test_yml_directory_path as current_test_directory,
         model_directory_path as change_test_directory_to
     from all_file_paths

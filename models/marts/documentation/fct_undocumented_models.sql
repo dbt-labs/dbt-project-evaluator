@@ -9,7 +9,8 @@ final as (
 
     select
         resource_name,
-        model_type
+        model_type,
+        package_name
 
     from all_resources
     where not is_described and resource_type = 'model'

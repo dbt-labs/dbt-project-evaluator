@@ -11,6 +11,7 @@ with direct_model_relationships as (
 model_and_source_joined as (
     select
         child,
+        child_package_name as package_name,
         case 
             when (
                 sum(case when parent_resource_type = 'model' then 1 else 0 end) > 0 
@@ -20,12 +21,13 @@ model_and_source_joined as (
             else false 
         end as keep_row 
     from direct_model_relationships
-    group by 1
+    group by 1,2
 ),
 
 final as (
     select 
-        direct_model_relationships.*
+        direct_model_relationships.*,
+        model_and_source_joined.package_name
     from direct_model_relationships
     inner join model_and_source_joined
         on direct_model_relationships.child = model_and_source_joined.child

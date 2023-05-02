@@ -11,7 +11,8 @@ all_graph_resources as (
         file_name,
         model_type,
         materialized,
-        source_name 
+        source_name,
+        package_name
     from {{ ref('int_all_graph_resources') }}
 ),
 

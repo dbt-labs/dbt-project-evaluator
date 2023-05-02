@@ -13,13 +13,14 @@ with direct_source_relationships as (
 source_fanout as (
     select
         parent,
+        parent_package_name as package_name,
         {{ dbt.listagg(
             measure='child', 
             delimiter_text="', '", 
             order_by_clause='order by child' if target.type in ['snowflake','redshift','duckdb']) 
         }} as model_children
     from direct_source_relationships
-    group by 1
+    group by 1, 2
     having count(*) > 1
 )
 

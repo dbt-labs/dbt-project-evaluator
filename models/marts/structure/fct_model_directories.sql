@@ -18,6 +18,7 @@ all_dag_relationships as (
 staging_models as (
     select  
         child,
+        child_package_name,
         child_resource_type,
         child_model_type,
         child_file_path,
@@ -34,6 +35,7 @@ staging_models as (
 inappropriate_subdirectories_staging as (
     select distinct -- must do distinct to avoid duplicates when staging model has multiple paths to a given source
         child as resource_name,
+        child_package_name as package_name,
         child_resource_type as resource_type,
         child_model_type as model_type,
         child_file_path as current_file_path,
@@ -46,6 +48,7 @@ inappropriate_subdirectories_staging as (
 innappropriate_subdirectories_non_staging_models as (
     select 
         all_graph_resources.resource_name,
+        all_graph_resources.package_name,
         all_graph_resources.resource_type,
         all_graph_resources.model_type,
         all_graph_resources.file_path as current_file_path,

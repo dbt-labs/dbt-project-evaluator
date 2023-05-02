@@ -9,9 +9,10 @@ with source_relationships as (
 
 final as (
     select
-        parent
+        parent,
+        parent_package_name as package_name
     from source_relationships
-    group by 1
+    group by 1,2
     having max(distance) = 0
 )
 

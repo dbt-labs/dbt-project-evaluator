@@ -56,6 +56,7 @@ final as (
     select 
         all_graph_resources.resource_name, 
         all_graph_resources.model_type,
+        all_graph_resources.package_name,
         coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as is_primary_key_tested,
         coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model
     from all_graph_resources
@@ -65,3 +66,4 @@ final as (
 )
 
 select * from final
+

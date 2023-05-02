@@ -10,7 +10,8 @@ final as (
         parent,
         parent_resource_type,
         child,
-        child_model_type
+        child_model_type,
+        child_package_name as package_name
     from direct_relationships
     where parent_resource_type = 'source'
     and child_model_type in ('marts', 'intermediate')

@@ -26,6 +26,7 @@ appropriate_prefixes as (
 models as (
     select
         all_graph_resources.resource_name,
+        all_graph_resources.package_name,
         all_graph_resources.prefix,
         all_graph_resources.model_type,
         naming_convention_prefixes.prefix_value
@@ -39,6 +40,7 @@ models as (
 inappropriate_model_names as (
     select 
         models.resource_name,
+        models.package_name,
         models.prefix,
         models.model_type,
         appropriate_prefixes.appropriate_prefixes

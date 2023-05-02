@@ -18,6 +18,7 @@ direct_exposure_relationships as (
 final as (
 
     select 
+        parent_package_name as package_name,
         parent_resource_type,
         parent as parent_resource_name,
         child as exposure_name,

@@ -32,7 +32,8 @@ triad_relationships as (
     select 
         rejoined.parent,
         rejoined.child as child,
-        direct_child.parent as parent_and_child
+        direct_child.parent as parent_and_child,
+        direct_child.child_package_name as package_name
     from rejoined
     left join all_relationships as direct_child
         on rejoined.child = direct_child.child

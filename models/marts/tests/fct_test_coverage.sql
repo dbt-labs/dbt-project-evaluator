@@ -2,6 +2,7 @@ with
 
 test_counts as (
     select * from {{ ref('int_model_test_summary') }}
+    {{ filter_exceptions(this) }}
 ),
 
 conversion as (
