@@ -11,6 +11,7 @@
     {%- for node in nodes_list -%}
 
         {%- set hard_coded_references = dbt_project_evaluator.find_all_hard_coded_references(node) -%}
+        {%- set contract = node.contract.enforced if node.contract else false -%}
 
         {%- set values_line  = 
             [
@@ -21,6 +22,12 @@
                 "cast(" ~ node.config.enabled | trim ~ " as boolean)",
                 wrap_string_with_quotes(node.config.materialized),
                 wrap_string_with_quotes(node.config.on_schema_change),
+                wrap_string_with_quotes(node.group),
+                wrap_string_with_quotes(node.access),
+                wrap_string_with_quotes(node.latest_version),
+                "cast(" ~ contract | trim  ~ " as boolean)",
+                node.columns | length,
+                node.columns | selectattr('description' , 'defined') | list | length,
                 wrap_string_with_quotes(node.database),
                 wrap_string_with_quotes(node.schema),
                 wrap_string_with_quotes(node.package_name),
@@ -30,7 +37,7 @@
                 wrap_string_with_quotes(node.meta | tojson),
                 wrap_string_with_quotes(dbt.escape_single_quotes(hard_coded_references)),
                 wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
-                "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)"
+                "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)"   
             ]
         %}
 
