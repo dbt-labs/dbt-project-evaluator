@@ -23,7 +23,7 @@ check_naming_convention as (
         ]) }} as valid_filename_option_1,
         {{ dbt.concat([
             "'_'",
-            dbt.split_part('resource_yml_file_path', "'" ~ get_directory_pattern() ~ "'", -2),
+            dbt.split_part('resource_yml_file_path',  dbt_project_evaluator.wrap_string_with_quotes(get_directory_pattern()), -2),
             "'__'",
             "resource_type",
             "'s.yml'"
