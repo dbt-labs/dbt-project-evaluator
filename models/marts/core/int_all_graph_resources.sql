@@ -79,7 +79,7 @@ joined as (
         unioned_with_calc.package_name, 
         unioned_with_calc.alias, 
         unioned_with_calc.is_described, 
-        unioned_with_calc.group, 
+        unioned_with_calc.model_group, 
         unioned_with_calc.access, 
         unioned_with_calc.access = 'public' as is_public, 
         unioned_with_calc.latest_version, 

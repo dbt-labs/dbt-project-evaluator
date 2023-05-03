@@ -23,7 +23,7 @@ select
     cast(True as boolean) as is_enabled,
     cast(null as {{ dbt.type_string() }}) as materialized,
     cast(null as {{ dbt.type_string() }}) as on_schema_change,
-    cast(null as {{ dbt.type_string() }}) as group,
+    cast(null as {{ dbt.type_string() }}) as model_group,
     cast(null as {{ dbt.type_string() }}) as access,
     cast(null as {{ dbt.type_string() }}) as latest_version,
     cast(True as boolean) as is_contract_enforced,
