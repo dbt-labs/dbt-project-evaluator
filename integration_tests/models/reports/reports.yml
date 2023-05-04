@@ -9,7 +9,7 @@ models:
     config:
       materialized: table
       contract:
-        enforced: true
+        enforced: "{{ true if target.type not in ['databricks'] else false }}"
     description: the colbert report
     columns:
       - name: id 

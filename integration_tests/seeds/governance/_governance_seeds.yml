@@ -1,3 +1,5 @@
+version: 2
+
 seeds:  
   - name: test_fct_public_models_without_contract
     tests:
