@@ -5,6 +5,8 @@ with direct_model_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type in ('model', 'snapshot')
     and child_resource_type in ('model', 'snapshot')
+    and not parent_is_excluded
+    and not child_is_excluded
     and distance = 1
 ),
 

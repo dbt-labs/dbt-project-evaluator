@@ -3,6 +3,7 @@ with
 models as (
     select * from {{ ref('int_all_graph_resources') }}
     where resource_type = 'model'
+    and not is_excluded
 ),
 
 conversion as (

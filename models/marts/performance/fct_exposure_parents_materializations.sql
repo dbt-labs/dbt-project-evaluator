@@ -13,6 +13,8 @@ direct_exposure_relationships as (
                 parent_resource_type = 'source'
             )
         )
+        -- no test on child_is_excluded because exposures are never excluded
+        and not parent_is_excluded
 ),
 
 final as (

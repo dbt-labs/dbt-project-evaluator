@@ -4,6 +4,8 @@ with direct_relationships as (
         *
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 final as (
     select

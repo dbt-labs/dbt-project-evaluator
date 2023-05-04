@@ -5,6 +5,8 @@ with model_relationships as (
         *
     from {{ ref('int_all_dag_relationships') }}
     where child_resource_type = 'model'
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 
 final as (
