@@ -1,4 +1,4 @@
-
+version: 2
 
 models:
   - name: fct_public_models_without_contract
