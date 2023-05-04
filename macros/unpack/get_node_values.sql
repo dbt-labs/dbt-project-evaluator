@@ -5,12 +5,23 @@
 {%- macro default__get_node_values() -%}
 
     {%- if execute -%}
+    {% set re = modules.re %}
     {%- set nodes_list = graph.nodes.values() -%}
     {%- set values = [] -%}
 
     {%- for node in nodes_list -%}
 
         {%- set hard_coded_references = dbt_project_evaluator.find_all_hard_coded_references(node) -%}
+
+        {%- set ns = namespace(exclude=false) -%}
+        {%- set node_package_path = node.package_name ~ ":" ~ node.original_file_path | replace("\\","\\\\") -%}
+
+        {%- for exclude_pattern in var('exclude_packages_and_paths',[]) -%}
+            {%- set is_match = re.match(exclude_pattern, node_package_path, re.IGNORECASE) -%}
+            {%- if is_match %}
+                {% set ns.exclude = true %}
+            {%- endif -%}
+        {%- endfor -%}
 
         {%- set values_line  = 
             [
@@ -30,7 +41,8 @@
                 wrap_string_with_quotes(node.meta | tojson),
                 wrap_string_with_quotes(dbt.escape_single_quotes(hard_coded_references)),
                 wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
-                "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)"
+                "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)",
+                "cast(" ~ ns.exclude ~ " as boolean)",
             ]
         %}
 
