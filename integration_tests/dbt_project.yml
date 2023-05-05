@@ -59,6 +59,7 @@ seeds:
 
 vars:
   # ensure integration tests run successfully when there are 0 of a given model type (extra)
+  exclude_packages_and_paths: ["^(?!dbt_project_evaluator_integration_tests:).*",".*/to_exclude/.*"]
   model_types: ['staging', 'intermediate', 'marts', 'other', 'extra', 'new_model_type']
   # dummy variable used for testing fct_hard_coded_references
   my_table_reference: 'grace_table'
