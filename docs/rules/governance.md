@@ -29,7 +29,7 @@ Edit the yml to include the contract configuration, as well as a column entry fo
 
 ```yml
 
-  - name: report_2
+  - name: report_1
     description: very important OKR reporting model
     access: public
     config:
