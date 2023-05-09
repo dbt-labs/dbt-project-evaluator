@@ -12,14 +12,23 @@
     {%- for node in nodes_list -%}
 
         {%- set ns = namespace(exclude=false) -%}
-        {%- set node_package_path = node.package_name ~ ":" ~ node.original_file_path | replace("\\","\\\\") ~ ":" ~ node.name -%}
+        {%- set node_path_and_name = node.original_file_path | replace("\\","\\\\") ~ ":" ~ node.fqn[-2] ~ "." ~ node.fqn[-1] -%}
 
-        {%- for exclude_pattern in var('exclude_packages_and_paths',[]) -%}
-            {%- set is_match = re.match(exclude_pattern, node_package_path, re.IGNORECASE) -%}
-            {%- if is_match %}
+        {#- we exclude the source if it is from the current project and matches the pattern -#}
+        {%- for exclude_pattern in var('exclude_paths_from_project',[]) -%}
+            {%- set matched_path = re.search(exclude_pattern, node_path_and_name, re.IGNORECASE) -%}
+            {%- if matched_path and node.package_name == project_name %}
                 {% set ns.exclude = true %}
             {%- endif -%}
         {%- endfor -%}
+
+        {#- we exclude the node if the package if it is listed in `exclude_packages` or if it is "all" -#}
+        {%- if (
+            node.package_name != project_name) 
+            and (node.package_name in  var('exclude_packages',[]) or 'all' in var('exclude_packages',[])) 
+        -%}
+            {% set ns.exclude = true %}
+        {%- endif -%}
 
          {%- set values_line = 
             [
