@@ -15,50 +15,37 @@ In that case, this package provides the ability to exclude whole packages and/or
 
 ## Configuration
 
-The variable `exclude_packages_and_paths` allows you to define a list of regex patterns to exclude from being reported as errors.
+The variables `exclude_packages` and `exclude_paths_from_project` allow you to define a list of regex patterns to exclude from being reported as errors.
 
-- **for models**, the regex provided will try to match the pattern in the string `<package>:<path/to/model.sql>`, allowing to exclude packages, but also whole folders or individual models
-- **for sources**, the regex will try to match the pattern in `<package>:<path/to/sources.yml>:<source_table_name>` *(the pattern is different than for models because the path doesn't let us exclude individual sources)*
+- `exclude_packages` accepts a list of package names to exclude from the tool. To exclude all packages except the current project, you can set it to `["all"]`
+- `exclude_paths_from_project` accepts a list of regular expressions of paths to exclude for the current project
+    - **for models**, the regex provided will try to match the pattern in the string `<path/to/model.sql>`, allowing to exclude packages, but also whole folders or individual models
+    - **for sources**, the regex will try to match the pattern in `<path/to/sources.yml>:<source_name>.<source_table_name>` *(the pattern is different than for models because the path itself doesn't let us exclude individual sources)*
 
 ### Example to exclude a whole package
 
 ```yaml title="dbt_project.yml"
 vars:
-  exclude_packages_and_paths: ["<package_name>:.*"]
+  exclude_packages: ["<package_name>"]
 ```
 
-### Example to exclude a given path
+### Example to exclude models/sources in a given path
 
 ```yaml title="dbt_project.yml"
 vars:
-  exclude_packages_and_paths: [".*/<path_to_exclude>/.*"]
+  exclude_paths_from_project: ["/<path_to_exclude>/"]
 ```
 
-### Example to exclude both a package and models in a path
+### Example to exclude both a package and models/sources in 2 different paths
 
 ```yaml title="dbt_project.yml"
 vars:
-  exclude_packages_and_paths: ["<package_name>:.*", ".*/<path_to_exclude>/.*"]
+  exclude_packages: ["<package_name>"]
+  exclude_paths_from_project: ["<path1_to_exclude>", "<path2_to_exclude>"]
 ```
 
 ## Tips and tricks
 
-Regular expressions are very powerful but can become complex. After defining your value for `exclude_packages_and_paths`, we recommend running the package and inspecting the model `int_all_graph_resources`, checking if the value in the column `is_disabled` matches your expectation.
+Regular expressions are very powerful but can become complex. After defining your value for `exclude_paths_from_project`, we recommend running the package and inspecting the model `int_all_graph_resources`, checking if the value in the column `is_excluded` matches your expectation.
 
 A useful tool to debug regular expression is [regex101](https://regex101.com/). You can provide a pattern and a list of strings to see which ones actually match the pattern.
-
-### Running the tests only on the current project
-
-Instead of listing all the packages to exclude, we can use a [regex negative look-ahead](https://www.regular-expressions.info/lookaround.html) expression to filter out all the models and sources that come from a package different than the current project.
-
-```yaml title="dbt_project.yml"
-vars:
-  exclude_packages_and_paths: ["^(?!<your_project_name>:).*"]
-```
-
-This expression will exclude all the nodes that don't start with `<your_project_name>:`, e.g. all the nodes coming from imported packages:
-
-- `^` : we search for the beginning of a string
-- `(?! ... )` : not immediately followed
-- by `<your_project_name>:`
-- `.*` : with whatever characters after
