@@ -1,4 +1,4 @@
-# Disabling tests from the package
+# Disabling checks from the package
 
 !!! note
 
