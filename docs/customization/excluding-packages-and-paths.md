@@ -3,10 +3,10 @@
 !!! note
 
     This section is describing how to entirely exclude models/sources and packages to be evaluated.
-    If you want to document exception to the rules, see the section [on exceptions](exceptions.md)
+    If you want to document exceptions to the rules, see the section [on exceptions](exceptions.md)
     and if you want to deactivate entire tests you can follow instructions from [this page](customization.md)
 
-There might be cases where you might want to exclude models/sources from being tested:
+There might be cases where you want to exclude models/sources from being tested:
 
 - they could come from a package for which you have no control over
 - you might be refactoring your project and wanting to exclude entire folders to follow best-practices in the new models
@@ -22,26 +22,32 @@ The variables `exclude_packages` and `exclude_paths_from_project` allow you to d
     - **for models**, the regex provided will try to match the pattern in the string `<path/to/model.sql>`, allowing to exclude packages, but also whole folders or individual models
     - **for sources**, the regex will try to match the pattern in `<path/to/sources.yml>:<source_name>.<source_table_name>` *(the pattern is different than for models because the path itself doesn't let us exclude individual sources)*
 
+!!! note
+
+    We currently don't allow excluding metrics and exposures, as if those need to be entirely excluded they could be deactivated from the project.
+    
+    If you have a specific use case requiring this ability, please raise a GitHub issue to explain the situation you'd like to solve and we can revisit this decision !
+
 ### Example to exclude a whole package
 
 ```yaml title="dbt_project.yml"
 vars:
-  exclude_packages: ["<package_name>"]
+  exclude_packages: ["upstream_package"]
 ```
 
 ### Example to exclude models/sources in a given path
 
 ```yaml title="dbt_project.yml"
 vars:
-  exclude_paths_from_project: ["/<path_to_exclude>/"]
+  exclude_paths_from_project: ["/models/legacy/"]
 ```
 
 ### Example to exclude both a package and models/sources in 2 different paths
 
 ```yaml title="dbt_project.yml"
 vars:
-  exclude_packages: ["<package_name>"]
-  exclude_paths_from_project: ["<path1_to_exclude>", "<path2_to_exclude>"]
+  exclude_packages: ["upstream_package"]
+  exclude_paths_from_project: ["/models/legacy/", "/my_date_spine.sql"]
 ```
 
 ## Tips and tricks
