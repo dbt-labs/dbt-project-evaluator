@@ -5,6 +5,8 @@ with source_relationships as (
         *
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type = 'source'
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 
 final as (

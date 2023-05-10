@@ -18,3 +18,8 @@ sources:
     # database: real_database
     tables:
       - name: table_3
+
+  - name: source_3
+    schema: real_schema_3
+    tables:
+      - name: table_6
