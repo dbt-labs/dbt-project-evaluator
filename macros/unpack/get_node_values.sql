@@ -5,7 +5,6 @@
 {%- macro default__get_node_values() -%}
 
     {%- if execute -%}
-    {% set re = modules.re %}
     {%- set nodes_list = graph.nodes.values() -%}
     {%- set values = [] -%}
 
