@@ -9,17 +9,17 @@
       
       
       
-        <link rel="prev" href="../customization/">
+        <link rel="prev" href="../exceptions/">
       
       
-        <link rel="next" href="../excluding-packages-and-paths/">
+        <link rel="next" href="../issues-in-log/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.11">
     
     
       
-        <title>Configuring exceptions to the rules - dbt_project_evaluator</title>
+        <title>Excluding packages and models/sources based on path - dbt_project_evaluator</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuring-exceptions-to-the-rules" class="md-skip">
+        <a href="#excluding-packages-or-sourcesmodels-based-on-their-path" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configuring exceptions to the rules
+              Excluding packages and models/sources based on path
             
           </span>
         </div>
@@ -437,6 +437,20 @@
               
   
   
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        Configuring exceptions to the rules
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
     
   
   
@@ -449,12 +463,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Configuring exceptions to the rules
+          Excluding packages and models/sources based on path
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Configuring exceptions to the rules
+        Excluding packages and models/sources based on path
       </a>
       
         
@@ -473,22 +487,42 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-create-a-new-seed" class="md-nav__link">
-    1. Create a new seed
+  <a href="#configuration" class="md-nav__link">
+    Configuration
   </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-to-exclude-a-whole-package" class="md-nav__link">
+    Example to exclude a whole package
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-to-exclude-modelssources-in-a-given-path" class="md-nav__link">
+    Example to exclude models/sources in a given path
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-to-exclude-both-a-package-and-modelssources-in-2-different-paths" class="md-nav__link">
+    Example to exclude both a package and models/sources in 2 different paths
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-deactivate-the-seed-from-the-original-package" class="md-nav__link">
-    2. Deactivate the seed from the original package
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-run-the-seed-and-the-package" class="md-nav__link">
-    3. Run the seed and the package
+  <a href="#tips-and-tricks" class="md-nav__link">
+    Tips and tricks
   </a>
   
 </li>
@@ -497,20 +531,6 @@
   
 </nav>
       
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../excluding-packages-and-paths/" class="md-nav__link">
-        Excluding packages and models/sources based on path
-      </a>
     </li>
   
 
@@ -596,7 +616,7 @@
                   
 
   
-    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/customization/exceptions.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/customization/excluding-packages-and-paths.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -604,52 +624,50 @@
   
 
 
-<h1 id="configuring-exceptions-to-the-rules">Configuring exceptions to the rules<a class="headerlink" href="#configuring-exceptions-to-the-rules" title="Permanent link">#</a></h1>
-<p>While the rules defined in this package are considered best practices, we realize that there might be exceptions to those rules and people might want to exclude given results to get passing tests despite not following all the recommendations.</p>
-<p>An example would be excluding all models with names matching with <code>stg_..._unioned</code> from <code>fct_multiple_sources_joined</code> as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the test to fail for those models.</p>
-<p>The package offers the ability to define a seed called <code>dbt_project_evaluator_exceptions.csv</code> to list those exceptions we don't want to be reported. This seed must contain the following columns:</p>
+<h1 id="excluding-packages-or-sourcesmodels-based-on-their-path">Excluding packages or sources/models based on their path<a class="headerlink" href="#excluding-packages-or-sourcesmodels-based-on-their-path" title="Permanent link">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section is describing how to entirely exclude models/sources and packages to be evaluated.
+If you want to document exceptions to the rules, see the section <a href="../exceptions/">on exceptions</a>
+and if you want to deactivate entire tests you can follow instructions from <a href="../customization/">this page</a></p>
+</div>
+<p>There might be cases where you want to exclude models/sources from being tested:</p>
 <ul>
-<li><code>fct_name</code>: the name of the fact table for which we want to define exceptions (Please note that it is not possible to exclude specific models for all the <code>coverage</code> tests, but there are variables available to configure those to the particular users' needs)</li>
-<li><code>column_name</code>: the column name from <code>fct_name</code> we will be looking at to define exceptions</li>
-<li><code>id_to_exclude</code>: the values (or <code>like</code> pattern) we want to exclude for <code>column_name</code></li>
-<li><code>comment</code>: a field where people can document why a given exception is legitimate</li>
+<li>they could come from a package for which you have no control over</li>
+<li>you might be refactoring your project and wanting to exclude entire folders to follow best-practices in the new models</li>
 </ul>
-<p>The following section describes the steps to follow to configure exceptions.</p>
-<h2 id="1-create-a-new-seed">1. Create a new seed<a class="headerlink" href="#1-create-a-new-seed" title="Permanent link">#</a></h2>
-<p>With our previous example, the seed <code>dbt_project_evaluator_exceptions.csv</code> would look like:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>fct_name,column_name,id_to_exclude,comment
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>fct_multiple_sources_joined,child,stg_%_unioned,Models called _unioned can union multiple sources
+<p>In that case, this package provides the ability to exclude whole packages and/or models and sources based on their path</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h2>
+<p>The variables <code>exclude_packages</code> and <code>exclude_paths_from_project</code> allow you to define a list of regex patterns to exclude from being reported as errors.</p>
+<ul>
+<li><code>exclude_packages</code> accepts a list of package names to exclude from the tool. To exclude all packages except the current project, you can set it to <code>["all"]</code></li>
+<li><code>exclude_paths_from_project</code> accepts a list of regular expressions of paths to exclude for the current project<ul>
+<li><strong>for models</strong>, the regex provided will try to match the pattern in the string <code>&lt;path/to/model.sql&gt;</code>, allowing to exclude packages, but also whole folders or individual models</li>
+<li><strong>for sources</strong>, the regex will try to match the pattern in <code>&lt;path/to/sources.yml&gt;:&lt;source_name&gt;.&lt;source_table_name&gt;</code> <em>(the pattern is different than for models because the path itself doesn't let us exclude individual sources)</em></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We currently don't allow excluding metrics and exposures, as if those need to be entirely excluded they could be deactivated from the project.</p>
+<p>If you have a specific use case requiring this ability, please raise a GitHub issue to explain the situation you'd like to solve and we can revisit this decision !</p>
+</div>
+<h3 id="example-to-exclude-a-whole-package">Example to exclude a whole package<a class="headerlink" href="#example-to-exclude-a-whole-package" title="Permanent link">#</a></h3>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">vars</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">exclude_packages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;upstream_package&quot;</span><span class="p p-Indicator">]</span>
 </span></code></pre></div>
-<p>which looks like the following when loaded in the warehouse</p>
-<table>
-<thead>
-<tr>
-<th>fct_name</th>
-<th>column_name</th>
-<th>id_to_exclude</th>
-<th>comment</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>fct_multiple_sources_joined</td>
-<td>child</td>
-<td>stg_%_unioned</td>
-<td>Models called _unioned can union multiple sources</td>
-</tr>
-</tbody>
-</table>
-<h2 id="2-deactivate-the-seed-from-the-original-package">2. Deactivate the seed from the original package<a class="headerlink" href="#2-deactivate-the-seed-from-the-original-package" title="Permanent link">#</a></h2>
-<p>Only a single seed can exist with a given name. When using a custom one, we need to deactivate the blank one from the package by adding the following to our <code>dbt_project.yml</code></p>
-<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">seeds</span><span class="p">:</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">dbt_project_evaluator_exceptions</span><span class="p">:</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">+enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<h3 id="example-to-exclude-modelssources-in-a-given-path">Example to exclude models/sources in a given path<a class="headerlink" href="#example-to-exclude-modelssources-in-a-given-path" title="Permanent link">#</a></h3>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">vars</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">exclude_paths_from_project</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/models/legacy/&quot;</span><span class="p p-Indicator">]</span>
 </span></code></pre></div>
-<h2 id="3-run-the-seed-and-the-package">3. Run the seed and the package<a class="headerlink" href="#3-run-the-seed-and-the-package" title="Permanent link">#</a></h2>
-<p>We then run both the seed and the package by executing the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>dbt<span class="w"> </span>build<span class="w"> </span>--select<span class="w"> </span>package:dbt_project_evaluator<span class="w"> </span>dbt_project_evaluator_exceptions
+<h3 id="example-to-exclude-both-a-package-and-modelssources-in-2-different-paths">Example to exclude both a package and models/sources in 2 different paths<a class="headerlink" href="#example-to-exclude-both-a-package-and-modelssources-in-2-different-paths" title="Permanent link">#</a></h3>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">vars</span><span class="p">:</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">exclude_packages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;upstream_package&quot;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">exclude_paths_from_project</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;/models/legacy/&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;/my_date_spine.sql&quot;</span><span class="p p-Indicator">]</span>
 </span></code></pre></div>
+<h2 id="tips-and-tricks">Tips and tricks<a class="headerlink" href="#tips-and-tricks" title="Permanent link">#</a></h2>
+<p>Regular expressions are very powerful but can become complex. After defining your value for <code>exclude_paths_from_project</code>, we recommend running the package and inspecting the model <code>int_all_graph_resources</code>, checking if the value in the column <code>is_excluded</code> matches your expectation.</p>
+<p>A useful tool to debug regular expression is <a href="https://regex101.com/">regex101</a>. You can provide a pattern and a list of strings to see which ones actually match the pattern.</p>
 
 
 
@@ -671,7 +689,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../customization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Disabling checks" rel="prev">
+          <a href="../exceptions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuring exceptions to the rules" rel="prev">
             <div class="md-footer__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
             </div>
@@ -680,20 +698,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Disabling checks
+                Configuring exceptions to the rules
               </div>
             </div>
           </a>
         
         
           
-          <a href="../excluding-packages-and-paths/" class="md-footer__link md-footer__link--next" aria-label="Next: Excluding packages and models/sources based on path" rel="next">
+          <a href="../issues-in-log/" class="md-footer__link md-footer__link--next" aria-label="Next: Display issues in the logs" rel="next">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Excluding packages and models/sources based on path
+                Display issues in the logs
               </div>
             </div>
             <div class="md-footer__button md-icon">

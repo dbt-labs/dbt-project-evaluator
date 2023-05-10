@@ -15,7 +15,7 @@
         <link rel="next" href="../structure/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.8">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.11">
     
     
       
@@ -23,10 +23,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ded33207.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.85bb2934.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.a0c5b2b5.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.a6bdf11c.min.css">
       
       
 
@@ -61,7 +61,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
   
     
     
@@ -124,7 +124,7 @@
             
             
             
-            <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+            <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
             
               <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
@@ -134,7 +134,7 @@
             
             
             
-            <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+            <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
             
               <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
@@ -459,20 +459,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../customization/customization/" class="md-nav__link">
-        Disabling models
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../customization/overriding-variables/" class="md-nav__link">
         Overriding variables
       </a>
@@ -487,8 +473,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../customization/customization/" class="md-nav__link">
+        Disabling checks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../customization/exceptions/" class="md-nav__link">
         Configuring exceptions to the rules
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/excluding-packages-and-paths/" class="md-nav__link">
+        Excluding packages and models/sources based on path
       </a>
     </li>
   
@@ -592,41 +606,42 @@
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">&#39;int_all_graph_resources&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="k">where</span><span class="w"> </span><span class="n">resource_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;model&#39;</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">),</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">conversion</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="k">select</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="n">resource_id</span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">is_described</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">is_described_model</span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="s1">&#39;model_types&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{{ model_type }}&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">is_</span><span class="err">{{</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="err">}}</span><span class="n">_model</span><span class="p">,</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">is_described</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{{ model_type }}&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">is_described_</span><span class="err">{{</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="err">}}</span><span class="n">_model</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">loop</span><span class="p">.</span><span class="k">last</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="p">,</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endif</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">models</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">),</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="k">final</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="k">select</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">        </span><span class="k">current_timestamp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">measured_at</span><span class="p">,</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_models</span><span class="p">,</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="k">sum</span><span class="p">(</span><span class="n">is_described_model</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">documented_models</span><span class="p">,</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">        </span><span class="n">round</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">is_described_model</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">documentation_coverage_pct</span><span class="p">,</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="s1">&#39;model_types&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">            </span><span class="n">round</span><span class="p">(</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">                </span><span class="err">{{</span><span class="w"> </span><span class="n">dbt_utils</span><span class="p">.</span><span class="n">safe_divide</span><span class="p">(</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">                    </span><span class="n">numerator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;sum(is_described_&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="ss">&quot;_model) * 100&quot;</span><span class="p">,</span><span class="w"> </span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">                    </span><span class="n">denominator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;count(is_&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="ss">&quot;_model)&quot;</span>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">                </span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">            </span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="err">}}</span><span class="n">_documentation_coverage_pct</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">loop</span><span class="p">.</span><span class="k">last</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="p">,</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endif</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">models</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">    </span><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="k">conversion</span>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">    </span><span class="k">on</span><span class="w"> </span><span class="n">models</span><span class="p">.</span><span class="n">resource_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">conversion</span><span class="p">.</span><span class="n">resource_id</span>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">)</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">final</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="k">and</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">is_excluded</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">),</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">conversion</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="k">select</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="n">resource_id</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">is_described</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">is_described_model</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="s1">&#39;model_types&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{{ model_type }}&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">is_</span><span class="err">{{</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="err">}}</span><span class="n">_model</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">is_described</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{{ model_type }}&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">end</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">is_described_</span><span class="err">{{</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="err">}}</span><span class="n">_model</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">loop</span><span class="p">.</span><span class="k">last</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="p">,</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endif</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">models</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">),</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="k">final</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">    </span><span class="k">select</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">        </span><span class="k">current_timestamp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">measured_at</span><span class="p">,</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">        </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_models</span><span class="p">,</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">        </span><span class="k">sum</span><span class="p">(</span><span class="n">is_described_model</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">documented_models</span><span class="p">,</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">        </span><span class="n">round</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">is_described_model</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">documentation_coverage_pct</span><span class="p">,</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="s1">&#39;model_types&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">            </span><span class="n">round</span><span class="p">(</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">                </span><span class="err">{{</span><span class="w"> </span><span class="n">dbt_utils</span><span class="p">.</span><span class="n">safe_divide</span><span class="p">(</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">                    </span><span class="n">numerator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;sum(is_described_&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="ss">&quot;_model) * 100&quot;</span><span class="p">,</span><span class="w"> </span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">                    </span><span class="n">denominator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;count(is_&quot;</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="ss">&quot;_model)&quot;</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">                </span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">            </span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="n">model_type</span><span class="w"> </span><span class="err">}}</span><span class="n">_documentation_coverage_pct</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">loop</span><span class="p">.</span><span class="k">last</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="p">,</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endif</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">        </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="n">models</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">    </span><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="k">conversion</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">    </span><span class="k">on</span><span class="w"> </span><span class="n">models</span><span class="p">.</span><span class="n">resource_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">conversion</span><span class="p">.</span><span class="n">resource_id</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="p">)</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">final</span>
 </span></code></pre></div>
 </details>
 <p><code>fct_documentation_coverage</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_documentation_coverage.sql">source</a>) calculates the percent of enabled models in the project that have
@@ -733,7 +748,7 @@ function in the model's <code>.yml</code> entry.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.footer", "navigation.instant", "navigation.tracking", "content.action.edit", "toc.integrate"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.51198bba.min.js"></script>
+      <script src="../../assets/javascripts/bundle.fac441b0.min.js"></script>
       
     
   </body>
