@@ -18,3 +18,5 @@ final as (
 )
 
 select * from final
+
+{{ filter_exceptions(this) }}

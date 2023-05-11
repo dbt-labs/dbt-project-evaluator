@@ -11,6 +11,8 @@ all_graph_resources as (
         file_name,
         model_type,
         materialized,
+        is_public, 
+        access, 
         source_name 
     from {{ ref('int_all_graph_resources') }}
 ),

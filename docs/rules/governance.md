@@ -28,7 +28,7 @@ Models with public access are free to be consumed by any downstream consumer. Th
 Edit the yml to include the contract configuration, as well as a column entry for all columns output by the model, including their datatype. While not strictly required for defining a contracts, it's best practice to also document each column as well. 
 
 ```yml
-
+models:
   - name: report_1
     description: very important OKR reporting model
     access: public
@@ -69,7 +69,7 @@ Models with public access are free to be consumed by any downstream consumer. Th
 Edit the yml to include a model level description,  as well as a column entry with a description for all columns output by the model. While not strictly required for public models, these should likely also have contracts added as well. (See above rule)
 
 ```yml
-
+models:
   - name: report_1
     description: very important OKR reporting model
     access: public
@@ -80,5 +80,70 @@ Edit the yml to include a model level description,  as well as a column entry wi
     columns:
       - name: id 
         description: the primary key of my OKR model
+        data_type: integer
+```
+
+## Exposures dependent on private models
+
+`fct_exposures_dependent_on_private_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_exposures_dependent_on_private_models.sql)) shows each relationship between a resource and an exposure where the parent resource is not a model with `access` configured as public.
+
+**Example**
+
+Here's a sample DAG that shows direct exposure relationships. 
+
+![An example exposure with a two parents (fct_model_6 and dim_model_7)](https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png){ width=500 }
+
+If this were the yml for these two parent models, `dim_model_7` would be flagged by this model, as it is not a public model. 
+
+```yml
+models:
+  - name: fct_model_6
+    description: very important OKR reporting model
+    access: public
+    config:
+      materialized: table
+      contract:
+        enforced: true
+    columns:
+      - name: id 
+        description: the primary key of my OKR model
+        data_type: integer
+  - name: dim_model_7
+    description: excellent model
+    access: private
+```
+
+
+**Reason to Flag**
+
+Exposures show how and where your data is being consumed in downstream tools. These tools should read from public, trusted, contracted data sources. All models that are exposed to other tools should have that codified in their `access` configuration. 
+
+**How to Remediate**
+
+Edit the yml to include fully expose the models that your exposures depend on. This should include `access`, a full model contract, and descriptions at all levels of the model. 
+
+```yml
+models:
+  - name: fct_model_6
+    description: very important OKR reporting model
+    access: public
+    config:
+      materialized: table
+      contract:
+        enforced: true
+    columns:
+      - name: id 
+        description: the primary key of my OKR model
+        data_type: integer
+  - name: dim_model_7
+    description: excellent model
+    access: public
+    config:
+      materialized: table
+      contract:
+        enforced: true
+    columns:
+      - name: id 
+        description: the primary key of my excellent model
         data_type: integer
 ```
