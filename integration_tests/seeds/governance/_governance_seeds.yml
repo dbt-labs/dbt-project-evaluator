@@ -5,3 +5,8 @@ seeds:
     tests:
       - dbt_utils.equality:
           compare_model: ref('fct_public_models_without_contract')
+
+  - name: test_fct_undocumented_public_models
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref('fct_undocumented_public_models')
