@@ -9,6 +9,8 @@ theme:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
@@ -16,6 +18,8 @@ theme:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -71,9 +75,10 @@ nav:
     - Structure: rules/structure.md
     - Performance: rules/performance.md
   - Customization: 
-    - Disabling models: customization/customization.md
     - Overriding variables: customization/overriding-variables.md
+    - Disabling checks: customization/customization.md
     - Configuring exceptions to the rules: customization/exceptions.md
+    - Excluding packages and models/sources based on path: customization/excluding-packages-and-paths.md
     - Display issues in the logs: customization/issues-in-log.md
   - Run in CI Check: ci-check.md
   - Querying the DAG: querying-the-dag.md

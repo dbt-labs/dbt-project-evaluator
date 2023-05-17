@@ -24,6 +24,7 @@ Docs are then automatically pushed to the website as part of our CI/CD process. 
         "markdownlint.config": {
             "ul-indent": {"indent": 4},
             "MD036": false,
+            "MD046": false,
         }
         ```
 

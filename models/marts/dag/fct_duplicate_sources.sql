@@ -8,6 +8,7 @@ with sources as (
         end as source_db_location 
     from {{ ref('int_all_graph_resources') }}
     where resource_type = 'source'
+    and not is_excluded
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by 1, 2
 ),

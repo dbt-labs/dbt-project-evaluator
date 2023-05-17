@@ -6,6 +6,8 @@ with direct_model_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where child_resource_type = 'model'
     and distance = 1
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 
 model_and_source_joined as (

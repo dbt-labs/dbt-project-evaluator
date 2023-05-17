@@ -2,6 +2,8 @@ with all_dag_relationships as (
     select  
         *
     from {{ ref('int_all_dag_relationships') }}
+    where not parent_is_excluded
+    and not child_is_excluded
 ),
 
 -- find all models without children

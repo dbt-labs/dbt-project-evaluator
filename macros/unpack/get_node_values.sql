@@ -11,6 +11,8 @@
     {%- for node in nodes_list -%}
 
         {%- set hard_coded_references = dbt_project_evaluator.find_all_hard_coded_references(node) -%}
+        {%- set exclude_node = dbt_project_evaluator.set_is_excluded(node, resource_type="node") -%}
+
 
         {%- set values_line  = 
             [
@@ -30,7 +32,8 @@
                 wrap_string_with_quotes(node.meta | tojson),
                 wrap_string_with_quotes(dbt.escape_single_quotes(hard_coded_references)),
                 wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
-                "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)"
+                "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)",
+                "cast(" ~ exclude_node ~ " as boolean)",
             ]
         %}
 
