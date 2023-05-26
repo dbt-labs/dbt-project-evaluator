@@ -10,9 +10,9 @@
         {{ print("\n-- " ~ result.node.alias ~ " --") }}
 
         {% set unique_id_model_checked = result.node.depends_on.nodes[0] %}
-        {% set name_model_checked = unique_id_model_checked.split('.')[-1] %}
 
         {% set model_details = graph["nodes"][unique_id_model_checked] %}
+        {% set name_model_checked = model_details.alias %}
         {% set model_schema = model_details.schema %}
         {% set model_database = model_details.database %}
         {% set db_schema = model_database ~ "." ~ model_schema if model_database else model_schema %}
