@@ -84,4 +84,4 @@ different_directories as (
 
 select * from different_directories
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

@@ -65,6 +65,6 @@ unioned as (
 
 select * from unioned
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}
  
 
