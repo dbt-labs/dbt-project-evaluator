@@ -66,4 +66,4 @@ final_filtered as (
 
 select * from final_filtered
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}
