@@ -23,4 +23,4 @@ inappropriate_subdirectories_sources as (
 
 select * from inappropriate_subdirectories_sources
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}
