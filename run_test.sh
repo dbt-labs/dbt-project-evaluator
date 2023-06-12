@@ -19,12 +19,17 @@ fi
 . $VENV
 
 cd integration_tests
-
 if [[ ! -e ~/.dbt/profiles.yml ]]; then
     mkdir -p ~/.dbt
     cp ci/sample.profiles.yml ~/.dbt/profiles.yml
 fi
 
+# used for now while we still test against 1.5 on DuckdDB
+if [[ $1 == "duckdb" ]] ; then
+    cp models/marts/metrics.yml.dbt_metrics models/marts/metrics.yml
+fi
+
+# tests with the first project
 dbt deps --target $1 || exit 1
 dbt build -x --target $1 --full-refresh || exit 1
 
