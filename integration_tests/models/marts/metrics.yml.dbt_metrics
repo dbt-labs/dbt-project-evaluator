@@ -4,11 +4,6 @@ metrics:
   - name: new_customers
     label: New Customers marked 'paying'
     model: ref('dim_model_7')
-    type: simple
-    type_params:
-      measure:
-        name: "new_with_metricflow"
-        filter: "loves_dbt is true"
     description: "The number of paid customers using the product"
 
     calculation_method: count
