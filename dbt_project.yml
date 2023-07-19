@@ -2,7 +2,7 @@ name: 'dbt_project_evaluator'
 version: '1.0.0'
 config-version: 2
 
-require-dbt-version: [">=1.6.0", "<2.0.0"]
+require-dbt-version: [">=1.6.0-rc1", "<2.0.0"]
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
