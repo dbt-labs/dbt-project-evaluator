@@ -4,6 +4,7 @@
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
     where not is_excluded
+    -- exclude required metricflow time spine
     and resource_name != 'metricflow_time_spine'
 ),
 

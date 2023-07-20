@@ -2,8 +2,8 @@ version: 2
 
 
 semantic_models:
-  - name: my_model # A semantic model with the name Transactions
-    model: ref('dim_model_7') # References the dbt model named `fact_transactions`
+  - name: my_model 
+    model: ref('dim_model_7') 
     description: "Transaction fact table at the transaction level. This table contains one row per transaction and includes the transaction timestamp."
     defaults:
       agg_time_dimension: date_day
