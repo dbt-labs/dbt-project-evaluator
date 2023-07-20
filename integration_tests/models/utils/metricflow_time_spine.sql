@@ -1,4 +1,5 @@
 -- metricflow_time_spine.sql
+{% set date_expr = "current_date()" if target.type in ["duckdb"] else dbt.current_timestamp() %}
 {{
     config(
         materialized = 'table',
@@ -10,8 +11,8 @@ with days as (
     {{
         dbt_utils.date_spine(
             'day',
-            dbt.safe_cast(dbt.current_timestamp(), "date"),
-            dbt.dateadd('day', 1, dbt.safe_cast(dbt.current_timestamp(), "date")),
+            date_expr,
+            dbt.dateadd('day', 1, date_expr),
         )
     }}
 
