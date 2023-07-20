@@ -8,6 +8,8 @@ with model_relationships as (
     -- only filter out excluded children nodes
         -- filtering parents could result in incorrectly flagging nodes that depend on excluded nodes
     and not child_is_excluded
+    -- exclude required time spine
+    and child != 'metricflow_time_spine'
 ),
 
 final as (
