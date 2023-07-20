@@ -39,6 +39,10 @@ seeds:
       +enabled: false
 ```
 
+> The default `dbt_project_evaluator_exceptions.csv` file includes two exceptions for the [`metricflow_time_spine` model required](https://docs.getdbt.com/docs/build/metricflow-time-spine) for dbt metrics users on dbt 1.6+.
+> Specifically, it will exclude this datespine model from the root model and naming convention checks.
+> When overriding this file, consider keeping these checks in your seed if you are using the dbt semantic layer.
+
 ## 3. Run the seed and the package
 
 We then run both the seed and the package by executing the following command:
