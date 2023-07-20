@@ -1,16 +1,20 @@
+-- metricflow_time_spine.sql
 {{
-  config(
-    materialized = 'table',
+    config(
+        materialized = 'table',
     )
 }}
 
--- metricflow_time_spine.sql
 with days as (
-    {{ dbt_utils.date_spine('day'
-    , "to_date('01/01/2000','mm/dd/yyyy')"
-    , "to_date('01/01/2027','mm/dd/yyyy')"
-    )
+
+    {{
+        dbt_utils.date_spine(
+            'day',
+            dbt.safe_cast(dbt.current_timestamp(), "date"),
+            dbt.dateadd('day', 1, dbt.safe_cast(dbt.current_timestamp(), "date")),
+        )
     }}
+
 ),
 
 final as (
@@ -18,5 +22,4 @@ final as (
     from days
 )
 
-select *
-from final
+select * from final
