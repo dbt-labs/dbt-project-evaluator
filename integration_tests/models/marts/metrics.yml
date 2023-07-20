@@ -5,6 +5,8 @@ semantic_models:
   - name: my_model # A semantic model with the name Transactions
     model: ref('dim_model_7') # References the dbt model named `fact_transactions`
     description: "Transaction fact table at the transaction level. This table contains one row per transaction and includes the transaction timestamp."
+    defaults:
+      agg_time_dimension: date_day
 
     entities: # Entities included in the table are defined here. MetricFlow will use these columns as join keys.
       - name: dim
@@ -15,10 +17,16 @@ semantic_models:
       - name: id
         type: categorical
 
+      - name: date_day
+        type: time
+        type_params:
+          time_granularity: day
+
     measures: # Measures are columns we perform an aggregation over. Measures are inputs to metrics.
       - name: total_count
         description: "The total count."
         agg: count
+        expr: 1
 
 metrics:
   - name: new_metric

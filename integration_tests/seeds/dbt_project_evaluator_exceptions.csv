@@ -1,2 +1,4 @@
 fct_name,column_name,id_to_exclude,comment
 fct_direct_join_to_source,parent,stg_model_1,This is actually OK because...
+fct_model_naming_conventions,resource_name,metricflow_time_spine,naming convention required by metricflow
+fct_root_models,child,metricflow_time_spine,macro time spine
