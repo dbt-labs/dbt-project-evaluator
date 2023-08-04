@@ -3,7 +3,7 @@
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
 Specifically, this package tests for:
 
-1. __[Modeling](/rules/modeling)__ - your dbt DAG for modeling best practices
+1. __[Modeling](./rules/modeling)__ - your dbt DAG for modeling best practices
 1. __[Testing](/rules/testing)__ - your models for testing best practices
 1. __[Documentation](/rules/documentation)__ - your models for documentation best practices
 1. __[Structure](/rules/structure)__ - your dbt project for file structure and naming best practices
