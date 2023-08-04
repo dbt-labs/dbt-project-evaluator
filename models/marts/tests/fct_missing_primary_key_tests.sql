@@ -1,9 +1,3 @@
-{{
-  config(
-    alias = 'my_alias',
-    )
-}}
-
 with 
 
 tests as (
