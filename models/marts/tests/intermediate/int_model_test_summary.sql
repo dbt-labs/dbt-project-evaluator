@@ -62,7 +62,7 @@ final as (
     from all_graph_resources
     left join agg_test_relationships
         on all_graph_resources.resource_id = agg_test_relationships.direct_parent_id
-    where all_graph_resources.resource_type = 'model'
+    where all_graph_resources.resource_type in ('model', 'seed', 'source', 'snapshot')
 )
 
 select * from final
