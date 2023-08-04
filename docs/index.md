@@ -3,11 +3,11 @@
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
 Specifically, this package tests for:
 
-1. __[Modeling](./rules/modeling)__ - your dbt DAG for modeling best practices
-1. __[Testing](/rules/testing)__ - your models for testing best practices
-1. __[Documentation](/rules/documentation)__ - your models for documentation best practices
-1. __[Structure](/rules/structure)__ - your dbt project for file structure and naming best practices
-1. __[Performance](/rules/performance)__ - your model materializations for performance best practices
+1. __[Modeling](/main/rules/modeling)__ - your dbt DAG for modeling best practices
+1. __[Testing](/main/rules/testing)__ - your models for testing best practices
+1. __[Documentation](/main/rules/documentation)__ - your models for documentation best practices
+1. __[Structure](/main/rules/structure)__ - your dbt project for file structure and naming best practices
+1. __[Performance](/main/rules/performance)__ - your model materializations for performance best practices
 
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 
