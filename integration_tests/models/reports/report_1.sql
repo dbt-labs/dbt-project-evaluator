@@ -1,3 +1,3 @@
 -- {{ ref('fct_model_6') }}
 
-select true
+select true as col
