@@ -159,9 +159,9 @@ with direct_relationships as (
         resource_name,
         materialized as child_materialized,
         is_public as child_is_public,
-        access as child_access
-
+        access as child_access,
         is_excluded as child_is_excluded
+        
     from direct_relationships
 )
 
