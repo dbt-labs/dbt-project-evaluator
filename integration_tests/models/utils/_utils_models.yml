@@ -1,0 +1,8 @@
+models:
+  - name: metricflow_time_spine
+    description: default time spine for metricflow 
+    columns:
+      - name: date_day
+        tests:
+          - unique
+          - not_null
