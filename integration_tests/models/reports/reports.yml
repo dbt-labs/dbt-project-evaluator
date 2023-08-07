@@ -2,8 +2,10 @@ version: 2
 
 models:
   - name: report_1
-    description: tom cruise's minorty report
+    description: tom cruise's minority report
     access: public
+    config:
+      materialized: table
   - name: report_2
     access: public
     config:

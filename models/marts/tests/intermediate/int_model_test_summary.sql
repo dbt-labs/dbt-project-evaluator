@@ -2,6 +2,7 @@ with
 
 all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
+    where not is_excluded
 ),
 
 relationships as (

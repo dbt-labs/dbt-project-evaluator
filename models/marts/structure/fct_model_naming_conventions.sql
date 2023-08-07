@@ -3,6 +3,9 @@
 
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
+    where not is_excluded
+    -- exclude required metricflow time spine
+    and resource_name != 'metricflow_time_spine'
 ),
 
 naming_convention_prefixes as (
@@ -51,4 +54,4 @@ inappropriate_model_names as (
 
 select * from inappropriate_model_names
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

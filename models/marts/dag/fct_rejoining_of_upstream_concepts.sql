@@ -4,6 +4,8 @@ with all_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type not in ('exposures', 'metrics')
     and child_resource_type not in ('exposures', 'metrics')
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 
 -- all parent/child relationships where the parent is BOTH the direct parent of the child and the second level parent of the child 
@@ -64,4 +66,4 @@ final_filtered as (
 
 select * from final_filtered
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

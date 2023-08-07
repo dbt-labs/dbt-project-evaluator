@@ -2,6 +2,7 @@ with
 
 all_resources as (
     select * from {{ ref('int_all_graph_resources') }}
+    where not is_excluded
 
 ),
 
@@ -18,4 +19,4 @@ final as (
 
 select * from final
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

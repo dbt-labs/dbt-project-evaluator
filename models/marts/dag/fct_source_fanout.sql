@@ -6,6 +6,8 @@ with direct_source_relationships as (
     where distance = 1
     and parent_resource_type = 'source'
     and child_resource_type = 'model'
+    and not parent_is_excluded
+    and not child_is_excluded
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by child
 ),
@@ -25,4 +27,4 @@ source_fanout as (
 
 select * from source_fanout
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

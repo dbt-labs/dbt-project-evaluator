@@ -5,6 +5,8 @@ with source_relationships as (
         *
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type = 'source'
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 
 final as (
@@ -17,4 +19,4 @@ final as (
 
 select * from final
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

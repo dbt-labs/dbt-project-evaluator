@@ -13,6 +13,8 @@ direct_exposure_relationships as (
                 parent_resource_type = 'source'
             )
         )
+        -- no test on child_is_excluded because exposures are never excluded
+        and not parent_is_excluded
 ),
 
 final as (
@@ -29,4 +31,4 @@ final as (
 
 select * from final
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

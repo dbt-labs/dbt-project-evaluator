@@ -4,6 +4,7 @@ with
 resources as (
 
     select * from {{ ref('int_all_graph_resources') }}
+    where not is_excluded
 
 ),
 
@@ -84,4 +85,4 @@ different_directories as (
 
 select * from different_directories
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

@@ -94,16 +94,22 @@ joined as (
         unioned_with_calc.meta,
         unioned_with_calc.macro_dependencies,
         unioned_with_calc.metric_type, 
-        unioned_with_calc.model, 
         unioned_with_calc.label, 
-        unioned_with_calc.sql, 
-        unioned_with_calc.timestamp as timestamp,  
+        unioned_with_calc.metric_filter,
+        unioned_with_calc.metric_measure,
+        unioned_with_calc.metric_measure_alias,
+        unioned_with_calc.numerator,
+        unioned_with_calc.denominator,
+        unioned_with_calc.expr,
+        unioned_with_calc.metric_window,
+        unioned_with_calc.grain_to_date,
         unioned_with_calc.source_name, -- NULL for non-source resources
         unioned_with_calc.is_source_described, 
         unioned_with_calc.loaded_at_field, 
         unioned_with_calc.loader, 
         unioned_with_calc.identifier,
-        unioned_with_calc.hard_coded_references -- NULL for non-model resources
+        unioned_with_calc.hard_coded_references, -- NULL for non-model resources
+        unioned_with_calc.is_excluded -- NULL for metrics and exposures
 
     from unioned_with_calc
     left join naming_convention_prefixes

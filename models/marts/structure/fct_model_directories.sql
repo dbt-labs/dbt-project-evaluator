@@ -55,6 +55,7 @@ innappropriate_subdirectories_non_staging_models as (
         on folders.model_type = all_graph_resources.model_type 
     -- either appropriate folder_name is not in the current_directory_path or a inappropriate folder name is closer to the file_name
     where all_graph_resources.model_type <> all_graph_resources.model_type_folder 
+    and not is_excluded
 ),
 
 unioned as (
@@ -65,6 +66,6 @@ unioned as (
 
 select * from unioned
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}
  
 

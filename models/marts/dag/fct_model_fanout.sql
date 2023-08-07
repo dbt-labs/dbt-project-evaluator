@@ -2,6 +2,8 @@ with all_dag_relationships as (
     select  
         *
     from {{ ref('int_all_dag_relationships') }}
+    where not parent_is_excluded
+    and not child_is_excluded
 ),
 
 -- find all models without children
@@ -46,4 +48,4 @@ model_fanout_agg as (
 
 select * from model_fanout_agg
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

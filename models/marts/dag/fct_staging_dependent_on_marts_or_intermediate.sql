@@ -7,6 +7,8 @@ with direct_model_relationships as (
     where distance = 1
     and parent_resource_type = 'model'
     and child_resource_type = 'model'
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 final as (
     select
@@ -20,4 +22,4 @@ final as (
 )
 select * from final
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

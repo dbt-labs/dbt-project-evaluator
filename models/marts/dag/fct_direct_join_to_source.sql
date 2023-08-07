@@ -6,6 +6,8 @@ with direct_model_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where child_resource_type = 'model'
     and distance = 1
+    and not parent_is_excluded
+    and not child_is_excluded
 ),
 
 model_and_source_joined as (
@@ -25,7 +27,11 @@ model_and_source_joined as (
 
 final as (
     select 
-        direct_model_relationships.*
+        direct_model_relationships.parent,
+        direct_model_relationships.parent_resource_type,
+        direct_model_relationships.child,
+        direct_model_relationships.child_resource_type,
+        direct_model_relationships.distance
     from direct_model_relationships
     inner join model_and_source_joined
         on direct_model_relationships.child = model_and_source_joined.child
@@ -35,4 +41,4 @@ final as (
 
 select * from final
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

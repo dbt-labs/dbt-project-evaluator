@@ -12,7 +12,7 @@ hide:
 |Modeling                                      |[Rejoining of Upstream Concepts](../rules/modeling/#rejoining-of-upstream-concepts)                                    |`fct_rejoining_of_upstream_concepts`|
 |Modeling                                      |[Model Fanout](../rules/modeling/#model-fanout)                                                                        |`fct_model_fanout`|
 |Modeling                                      |[Downstream Models Dependent on Source](../rules/modeling/#downstream-models-dependent-on-source)                      |`fct_marts_or_intermediate_dependent_on_source`|
-|Modeling                                      |[Direct Join to Source](/..rules/modeling/#direct-join-to-source)                                                      |`fct_direct_join_to_source`|
+|Modeling                                      |[Direct Join to Source](../rules/modeling/#direct-join-to-source)                                                      |`fct_direct_join_to_source`|
 |Modeling                                      |[Duplicate Sources](../rules/modeling/#duplicate-sources)                                                              |`fct_duplicate_sources`|
 |Modeling                                      |[Hard Coded References](../rules/modeling/#hard-coded-references)                                                      |`fct_hard_coded_references`|
 |Modeling                                      |[Multiple Sources Joined](../rules/modeling/#multiple-sources-joined)                                                  |`fct_multiple_sources_joined`|

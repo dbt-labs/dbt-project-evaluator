@@ -6,6 +6,7 @@
 
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
+    where not is_excluded
 ),
 
 -- find all sources that are definied in a .yml file NOT in their subdirectory
@@ -22,4 +23,4 @@ inappropriate_subdirectories_sources as (
 
 select * from inappropriate_subdirectories_sources
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

@@ -21,13 +21,16 @@ select
     cast(null as {{ dbt.type_string() }}) as file_path,
     cast(True as boolean) as is_described,
     cast(null as {{ dbt.type_string() }}) as metric_type,
-    cast(null as {{ dbt.type_string() }}) as model,
     cast(null as {{ dbt.type_string() }}) as label,
-    cast(null as {{ dbt.type_string() }}) as sql,
-    cast(null as {{ dbt.type_string() }}) as timestamp,
     cast(null as {{ dbt.type_string() }}) as package_name,
-    cast(null as {{ dbt.type_string() }}) as dimensions,
-    cast(null as {{ dbt.type_string() }}) as filters,
+    cast(null as {{ dbt.type_string() }}) as metric_filter,
+    cast(null as {{ dbt.type_string() }}) as metric_measure,
+    cast(null as {{ dbt.type_string() }}) as metric_measure_alias,
+    cast(null as {{ dbt.type_string() }}) as numerator,
+    cast(null as {{ dbt.type_string() }}) as denominator,
+    cast(null as {{ dbt.type_string() }}) as expr,
+    cast(null as {{ dbt.type_string() }}) as metric_window,
+    cast(null as {{ dbt.type_string() }}) as grain_to_date,
     cast(null as {{ dbt.type_string() }}) as meta
 
 from dummy_cte

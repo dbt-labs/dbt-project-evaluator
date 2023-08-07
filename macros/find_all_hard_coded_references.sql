@@ -6,7 +6,7 @@
 
     {%- set all_hard_coded_references_list = [] -%}
 
-    {% if node.resource_type == 'model' %}
+    {% if node.resource_type == 'model' and node.language == "sql" %}
 
         {% if execute %}
         {%- set model_raw_sql = node.raw_sql or node.raw_code -%}

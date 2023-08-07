@@ -5,6 +5,8 @@ with direct_model_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type in ('model', 'snapshot')
     and child_resource_type in ('model', 'snapshot')
+    and not parent_is_excluded
+    and not child_is_excluded
     and distance = 1
 ),
 
@@ -21,4 +23,4 @@ bending_connections as (
 
 select * from bending_connections
 
-{{ filter_exceptions(this) }}
+{{ filter_exceptions(model.name) }}

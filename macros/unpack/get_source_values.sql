@@ -10,6 +10,8 @@
 
     {%- for node in nodes_list -%}
 
+        {%- set exclude_source = dbt_project_evaluator.set_is_excluded(node, resource_type="source") -%}
+
          {%- set values_line = 
             [
               wrap_string_with_quotes(node.unique_id),
@@ -27,7 +29,8 @@
               wrap_string_with_quotes(node.package_name),
               wrap_string_with_quotes(node.loader),
               wrap_string_with_quotes(node.identifier),
-              wrap_string_with_quotes(node.meta | tojson)
+              wrap_string_with_quotes(node.meta | tojson),
+              "cast(" ~ exclude_source ~ " as boolean)",
             ]
         %}
             
