@@ -9,6 +9,7 @@ Currently, this package uses different variables to adapt the models to your obj
 | `test_coverage_target` | the minimum acceptable test coverage percentage | 100% |
 | `documentation_coverage_target` | the minimum acceptable documentation coverage percentage | 100% |
 | `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | `[["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]` |
+| `enforced_primary_key_node_types` | the set of node types for you you would like to enforce primary key test coverage. Valid options are `model`, `source`, `snapshot`, `seed` | `model`
 
 **Usage notes for `primary_key_test_macros:`**
 
