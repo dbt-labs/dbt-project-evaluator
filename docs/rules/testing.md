@@ -21,17 +21,11 @@ Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/
 Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests)
 in the `tests` directory of you project.
 
-**Enforcing on more node types and primary key test options (Advanced)**
+**Enforcing on more node types(Advanced)**
 
 You can optionally extend this test to apply to more node types (`source`,`snapshot`, `seed`). By configuring the variable `enforced_primary_key_node_types` to be a set of node types for which you wish to enforce primary key test coverage in addition to (or instead of) just models. Check out the [overriding variables section](../customization/overriding-variables.md) for instructions
 
 Snapshots should always have a multi-field primary key in order to function, while sources and seeds may not. Depending on your expectations for duplicates and null values, different kinds of primary key tests may be appropriate. Consider your use case carefully.
-
-Here are some options for primary key tests you can configure:
-1. a `dbt.test_unique` applied to a single column, perhaps with `dbt.test_not_null`. Both are [included with DBT core](https://docs.getdbt.com/docs/build/tests#generic-tests).
-2. `dbt_utils.test_unique_combination_of_columns` in the [DBT Utils](https://github.com/dbt-labs/dbt-utils) package tests for multi-field uniqueness, but does not enforce that the fields are not null
-3. `dbt_constraints.test_primary_key` in the [DBT Constraints](https://github.com/Snowflake-Labs/dbt_constraints) package tests for multi-field uniqueness and that each field is not null
-
 
 ---
 
