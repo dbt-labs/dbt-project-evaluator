@@ -21,7 +21,7 @@ models:
 
 **Reason to Flag**
 
-Models with public access are free to be consumed by any downstream consumer. This implies a need for better guarantees around the model's data types and columns. Adding a contract to the model will ensure that the model *always* conforms to the datatypes you expect. 
+Models with public access are free to be consumed by any downstream consumer. This implies a need for better guarantees around the model's data types and columns. Adding a contract to the model will ensure that the model *always* conforms to the datatypes, columns, and other constraints you expect. 
 
 **How to Remediate**
 
@@ -91,7 +91,7 @@ Here's a sample DAG that shows direct exposure relationships.
 
 ![An example exposure with a two parents (fct_model_6 and dim_model_7)](https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png){ width=500 }
 
-If this were the yml for these two parent models, `dim_model_7` would be flagged by this model, as it is not a public model. 
+If this were the yml for these two parent models, `dim_model_7` would be flagged by this check, as it is not a public model. 
 
 ```yml
 models:
