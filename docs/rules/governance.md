@@ -33,7 +33,6 @@ models:
     description: very important OKR reporting model
     access: public
     config:
-      materialized: table
       contract:
         enforced: true
     columns:
@@ -44,14 +43,14 @@ models:
 
 ## Undocumented public models
 
-`fct_undocumented_public_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_undocumented_public_models.sql)) shows each model with `access` configured as public that is not fully documented. This check is similar to `fct_undocumented_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/documentation/fct_undocumented_models.sql)), but is a stricter check that will highlight any public model that does not have a model-level description as well descriptions on each of its columns. 
+`fct_undocumented_public_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_undocumented_public_models.sql)) shows each model with `access` configured as public that is not fully documented. This check is similar to `fct_undocumented_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/documentation/fct_undocumented_models.sql)), but is a stricter check that will highlight any public model that does not have a model-level description as well descriptions on each of its columns.
 
 **Example**
 
-`report_1` is defined as a public model, but does not descriptions on the model and each column 
+`report_1` is defined as a public model, but does not descriptions on the model and each column.
 
 ```yml
-# public model without a contract
+# public model without documentation
 models:
   - name: report_1
     access: public
@@ -66,7 +65,7 @@ Models with public access are free to be consumed by any downstream consumer. Th
 
 **How to Remediate**
 
-Edit the yml to include a model level description,  as well as a column entry with a description for all columns output by the model. While not strictly required for public models, these should likely also have contracts added as well. (See above rule)
+Edit the yml to include a model level description,  as well as a column entry with a description for all columns output by the model. While not strictly required for public models, these should likely also have contracts added as well. (See [above rule](#public-models-without-contracts))
 
 ```yml
 models:
@@ -74,7 +73,6 @@ models:
     description: very important OKR reporting model
     access: public
     config:
-      materialized: table
       contract:
         enforced: true
     columns:
@@ -120,7 +118,7 @@ Exposures show how and where your data is being consumed in downstream tools. Th
 
 **How to Remediate**
 
-Edit the yml to include fully expose the models that your exposures depend on. This should include `access`, a full model contract, and descriptions at all levels of the model. 
+Edit the yml to include fully expose the models that your exposures depend on. This rule will only flag models that are not `public`, but best practices suggest you should also fully document and contracts these public models as well. 
 
 ```yml
 models:
