@@ -9,6 +9,7 @@ Currently, this package uses different variables to adapt the models to your obj
 | `test_coverage_target` | the minimum acceptable test coverage percentage | 100% |
 | `documentation_coverage_target` | the minimum acceptable documentation coverage percentage | 100% |
 | `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | `[["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]` |
+| `enforced_primary_key_node_types` | the set of node types for you you would like to enforce primary key test coverage. Valid options to include are `model`, `source`, `snapshot`, `seed` | `["model"]`
 
 **Usage notes for `primary_key_test_macros:`**
 
@@ -21,7 +22,7 @@ For each entry in the parent list, the logic in `int_model_test_summary` will ev
 
 Each set of test(s) that define a primary key requirement must be grouped together in a sub-list to ensure they are evaluated together (e.g. [`dbt.test_unique`, `dbt.test_not_null`] ).
 
-*While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests.*
+*While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests. Alternatively, on Snowflake, consider `dbt_constraints.test_primary_key` in the [dbt Constraints](https://github.com/Snowflake-Labs/dbt_constraints) package, which enforces each field in the primary key is non null.*
 
 ```yaml title="dbt_project.yml"
 # set your test and doc coverage to 75% instead

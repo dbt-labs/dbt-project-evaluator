@@ -56,13 +56,15 @@ agg_test_relationships as (
 final as (
     select 
         all_graph_resources.resource_name, 
+        all_graph_resources.resource_type,
         all_graph_resources.model_type,
         coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as is_primary_key_tested,
         coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model
     from all_graph_resources
     left join agg_test_relationships
         on all_graph_resources.resource_id = agg_test_relationships.direct_parent_id
-    where all_graph_resources.resource_type = 'model'
+    where
+        all_graph_resources.resource_type in ('model', 'seed', 'source', 'snapshot')
 )
 
 select * from final
