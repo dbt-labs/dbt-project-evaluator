@@ -9,17 +9,17 @@
       
       
       
-        <link rel="prev" href="../overriding-variables/">
+        <link rel="prev" href="../performance/">
       
       
-        <link rel="next" href="../exceptions/">
+        <link rel="next" href="../../customization/overriding-variables/">
       
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
-        <title>Disabling checks - dbt_project_evaluator</title>
+        <title>Governance - dbt_project_evaluator</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#disabling-checks-from-the-package" class="md-skip">
+        <a href="#governance" class="md-skip">
           Skip to content
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Disabling checks
+              Governance
             
           </span>
         </div>
@@ -261,14 +261,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
       
       
       
@@ -277,7 +279,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_2">
           <span class="md-nav__icon md-icon"></span>
           Rules
@@ -290,7 +292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rules/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         List of rules
       </a>
     </li>
@@ -304,7 +306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rules/modeling/" class="md-nav__link">
+      <a href="../modeling/" class="md-nav__link">
         Modeling
       </a>
     </li>
@@ -318,7 +320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rules/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         Testing
       </a>
     </li>
@@ -332,7 +334,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rules/documentation/" class="md-nav__link">
+      <a href="../documentation/" class="md-nav__link">
         Documentation
       </a>
     </li>
@@ -346,7 +348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rules/structure/" class="md-nav__link">
+      <a href="../structure/" class="md-nav__link">
         Structure
       </a>
     </li>
@@ -360,73 +362,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rules/performance/" class="md-nav__link">
+      <a href="../performance/" class="md-nav__link">
         Performance
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../rules/governance/" class="md-nav__link">
-        Governance
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-          Customization
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-        <label class="md-nav__title" for="__nav_3">
-          <span class="md-nav__icon md-icon"></span>
-          Customization
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../overriding-variables/" class="md-nav__link">
-        Overriding variables
       </a>
     </li>
   
@@ -448,10 +385,104 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Governance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
-        Disabling checks
+        Governance
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#public-models-without-contracts" class="md-nav__link">
+    Public models without contracts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#undocumented-public-models" class="md-nav__link">
+    Undocumented public models
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exposures-dependent-on-private-models" class="md-nav__link">
+    Exposures dependent on private models
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Customization
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Customization
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/overriding-variables/" class="md-nav__link">
+        Overriding variables
+      </a>
     </li>
   
 
@@ -463,7 +494,21 @@
   
   
     <li class="md-nav__item">
-      <a href="../exceptions/" class="md-nav__link">
+      <a href="../../customization/customization/" class="md-nav__link">
+        Disabling checks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/exceptions/" class="md-nav__link">
         Configuring exceptions to the rules
       </a>
     </li>
@@ -477,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../excluding-packages-and-paths/" class="md-nav__link">
+      <a href="../../customization/excluding-packages-and-paths/" class="md-nav__link">
         Excluding packages and models/sources based on path
       </a>
     </li>
@@ -491,7 +536,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../issues-in-log/" class="md-nav__link">
+      <a href="../../customization/issues-in-log/" class="md-nav__link">
         Display issues in the logs
       </a>
     </li>
@@ -565,7 +610,7 @@
                   
 
   
-    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/customization/customization.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/rules/governance.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -573,25 +618,97 @@
   
 
 
-<h1 id="disabling-checks-from-the-package">Disabling checks from the package<a class="headerlink" href="#disabling-checks-from-the-package" title="Permanent link">#</a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This section is describing how to completely deactivate tests from the package.
-If you are looking to deactivate models/sources from being tested, you can look at <a href="../excluding-packages-and-paths/">excluding packages and paths</a></p>
-</div>
-<p>All the tests done as part of the package are tied to <code>fct</code> models.</p>
-<p>If there is a particular test or set of tests that you <em>do not want this package to execute</em>, you can
-disable the corresponding <code>fct</code> models as you would any other model in your <code>dbt_project.yml</code> file</p>
-<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">models</span><span class="p">:</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">marts</span><span class="p">:</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">tests</span><span class="p">:</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="c1"># disable entire test coverage suite</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nt">+enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">dag</span><span class="p">:</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="c1"># disable single DAG model</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="nt">fct_model_fanout</span><span class="p">:</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">          </span><span class="nt">+enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<h1 id="governance">Governance<a class="headerlink" href="#governance" title="Permanent link">#</a></h1>
+<p>This set of rules provides checks on your project against dbt Labs' recommended best proactices for adding model governance features in dbt versions 1.5 and above.</p>
+<h2 id="public-models-without-contracts">Public models without contracts<a class="headerlink" href="#public-models-without-contracts" title="Permanent link">#</a></h2>
+<p><code>fct_public_models_without_contract</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_public_models_without_contract.sql">source</a>) shows each model with <code>access</code> configured as public, but is not a contracted model.</p>
+<p><strong>Example</strong></p>
+<p><code>report_1</code> is defined as a public model, but does not have the <code>contract</code> configuration to enforce its datatypes.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># public model without a contract
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>models:
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  - name: report_1
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    description: very important OKR reporting model
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    access: public
+</span></code></pre></div>
+<p><strong>Reason to Flag</strong></p>
+<p>Models with public access are free to be consumed by any downstream consumer. This implies a need for better guarantees around the model's data types and columns. Adding a contract to the model will ensure that the model <em>always</em> conforms to the datatypes, columns, and other constraints you expect.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Edit the yml to include the contract configuration, as well as a column entry for all columns output by the model, including their datatype. While not strictly required for defining a contracts, it's best practice to also document each column as well.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>models:
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  - name: report_1
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    description: very important OKR reporting model
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    access: public
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    config:
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>      contract:
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        enforced: true
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    columns:
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>      - name: id 
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        data_type: integer
+</span></code></pre></div>
+<h2 id="undocumented-public-models">Undocumented public models<a class="headerlink" href="#undocumented-public-models" title="Permanent link">#</a></h2>
+<p><code>fct_undocumented_public_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_undocumented_public_models.sql">source</a>) shows each model with <code>access</code> configured as public that is not fully documented. This check is similar to <code>fct_undocumented_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/documentation/fct_undocumented_models.sql">source</a>), but is a stricter check that will highlight any public model that does not have a model-level description as well descriptions on each of its columns.</p>
+<p><strong>Example</strong></p>
+<p><code>report_1</code> is defined as a public model, but does not descriptions on the model and each column.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># public model without documentation
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>models:
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  - name: report_1
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    access: public
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    columns:
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>      - name: id
+</span></code></pre></div>
+<p><strong>Reason to Flag</strong></p>
+<p>Models with public access are free to be consumed by any downstream consumer. This implies a need for higher standards for the model's usability for those cosumers. Adding more documentation can help consumers understand how they should leverage the data from your public model.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Edit the yml to include a model level description,  as well as a column entry with a description for all columns output by the model. While not strictly required for public models, these should likely also have contracts added as well. (See <a href="#public-models-without-contracts">above rule</a>)</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>models:
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  - name: report_1
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    description: very important OKR reporting model
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    access: public
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    columns:
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      - name: id 
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        description: the primary key of my OKR model
+</span></code></pre></div>
+<h2 id="exposures-dependent-on-private-models">Exposures dependent on private models<a class="headerlink" href="#exposures-dependent-on-private-models" title="Permanent link">#</a></h2>
+<p><code>fct_exposures_dependent_on_private_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_exposures_dependent_on_private_models.sql">source</a>) shows each relationship between a resource and an exposure where the parent resource is not a model with <code>access</code> configured as public.</p>
+<p><strong>Example</strong></p>
+<p>Here's a sample DAG that shows direct exposure relationships.</p>
+<p><img alt="An example exposure with a two parents (fct_model_6 and dim_model_7)" src="https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png" width="500" /></p>
+<p>If this were the yml for these two parent models, <code>dim_model_7</code> would be flagged by this check, as it is not a public model.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>models:
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  - name: fct_model_6
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    description: very important OKR reporting model
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    access: public
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    config:
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      materialized: table
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>      contract:
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        enforced: true
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    columns:
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      - name: id 
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        description: the primary key of my OKR model
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        data_type: integer
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  - name: dim_model_7
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    description: excellent model
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    access: private
+</span></code></pre></div>
+<p><strong>Reason to Flag</strong></p>
+<p>Exposures show how and where your data is being consumed in downstream tools. These tools should read from public, trusted, contracted data sources. All models that are exposed to other tools should have that codified in their <code>access</code> configuration.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Edit the yml to include fully expose the models that your exposures depend on. This rule will only flag models that are not <code>public</code>, but best practices suggest you should also fully document and contracts these public models as well.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>models:
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  - name: fct_model_6
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    description: very important OKR reporting model
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    access: public
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    config:
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>      materialized: table
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>      contract:
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        enforced: true
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    columns:
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>      - name: id 
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>        description: the primary key of my OKR model
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        data_type: integer
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  - name: dim_model_7
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>    description: excellent model
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    access: public
 </span></code></pre></div>
 
 
@@ -614,7 +731,7 @@ disable the corresponding <code>fct</code> models as you would any other model i
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../overriding-variables/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overriding variables" rel="prev">
+          <a href="../performance/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Performance" rel="prev">
             <div class="md-footer__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
             </div>
@@ -623,20 +740,20 @@ disable the corresponding <code>fct</code> models as you would any other model i
                 Previous
               </span>
               <div class="md-ellipsis">
-                Overriding variables
+                Performance
               </div>
             </div>
           </a>
         
         
           
-          <a href="../exceptions/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuring exceptions to the rules" rel="next">
+          <a href="../../customization/overriding-variables/" class="md-footer__link md-footer__link--next" aria-label="Next: Overriding variables" rel="next">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuring exceptions to the rules
+                Overriding variables
               </div>
             </div>
             <div class="md-footer__button md-icon">
