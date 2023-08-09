@@ -8,6 +8,8 @@ Specifically, this package tests for:
 3. __[Documentation](rules/documentation)__ - your models for documentation best practices
 4. __[Structure](rules/structure)__ - your dbt project for file structure and naming best practices
 5. __[Performance](rules/performance)__ - your model materializations for performance best practices
+6. __[Governance](rules/governance)__ - your model governance feature best practices
+
 
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 

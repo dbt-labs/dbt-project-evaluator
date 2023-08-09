@@ -29,3 +29,6 @@ hide:
 |Structure                                     |[Model Directories](../rules/structure/#model-directories)                                                             |`fct_model_directories`|
 |Performance                                   |[Chained View Dependencies](../rules/performance/#chained-view-dependencies)                                           |`fct_chained_views_dependencies`|
 |Performance                                   |[Exposure Parents Materializations](../rules/performance/#exposure-parents-materializations)                           |`fct_exposure_parents_materializations`|
+|Governance                                    |[Public Models Without Contracts](../rules/governance/#public-models-without-contracts)                                |`fct_public_models_without_contracts`|
+|Governance                                    |[Exposures Dependent on Private Models](../rules/governance/#exposures-dependent-on-private-models)                    |`fct_exposures_dependent_on_private_models`|
+|Governance                                    |[Undocumented Public Models](../rules/governance/#undocumented-public-models)                                          |`fct_undocumented_public_models`|

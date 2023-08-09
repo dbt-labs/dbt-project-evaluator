@@ -74,6 +74,7 @@ nav:
     - Documentation: rules/documentation.md
     - Structure: rules/structure.md
     - Performance: rules/performance.md
+    - Governance: rules/governance.md
   - Customization: 
     - Overriding variables: customization/overriding-variables.md
     - Disabling checks: customization/customization.md

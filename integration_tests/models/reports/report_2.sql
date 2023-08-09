@@ -1,1 +1,1 @@
-{{ ref('fct_model_6') }}
+select * from {{ ref('fct_model_6') }}

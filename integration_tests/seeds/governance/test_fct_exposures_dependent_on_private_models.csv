@@ -1,0 +1,5 @@
+exposure_name,parent_resource_name,parent_access,parent_resource_type
+exposure_1,dim_model_7,protected,model
+exposure_1,fct_model_6,protected,model
+exposure_1,fct_model_9,protected,model
+exposure_1,source_1.table_1,,source

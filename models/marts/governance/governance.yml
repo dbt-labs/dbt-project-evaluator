@@ -1,0 +1,15 @@
+models:
+  - name: fct_public_models_without_contract
+    description: "This table shows each public model that does not have an enforced contract"
+    tests:
+      - is_empty
+
+  - name: fct_undocumented_public_models
+    description: "This table shows each public model that does not have both a model level description, and a description for each of the columns in the model"
+    tests:
+      - is_empty
+
+  - name: fct_exposures_dependent_on_private_models
+    description: "This table shows each direct relationship between a parent resource and a downstream exposure where the parent resource is not a public model"
+    tests:
+      - is_empty
