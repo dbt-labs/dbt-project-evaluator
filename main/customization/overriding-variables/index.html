@@ -659,6 +659,11 @@
 <td>the set(s) of dbt tests used to check validity of a primary key</td>
 <td><code>[["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]</code></td>
 </tr>
+<tr>
+<td><code>enforced_primary_key_node_types</code></td>
+<td>the set of node types for you you would like to enforce primary key test coverage. Valid options to include are <code>model</code>, <code>source</code>, <code>snapshot</code>, <code>seed</code></td>
+<td><code>["model"]</code></td>
+</tr>
 </tbody>
 </table>
 <p><strong>Usage notes for <code>primary_key_test_macros:</code></strong></p>
@@ -669,7 +674,7 @@
 <li>The <code>dbt_utils.unique_combination_of_columns</code> applied to the model.</li>
 </ol>
 <p>Each set of test(s) that define a primary key requirement must be grouped together in a sub-list to ensure they are evaluated together (e.g. [<code>dbt.test_unique</code>, <code>dbt.test_not_null</code>] ).</p>
-<p><em>While it's not explicitly tested in this package, we strongly encourage adding a <code>not_null</code> test on each of the columns listed in the <code>dbt_utils.unique_combination_of_columns</code> tests.</em></p>
+<p><em>While it's not explicitly tested in this package, we strongly encourage adding a <code>not_null</code> test on each of the columns listed in the <code>dbt_utils.unique_combination_of_columns</code> tests. Alternatively, on Snowflake, consider <code>dbt_constraints.test_primary_key</code> in the <a href="https://github.com/Snowflake-Labs/dbt_constraints">dbt Constraints</a> package, which enforces each field in the primary key is non null.</em></p>
 <div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># set your test and doc coverage to 75% instead</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># use the dbt_constraints.test_primary_key test to check for validity of your primary keys</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
