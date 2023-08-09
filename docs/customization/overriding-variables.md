@@ -22,7 +22,7 @@ For each entry in the parent list, the logic in `int_model_test_summary` will ev
 
 Each set of test(s) that define a primary key requirement must be grouped together in a sub-list to ensure they are evaluated together (e.g. [`dbt.test_unique`, `dbt.test_not_null`] ).
 
-*While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests. Alternatively, consider `dbt_constraints.test_primary_key` in the [DBT Constraints](https://github.com/Snowflake-Labs/dbt_constraints) package, which enforces each field in the primary key is non null.*
+*While it's not explicitly tested in this package, we strongly encourage adding a `not_null` test on each of the columns listed in the `dbt_utils.unique_combination_of_columns` tests. Alternatively, on Snowflake, consider `dbt_constraints.test_primary_key` in the [dbt Constraints](https://github.com/Snowflake-Labs/dbt_constraints) package, which enforces each field in the primary key is non null.*
 
 ```yaml title="dbt_project.yml"
 # set your test and doc coverage to 75% instead
