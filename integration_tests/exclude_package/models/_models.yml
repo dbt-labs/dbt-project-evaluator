@@ -7,5 +7,3 @@ models:
     columns: 
       - name: id
         data_type: integer
-      - name: data_quality
-        data_type: "{{ 'string' if target.type in ['bigquery', 'databricks'] else 'text' }}"
