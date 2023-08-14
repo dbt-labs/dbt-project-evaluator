@@ -9,6 +9,7 @@ direct_exposure_relationships as (
                 parent_resource_type = 'model'
                 and parent_is_public
             )
+        and not parent_is_excluded
 ),
 
 final as (
