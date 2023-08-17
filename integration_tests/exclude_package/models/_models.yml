@@ -1,0 +1,9 @@
+models:
+  - name: excluded_model
+    access: public
+    config: 
+      contract: 
+        enforced: true
+    columns: 
+      - name: id
+        data_type: integer
