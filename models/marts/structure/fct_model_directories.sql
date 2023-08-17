@@ -14,6 +14,7 @@ folders as (
 
 all_dag_relationships as (
     select * from {{ ref('int_all_dag_relationships') }}
+    where not child_is_excluded
 ),
 
 staging_models as (
@@ -56,7 +57,6 @@ innappropriate_subdirectories_non_staging_models as (
         on folders.model_type = all_graph_resources.model_type 
     -- either appropriate folder_name is not in the current_directory_path or a inappropriate folder name is closer to the file_name
     where all_graph_resources.model_type <> all_graph_resources.model_type_folder 
-    and not is_excluded
 ),
 
 unioned as (
