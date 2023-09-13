@@ -59,3 +59,16 @@ integration_tests:
     duckdb:
       type: duckdb
       path: ./duck.db
+
+    trino:
+      type: trino
+      host: "{{ env_var('TRINO_TEST_HOST') }}"
+      port: "{{ env_var('TRINO_TEST_PORT') | as_number }}"
+      method: ldap
+      user: "{{ env_var('TRINO_TEST_USER') }}"
+      password: "{{ env_var('TRINO_TEST_PASS') }}"
+      catalog: "{{ env_var('TRINO_TEST_CATALOG_NAME') }}"
+      schema: dbt_project_evaluator_integration_tests_trino
+      threads: 5
+      session_properties:
+        query_max_stage_count: 200

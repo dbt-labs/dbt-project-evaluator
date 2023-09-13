@@ -82,6 +82,17 @@ jobs:
       - store_artifacts:
           path: ./integration_tests/logs
 
+  integration-trino:
+    docker:
+      - image: cimg/python:3.9.9
+    steps:
+      - checkout
+      - run:
+          name: "Run Tests - Trino"
+          command: ./run_test.sh trino
+      - store_artifacts:
+          path: ./integration_tests/logs
+
 workflows:
   version: 2
   test-all:
@@ -102,5 +113,9 @@ workflows:
             - integration-postgres
       - integration-databricks:
           context: profile-databricks
+          requires:
+            - integration-postgres
+      - integration-trino:
+          context: profile-trino
           requires:
             - integration-postgres
