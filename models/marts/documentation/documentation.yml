@@ -18,3 +18,13 @@ models:
       This model contains all models that do not have a description configured in a YML file. 
     tests:
       - is_empty
+  - name: fct_undocumented_source_nodes
+    description: >
+      This model contains all source nodes that do not have a description configured in a YML file. 
+    tests:
+      - is_empty
+  - name: fct_undocumented_sources
+    description: >
+      This model contains all sources that do not have a description configured in a YML file. 
+    tests:
+      - is_empty
