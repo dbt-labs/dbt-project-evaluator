@@ -59,6 +59,13 @@ Good documentation for your dbt sources will help contributors to your project u
 
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the table's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the table's `.yml` entry.
+```
+sources:
+  - name: my_source
+    tables:
+      - name: my_table
+        description: This is the source table description
+```
 
 ## Undocumented Sources
 
@@ -72,3 +79,10 @@ Good documentation for your dbt sources will help contributors to your project u
 
 Apply a text [description](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) in the source's `.yml` entry, or create a [docs block](https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks) in a markdown file, and use the `{{ doc() }}`
 function in the source's `.yml` entry.
+```
+sources:
+  - name: my_source
+    description: This is the source description
+    tables:
+      - name: my_table
+```
