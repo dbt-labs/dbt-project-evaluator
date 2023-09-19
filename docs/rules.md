@@ -23,7 +23,7 @@ hide:
 |Testing                                       |[Test Coverage](../rules/testing/#test-coverage)                                                                       |`fct_test_coverage`|
 |Documentation                                 |[Undocumented Models](../rules/documentation/#undocumented-models)                                                     |`fct_undocumented_models`|
 |Documentation                                 |[Documentation Coverage](../rules/documentation/#documentation-coverage)                                               |`fct_documentation_coverage`|
-|Documentation                                 |[Undocumented Source Nodes](../rules/documentation/#undocumented-source-nodes)                                                     |`fct_undocumented_source_nodes`|
+|Documentation                                 |[Undocumented Source Nodes](../rules/documentation/#undocumented-source-tables)                                                     |`fct_undocumented_source_tables`|
 |Documentation                                 |[Undocumented Sources](../rules/documentation/#undocumented-sources)                                               |`fct_documentation_sources`|
 |Structure                                     |[Test Directories](../rules/structure/#test-directories)                                                               |`fct_test_directories`|
 |Structure                                     |[Model Naming Conventions](../rules/structure/#model-naming-conventions)                                               |`fct_model_naming_conventions`|
