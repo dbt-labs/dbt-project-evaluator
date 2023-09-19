@@ -47,9 +47,9 @@ function in the model's `.yml` entry.
 
     We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. Missing documentation should be addressed first for marts models, then for the rest of your project, to ensure that stakeholders in the organization can understand the data which is surfaced to them.
 
-## Undocumented Source Nodes
+## Undocumented Source Tables
 
-`fct_undocumented_source_nodes` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_source_nodes.sql)) lists every source node with no description configured.
+`fct_undocumented_source_tables` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_source_tables.sql)) lists every source table with no description configured.
 
 **Reason to Flag**
 
