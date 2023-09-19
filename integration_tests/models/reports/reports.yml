@@ -6,13 +6,18 @@ models:
     access: public
     config:
       materialized: table
+    columns:
+      - name: col 
+        description: col me maybe
+        data_type: boolean
+
   - name: report_2
+    description: the colbert report
     access: public
     config:
       materialized: table
       contract:
         enforced: true
-    description: the colbert report
     columns:
       - name: id 
         data_type: integer
