@@ -19,7 +19,7 @@ conversion as (
 
 final as (
     select
-        current_timestamp as measured_at,
+        {{ 'current_timestamp' if target.type != 'trino' else 'current_timestamp(6)' }} as measured_at,
         count(*) as total_models,
         sum(number_of_tests_on_model) as total_tests,
         sum(is_tested_model) as tested_models,
@@ -32,7 +32,7 @@ final as (
                 ) }}
             , 2) as {{ model_type }}_test_coverage_pct,
         {% endfor %}
-        round(sum(number_of_tests_on_model) * 1.0 / count(*), 4) as test_to_model_ratio
+        round(sum(number_of_tests_on_model) * 1.0000 / count(*), 4) as test_to_model_ratio
 
     from test_counts
     left join conversion

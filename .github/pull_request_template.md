@@ -28,5 +28,6 @@ Screenshot of passing integration tests locally
     - [ ] Snowflake
     - [ ] Databricks
     - [ ] DuckDB
+    - [ ] Trino/Starburst
 - [ ] I have updated the README.md (if applicable)
 - [ ] I have added tests & descriptions to my models (and macros if applicable)
