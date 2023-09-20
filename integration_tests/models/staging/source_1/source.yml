@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: source_1
+    description: this is source 1.
     schema: real_schema
     # database: real_database
     tables:

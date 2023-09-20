@@ -31,3 +31,21 @@ seeds:
             - intermediate_documentation_coverage_pct
             - marts_documentation_coverage_pct
             - other_documentation_coverage_pct
+  
+  - name: test_fct_undocumented_source_tables
+    config:
+      tags:
+        - docs
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_undocumented_source_tables
+          compare_model: ref('fct_undocumented_source_tables')
+
+  - name: test_fct_undocumented_sources
+    config:
+      tags:
+        - docs
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_undocumented_sources
+          compare_model: ref('fct_undocumented_sources')
