@@ -9,8 +9,7 @@ all_resources as (
 final as (
 
     select
-        resource_name,
-        model_type
+        resource_name
 
     from all_resources
     where not is_source_described and resource_type = 'source'
