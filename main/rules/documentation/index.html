@@ -430,6 +430,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#undocumented-source-tables" class="md-nav__link">
+    Undocumented Source Tables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#undocumented-sources" class="md-nav__link">
+    Undocumented Sources
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -800,6 +814,32 @@ function in the model's <code>.yml</code> entry.</p>
 <p class="admonition-title">Tip</p>
 <p>We recommend that every model in your dbt project has at minimum a model-level description. This ensures that each model's purpose is clear to other developers and stakeholders when viewing the dbt docs site. Missing documentation should be addressed first for marts models, then for the rest of your project, to ensure that stakeholders in the organization can understand the data which is surfaced to them.</p>
 </div>
+<h2 id="undocumented-source-tables">Undocumented Source Tables<a class="headerlink" href="#undocumented-source-tables" title="Permanent link">#</a></h2>
+<p><code>fct_undocumented_source_tables</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_source_tables.sql">source</a>) lists every source table with no description configured.</p>
+<p><strong>Reason to Flag</strong></p>
+<p>Good documentation for your dbt sources will help contributors to your project understand how and when data is loaded into your warehouse.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Apply a text <a href="https://docs.getdbt.com/docs/building-a-dbt-project/documentation">description</a> in the table's <code>.yml</code> entry, or create a <a href="https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks">docs block</a> in a markdown file, and use the <code>{{ doc() }}</code>
+function in the table's <code>.yml</code> entry.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sources:
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  - name: my_source
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    tables:
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>      - name: my_table
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        description: This is the source table description
+</span></code></pre></div></p>
+<h2 id="undocumented-sources">Undocumented Sources<a class="headerlink" href="#undocumented-sources" title="Permanent link">#</a></h2>
+<p><code>fct_undocumented_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_sources.sql">source</a>) lists every source with no description configured.</p>
+<p><strong>Reason to Flag</strong></p>
+<p>Good documentation for your dbt sources will help contributors to your project understand how and when data is loaded into your warehouse.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Apply a text <a href="https://docs.getdbt.com/docs/building-a-dbt-project/documentation">description</a> in the source's <code>.yml</code> entry, or create a <a href="https://docs.getdbt.com/docs/building-a-dbt-project/documentation#using-docs-blocks">docs block</a> in a markdown file, and use the <code>{{ doc() }}</code>
+function in the source's <code>.yml</code> entry.
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sources:
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  - name: my_source
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    description: This is the source description
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    tables:
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>      - name: my_table
+</span></code></pre></div></p>
 
 
 
