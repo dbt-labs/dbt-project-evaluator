@@ -8,8 +8,8 @@ all_resources as (
 
 final as (
 
-    select
-        resource_name
+    select distinct
+        source_name
 
     from all_resources
     where not is_source_described and resource_type = 'source'
