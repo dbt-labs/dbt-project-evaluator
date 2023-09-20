@@ -40,6 +40,7 @@ If applicable, add screenshots or log output to help explain your problem.
 - [ ] redshift
 - [ ] bigquery
 - [ ] snowflake
+- [ ] trino/starburst
 - [ ] other (specify: ____________)
 
 

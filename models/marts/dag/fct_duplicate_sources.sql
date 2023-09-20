@@ -19,7 +19,7 @@ source_duplicates as (
         {{ dbt.listagg(
             measure = 'resource_name', 
             delimiter_text = "', '", 
-            order_by_clause = 'order by resource_name' if target.type in ['snowflake','redshift','duckdb']) 
+            order_by_clause = 'order by resource_name' if target.type in ['snowflake','redshift','duckdb','trino'])
         }} as source_names
     from sources
     group by source_db_location
