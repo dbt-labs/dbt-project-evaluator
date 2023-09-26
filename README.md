@@ -21,6 +21,7 @@ Currently, the following adapters are supported:
 - Snowflake
 - DuckDB
 - Trino (tested with Iceberg connector)
+- AWS Athena
 
 ## Using This Package
 

@@ -1,10 +1,15 @@
-
+# DBT artifacts
 target/
 logs/
 dbt_modules/
 dbt_packages/
-.vscode
 integration_tests/state/
 site/
 env/
+
+# IDE
+.vscode
+.idea
+
+# MacOS
 .DS_Store
