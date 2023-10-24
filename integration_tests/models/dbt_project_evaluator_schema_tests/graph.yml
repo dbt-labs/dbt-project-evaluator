@@ -55,7 +55,7 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - unique_id
-            - column_name
+            - name
 
   - name: stg_sources
     description: "Staging model from the graph variable, one record per source resource."
