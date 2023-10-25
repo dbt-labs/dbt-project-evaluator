@@ -40,7 +40,7 @@ agg_test_relationships as (
                 when (
                     {%- for test_set in var('primary_key_test_macros') %}
                         {%- set compare_value = test_set | length %}
-                    primary_key_method_{{ loop.index }}_count = {{ compare_value}}
+                    primary_key_method_{{ loop.index }}_count >= {{ compare_value}}
                         {%- if not loop.last %} or {% endif %}
                     {%- endfor %} 
                 ) then 1 
