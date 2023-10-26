@@ -8,4 +8,4 @@ To use it, you can add the following line in your `dbt_project.yml`:
 on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
 ```
 
-The macro accepts a parameter to pick between 2 types of formatting, `format='table'` (default) or `format='csv'
+The macro accepts a parameter to pick between 2 types of formatting, `format='table'` (default) or `format='csv'`
