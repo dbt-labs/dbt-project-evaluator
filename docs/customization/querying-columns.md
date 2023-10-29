@@ -13,4 +13,4 @@ You can use this model to help with questions such as:
 
 ## Defining additional tests that match your exact requirements
 
-- writing a model with `ref(int_all_columns)` with custom tests added for a specific use case
+You can create a custom test against  `{{ ref(int_all_columns) }}` to test for your specific check! When running the package you'd need to make sure to also include children of the packag's models by using the `package:dbt_project_evalutator+` selector.
