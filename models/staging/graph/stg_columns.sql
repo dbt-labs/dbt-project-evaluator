@@ -1,14 +1,6 @@
-{{
-    config(
-        materialized='table',
-    )
-}}
+with
 
-{% if execute %}
-    {{ check_model_is_table(model) }}
-{% endif %}
-
-with unioned as (
+final as (
 
     {{ dbt_utils.union_relations([
         ref('base_node_columns'),
@@ -16,4 +8,4 @@ with unioned as (
     ])}}
 )
 
-select distinct * from unioned
+select distinct * from final
