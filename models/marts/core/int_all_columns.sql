@@ -51,7 +51,7 @@ final as (
 
     from stg_columns
 
-    right join stg_nodes
+    inner join stg_nodes
         on stg_nodes.unique_id = stg_columns.node_unique_id
 
 )
