@@ -8,4 +8,4 @@ final as (
     ])}}
 )
 
-select distinct * from final
+select * from final
