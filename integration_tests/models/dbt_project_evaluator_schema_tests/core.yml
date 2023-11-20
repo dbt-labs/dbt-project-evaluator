@@ -21,6 +21,10 @@ models:
         description: this contains the on_schema_change setting for incremental models. This column was sometimes an empty string, so should be tested to detect regressions
         tests:
           - is_not_empty_string
+      - name: model_type
+        tests: 
+          - accepted_values:
+              values: "{{ var('model_types') }}"
 
   - name: int_direct_relationships
     description: "This table shows one record for each direct parent/child pair in the graph."
