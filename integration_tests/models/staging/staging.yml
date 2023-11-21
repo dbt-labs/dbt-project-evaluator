@@ -2,7 +2,6 @@ version: 2
 
 models:
   - name: stg_model_4
-    description: " "
     columns:
       - name: id
         tests:
