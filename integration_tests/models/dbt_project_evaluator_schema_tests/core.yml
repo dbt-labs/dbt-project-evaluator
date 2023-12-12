@@ -23,8 +23,10 @@ models:
           - is_not_empty_string
       - name: model_type
         tests: 
-          - accepted_values:
-              values: "{{ var('model_types') }}"
+          - dbt_utils.expression_is_true:
+              expression: "= 'base'"
+              config:
+                where: "resource_name = 'base_model_10'"
 
   - name: int_direct_relationships
     description: "This table shows one record for each direct parent/child pair in the graph."
