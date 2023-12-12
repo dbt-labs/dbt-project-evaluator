@@ -37,3 +37,12 @@ metrics:
       measure: total_count 
     filter: |
       {{ Dimension('dim__id') }} > 0
+  - name: new_metric_with_window
+    label: "New cumulative Metric"
+    type: cumulative 
+    type_params:
+  # Specify the measure you are creating a proxy for. 
+      measure: total_count 
+      window: 30 days
+    filter: |
+      {{ Dimension('dim__id') }} > 0
