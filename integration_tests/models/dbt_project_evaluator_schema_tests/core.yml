@@ -21,6 +21,12 @@ models:
         description: this contains the on_schema_change setting for incremental models. This column was sometimes an empty string, so should be tested to detect regressions
         tests:
           - is_not_empty_string
+      - name: model_type
+        tests: 
+          - dbt_utils.expression_is_true:
+              expression: "= 'base'"
+              config:
+                where: "resource_name = 'base_model_10'"
 
   - name: int_direct_relationships
     description: "This table shows one record for each direct parent/child pair in the graph."
