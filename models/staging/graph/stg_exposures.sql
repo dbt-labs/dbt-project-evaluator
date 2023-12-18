@@ -26,5 +26,5 @@ cte as (
 )
 
 select *
-from dummy_cte
+from cte
 where false
