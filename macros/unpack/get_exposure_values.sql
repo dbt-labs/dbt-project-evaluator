@@ -22,7 +22,7 @@
               wrap_string_with_quotes(node.maturity),
               wrap_string_with_quotes(node.package_name),
               wrap_string_with_quotes(node.url),
-              wrap_string_with_quotes(node.owner.name),
+              wrap_string_with_quotes(dbt.escape_single_quotes(node.owner.name)),
               wrap_string_with_quotes(node.owner.email),
               wrap_string_with_quotes(node.meta | tojson)
             ]
