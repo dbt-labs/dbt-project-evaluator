@@ -70,12 +70,14 @@ vars:
   # -- Naming conventions variables --
   # to add a new "model type", update the variable model_types 
   # and create new variables with the names <model_type>_folder_name and/or <model_type>_prefixes 
-  model_types: ['staging', 'intermediate', 'marts', 'other']
+  model_types: ['base', 'staging', 'intermediate', 'marts', 'other']
 
+  base_folder_name: 'base'
   staging_folder_name: 'staging'
   intermediate_folder_name: 'intermediate'
   marts_folder_name: 'marts'
   
+  base_prefixes: ['base_']
   staging_prefixes: ['stg_']
   intermediate_prefixes: ['int_']
   marts_prefixes: ['fct_', 'dim_']

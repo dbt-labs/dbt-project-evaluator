@@ -1,4 +1,4 @@
-{% macro print_dbt_project_evaluator_issues(format='table') %}
+{% macro print_dbt_project_evaluator_issues(format='table', quote="") %}
 
   {%- if flags.WHICH in ["build","test"] -%}
     {{ print("\n### List of issues raised by dbt_project_evaluator ###") }}
@@ -13,8 +13,8 @@
 
         {% set model_details = graph["nodes"][unique_id_model_checked] %}
         {% set name_model_checked = model_details.alias %}
-        {% set model_schema = model_details.schema %}
-        {% set model_database = model_details.database %}
+        {% set model_schema = quote ~ model_details.schema ~ quote %}
+        {% set model_database = quote ~ model_details.database ~ quote if model_details.database  else None %}
         {% set db_schema = model_database ~ "." ~ model_schema if model_database else model_schema %}
 
         {% set sql_statement %}
