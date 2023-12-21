@@ -22,7 +22,7 @@
         or resource_name.startswith(test_name_prefix_of_custom_rules)
       ) %}
         
-        {{ print("\n-- " ~ result.node.alias ~ " --") }}
+        {{ print("\n-- " ~ result.node.fqn | join(".") ~ " --") }}
 
         {% set unique_id_model_checked = result.node.depends_on.nodes[0] %}
 
