@@ -1,0 +1,2 @@
+resource_name,resource_type,file_path,join_count
+fct_model_10,model,"integration_tests/models/marts/fct_model_10.sql",7
