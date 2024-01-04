@@ -56,3 +56,7 @@ models:
     description: "This table shows each model that has hard coded references."
     tests:
       - is_empty
+  - name: fct_number_of_joins
+    description: "This returns models referencing more than 7 dependencies. Per dbt best practices, models should be designed in a way that depend on 7 or fewer joins."
+    tests:
+      - is_empty
