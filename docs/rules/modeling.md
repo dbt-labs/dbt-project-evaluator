@@ -432,14 +432,18 @@ or any other nested information.
 
 ![A refactored DAG showing three sources which are each being referenced by an accompanying staging model](https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png){ width=500 }
 
+---
 
-## Models with More than 10 Joins
+## Models with More than 7 Joins
 
-`fct_number_of_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_number_of_joins.sql)) shows each model with a reference to 7 or more other models (either model, intermediate, or source).
+`fct_number_of_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_number_of_joins.sql)) shows a model with a reference to 7 or more other models (either model, intermediate, or source).
 
 **Example**
 
-*Insert an example of a DAG where one model is linked to 10 or more models upstream.*
+`fct_model_1` directly references seven (7) staging models upstream.
+
+![A DAG showing a model that directly references seven staging models upstream.](https://github.com/BradCr/dbt-project-evaluator/assets/151274228/46ea1f78-1bd7-436b-b15b-f63c726601a1)
+{ width = 900 }
 
 **Reason to Flag**
 
@@ -448,3 +452,7 @@ This likely represents a model in which too much is being done. Having a model t
 **How to Remediate**
 
 Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart — rather than have 7+ joins in the mart, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.
+
+![A DAG showing a model that directly references only two intermediate models. The intermediate models reference three and four staging models upstream.](https://github.com/BradCr/dbt-project-evaluator/assets/151274228/4b630e3c-f13a-443c-94e5-2d93c713c8f2)
+{ width = 1000 }
+
