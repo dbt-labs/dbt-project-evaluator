@@ -7,4 +7,5 @@ dbt_packages/
 integration_tests/state/
 site/
 env/
+.venv/
 .DS_Store
