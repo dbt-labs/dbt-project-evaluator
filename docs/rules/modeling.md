@@ -436,7 +436,7 @@ or any other nested information.
 
 ## Models with More than 7 Joins
 
-`fct_number_of_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_number_of_joins.sql)) shows a model with a reference to 7 or more other models (either model, intermediate, or source).
+`fct_number_of_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_number_of_joins.sql)) shows models with a reference to 7 or more other models (either model, intermediate, or source).
 
 **Example**
 
