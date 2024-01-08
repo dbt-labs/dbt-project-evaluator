@@ -1,23 +1,26 @@
 with all_dag_relationships as (
-    select * from {{ ref('int_all_dag_relationships') }}
-    where not child_is_excluded
-)
-
-,too_many_joins_in_model as (
     select
-        child as resource_name
-        ,child_resource_type as resource_type
-        ,child_file_path as file_path
-        ,count(distinct parent) as join_count
+        *
+    from {{ ref('int_all_dag_relationships') }}
+    where not child_is_excluded
+),
+
+final as (
+    select
+        child as resource_name,
+        child_resource_type as resource_type,
+        child_file_path as file_path,
+        count(distinct parent) as join_count
     from all_dag_relationships
-    where distance = 1 and child_model_type in ('marts')
+    where distance = 1
+    and child_model_type in ('marts')
     group by
-        child
-        ,child_resource_type
-        ,child_file_path
+        child,
+        child_resource_type,
+        child_file_path
     having count(distinct parent) >= 7
 )
 
-select * from too_many_joins_in_model
+select * from final
 
 --  {{ filter_exceptions(model.name) }}
