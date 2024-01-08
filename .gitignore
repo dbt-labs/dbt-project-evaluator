@@ -1,3 +1,7 @@
+# Python virtualenv
+.venv/
+venv/
+
 # DBT artifacts
 target/
 logs/
@@ -6,6 +10,8 @@ dbt_packages/
 integration_tests/state/
 site/
 env/
+profiles.yml
+package-lock.yml
 
 # IDE
 .vscode

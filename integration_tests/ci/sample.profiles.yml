@@ -72,3 +72,15 @@ integration_tests:
       threads: 5
       session_properties:
         query_max_stage_count: 200
+
+    athena: # for local tests only
+      type: athena
+      s3_staging_dir: s3://{{ env_var('ENV') }}-dwh-athena/results/dbt/
+      s3_data_dir: s3://{{ env_var('ENV') }}-dwh-transformed/dbt/
+      s3_data_naming: schema_table_unique
+      region_name: eu-central-1
+      schema: sandbox_serhii_dimchenko
+      database: awsdatacatalog
+      work_group: dbt
+      num_retries: 2
+      threads: 4
