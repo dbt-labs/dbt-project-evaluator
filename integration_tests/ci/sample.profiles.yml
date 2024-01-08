@@ -75,12 +75,12 @@ integration_tests:
 
     athena: # for local tests only
       type: athena
-      s3_staging_dir: s3://{{ env_var('ENV') }}-dwh-athena/results/dbt/
-      s3_data_dir: s3://{{ env_var('ENV') }}-dwh-transformed/dbt/
+      s3_staging_dir: {{ env_var('ATHENA_S3_STAGING_DIR') }}
+      s3_data_dir: {{ env_var('ATHENA_S3_DATA_DIR') }}
       s3_data_naming: schema_table_unique
-      region_name: eu-central-1
-      schema: sandbox_serhii_dimchenko
+      region_name: {{ env_var('ATHENA_REGION') }}
+      schema: {{ env_var('ATHENA_SCHEMA') }}
       database: awsdatacatalog
-      work_group: dbt
+      work_group: {{ env_var('ATHENA_WORKGROUP') }}
       num_retries: 2
       threads: 4

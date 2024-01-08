@@ -2,6 +2,9 @@
 .venv/
 venv/
 
+# Environment variables
+.env
+
 # DBT artifacts
 target/
 logs/

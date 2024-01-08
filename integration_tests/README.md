@@ -1,4 +1,4 @@
-## Test dbt Project
+# Test dbt Project
 
 The models within this folder (barring those in models/audit_schema_tests) represent a dbt project with poor DAG modeling. Error detection tools within this package are tested on this dbt project.
 
@@ -6,3 +6,21 @@ The models within this folder (barring those in models/audit_schema_tests) repre
 
 ## Adding an Integration Test
 Create a seed which matches the intended output of your model and add equality tests comparing the output to your seed to the output of your model.
+
+## Local tests
+
+### AWS Athena
+
+To run tests locally, please follow instructions:
+
+1. Set up environment variables:
+
+```bash
+ATHENA_S3_STAGING_DIR=
+ATHENA_S3_DATA_DIR=
+ATHENA_REGION=
+ATHENA_SCHEMA=
+ATHENA_WORKGROUP=
+```
+
+2. Now you can run integration tests, see details [here](../run_test.sh)
