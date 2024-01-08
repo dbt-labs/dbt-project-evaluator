@@ -13,7 +13,7 @@ Create a seed which matches the intended output of your model and add equality t
 
 To run tests locally, please follow instructions:
 
-1. Set up environment variables:
+* Set up environment variables:
 
 ```bash
 ATHENA_S3_STAGING_DIR=
@@ -23,4 +23,20 @@ ATHENA_SCHEMA=
 ATHENA_WORKGROUP=
 ```
 
-2. Now you can run integration tests, see details [here](../run_test.sh)
+* Add `profiles.yml` file based on [sample](ci/sample.profiles.yml):
+
+```yaml
+    athena: # for local tests only
+      type: athena
+      s3_staging_dir: {{ env_var('ATHENA_S3_STAGING_DIR') }}
+      s3_data_dir: {{ env_var('ATHENA_S3_DATA_DIR') }}
+      s3_data_naming: schema_table_unique
+      region_name: {{ env_var('ATHENA_REGION') }}
+      schema: {{ env_var('ATHENA_SCHEMA') }}
+      database: awsdatacatalog
+      work_group: {{ env_var('ATHENA_WORKGROUP') }}
+      num_retries: 2
+      threads: 4
+```
+
+* Now you can run integration tests, see details [here](../run_test.sh) with `--target athena` flag for dbt commands.
