@@ -2,13 +2,13 @@ version: 2
 
 exposures:
   - name: exposure_1
-    description: real_dashboard
+    description: real_dashboard with fun chars '\!@#
     type: dashboard
     url: dave.com/metrics
     maturity: low
     tags: ['proserv']
     owner:
-      name: proserv
+      name: dave's davey
       email: proserv@dbt.com
     
     depends_on:
