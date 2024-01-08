@@ -12,7 +12,7 @@
 
         {%- set exclude_source = dbt_project_evaluator.set_is_excluded(node, resource_type="source") -%}
 
-         {%- set values_line = 
+         {%- set values_line =
             [
               wrap_string_with_quotes(node.unique_id),
               wrap_string_with_quotes(node.name),
@@ -33,7 +33,7 @@
               "cast(" ~ exclude_source ~ " as boolean)",
             ]
         %}
-            
+
         {%- do values.append(values_line) -%}
 
     {%- endfor -%}
@@ -41,5 +41,5 @@
 
 
     {{ return(values) }}
- 
+
 {%- endmacro -%}

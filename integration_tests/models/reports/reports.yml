@@ -7,7 +7,7 @@ models:
     config:
       materialized: table
     columns:
-      - name: col 
+      - name: col
         description: col me maybe
         data_type: boolean
 
@@ -19,5 +19,5 @@ models:
       contract:
         enforced: true
     columns:
-      - name: id 
+      - name: id
         data_type: integer

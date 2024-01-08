@@ -1,6 +1,6 @@
 version: 2
 
-seeds:  
+seeds:
   - name: test_fct_public_models_without_contract
     tests:
       - dbt_utils.equality:

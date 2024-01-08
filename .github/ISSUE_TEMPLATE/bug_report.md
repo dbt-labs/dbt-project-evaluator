@@ -1,3 +1,4 @@
+<!-- markdownlint-disable -->
 ---
 name: Bug report
 about: Report a bug or an issue you've found with this package
@@ -33,9 +34,11 @@ If applicable, add screenshots or log output to help explain your problem.
 --->
 
 ### System information
+
 **The contents of your `packages.yml` file:**
 
 **Which database are you using dbt with?**
+
 - [ ] postgres
 - [ ] redshift
 - [ ] bigquery
@@ -43,12 +46,11 @@ If applicable, add screenshots or log output to help explain your problem.
 - [ ] trino/starburst
 - [ ] other (specify: ____________)
 
-
 **The output of `dbt --version`:**
+
 ```
 <output goes here>
 ```
-
 
 ### Additional context
 <!---

@@ -1,11 +1,11 @@
 with sources as (
     select
         resource_name,
-        case 
+        case
             -- if you're using databricks but not the unity catalog, database will be null
-            when database is NULL then {{ dbt.concat(["schema", "'.'", "identifier"]) }} 
-            else {{ dbt.concat(["database", "'.'", "schema", "'.'", "identifier"]) }} 
-        end as source_db_location 
+            when database is NULL then {{ dbt.concat(["schema", "'.'", "identifier"]) }}
+            else {{ dbt.concat(["database", "'.'", "schema", "'.'", "identifier"]) }}
+        end as source_db_location
     from {{ ref('int_all_graph_resources') }}
     where resource_type = 'source'
     and not is_excluded
@@ -17,8 +17,8 @@ source_duplicates as (
     select
         source_db_location,
         {{ dbt.listagg(
-            measure = 'resource_name', 
-            delimiter_text = "', '", 
+            measure = 'resource_name',
+            delimiter_text = "', '",
             order_by_clause = 'order by resource_name' if target.type in ['snowflake','redshift','duckdb','trino'])
         }} as source_names
     from sources

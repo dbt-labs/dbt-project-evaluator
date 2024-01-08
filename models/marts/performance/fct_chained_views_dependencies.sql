@@ -1,5 +1,5 @@
 with all_relationships as (
-    select  
+    select
         *
     from {{ ref('int_all_dag_relationships') }}
     where distance <> 0

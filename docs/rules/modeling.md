@@ -238,7 +238,7 @@ Post-refactor, your DAG should look like this:
 
 ![A refactored DAG showing two staging models feeding into an intermediate model](https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png){ width=500 }
 
-or if you want to use base_ models and keep stg_model_2 as is:
+or if you want to use base_models and keep stg_model_2 as is:
 
 ![A refactored DAG showing two base models feeding into a staging model](https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png){ width=500 }
 

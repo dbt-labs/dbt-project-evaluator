@@ -25,7 +25,7 @@ Currently, the following adapters are supported:
 ## Using This Package
 
 ### Cloning via dbt Package Hub
-  
+
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 ### Additional setup for Databricks/Spark/DuckDB/Redshift
@@ -41,7 +41,7 @@ dispatch:
 ```
 
 This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the [cross_db_shim directory](macros/cross_db_shim/).
-  
+
 ## Documentation
 
 The full documentation and list of rules are available on [this website](https://dbt-labs.github.io/dbt-project-evaluator/)

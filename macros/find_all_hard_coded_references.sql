@@ -16,21 +16,21 @@
 
         {#-
             REGEX Explanations
-            
+
             # from_var_1
             - matches (from or join) followed by some spaces and then {{var(<something>)}}
-            
+
             # from_var_2
             - matches (from or join) followed by some spaces and then {{var(<something>,<something_else>)}}
-            
+
             # from_table_1
             - matches (from or join) followed by some spaces and then <something>.<something_else>
               where each <something> is enclosed by (` or [ or " or ' or nothing)
-            
+
             # from_table_2
             - matches (from or join) followed by some spaces and then <something>.<something_else>.<something_different>
               where each <something> is enclosed by (` or [ or " or ' or nothing)
-            
+
             # from_table_3
             - matches (from or join) followed by some spaces and then <something>
               where <something> is enclosed by (` or [ or " or ')
@@ -76,7 +76,7 @@
                 ({{\s*var\s*\(\s*[\'\"]?)
 
                 # third matching group
-                # at least 1 of anything except a parenthesis or quotation mark            
+                # at least 1 of anything except a parenthesis or quotation mark
                 ([^)\'\"]+)
 
                 # fourth matching group
@@ -88,19 +88,19 @@
                 (,)
 
                 # sixth matching group
-                # 0 or more whitespace character(s), 1 or 0 quotation mark            
+                # 0 or more whitespace character(s), 1 or 0 quotation mark
                 (\s*[\'\"]?)
 
                 # seventh matching group
-                # at least 1 of anything except a parenthesis or quotation mark            
+                # at least 1 of anything except a parenthesis or quotation mark
                 ([^)\'\"]+)
 
                 # eighth matching group
-                # 1 or 0 quotation mark, 0 or more whitespace character(s)            
+                # 1 or 0 quotation mark, 0 or more whitespace character(s)
                 ([\'\"]?\s*)
 
                 # ninth matching group
-                # a closing parenthesis, 0 or more whitespace character(s), closing }}            
+                # a closing parenthesis, 0 or more whitespace character(s), closing }}
                 (\)\s*}})
 
                 ',
@@ -108,7 +108,7 @@
                 '(?ix)
 
                 # first matching group
-                # from or join followed by at least 1 whitespace character            
+                # from or join followed by at least 1 whitespace character
                 (from|join)\s+
 
                 # second matching group
@@ -144,22 +144,22 @@
                 '(?ix)
 
                 # first matching group
-                # from or join followed by at least 1 whitespace character 
+                # from or join followed by at least 1 whitespace character
                 (from|join)\s+
 
                 # second matching group
-                # 1 or 0 of (opening bracket, backtick, or quotation mark)            
+                # 1 or 0 of (opening bracket, backtick, or quotation mark)
                 ([\[`\"\']?)
 
                 # third matching group
                 # at least 1 word character
                 (\w+)
                 # fouth matching group
-                # 1 or 0 of (closing bracket, backtick, or quotation mark)            
+                # 1 or 0 of (closing bracket, backtick, or quotation mark)
                 ([\]`\"\']?)
 
                 # fifth matching group
-                # a period            
+                # a period
                 (\.)
 
                 # sixth matching group
@@ -167,23 +167,23 @@
                 ([\[`\"\']?)
 
                 # seventh matching group
-                # at least 1 word character            
+                # at least 1 word character
                 (\w+)
 
                 # eighth matching group
-                # 1 or 0 of (closing bracket, backtick, or quotation mark) 
+                # 1 or 0 of (closing bracket, backtick, or quotation mark)
                 ([\]`\"\']?)
 
                 # ninth matching group
-                # a period             
+                # a period
                 (\.)
 
                 # tenth matching group
-                # 1 or 0 of (closing bracket, backtick, or quotation mark)             
+                # 1 or 0 of (closing bracket, backtick, or quotation mark)
                 ([\[`\"\']?)
 
                 # eleventh matching group
-                # at least 1 word character   
+                # at least 1 word character
                 (\w+)
 
                 # twelfth matching group
@@ -195,17 +195,17 @@
                 '(?ix)
 
                 # first matching group
-                # from or join followed by at least 1 whitespace character             
+                # from or join followed by at least 1 whitespace character
                 (from|join)\s+
 
                 # second matching group
-                # 1 of (opening bracket, backtick, or quotation mark)            
+                # 1 of (opening bracket, backtick, or quotation mark)
                 ([\[`\"\'])
 
                 # third matching group
-                # at least 1 word character or space 
+                # at least 1 word character or space
                 ([\w ]+)
-                
+
                 # fourth matching group
                 # 1 of (closing bracket, backtick, or quotation mark) folowed by a whitespace character or end of string
                 ([\]`\"\'])(?=\s|$)
@@ -216,7 +216,7 @@
         {%- for regex_name, regex_pattern in from_hard_coded_references.items() -%}
 
             {%- set all_regex_matches = re.findall(regex_pattern, model_raw_sql) -%}
-                
+
                 {%- for match in all_regex_matches -%}
 
                     {%- set raw_reference = match[1:]|join()|trim -%}
@@ -224,11 +224,11 @@
                     {%- do all_hard_coded_references_list.append(raw_reference) -%}
 
                 {%- endfor -%}
-        
+
         {%- endfor -%}
 
     {% endif %}
-    
+
     {% set all_hard_coded_references = set(all_hard_coded_references_list)|sort|join(', ')|trim %}
 
     {{ return(all_hard_coded_references) }}

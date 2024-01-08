@@ -1,14 +1,16 @@
+# Pull request
+
 This is a:
+
 - [ ] bug fix PR with no breaking changes
 - [ ] new functionality
 
-## Link to Issue 
+## Link to Issue
 <!---
 Include this section if you are closing an open issue
-e.g. 
+e.g.
 Closes #13
 -->
-
 
 ## Description & motivation
 <!---
@@ -21,13 +23,14 @@ Screenshot of passing integration tests locally
 -->
 
 ## Checklist
+
 - [ ] I have verified that these changes work locally on the following warehouses (Note: it's okay if you do not have access to all warehouses, this helps us understand what has been covered)
-    - [ ] BigQuery
-    - [ ] Postgres
-    - [ ] Redshift
-    - [ ] Snowflake
-    - [ ] Databricks
-    - [ ] DuckDB
-    - [ ] Trino/Starburst
+  - [ ] BigQuery
+  - [ ] Postgres
+  - [ ] Redshift
+  - [ ] Snowflake
+  - [ ] Databricks
+  - [ ] DuckDB
+  - [ ] Trino/Starburst
 - [ ] I have updated the README.md (if applicable)
 - [ ] I have added tests & descriptions to my models (and macros if applicable)

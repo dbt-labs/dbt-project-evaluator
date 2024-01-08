@@ -4,9 +4,9 @@
     {{ print("\n### List of issues raised by dbt_project_evaluator ###") }}
 
     {% for result in results | selectattr('failures') | selectattr('failures', '>', 0) %}
-      
+
       {% if result.node.fqn[0] == "dbt_project_evaluator" %}
-        
+
         {{ print("\n-- " ~ result.node.alias ~ " --") }}
 
         {% set unique_id_model_checked = result.node.depends_on.nodes[0] %}
@@ -24,7 +24,7 @@
         {% set query_results = run_query(sql_statement) %}
         {% if format == 'table' %}
           {{ print(query_results.print_table(max_column_width=80, max_rows=1000) or "") }}
-        {% elif format == 'csv' %}  
+        {% elif format == 'csv' %}
           {{ print(query_results.print_csv() or "") }}
         {% else %}
             {%- do exceptions.raise_compiler_error("format can only be 'table' or 'csv'") -%}

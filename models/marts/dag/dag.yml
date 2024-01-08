@@ -23,8 +23,8 @@ models:
       - is_empty
   - name: fct_rejoining_of_upstream_concepts
     description: >
-      "All cases where one of the parent's direct children (child) is ALSO the direct child of ANOTHER one of the 
-      parent's direct childen (parent_and_child). Only includes cases where the model "in between" the parent and child 
+      "All cases where one of the parent's direct children (child) is ALSO the direct child of ANOTHER one of the
+      parent's direct childen (parent_and_child). Only includes cases where the model "in between" the parent and child
       has NO other downstream dependencies.
     tests:
       - is_empty
@@ -43,7 +43,7 @@ models:
   - name: fct_staging_dependent_on_staging
     description: "This table shows each parent/child relationship where models in the staging layer are dependent on each other."
     tests:
-      - is_empty 
+      - is_empty
   - name: fct_unused_sources
     description: "This table shows each source with 0 children."
     tests:

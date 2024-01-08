@@ -36,7 +36,7 @@ models:
       contract:
         enforced: true
     columns:
-      - name: id 
+      - name: id
         data_type: integer
 ```
 
@@ -72,7 +72,7 @@ models:
     description: very important OKR reporting model
     access: public
     columns:
-      - name: id 
+      - name: id
         description: the primary key of my OKR model
 ```
 
@@ -98,14 +98,13 @@ models:
       contract:
         enforced: true
     columns:
-      - name: id 
+      - name: id
         description: the primary key of my OKR model
         data_type: integer
   - name: dim_model_7
     description: excellent model
     access: private
 ```
-
 
 **Reason to Flag**
 
@@ -125,7 +124,7 @@ models:
       contract:
         enforced: true
     columns:
-      - name: id 
+      - name: id
         description: the primary key of my OKR model
         data_type: integer
   - name: dim_model_7

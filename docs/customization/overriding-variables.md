@@ -33,7 +33,7 @@ vars:
     documentation_coverage_target: 75
     test_coverage_target: 75
     primary_key_test_macros: [["dbt_constraints.test_primary_key"]]
-    
+
 ```
 
 ## DAG Variables
@@ -109,6 +109,6 @@ vars:
   dbt_project_evaluator:
     # update the number of records inserted from the graph from 10,000 to 500 to reduce query size
     insert_batch_size: 500
-    # set the maximum distance between nodes to 5 
+    # set the maximum distance between nodes to 5
     max_depth_dag: 5
 ```

@@ -1,11 +1,11 @@
 
 {% macro duckdb__split_part(string_text, delimiter_text, part_number) -%}
     str_split({{string_text}}, {{delimiter_text}})[{{part_number}}]
-{%- endmacro %} 
+{%- endmacro %}
 
 {% macro duckdb__listagg(measure, delimiter_text, order_by_clause, limit_num) -%}
 
-    {# 
+    {#
         This is not the full support for listagg on DuckDB but it allows tests to pass/fail for this package
         - order_by_clause does not work, so we need to sort the CTE before calling listagg
         - support for limit_num was not added

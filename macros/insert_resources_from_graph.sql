@@ -2,7 +2,7 @@
   {%- set values = get_resource_values(resource_type, relationships) -%}
   {%- set values_length = values | length -%}
   {%- set loop_count = (values_length / batch_size) | round(0, 'ceil') | int -%}
-  
+
     {%- for loop_number in range(loop_count) -%}
         {%- set lower_bound = loop.index0 * batch_size -%}
         {%- set upper_bound = loop.index * batch_size -%}
@@ -17,5 +17,5 @@
             {{ insert_statement }}
         {%- endcall %}
     {% endfor %}
-    
+
 {% endmacro %}

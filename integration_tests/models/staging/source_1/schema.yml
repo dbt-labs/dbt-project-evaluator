@@ -4,7 +4,7 @@ models:
   - name: stg_model_1
     description: test
     columns:
-      - name: id 
+      - name: id
         description: hocus pocus
         tests:
           - unique
@@ -16,7 +16,7 @@ models:
             - color
   - name: stg_model_2
     columns:
-      - name: id 
+      - name: id
         tests:
           - unique
           - not_null

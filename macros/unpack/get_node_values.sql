@@ -15,7 +15,7 @@
         {%- set exclude_node = dbt_project_evaluator.set_is_excluded(node, resource_type="node") -%}
 
 
-        {%- set values_line  = 
+        {%- set values_line  =
             [
                 wrap_string_with_quotes(node.unique_id),
                 wrap_string_with_quotes(node.name),

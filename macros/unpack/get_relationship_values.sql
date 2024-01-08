@@ -6,7 +6,7 @@
 
     {%- if execute -%}
         {%- if node_type == 'nodes' %}
-            {% set nodes_list = graph.nodes.values() %}   
+            {% set nodes_list = graph.nodes.values() %}
         {%- elif node_type == 'exposures' -%}
             {% set nodes_list = graph.exposures.values() %}
         {%- elif node_type == 'metrics' -%}
@@ -14,35 +14,35 @@
         {%- else -%}
             {{ exceptions.raise_compiler_error("node_type needs to be either nodes, exposures or metrics, got " ~ node_type) }}
         {% endif -%}
-        
+
         {%- set values = [] -%}
 
         {%- for node in nodes_list -%}
 
             {%- if node.get('depends_on',{}).get('nodes',[]) |length == 0 -%}
 
-                {%- set values_line = 
+                {%- set values_line =
                   [
                     "cast('" ~ node.unique_id ~ "' as " ~ dbt.type_string() ~ ")",
                     "cast(NULL as " ~ dbt.type_string() ~ ")",
                     "FALSE",
-                  ] 
+                  ]
                 %}
-                  
+
                 {%- do values.append(values_line) -%}
 
-            {%- else -%}       
+            {%- else -%}
 
                 {%- for parent in node.get('depends_on',{}).get('nodes',[]) -%}
 
-                    {%- set values_line = 
+                    {%- set values_line =
                         [
                             "cast('" ~ node.unique_id ~ "' as " ~ dbt.type_string() ~ ")",
                             "cast('" ~ parent ~ "' as " ~ dbt.type_string() ~ ")",
                             "" ~ loop.last ~ "" if node.unique_id.split('.')[0] == 'test' else "FALSE"
                         ]
                     %}
-                      
+
                     {%- do values.append(values_line) -%}
 
                 {%- endfor -%}
@@ -50,9 +50,9 @@
             {%- endif -%}
 
         {%- endfor -%}
-    
+
     {{ return(values) }}
 
     {%- endif -%}
-  
+
 {%- endmacro -%}

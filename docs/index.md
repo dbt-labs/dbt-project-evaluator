@@ -10,7 +10,6 @@ Specifically, this package tests for:
 5. __[Performance](rules/performance)__ - your model materializations for performance best practices
 6. __[Governance](rules/governance)__ - your model governance feature best practices
 
-
 In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
 
 Currently, the following adapters are supported:
@@ -26,7 +25,7 @@ Currently, the following adapters are supported:
 ## Using This Package
 
 ### Cloning via dbt Package Hub
-  
+
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
 ### Additional setup for Databricks/Spark/DuckDB/Redshift
@@ -40,7 +39,7 @@ dispatch:
 ```
 
 This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the [cross_db_shim directory](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/cross_db_shim/).
-  
+
 ### How It Works
 
 This package will:

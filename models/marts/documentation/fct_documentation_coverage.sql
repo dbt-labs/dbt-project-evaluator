@@ -27,7 +27,7 @@ final as (
         {% for model_type in var('model_types') %}
             round(
                 {{ dbt_utils.safe_divide(
-                    numerator = "sum(is_described_" ~ model_type ~ "_model) * 100", 
+                    numerator = "sum(is_described_" ~ model_type ~ "_model) * 100",
                     denominator = "count(is_" ~ model_type ~ "_model)"
                 ) }}
             , 2) as {{ model_type }}_documentation_coverage_pct{% if not loop.last %},{% endif %}

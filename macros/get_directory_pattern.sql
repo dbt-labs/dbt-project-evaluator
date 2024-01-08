@@ -8,12 +8,12 @@
     {{ return("\\\\") }}
   {% endif %}
 {% endmacro %}
- 
+
 {% macro get_regexp_directory_pattern() %}
   {% set regexp_escaped = get_directory_pattern() | replace("\\\\", "\\\\\\\\") %}
   {% do return(regexp_escaped) %}
 {% endmacro %}
- 
+
 {% macro get_dbtreplace_directory_pattern() %}
   {%- set env_var_home_exists = env_var("HOME", "not_set") != "not_set" -%}
   {%- set on_mac_or_linux = env_var_home_exists and "\\\\" not in env_var("HOME") -%}
@@ -22,4 +22,4 @@
   {% else %}
     {{ dbt.replace("file_path", "regexp_replace(file_path,'.*\\\\\\\\','')", "''") }}
   {% endif %}
-{% endmacro %} 
+{% endmacro %}
