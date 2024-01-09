@@ -41,7 +41,7 @@ For each model flagged, ensure the model type is defined and the model name is p
 ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_model_directories.sql))
 shows all cases where a model is NOT in the appropriate subdirectory:
 
-- For staging models: The files should be nested in the staging folder of a suborder that matches their source parent's name.
+- For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
 - For non-staging models: The files should be nested closest to the folder name that matches their model type.  
 
 ### Example
