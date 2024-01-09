@@ -1,12 +1,11 @@
-<!-- markdownlint-disable -->
 ---
 name: Feature request
 about: Suggest an idea for this package
 title: ''
 labels: enhancement, triage
 assignees: ''
-
 ---
+<!-- markdownlint-disable MD002-->
 
 ### Describe the feature
 
@@ -26,5 +25,5 @@ What kind of use case will this feature be useful for? Please be specific and pr
 
 ### Are you interested in contributing this feature?
 <!---
-Let us know if you want to contribute the feature, and whether would need a hand getting started
+Let us know if you want to contribute the feature, and whether you would need a hand getting started
 --->
