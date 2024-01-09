@@ -4,12 +4,12 @@ Currently, this package uses different variables to adapt the models to your obj
 
 ## Testing and Documentation Variables
 
-| variable    | description | default     |
-| ----------- | ----------- | ----------- |
-| `test_coverage_target` | the minimum acceptable test coverage percentage | 100% |
-| `documentation_coverage_target` | the minimum acceptable documentation coverage percentage | 100% |
-| `primary_key_test_macros` | the set(s) of dbt tests used to check validity of a primary key | `[["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]` |
-| `enforced_primary_key_node_types` | the set of node types for you you would like to enforce primary key test coverage. Valid options to include are `model`, `source`, `snapshot`, `seed` | `["model"]`
+| variable                          | description                                                                                                                                           | default                                                                                        |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| `test_coverage_target`            | the minimum acceptable test coverage percentage                                                                                                       | 100%                                                                                           |
+| `documentation_coverage_target`   | the minimum acceptable documentation coverage percentage                                                                                              | 100%                                                                                           |
+| `primary_key_test_macros`         | the set(s) of dbt tests used to check validity of a primary key                                                                                       | `[["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]` |
+| `enforced_primary_key_node_types` | the set of node types for you you would like to enforce primary key test coverage. Valid options to include are `model`, `source`, `snapshot`, `seed` | `["model"]`                                                                                    |
 
 **Usage notes for `primary_key_test_macros:`**
 
@@ -52,23 +52,23 @@ vars:
 
 ## Naming Convention Variables
 
-| variable    | description | default     |
-| ----------- | ----------- | ----------- |
-| `model_types` | a list of the different types of models that define the layers of your dbt project | staging, intermediate, marts, other |
-| `staging_folder_name` | the name of the folder that contains your staging models | staging |
-| `intermediate_folder_name` | the name of the folder that contains your intermediate models | intermediate |
-| `marts_folder_name` | the name of the folder that contains your marts models | marts |
-| `staging_prefixes` | the list of acceptable prefixes for your staging models | stg_ |
-| `intermediate_prefixes` | the list of acceptable prefixes for your intermediate models | int_ |
-| `marts_prefixes` | the list of acceptable prefixes for your marts models | fct_, dim_ |
-| `other_prefixes` | the list of acceptable prefixes for your other models | rpt_ |
+| variable                   | description                                                                        | default                             |
+|----------------------------|------------------------------------------------------------------------------------|-------------------------------------|
+| `model_types`              | a list of the different types of models that define the layers of your dbt project | staging, intermediate, marts, other |
+| `staging_folder_name`      | the name of the folder that contains your staging models                           | staging                             |
+| `intermediate_folder_name` | the name of the folder that contains your intermediate models                      | intermediate                        |
+| `marts_folder_name`        | the name of the folder that contains your marts models                             | marts                               |
+| `staging_prefixes`         | the list of acceptable prefixes for your staging models                            | stg_                                |
+| `intermediate_prefixes`    | the list of acceptable prefixes for your intermediate models                       | int_                                |
+| `marts_prefixes`           | the list of acceptable prefixes for your marts models                              | fct_, dim_                          |
+| `other_prefixes`           | the list of acceptable prefixes for your other models                              | rpt_                                |
 
 The `model_types`, `<model_type>_folder_name`, and `<model_type>_prefixes` variables allow the package to check if models in the different layers are in the correct folders and have a correct prefix in their name. The default model types are the ones we recommend in our [dbt Labs Style Guide](https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md).
 
 If your model types are different, you can update the `model_types` variable and create new variables for `<model_type>_folder_name` and/or `<model_type>_prefixes`.
 
 ```yaml title="dbt_project.yml"
-# add an additional model type "util"
+# add a model type "util"
 
 vars:
   dbt_project_evaluator:
@@ -79,9 +79,9 @@ vars:
 
 ## Performance Variables
 
-| variable    | description | default     |
-| ----------- | ----------- | ----------- |
-| `chained_views_threshold` | threshold for unacceptable length of chain of views for `fct_chained_views_dependencies` | 4 |
+| variable                  | description                                                                              | default |
+|---------------------------|------------------------------------------------------------------------------------------|---------|
+| `chained_views_threshold` | threshold for unacceptable length of chain of views for `fct_chained_views_dependencies` | 4       |
 
 ```yaml title="dbt_project.yml"
 vars:
@@ -92,12 +92,12 @@ vars:
 
 ## Execution
 
-| variable    | description | default     |
-| ----------- | ----------- | ----------- |
-| `max_depth_dag` | limits the maximum distance between nodes calculated in `int_all_dag_relationships` | 9 for bigquery and spark, -1 for other adatpters |
-| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
+| variable            | description                                                                         | default                                          |
+|---------------------|-------------------------------------------------------------------------------------|--------------------------------------------------|
+| `max_depth_dag`     | limits the maximum distance between nodes calculated in `int_all_dag_relationships` | 9 for bigquery and spark, -1 for other adatpters |
+| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models           | 10000                                            |
 
-**Note on max_depth_dag**
+### Note on max_depth_dag
 
 The default behavior for limiting the relationships calculated in the `int_all_dag_relationships` model differs depending on your adapter.
 
