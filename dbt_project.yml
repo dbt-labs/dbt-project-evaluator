@@ -86,7 +86,3 @@ vars:
   # -- Execution variables --
   insert_batch_size: "{{ 500 if target.type == 'bigquery' else 10000 }}"
   max_depth_dag: "{{ 9 if target.type in ['bigquery', 'spark', 'databricks'] else 4 if target.type == 'trino' else -1 }}"
-
-  dispatch:
-  - macro_namespace: dbt
-    search_order: ['dbt_project_evaluator', 'dbt']
