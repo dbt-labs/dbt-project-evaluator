@@ -29,7 +29,7 @@ with stg_model_1 as (
 )
 
 ,fct_model_9 as (
-    select * from {{ ref('stg_model_9') }}
+    select * from {{ ref('fct_model_9') }}
 )
 
 ,final as (
