@@ -92,11 +92,11 @@ seeds:
             - model
             - hard_coded_references
 
-  - name: test_fct_number_of_joins
+  - name: test_fct_too_many_joins
     tests:
       - dbt_utils.equality:
-          name: equality_fct_number_of_joins
-          compare_model: ref('fct_number_of_joins')
+          name: equality_fct_too_many_joins
+          compare_model: ref('fct_too_many_joins')
           compare_columns:
             - resource_name
             - resource_type

@@ -19,13 +19,13 @@ hide:
 |Modeling                                      |[Root Models](../rules/modeling/#root-models)                                                                          |`fct_root_models`|
 |Modeling                                      |[Staging Models Dependent on Downstream Models](../rules/modeling/#staging-models-dependent-on-downstream-models)      |`fct_staging_dependent_on_marts_or_intermediate`|
 |Modeling                                      |[Unused Sources](../rules/modeling/#unused-sources)                                                                    |`fct_unused_sources`|
-|Modeling                                      |[Models with More than 7 Joins](..rules/modeling/#models-with-more-than-7-joins)                                       |`fct_number_of_joins`|
+|Modeling                                      |[Models with 7 or More Joins](..rules/modeling/#models-with-7-or-more-joins)                                           |`fct_number_of_joins`|
 |Testing                                       |[Missing Primary Key Tests](../rules/testing/#missing-primary-key-tests)                                               |`fct_missing_primary_key_tests`|
 |Testing                                       |[Test Coverage](../rules/testing/#test-coverage)                                                                       |`fct_test_coverage`|
 |Documentation                                 |[Undocumented Models](../rules/documentation/#undocumented-models)                                                     |`fct_undocumented_models`|
 |Documentation                                 |[Documentation Coverage](../rules/documentation/#documentation-coverage)                                               |`fct_documentation_coverage`|
-|Documentation                                 |[Undocumented Source Tables](../rules/documentation/#undocumented-source-tables)                                                     |`fct_undocumented_source_tables`|
-|Documentation                                 |[Undocumented Sources](../rules/documentation/#undocumented-sources)                                               |`fct_undocumented_sources`|
+|Documentation                                 |[Undocumented Source Tables](../rules/documentation/#undocumented-source-tables)                                       |`fct_undocumented_source_tables`|
+|Documentation                                 |[Undocumented Sources](../rules/documentation/#undocumented-sources)                                                   |`fct_undocumented_sources`|
 |Structure                                     |[Test Directories](../rules/structure/#test-directories)                                                               |`fct_test_directories`|
 |Structure                                     |[Model Naming Conventions](../rules/structure/#model-naming-conventions)                                               |`fct_model_naming_conventions`|
 |Structure                                     |[Source Directories](../rules/structure/#source-directories)                                                           |`fct_source_directories`|

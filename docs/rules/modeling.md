@@ -434,9 +434,9 @@ or any other nested information.
 
 ---
 
-## Models with More than 7 Joins
+## Models with 7 or More Joins
 
-`fct_number_of_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_number_of_joins.sql)) shows models with a reference to 7 or more other models (either model, intermediate, or source).
+`fct_number_of_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_too_many_joins.sql)) shows models with a reference to 7 or more other models (either model, intermediate, or source).
 
 **Example**
 
@@ -451,7 +451,7 @@ This likely represents a model in which too much is being done. Having a model t
 
 **How to Remediate**
 
-Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart — rather than have 7+ joins in the mart, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.
+Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart — rather than have 7 or more joins in the mart, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.
 
 ![A DAG showing a model that directly references only two intermediate models. The intermediate models reference three and four staging models upstream.](https://github.com/BradCr/dbt-project-evaluator/assets/151274228/4b630e3c-f13a-443c-94e5-2d93c713c8f2)
 { width = 1000 }
