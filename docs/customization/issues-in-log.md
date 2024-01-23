@@ -73,5 +73,5 @@ By setting `dbt_project_evaluator.is_empty`, you can see the result like:
 | fct_my_public_model                |      True |                False |
 ```
 
-As you can see, custom rules and official rules can be identified by the prefix of test_name (`my_dbt_package.` and
+Custom rules and official rules can be identified by the prefix of test_name (`my_dbt_package.` and
 `dbt_project_evaluator.`).
