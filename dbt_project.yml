@@ -27,7 +27,7 @@ models:
     marts:
       core:
         int_all_graph_resources:
-          +materialized: table   
+          +materialized: table
         int_direct_relationships:
           # required for BigQuery and Redshift for performance/memory reasons
           +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
@@ -65,15 +65,15 @@ vars:
   models_fanout_threshold: 3
 
   # -- Naming conventions variables --
-  # to add a new "model type", update the variable model_types 
-  # and create new variables with the names <model_type>_folder_name and/or <model_type>_prefixes 
+  # to add a new "model type", update the variable model_types
+  # and create new variables with the names <model_type>_folder_name and/or <model_type>_prefixes
   model_types: ['base', 'staging', 'intermediate', 'marts', 'other']
 
   base_folder_name: 'base'
   staging_folder_name: 'staging'
   intermediate_folder_name: 'intermediate'
   marts_folder_name: 'marts'
-  
+
   base_prefixes: ['base_']
   staging_prefixes: ['stg_']
   intermediate_prefixes: ['int_']

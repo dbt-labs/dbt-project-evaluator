@@ -1,8 +1,8 @@
-with 
+with
 
 direct_exposure_relationships as (
     select * from {{ ref('int_all_dag_relationships') }}
-    where 
+    where
         distance = 1
         and child_resource_type = 'exposure'
         and not (
@@ -14,7 +14,7 @@ direct_exposure_relationships as (
 
 final as (
 
-    select 
+    select
         child as exposure_name,
         parent as parent_resource_name,
         parent_access,
