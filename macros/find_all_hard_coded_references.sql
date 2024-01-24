@@ -35,6 +35,9 @@
             - matches (from or join) followed by some spaces and then <something>
               where <something> is enclosed by (` or [ or " or ')
 
+            # notes
+            - all regex matches exclude text that immediately follows "distinct "
+
         -#}
 
         {%- set re = modules.re -%}
@@ -42,6 +45,9 @@
         {%- set from_hard_coded_references = {
             'from_var_1':
                 '(?ix)
+
+                # NOT following "distinct "
+                (?<!distinct\s)
 
                 # first matching group
                 # from or join followed by at least 1 whitespace character
@@ -66,6 +72,9 @@
                 ',
             'from_var_2':
                 '(?ix)
+
+                # NOT following "distinct "
+                (?<!distinct\s)
 
                 # first matching group
                 # from or join followed by at least 1 whitespace character
@@ -107,6 +116,9 @@
             'from_table_1':
                 '(?ix)
 
+                # NOT following "distinct "
+                (?<!distinct\s)
+
                 # first matching group
                 # from or join followed by at least 1 whitespace character            
                 (from|join)\s+
@@ -143,6 +155,9 @@
             'from_table_2':
                 '(?ix)
 
+                # NOT following "distinct "
+                (?<!distinct\s)
+
                 # first matching group
                 # from or join followed by at least 1 whitespace character 
                 (from|join)\s+
@@ -154,6 +169,7 @@
                 # third matching group
                 # at least 1 word character
                 (\w+)
+
                 # fouth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark)            
                 ([\]`\"\']?)
@@ -187,12 +203,15 @@
                 (\w+)
 
                 # twelfth matching group
-                # 1 or 0 of (closing bracket, backtick, or quotation mark) folowed by a whitespace character or end of string
+                # 1 or 0 of (closing bracket, backtick, or quotation mark) followed by a whitespace character or end of string
                 ([\]`\"\']?)(?=\s|$)
 
                 ',
             'from_table_3':
                 '(?ix)
+
+                # NOT following "distinct "
+                (?<!distinct\s)
 
                 # first matching group
                 # from or join followed by at least 1 whitespace character             
@@ -203,8 +222,8 @@
                 ([\[`\"\'])
 
                 # third matching group
-                # at least 1 word character or space 
-                ([\w ]+)
+                # at least 1 word character
+                (\w+)
                 
                 # fourth matching group
                 # 1 of (closing bracket, backtick, or quotation mark) folowed by a whitespace character or end of string
