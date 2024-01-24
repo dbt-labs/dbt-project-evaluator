@@ -54,4 +54,4 @@ inappropriate_model_names as (
 
 select * from inappropriate_model_names
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}
