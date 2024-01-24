@@ -34,9 +34,6 @@ models:
         int_all_dag_relationships:
           # required for BigQuery, Redshift, and Databricks for performance/memory reasons
           +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
-        int_all_columns:
-          # required for BigQuery, Redshift, and Databricks for performance/memory reasons
-          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
       dag:
         +materialized: table
     staging:

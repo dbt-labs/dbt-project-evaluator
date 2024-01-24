@@ -1,6 +1,6 @@
 # Querying columns with SQL
 
-The model `int_all_columns` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core/int_all_columns.sql)), created with the package, lists all the columns from all the dbt nodes (models, sources, tests, snapshots)
+The model `stg_columns` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/staging/graph/stg_columns.sql)), created with the package, lists all the columns from all the dbt nodes (models, sources, tests, snapshots)
 
 You can use this model to help with questions such as:
 
@@ -13,4 +13,4 @@ You can use this model to help with questions such as:
 
 ## Defining additional tests that match your exact requirements
 
-You can create a custom test against  `{{ ref(int_all_columns) }}` to test for your specific check! When running the package you'd need to make sure to also include children of the packag's models by using the `package:dbt_project_evalutator+` selector.
+You can create a custom test against  `{{ ref(stg_columns) }}` to test for your specific check! When running the package you'd need to make sure to also include children of the package's models by using the `package:dbt_project_evalutator+` selector.
