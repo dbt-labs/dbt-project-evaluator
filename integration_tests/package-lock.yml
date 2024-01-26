@@ -1,6 +1,0 @@
-packages:
-- local: ../
-- local: exclude_package/
-- package: dbt-labs/dbt_utils
-  version: 1.1.1
-sha1_hash: 99c9a6d4b9f757fa6c178cf18b75ed8975c42331

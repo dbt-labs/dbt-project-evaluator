@@ -8,3 +8,4 @@ integration_tests/state/
 site/
 env/
 .DS_Store
+integration_tests/package-lock.yml

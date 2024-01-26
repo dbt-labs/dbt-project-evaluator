@@ -1,2 +1,2 @@
 resource_name,resource_type,file_path,join_count
-fct_model_10,model,"models\\marts\\fct_model_10.sql",7
+fct_model_10,model,"models/marts/fct_model_10.sql",7

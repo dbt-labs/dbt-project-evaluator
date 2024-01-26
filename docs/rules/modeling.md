@@ -440,7 +440,7 @@ or any other nested information.
 
 **Example**
 
-`fct_model_1` directly references seven (7) staging models upstream.
+`fct_model_10` directly references seven (7) staging models upstream.
 
 ![A DAG showing a model that directly references seven staging models upstream.](https://github.com/BradCr/dbt-project-evaluator/assets/151274228/46ea1f78-1bd7-436b-b15b-f63c726601a1)
 { width = 900 }

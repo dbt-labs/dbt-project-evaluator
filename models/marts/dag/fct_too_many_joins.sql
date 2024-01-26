@@ -18,7 +18,7 @@ final as (
         child,
         child_resource_type,
         child_file_path
-    having count(distinct parent) >= 7
+    having count(distinct parent) >= {{ var('too_many_joins_threshold') }}
 )
 
 select * from final
