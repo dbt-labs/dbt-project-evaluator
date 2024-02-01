@@ -23,8 +23,8 @@
                         wrap_string_with_quotes(node.unique_id),
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.name)),
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.description)),
-                        'null' if not column.data_type else wrap_string_with_quotes(dbt.escape_single_quotes(column.data_type)),
-                        'null' if not column.quote else wrap_string_with_quotes(dbt.escape_single_quotes(column.quote))
+                        wrap_string_with_quotes(dbt.escape_single_quotes(column.data_type)),
+                       wrap_string_with_quotes(dbt.escape_single_quotes(column.quote))
                     ]
                 %}
 
