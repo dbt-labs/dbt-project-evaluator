@@ -5,7 +5,7 @@
 {% macro default__recursive_dag() %}
 
 with recursive direct_relationships as (
-    select  
+    select
         *
     from {{ ref('int_direct_relationships') }}
     where resource_type <> 'test'
@@ -44,7 +44,7 @@ all_relationships (
     path,
     is_dependent_on_chain_of_views
 ) as (
-    -- anchor 
+    -- anchor
     select distinct
         resource_id as parent_id,
         resource_name as parent,
@@ -76,11 +76,11 @@ all_relationships (
 
     from direct_relationships
     -- where direct_parent_id is null {# optional lever to change filtering of anchor clause to only include root resources #}
-    
+
     union all
 
     -- recursive clause
-    select  
+    select
         all_relationships.parent_id as parent_id,
         all_relationships.parent as parent,
         all_relationships.parent_resource_type as parent_resource_type,
@@ -105,12 +105,12 @@ all_relationships (
         direct_relationships.directory_path as child_directory_path,
         direct_relationships.file_name as child_file_name,
         direct_relationships.is_excluded as child_is_excluded,
-        all_relationships.distance+1 as distance, 
+        all_relationships.distance+1 as distance,
         {{ dbt.array_append('all_relationships.path', 'direct_relationships.resource_name') }} as path,
-        case 
-            when 
-                all_relationships.child_materialized in ('view', 'ephemeral') 
-                and coalesce(all_relationships.is_dependent_on_chain_of_views, true) 
+        case
+            when
+                all_relationships.child_materialized in ('view', 'ephemeral')
+                and coalesce(all_relationships.is_dependent_on_chain_of_views, true)
                 then true
             else false
         end as is_dependent_on_chain_of_views
@@ -145,7 +145,7 @@ all_relationships (
 {% endif %}
 
 with direct_relationships as (
-    select  
+    select
         *
     from {{ ref('int_direct_relationships') }}
     where resource_type <> 'test'
@@ -161,12 +161,12 @@ with direct_relationships as (
         is_public as child_is_public,
         access as child_access,
         is_excluded as child_is_excluded
-        
+
     from direct_relationships
 )
 
 , cte_0 as (
-    select 
+    select
         parent_id,
         child_id,
         child_materialized,
@@ -182,19 +182,19 @@ with direct_relationships as (
 {% for i in range(1,max_depth) %}
 {% set prev_cte_path %}cte_{{ i - 1 }}.path{% endset %}
 , cte_{{i}} as (
-    select 
+    select
         cte_{{i - 1}}.parent_id as parent_id,
         direct_relationships.resource_id as child_id,
         direct_relationships.materialized as child_materialized,
         direct_relationships.is_public as child_is_public,
         direct_relationships.access as child_access,
         direct_relationships.is_excluded as child_is_excluded,
-        cte_{{i - 1}}.distance+1 as distance, 
+        cte_{{i - 1}}.distance+1 as distance,
         {{ dbt.array_append(prev_cte_path, 'direct_relationships.resource_name') }} as path,
-        case 
-            when 
-                cte_{{i - 1}}.child_materialized in ('view', 'ephemeral') 
-                and coalesce(cte_{{i - 1}}.is_dependent_on_chain_of_views, true) 
+        case
+            when
+                cte_{{i - 1}}.child_materialized in ('view', 'ephemeral')
+                and coalesce(cte_{{i - 1}}.is_dependent_on_chain_of_views, true)
                 then true
             else false
         end as is_dependent_on_chain_of_views
@@ -265,6 +265,10 @@ with direct_relationships as (
 
 {% macro trino__recursive_dag() %}
 {#-- Although Trino supports a recursive WITH-queries,
--- it is less performant than creating CTEs with loops and unioning them --#}
+-- it is less performant than creating CTEs with loops and union them --#}
+    {{ return(bigquery__recursive_dag()) }}
+{% endmacro %}
+
+{% macro athena__recursive_dag() %}
     {{ return(bigquery__recursive_dag()) }}
 {% endmacro %}
