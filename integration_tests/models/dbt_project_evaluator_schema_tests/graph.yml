@@ -49,6 +49,14 @@ models:
           - unique
           - not_null
 
+  - name: stg_columns
+    description: "Staging model from the graph variable, one record per column resource."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - node_unique_id
+            - name
+
   - name: stg_sources
     description: "Staging model from the graph variable, one record per source resource."
     columns:
