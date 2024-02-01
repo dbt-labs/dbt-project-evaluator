@@ -48,4 +48,4 @@ model_fanout_agg as (
 
 select * from model_fanout_agg
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}
