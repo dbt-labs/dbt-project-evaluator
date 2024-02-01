@@ -23,4 +23,4 @@ bending_connections as (
 
 select * from bending_connections
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}
