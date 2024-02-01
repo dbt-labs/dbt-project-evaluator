@@ -9,25 +9,25 @@
       
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../issues-in-log/">
       
       
-        <link rel="next" href="modeling/">
+        <link rel="next" href="../../ci-check/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.6">
     
     
       
-        <title>List of rules - dbt_project_evaluator</title>
+        <title>Querying columns - dbt_project_evaluator</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.50c56a3b.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -46,9 +46,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#list-of-the-rules-currently-defined" class="md-skip">
+        <a href="#querying-columns-with-sql" class="md-skip">
           Skip to content
         </a>
       
@@ -94,9 +94,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="dbt_project_evaluator" class="md-header__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+    <a href="../.." title="dbt_project_evaluator" class="md-header__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
       
-  <img src="../assets/dbt-logo.svg" alt="logo">
+  <img src="../../assets/dbt-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              List of rules
+              Querying columns
             
           </span>
         </div>
@@ -217,8 +217,6 @@
           
             
               
-                
-              
               <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -230,9 +228,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="dbt_project_evaluator" class="md-nav__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+    <a href="../.." title="dbt_project_evaluator" class="md-nav__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
       
-  <img src="../assets/dbt-logo.svg" alt="logo">
+  <img src="../../assets/dbt-logo.svg" alt="logo">
 
     </a>
     dbt_project_evaluator
@@ -259,7 +257,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -276,21 +274,19 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -304,7 +300,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Rules
@@ -315,19 +311,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../rules/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -336,7 +323,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -349,7 +335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="modeling/" class="md-nav__link">
+      <a href="../../rules/modeling/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -370,7 +356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="testing/" class="md-nav__link">
+      <a href="../../rules/testing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -391,7 +377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="documentation/" class="md-nav__link">
+      <a href="../../rules/documentation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -412,7 +398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="structure/" class="md-nav__link">
+      <a href="../../rules/structure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -433,7 +419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="performance/" class="md-nav__link">
+      <a href="../../rules/performance/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -454,7 +440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="governance/" class="md-nav__link">
+      <a href="../../rules/governance/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -479,19 +465,21 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -505,7 +493,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Customization
@@ -519,7 +507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../customization/overriding-variables/" class="md-nav__link">
+      <a href="../overriding-variables/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -540,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../customization/customization/" class="md-nav__link">
+      <a href="../customization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -561,7 +549,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../customization/exceptions/" class="md-nav__link">
+      <a href="../exceptions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -582,7 +570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../customization/excluding-packages-and-paths/" class="md-nav__link">
+      <a href="../excluding-packages-and-paths/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -603,7 +591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../customization/issues-in-log/" class="md-nav__link">
+      <a href="../issues-in-log/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -621,10 +609,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../customization/querying-columns/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Querying columns
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -633,6 +641,35 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#defining-additional-tests-that-match-your-exact-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining additional tests that match your exact requirements
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -652,7 +689,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ci-check/" class="md-nav__link">
+      <a href="../../ci-check/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -672,7 +709,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../querying-the-dag/" class="md-nav__link">
+      <a href="../../querying-the-dag/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -692,7 +729,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -720,7 +757,7 @@
                   
 
   
-    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/rules.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/customization/querying-columns.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -728,153 +765,18 @@
   
 
 
-<h1 id="list-of-the-rules-currently-defined">List of the rules currently defined<a class="headerlink" href="#list-of-the-rules-currently-defined" title="Permanent link">#</a></h1>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Friendly name</th>
-<th>fact name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#staging-models-dependent-on-other-staging-models">Staging Models Dependent on Other Staging Models</a></td>
-<td><code>fct_staging_dependent_on_staging</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#source-fanout">Source Fanout</a></td>
-<td><code>fct_source_fanout</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#rejoining-of-upstream-concepts">Rejoining of Upstream Concepts</a></td>
-<td><code>fct_rejoining_of_upstream_concepts</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#model-fanout">Model Fanout</a></td>
-<td><code>fct_model_fanout</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#downstream-models-dependent-on-source">Downstream Models Dependent on Source</a></td>
-<td><code>fct_marts_or_intermediate_dependent_on_source</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#direct-join-to-source">Direct Join to Source</a></td>
-<td><code>fct_direct_join_to_source</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#duplicate-sources">Duplicate Sources</a></td>
-<td><code>fct_duplicate_sources</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#hard-coded-references">Hard Coded References</a></td>
-<td><code>fct_hard_coded_references</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#multiple-sources-joined">Multiple Sources Joined</a></td>
-<td><code>fct_multiple_sources_joined</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#root-models">Root Models</a></td>
-<td><code>fct_root_models</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#staging-models-dependent-on-downstream-models">Staging Models Dependent on Downstream Models</a></td>
-<td><code>fct_staging_dependent_on_marts_or_intermediate</code></td>
-</tr>
-<tr>
-<td>Modeling</td>
-<td><a href="../rules/modeling/#unused-sources">Unused Sources</a></td>
-<td><code>fct_unused_sources</code></td>
-</tr>
-<tr>
-<td>Testing</td>
-<td><a href="../rules/testing/#missing-primary-key-tests">Missing Primary Key Tests</a></td>
-<td><code>fct_missing_primary_key_tests</code></td>
-</tr>
-<tr>
-<td>Testing</td>
-<td><a href="../rules/testing/#test-coverage">Test Coverage</a></td>
-<td><code>fct_test_coverage</code></td>
-</tr>
-<tr>
-<td>Documentation</td>
-<td><a href="../rules/documentation/#undocumented-models">Undocumented Models</a></td>
-<td><code>fct_undocumented_models</code></td>
-</tr>
-<tr>
-<td>Documentation</td>
-<td><a href="../rules/documentation/#documentation-coverage">Documentation Coverage</a></td>
-<td><code>fct_documentation_coverage</code></td>
-</tr>
-<tr>
-<td>Documentation</td>
-<td><a href="../rules/documentation/#undocumented-source-tables">Undocumented Source Tables</a></td>
-<td><code>fct_undocumented_source_tables</code></td>
-</tr>
-<tr>
-<td>Documentation</td>
-<td><a href="../rules/documentation/#undocumented-sources">Undocumented Sources</a></td>
-<td><code>fct_undocumented_sources</code></td>
-</tr>
-<tr>
-<td>Structure</td>
-<td><a href="../rules/structure/#test-directories">Test Directories</a></td>
-<td><code>fct_test_directories</code></td>
-</tr>
-<tr>
-<td>Structure</td>
-<td><a href="../rules/structure/#model-naming-conventions">Model Naming Conventions</a></td>
-<td><code>fct_model_naming_conventions</code></td>
-</tr>
-<tr>
-<td>Structure</td>
-<td><a href="../rules/structure/#source-directories">Source Directories</a></td>
-<td><code>fct_source_directories</code></td>
-</tr>
-<tr>
-<td>Structure</td>
-<td><a href="../rules/structure/#model-directories">Model Directories</a></td>
-<td><code>fct_model_directories</code></td>
-</tr>
-<tr>
-<td>Performance</td>
-<td><a href="../rules/performance/#chained-view-dependencies">Chained View Dependencies</a></td>
-<td><code>fct_chained_views_dependencies</code></td>
-</tr>
-<tr>
-<td>Performance</td>
-<td><a href="../rules/performance/#exposure-parents-materializations">Exposure Parents Materializations</a></td>
-<td><code>fct_exposure_parents_materializations</code></td>
-</tr>
-<tr>
-<td>Governance</td>
-<td><a href="../rules/governance/#public-models-without-contracts">Public Models Without Contracts</a></td>
-<td><code>fct_public_models_without_contracts</code></td>
-</tr>
-<tr>
-<td>Governance</td>
-<td><a href="../rules/governance/#exposures-dependent-on-private-models">Exposures Dependent on Private Models</a></td>
-<td><code>fct_exposures_dependent_on_private_models</code></td>
-</tr>
-<tr>
-<td>Governance</td>
-<td><a href="../rules/governance/#undocumented-public-models">Undocumented Public Models</a></td>
-<td><code>fct_undocumented_public_models</code></td>
-</tr>
-</tbody>
-</table>
+<h1 id="querying-columns-with-sql">Querying columns with SQL<a class="headerlink" href="#querying-columns-with-sql" title="Permanent link">#</a></h1>
+<p>The model <code>stg_columns</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/staging/graph/stg_columns.sql">source</a>), created with the package, lists all the columns from all the dbt nodes (models, sources, tests, snapshots)</p>
+<p>You can use this model to help with questions such as:</p>
+<ul>
+<li>Are there columns with the same name in different nodes?</li>
+<li>Do any columns in the YAML configuration lack descriptions?</li>
+<li>Do any columns share the same name but have different descriptions?</li>
+<li>Are there columns with names that match a specific pattern (regex)?</li>
+<li>Have any prohibited names been used for columns?</li>
+</ul>
+<h2 id="defining-additional-tests-that-match-your-exact-requirements">Defining additional tests that match your exact requirements<a class="headerlink" href="#defining-additional-tests-that-match-your-exact-requirements" title="Permanent link">#</a></h2>
+<p>You can create a custom test against  <code>{{ ref(stg_columns) }}</code> to test for your specific check! When running the package you'd need to make sure to also include children of the package's models by using the <code>package:dbt_project_evalutator+</code> selector.</p>
 
 
 
@@ -882,13 +784,8 @@
 
 
 
-  
-  
 
 
-
-
-  
 
 
 
@@ -906,12 +803,10 @@
   
     
       
-        
-      
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+          <a href="../issues-in-log/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Display issues in the logs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
@@ -921,20 +816,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Home
+                Display issues in the logs
               </div>
             </div>
           </a>
         
         
           
-          <a href="modeling/" class="md-footer__link md-footer__link--next" aria-label="Next: Modeling">
+          <a href="../../ci-check/" class="md-footer__link md-footer__link--next" aria-label="Next: Run in CI Check">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Modeling
+                Run in CI Check
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -968,10 +863,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer", "navigation.instant", "navigation.tracking", "content.action.edit", "toc.integrate"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.footer", "navigation.instant", "navigation.tracking", "content.action.edit", "toc.integrate"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.e1c3ead8.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e1c3ead8.min.js"></script>
       
     
   </body>
