@@ -20,11 +20,11 @@
 
                 {%- set values_line  = 
                     [
-                        wrap_string_with_quotes(node.unique_id),
-                        wrap_string_with_quotes(dbt.escape_single_quotes(column.name)),
-                        wrap_string_with_quotes(dbt.escape_single_quotes(column.description)),
-                        wrap_string_with_quotes(dbt.escape_single_quotes(column.data_type)),
-                        wrap_string_with_quotes(dbt.escape_single_quotes(column.quote))
+                        dbt.string_literal(node.unique_id),
+                        dbt.string_literal(dbt.escape_single_quotes(column.name)),
+                        dbt.string_literal(dbt.escape_single_quotes(column.description)),
+                        dbt.string_literal(dbt.escape_single_quotes(column.data_type)),
+                        dbt.string_literal(dbt.escape_single_quotes(column.quote))
                     ]
                 %}
 

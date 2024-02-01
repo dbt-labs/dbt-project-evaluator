@@ -13,18 +13,18 @@
 
           {%- set values_line = 
             [
-              wrap_string_with_quotes(node.unique_id),
-              wrap_string_with_quotes(node.name),
-              wrap_string_with_quotes(node.resource_type),
-              wrap_string_with_quotes(node.original_file_path | replace("\\","\\\\")),
+              dbt.string_literal(node.unique_id),
+              dbt.string_literal(node.name),
+              dbt.string_literal(node.resource_type),
+              dbt.string_literal(node.original_file_path | replace("\\","\\\\")),
               "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
-              wrap_string_with_quotes(node.type),
-              wrap_string_with_quotes(node.maturity),
-              wrap_string_with_quotes(node.package_name),
-              wrap_string_with_quotes(node.url),
-              wrap_string_with_quotes(dbt.escape_single_quotes(node.owner.name)),
-              wrap_string_with_quotes(dbt.escape_single_quotes(node.owner.email)),
-              wrap_string_with_quotes(node.meta | tojson)
+              dbt.string_literal(node.type),
+              dbt.string_literal(node.maturity),
+              dbt.string_literal(node.package_name),
+              dbt.string_literal(node.url),
+              dbt.string_literal(dbt.escape_single_quotes(node.owner.name)),
+              dbt.string_literal(dbt.escape_single_quotes(node.owner.email)),
+              dbt.string_literal(node.meta | tojson)
             ]
           %}
 

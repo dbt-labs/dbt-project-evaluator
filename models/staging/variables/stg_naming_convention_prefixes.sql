@@ -15,7 +15,7 @@ parsed as (
 
 select
     var_name as prefix_name, 
-    {{ dbt.replace('var_name', wrap_string_with_quotes(suffix_model_type) , "''") }} as model_type,
+    {{ dbt.replace('var_name', dbt.string_literal(suffix_model_type) , "''") }} as model_type,
     var_value as prefix_value
 from vars_prefix_table
 

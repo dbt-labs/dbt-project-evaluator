@@ -8,7 +8,7 @@
       {%- endfor %}
 {%- endfor -%}
 
-{%- set quoted_directory_pattern = wrap_string_with_quotes(get_directory_pattern()) %}
+{%- set quoted_directory_pattern = dbt.string_literal(get_directory_pattern()) %}
 
 with unioned as (
 

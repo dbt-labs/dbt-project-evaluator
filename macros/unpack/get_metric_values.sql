@@ -12,23 +12,23 @@
           
           {%- set values_line = 
             [
-            wrap_string_with_quotes(node.unique_id),
-            wrap_string_with_quotes(node.name),
-            wrap_string_with_quotes(node.resource_type),
-            wrap_string_with_quotes(node.original_file_path | replace("\\","\\\\")),
+            dbt.string_literal(node.unique_id),
+            dbt.string_literal(node.name),
+            dbt.string_literal(node.resource_type),
+            dbt.string_literal(node.original_file_path | replace("\\","\\\\")),
             "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
-            wrap_string_with_quotes(node.type),
-            wrap_string_with_quotes(dbt.escape_single_quotes(node.label)),
-            wrap_string_with_quotes(node.package_name),
-            wrap_string_with_quotes(node.filter | tojson),
-            wrap_string_with_quotes(node.type_params.measure.name),
-            wrap_string_with_quotes(node.type_params.measure.alias),
-            wrap_string_with_quotes(node.type_params.numerator | tojson),
-            wrap_string_with_quotes(node.type_params.denominator | tojson),
-            wrap_string_with_quotes(node.type_params.expr),
-            wrap_string_with_quotes(node.type_params.window | tojson),
-            wrap_string_with_quotes(node.type_params.grain_to_date),
-            wrap_string_with_quotes(node.meta | tojson)
+            dbt.string_literal(node.type),
+            dbt.string_literal(dbt.escape_single_quotes(node.label)),
+            dbt.string_literal(node.package_name),
+            dbt.string_literal(node.filter | tojson),
+            dbt.string_literal(node.type_params.measure.name),
+            dbt.string_literal(node.type_params.measure.alias),
+            dbt.string_literal(node.type_params.numerator | tojson),
+            dbt.string_literal(node.type_params.denominator | tojson),
+            dbt.string_literal(node.type_params.expr),
+            dbt.string_literal(node.type_params.window | tojson),
+            dbt.string_literal(node.type_params.grain_to_date),
+            dbt.string_literal(node.meta | tojson)
             ]
           %}
 
