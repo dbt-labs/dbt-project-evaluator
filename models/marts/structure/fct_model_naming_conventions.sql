@@ -12,19 +12,19 @@ naming_convention_prefixes as (
     select * from {{ ref('stg_naming_convention_prefixes') }}
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by prefix_value
-), 
+),
 
 appropriate_prefixes as (
-    select 
-        model_type, 
+    select
+        model_type,
         {{ dbt.listagg(
-            measure='prefix_value', 
-            delimiter_text="', '", 
+            measure='prefix_value',
+            delimiter_text="', '",
             order_by_clause='order by prefix_value' if target.type in ['snowflake','redshift','duckdb','trino'])
         }} as appropriate_prefixes
     from naming_convention_prefixes
     group by model_type
-), 
+),
 
 models as (
     select
@@ -32,7 +32,7 @@ models as (
         all_graph_resources.prefix,
         all_graph_resources.model_type,
         naming_convention_prefixes.prefix_value
-    from all_graph_resources 
+    from all_graph_resources
     left join naming_convention_prefixes
         on all_graph_resources.model_type = naming_convention_prefixes.model_type
         and all_graph_resources.prefix = naming_convention_prefixes.prefix_value
@@ -40,7 +40,7 @@ models as (
 ),
 
 inappropriate_model_names as (
-    select 
+    select
         models.resource_name,
         models.prefix,
         models.model_type,

@@ -4,68 +4,68 @@
     )
 }}
 
-select 1 as id 
+select 1 as id
 -- from {{ ref('stg_model_3') }}
 
--- union all 
+-- union all
 -- select
 --     3 as id
 -- from my_db.my_schema.my_table
--- union all 
+-- union all
 -- select
 --     3 as id
 -- from 'my_db'.'my_schema'.'my_table'
--- union all 
+-- union all
 -- select
 --     3 as id
 -- from "my_db"."my_schema"."my_table"
--- union all 
+-- union all
 -- select
 --     3 as id
 -- from `my_db`.`my_schema`.`my_table`
--- union all 
+-- union all
 -- select
 --     3 as id
 -- from [my_db].[my_schema].[my_table]
 
 -- union all
--- select 
+-- select
 --     4 as id
 -- from my_schema.raw_relation_5
 -- union all
--- select 
+-- select
 --     4 as id
--- from 'my_schema'.'raw_relation_5' 
+-- from 'my_schema'.'raw_relation_5'
 -- union all
--- select 
+-- select
 --     4 as id
 -- from "my_schema"."raw_relation_5"
 -- union all
--- select 
+-- select
 --     4 as id
 -- from `my_schema`.`raw_relation_5`
 -- union all
--- select 
+-- select
 --     4 as id
--- from [my_schema].[raw_relation_5] 
+-- from [my_schema].[raw_relation_5]
 
 
 -- union all
--- select 
+-- select
 --     4 as id
--- from `raw_relation_1` 
+-- from `raw_relation_1`
 -- union all
--- select 
+-- select
 --     4 as id
--- from "raw_relation_2" 
+-- from "raw_relation_2"
 -- union all
--- select 
+-- select
 --     4 as id
--- from [raw_relation_3]  
+-- from [raw_relation_3]
 -- union all
--- select 
+-- select
 --     4 as id
--- from 'raw_relation_4' 
+-- from 'raw_relation_4'
 
 -- union all
 -- select

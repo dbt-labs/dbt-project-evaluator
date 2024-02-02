@@ -1,7 +1,7 @@
 -- this model finds cases where a source has no children
 
 with source_relationships as (
-    select  
+    select
         *
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type = 'source'

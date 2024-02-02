@@ -1,11 +1,12 @@
 ---
+
 name: Bug report
 about: Report a bug or an issue you've found with this package
 title: ''
 labels: bug, triage
 assignees: ''
-
 ---
+<!-- markdownlint-disable MD002-->
 
 ### Describe the bug
 <!---
@@ -33,9 +34,11 @@ If applicable, add screenshots or log output to help explain your problem.
 --->
 
 ### System information
+
 **The contents of your `packages.yml` file:**
 
 **Which database are you using dbt with?**
+
 - [ ] postgres
 - [ ] redshift
 - [ ] bigquery
@@ -43,19 +46,19 @@ If applicable, add screenshots or log output to help explain your problem.
 - [ ] trino/starburst
 - [ ] other (specify: ____________)
 
-
 **The output of `dbt --version`:**
-```
+
+```bash
 <output goes here>
 ```
 
-
 ### Additional context
 <!---
-Add any other context about the problem here. For example, if you think you know which line of code is causing the issue.
+Add any other context about the problem here.
+For example, if you think, you know which line of code is causing the issue.
 --->
 
 ### Are you interested in contributing the fix?
 <!---
-Let us know if you want to contribute the fix, and whether would need a hand getting started
+Let us know if you want to contribute the fix, and whether you would need a hand getting started
 --->

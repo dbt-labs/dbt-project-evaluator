@@ -1,4 +1,4 @@
-with 
+with
 
 all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
@@ -10,15 +10,15 @@ relationships as (
 ),
 
 count_column_tests as (
-    
-    select 
-        relationships.direct_parent_id, 
+
+    select
+        relationships.direct_parent_id,
         all_graph_resources.column_name,
         {%- for test_set in var('primary_key_test_macros') %}
             {%- set outer_loop = loop -%}
-        count(distinct case when 
-                {%- for test in test_set %} 
-                all_graph_resources.is_{{ test.split('.')[1] }} {%- if not loop.last %} or {% endif %} 
+        count(distinct case when
+                {%- for test in test_set %}
+                all_graph_resources.is_{{ test.split('.')[1] }} {%- if not loop.last %} or {% endif %}
                 {%- endfor %}
             then relationships.resource_id else null end
         ) as primary_key_method_{{ outer_loop.index }}_count,
@@ -34,17 +34,17 @@ count_column_tests as (
 
 agg_test_relationships as (
 
-    select 
-        direct_parent_id, 
-        sum(case 
+    select
+        direct_parent_id,
+        sum(case
                 when (
                     {%- for test_set in var('primary_key_test_macros') %}
                         {%- set compare_value = test_set | length %}
                     primary_key_method_{{ loop.index }}_count >= {{ compare_value}}
                         {%- if not loop.last %} or {% endif %}
-                    {%- endfor %} 
-                ) then 1 
-                else 0 
+                    {%- endfor %}
+                ) then 1
+                else 0
             end
         ) >= 1 as is_primary_key_tested,
         sum(tests_count) as number_of_tests_on_model
@@ -54,8 +54,8 @@ agg_test_relationships as (
 ),
 
 final as (
-    select 
-        all_graph_resources.resource_name, 
+    select
+        all_graph_resources.resource_name,
         all_graph_resources.resource_type,
         all_graph_resources.model_type,
         coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as is_primary_key_tested,

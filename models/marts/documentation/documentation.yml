@@ -1,10 +1,10 @@
-version: 2 
+version: 2
 
-models: 
+models:
   - name: fct_documentation_coverage
     description: >
-      This model calculates the percent of enabled models in the project that have a configured description. 
-      We recommend you describe at least 75 percent of your models. 
+      This model calculates the percent of enabled models in the project that have a configured description.
+      We recommend you describe at least 75 percent of your models.
     columns:
       - name: documentation_coverage_pct
         description: the number of models in the project with a description divided by the total number of models in the project
@@ -15,16 +15,16 @@ models:
               severity: warn
   - name: fct_undocumented_models
     description: >
-      This model contains all models that do not have a description configured in a YML file. 
+      This model contains all models that do not have a description configured in a YML file.
     tests:
       - is_empty
   - name: fct_undocumented_source_tables
     description: >
-      This model contains all source tables that do not have a description configured in a YML file. 
+      This model contains all source tables that do not have a description configured in a YML file.
     tests:
       - is_empty
   - name: fct_undocumented_sources
     description: >
-      This model contains all sources that do not have a description configured in a YML file. 
+      This model contains all sources that do not have a description configured in a YML file.
     tests:
       - is_empty

@@ -1,7 +1,7 @@
 -- this model finds cases where a model has a reference to both a model and a source
 
 with direct_model_relationships as (
-    select  
+    select
         *
     from {{ ref('int_all_dag_relationships') }}
     where child_resource_type = 'model'
@@ -13,20 +13,20 @@ with direct_model_relationships as (
 model_and_source_joined as (
     select
         child,
-        case 
+        case
             when (
-                sum(case when parent_resource_type = 'model' then 1 else 0 end) > 0 
+                sum(case when parent_resource_type = 'model' then 1 else 0 end) > 0
                 and sum(case when parent_resource_type = 'source' then 1 else 0 end) > 0
-            ) 
+            )
             then true
-            else false 
-        end as keep_row 
+            else false
+        end as keep_row
     from direct_model_relationships
     group by 1
 ),
 
 final as (
-    select 
+    select
         direct_model_relationships.parent,
         direct_model_relationships.parent_resource_type,
         direct_model_relationships.child,

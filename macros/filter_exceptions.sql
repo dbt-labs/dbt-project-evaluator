@@ -13,20 +13,20 @@
     {% endset %}
 
     {% if execute %}
-    {% set is_default_seed = 'dbt_project_evaluator' in graph.nodes.values() | 
-        selectattr('resource_type', 'equalto', 'seed') | 
-        selectattr('name', 'equalto', 'dbt_project_evaluator_exceptions') | 
+    {% set is_default_seed = 'dbt_project_evaluator' in graph.nodes.values() |
+        selectattr('resource_type', 'equalto', 'seed') |
+        selectattr('name', 'equalto', 'dbt_project_evaluator_exceptions') |
         map(attribute = 'package_name') | list %}
 
     {% if not is_default_seed %}
-    
+
         {% if flags.WHICH not in ['compile'] %}
             where 1 = 1
             {% for row_filter in run_query(query_filters) %}
                 and {{ row_filter[0] }} not like '{{ row_filter[1] }}'
             {% endfor %}
         {% endif %}
-    
+
     {% endif %}
 
     {% endif %}

@@ -16,7 +16,7 @@
             "`set_is_excluded()` macro does not support resource type: " ~ resource_type
         ) }}
     {% endif %}
-    
+
 
     {#- we exclude the resource if it is from the current project and matches the pattern -#}
     {%- for exclude_paths_pattern in var('exclude_paths_from_project',[]) -%}
@@ -28,8 +28,8 @@
 
     {#- we exclude the resource if the package if it is listed in `exclude_packages` or if it is "all" -#}
     {%- if (
-        resource.package_name != project_name) 
-        and (resource.package_name in  var('exclude_packages',[]) or 'all' in var('exclude_packages',[])) 
+        resource.package_name != project_name)
+        and (resource.package_name in  var('exclude_packages',[]) or 'all' in var('exclude_packages',[]))
     -%}
         {% set ns.exclude = true %}
     {%- endif -%}

@@ -1,7 +1,7 @@
-with 
+with
 
 tests as (
-    select * from {{ ref('int_model_test_summary') }} 
+    select * from {{ ref('int_model_test_summary') }}
     where resource_type in
     (
         {% for resource_type in var('enforced_primary_key_node_types') %}'{{ resource_type }}'{% if not loop.last %},{% endif %}
@@ -11,7 +11,7 @@ tests as (
 
 final as (
 
-    select 
+    select
         *
     from tests
     where not(is_primary_key_tested)

@@ -1,10 +1,10 @@
 version: 2
 
 models:
-  - name: int_model_test_summary 
+  - name: int_model_test_summary
     description: this model creates some initial metrics required for the downstream models related to testing
     columns:
       - name: resource_name
         tests:
-          - unique 
-          - not_null 
+          - unique
+          - not_null

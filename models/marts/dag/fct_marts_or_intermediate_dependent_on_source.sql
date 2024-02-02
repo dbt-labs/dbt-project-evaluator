@@ -1,6 +1,6 @@
 -- cases where a marts/intermediate model directly references a raw source
 with direct_relationships as (
-    select  
+    select
         *
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1

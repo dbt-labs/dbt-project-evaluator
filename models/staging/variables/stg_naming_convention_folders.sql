@@ -12,7 +12,7 @@ with vars_folders_table as (
 )
 
 select
-    var_name as folder_name, 
+    var_name as folder_name,
     {{ dbt.replace('var_name', wrap_string_with_quotes(suffix_folder), "''") }} as model_type,
     var_value as folder_name_value
 from vars_folders_table

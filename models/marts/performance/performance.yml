@@ -1,11 +1,11 @@
-version: 2 
+version: 2
 
-models: 
+models:
   - name: fct_chained_views_dependencies
     description: >
       This returns models dependent on chains of "non-physically-materialized" models (views and ephemerals),
-      highlighting potential cases for improving performance by switching the materialization of model(s) within 
-      the chain to table or incremental. 
+      highlighting potential cases for improving performance by switching the materialization of model(s) within
+      the chain to table or incremental.
     columns:
       - name: distance
         tests:

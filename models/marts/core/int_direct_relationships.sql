@@ -1,5 +1,5 @@
 -- one record for each resource in the graph and its direct parent
-with 
+with
 
 all_graph_resources as (
     select
@@ -7,19 +7,19 @@ all_graph_resources as (
         resource_name,
         resource_type,
         file_path,
-        directory_path, 
+        directory_path,
         file_name,
         model_type,
         materialized,
-        is_public, 
-        access, 
+        is_public,
+        access,
         source_name,
         is_excluded
     from {{ ref('int_all_graph_resources') }}
 ),
 
 direct_model_relationships as (
-    select  
+    select
         resource_id,
         direct_parent_id,
         is_primary_relationship
@@ -27,7 +27,7 @@ direct_model_relationships as (
 ),
 
 direct_exposure_relationships as (
-    select  
+    select
         resource_id,
         direct_parent_id,
         is_primary_relationship
@@ -35,7 +35,7 @@ direct_exposure_relationships as (
 ),
 
 direct_metrics_relationships as (
-    select  
+    select
         resource_id,
         direct_parent_id,
         is_primary_relationship
@@ -46,7 +46,7 @@ direct_metrics_relationships as (
 direct_relationships as (
     select
         all_graph_resources.*,
-        case 
+        case
             when all_graph_resources.resource_type = 'source' then null
             when all_graph_resources.resource_type = 'exposure' then exposures.direct_parent_id
             when all_graph_resources.resource_type = 'metric' then metrics.direct_parent_id

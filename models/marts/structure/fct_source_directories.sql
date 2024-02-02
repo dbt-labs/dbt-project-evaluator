@@ -11,7 +11,7 @@ with all_graph_resources as (
 
 -- find all sources that are definied in a .yml file NOT in their subdirectory
 inappropriate_subdirectories_sources as (
-    select 
+    select
         resource_name,
         resource_type,
         file_path as current_file_path,

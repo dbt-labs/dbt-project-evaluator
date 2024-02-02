@@ -72,7 +72,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: model_type 
+      - name: model_type
         tests:
           - accepted_values:
               values: "{{ var('model_types') }}"
@@ -85,7 +85,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: model_type 
+      - name: model_type
         tests:
           - accepted_values:
               values: "{{ var('model_types') }}"

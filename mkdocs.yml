@@ -4,7 +4,7 @@ site_name: dbt_project_evaluator
 
 theme:
 
-  palette: 
+  palette:
 
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
@@ -67,7 +67,7 @@ edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
-  - Rules: 
+  - Rules:
     - List of rules: rules.md
     - Modeling: rules/modeling.md
     - Testing: rules/testing.md
@@ -75,7 +75,7 @@ nav:
     - Structure: rules/structure.md
     - Performance: rules/performance.md
     - Governance: rules/governance.md
-  - Customization: 
+  - Customization:
     - Overriding variables: customization/overriding-variables.md
     - Disabling checks: customization/customization.md
     - Configuring exceptions to the rules: customization/exceptions.md
