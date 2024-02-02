@@ -1,6 +1,6 @@
 -- check for cases where models in the staging layer are dependent on each other
 with direct_model_relationships as (
-    select
+    select  
         *
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type in ('model', 'snapshot')
@@ -23,4 +23,4 @@ bending_connections as (
 
 select * from bending_connections
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

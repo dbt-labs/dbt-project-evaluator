@@ -1,5 +1,5 @@
 with all_relationships as (
-    select
+    select  
         *
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type not in ('exposures', 'metrics')
@@ -8,14 +8,14 @@ with all_relationships as (
     and not child_is_excluded
 ),
 
--- all parent/child relationships where the parent is BOTH the direct parent of the child and the second level parent of the child
+-- all parent/child relationships where the parent is BOTH the direct parent of the child and the second level parent of the child 
 rejoined as (
     select
         parent,
         child
     from all_relationships
     group by 1, 2
-    having (sum(case when distance = 1 then 1 else 0 end) >= 1
+    having (sum(case when distance = 1 then 1 else 0 end) >= 1 
         and sum(case when distance = 2 then 1 else 0 end) >= 1)
 ),
 
@@ -31,7 +31,7 @@ single_use_resources as (
 
 -- all cases where one of the parent's direct children (child) is ALSO the direct child of ANOTHER one of the parent's direct childen (parent_and_child)
 triad_relationships as (
-    select
+    select 
         rejoined.parent,
         rejoined.child as child,
         direct_child.parent as parent_and_child
@@ -50,12 +50,12 @@ triad_relationships as (
 final as (
     select
         triad_relationships.*,
-        case
-            when single_use_resources.parent is not null then true
+        case 
+            when single_use_resources.parent is not null then true 
             else false
         end as is_loop_independent
     from triad_relationships
-    left join single_use_resources
+    left join single_use_resources 
         on triad_relationships.parent_and_child = single_use_resources.parent
 ),
 
@@ -66,4 +66,4 @@ final_filtered as (
 
 select * from final_filtered
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

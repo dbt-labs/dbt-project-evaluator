@@ -1,15 +1,15 @@
-{% macro filter_exceptions(model_name) -%}
-    {{ return(adapter.dispatch('filter_exceptions', 'dbt_project_evaluator')(model_name)) }}
+{% macro filter_exceptions() -%}
+    {{ return(adapter.dispatch('filter_exceptions', 'dbt_project_evaluator')()) }}
 {%- endmacro %}
 
-{% macro default__filter_exceptions(model_name) %}
+{% macro default__filter_exceptions() %}
 
     {% set query_filters %}
     select
         column_name,
         id_to_exclude
     from {{ ref('dbt_project_evaluator_exceptions') }}
-    where fct_name = '{{ model_name }}'
+    where fct_name = '{{ model.name }}'
     {% endset %}
 
     {% if execute %}

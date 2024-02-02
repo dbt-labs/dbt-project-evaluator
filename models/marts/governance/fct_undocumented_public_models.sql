@@ -1,4 +1,4 @@
-with
+with 
 
 all_resources as (
     select * from {{ ref('int_all_graph_resources') }}
@@ -6,16 +6,16 @@ all_resources as (
 ),
 
 final as (
-    select
+    select 
         resource_name,
-        access,
-        is_described,
+        access, 
+        is_described, 
         total_defined_columns,
         total_described_columns
-
+    
     from all_resources
-    where
-        is_public
+    where 
+        is_public 
         and (
             -- no model level description
             not is_described
@@ -28,4 +28,4 @@ final as (
 
 select * from final
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

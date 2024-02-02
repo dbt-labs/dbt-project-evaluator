@@ -67,4 +67,4 @@ unioned as (
 
 select * from unioned
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

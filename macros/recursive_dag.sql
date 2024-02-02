@@ -265,6 +265,10 @@ with direct_relationships as (
 
 {% macro trino__recursive_dag() %}
 {#-- Although Trino supports a recursive WITH-queries,
--- it is less performant than creating CTEs with loops and unioning them --#}
+-- it is less performant than creating CTEs with loops and union them --#}
+    {{ return(bigquery__recursive_dag()) }}
+{% endmacro %}
+
+{% macro athena__recursive_dag() %}
     {{ return(bigquery__recursive_dag()) }}
 {% endmacro %}

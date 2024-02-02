@@ -49,7 +49,7 @@ test_file_paths as (
         file_name as test_yml_name,
         directory_path as test_yml_directory_path
     from resources
-    where
+    where 
         resource_type = 'test'
         and is_generic_test
 
@@ -85,4 +85,4 @@ different_directories as (
 
 select * from different_directories
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

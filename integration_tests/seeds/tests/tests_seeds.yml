@@ -10,11 +10,11 @@ seeds:
   - name: test_fct_test_coverage
     config:
       column_types:
-        test_coverage_pct: "{{ 'float' if target.type != 'trino' else 'double' }}"
-        staging_test_coverage_pct: "{{ 'float' if target.type != 'trino' else 'double' }}"
-        intermediate_test_coverage_pct: "{{ 'float' if target.type != 'trino' else 'double' }}"
-        marts_test_coverage_pct: "{{ 'float' if target.type != 'trino' else 'double' }}"
-        other_test_coverage_pct: "{{ 'float' if target.type != 'trino' else 'double' }}"
+        test_coverage_pct: &float "{{ 'float' if target.type not in ['athena', 'trino'] else 'double' }}"
+        staging_test_coverage_pct: *float
+        intermediate_test_coverage_pct: *float
+        marts_test_coverage_pct: *float
+        other_test_coverage_pct: *float
     tests:
       - dbt_utils.equality:
           name: equality_fct_test_coverage

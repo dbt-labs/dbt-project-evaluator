@@ -1,5 +1,5 @@
 with all_dag_relationships as (
-    select
+    select  
         *
     from {{ ref('int_all_dag_relationships') }}
     where not parent_is_excluded
@@ -19,7 +19,7 @@ models_without_children as (
 -- all parents with more direct children than the threshold for fanout (determined by variable models_fanout_threshold, default 3)
     -- Note: only counts "leaf children" - direct chilren that are models AND are child-less (are at the right-most-point in the DAG)
 model_fanout as (
-    select
+    select 
         all_dag_relationships.parent,
         all_dag_relationships.parent_model_type,
         all_dag_relationships.child
@@ -37,8 +37,8 @@ model_fanout_agg as (
         parent,
         parent_model_type,
         {{ dbt.listagg(
-            measure = 'child',
-            delimiter_text = "', '",
+            measure = 'child', 
+            delimiter_text = "', '", 
             order_by_clause = 'order by child' if target.type in ['snowflake','redshift','duckdb','trino'])
         }} as leaf_children
     from model_fanout
@@ -48,4 +48,4 @@ model_fanout_agg as (
 
 select * from model_fanout_agg
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

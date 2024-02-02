@@ -20,7 +20,7 @@ conversion as (
 
 final as (
     select
-        {{ 'current_timestamp' if target.type != 'trino' else 'current_timestamp(6)' }} as measured_at,
+        {{ dbt.current_timestamp() if target.type != 'trino' else 'current_timestamp(6)' }} as measured_at,
         count(*) as total_models,
         sum(is_described_model) as documented_models,
         round(sum(is_described_model) * 100.00 / count(*), 2) as documentation_coverage_pct,

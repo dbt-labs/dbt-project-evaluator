@@ -16,8 +16,8 @@ multiple_sources_joined as (
     select
         child,
         {{ dbt.listagg(
-            measure='parent',
-            delimiter_text="', '",
+            measure='parent', 
+            delimiter_text="', '", 
             order_by_clause='order by parent' if target.type in ['snowflake','redshift','duckdb','trino'])
         }} as source_parents
     from direct_source_relationships
@@ -27,4 +27,4 @@ multiple_sources_joined as (
 
 select * from multiple_sources_joined
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}
