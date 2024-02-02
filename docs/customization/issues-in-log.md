@@ -21,7 +21,7 @@ the custom models.
 ```yaml
 models:
   - name: my_custom_rule_model
-    description: This is my custom project evaluator check 
+    description: This is my custom project evaluator check
     tests:
       - dbt_project_evaluator.is_empty
 ```

@@ -11,9 +11,9 @@
 /* Bigquery won't let us `where` without `from` so we use this workaround */
 with dummy_cte as (
     select 1 as foo
-) 
+)
 
-select 
+select
     cast(null as {{ dbt.type_string() }}) as node_unique_id,
     cast(null as {{ dbt.type_string()}}) as name,
     cast(null as {{ dbt.type_string()}}) as description,

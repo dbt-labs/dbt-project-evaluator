@@ -13,7 +13,7 @@
     ) %}
 
     {% for result in results | selectattr('failures') | selectattr('failures', '>', 0) %}
-      
+
       {% set is_test = result.node.config.materialized == "test" %}
       {% set package_name = result.node.package_name %}
       {% set resource_name = result.node.name %}
@@ -21,7 +21,7 @@
         package_name == "dbt_project_evaluator"
         or resource_name.startswith(test_name_prefix_of_custom_rules)
       ) %}
-        
+
         {{ print("\n-- " ~ result.node.fqn | join(".") ~ " --") }}
 
         {% set unique_id_model_checked = result.node.depends_on.nodes[0] %}
@@ -39,7 +39,7 @@
         {% set query_results = run_query(sql_statement) %}
         {% if format == 'table' %}
           {{ print(query_results.print_table(max_column_width=80, max_rows=1000) or "") }}
-        {% elif format == 'csv' %}  
+        {% elif format == 'csv' %}
           {{ print(query_results.print_csv() or "") }}
         {% else %}
             {%- do exceptions.raise_compiler_error("format can only be 'table' or 'csv'") -%}

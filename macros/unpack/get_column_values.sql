@@ -6,7 +6,7 @@
 
     {%- if execute -%}
         {%- if node_type == 'nodes' %}
-            {% set nodes_list = graph.nodes.values() %}   
+            {% set nodes_list = graph.nodes.values() %}
         {%- elif node_type == 'sources' -%}
             {% set nodes_list = graph.sources.values() %}
         {%- else -%}
@@ -18,7 +18,7 @@
         {%- for node in nodes_list -%}
             {%- for column in node.columns.values() -%}
 
-                {%- set values_line  = 
+                {%- set values_line  =
                     [
                         wrap_string_with_quotes(node.unique_id),
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.name)),
@@ -35,5 +35,5 @@
     {{ return(values) }}
 
     {%- endif -%}
-  
+
 {%- endmacro -%}

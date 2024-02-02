@@ -10,7 +10,6 @@ You can use this model to help with questions such as:
 - Are there columns with names that match a specific pattern (regex)?
 - Have any prohibited names been used for columns?
 
-
 ## Defining additional tests that match your exact requirements
 
 You can create a custom test against  `{{ ref(stg_columns) }}` to test for your specific check! When running the package you'd need to make sure to also include children of the package's models by using the `package:dbt_project_evalutator+` selector.

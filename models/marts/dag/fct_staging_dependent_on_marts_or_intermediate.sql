@@ -1,7 +1,7 @@
 -- cases where a staging model depends on a marts/intermediate model
 -- data should flow from raw -> staging -> intermediate -> marts
 with direct_model_relationships as (
-    select  
+    select
         *
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
