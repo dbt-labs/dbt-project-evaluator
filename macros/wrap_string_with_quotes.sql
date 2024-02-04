@@ -1,5 +1,5 @@
 {% macro wrap_string_with_quotes(str) %}
-    {{ return(adapter.dispatch('wrap_string_with_quotes', 'dbt_project_evaluator')()) }}
+  {{ return(adapter.dispatch('wrap_string_with_quotes', 'dbt_project_evaluator')()) }}
 {% endmacro %}
 
 {% macro default__wrap_string_with_quotes(str) %}
