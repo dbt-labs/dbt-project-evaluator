@@ -1,4 +1,4 @@
-{% macro wrap_string_with_quotes() %}
+{% macro wrap_string_with_quotes(str) %}
     {{ return(adapter.dispatch('wrap_string_with_quotes', 'dbt_project_evaluator')()) }}
 {% endmacro %}
 
