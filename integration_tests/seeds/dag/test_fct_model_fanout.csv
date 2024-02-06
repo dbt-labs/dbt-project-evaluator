@@ -1,3 +1,2 @@
 ﻿parent,parent_model_type,leaf_children
-fct_model_6,marts,"fct_model_10, report_1, report_2, report_3"
-fct_model_9,marts,"int_model_10, int_model_11, stg_model_5"
+fct_model_6,marts,"report_1, report_2, report_3"

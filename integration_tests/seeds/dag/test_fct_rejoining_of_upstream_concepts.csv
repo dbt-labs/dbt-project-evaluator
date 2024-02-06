@@ -1,3 +1,2 @@
 parent,child,parent_and_child,is_loop_independent
 stg_model_1,int_model_5,int_model_4,true
-fct_model_9,fct_model_10,stg_model_5,true
