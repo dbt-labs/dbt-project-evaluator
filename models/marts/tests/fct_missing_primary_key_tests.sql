@@ -20,4 +20,4 @@ final as (
 
 select * from final
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

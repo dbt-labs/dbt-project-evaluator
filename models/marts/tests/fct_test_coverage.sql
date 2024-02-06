@@ -19,7 +19,7 @@ conversion as (
 
 final as (
     select
-        {{ 'current_timestamp' if target.type != 'trino' else 'current_timestamp(6)' }} as measured_at,
+        {{ dbt.current_timestamp() if target.type != 'trino' else 'current_timestamp(6)' }} as measured_at,
         count(*) as total_models,
         sum(number_of_tests_on_model) as total_tests,
         sum(is_tested_model) as tested_models,

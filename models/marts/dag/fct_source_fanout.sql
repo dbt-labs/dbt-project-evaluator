@@ -27,4 +27,4 @@ source_fanout as (
 
 select * from source_fanout
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

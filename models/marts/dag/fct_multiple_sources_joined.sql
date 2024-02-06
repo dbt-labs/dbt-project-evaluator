@@ -27,4 +27,4 @@ multiple_sources_joined as (
 
 select * from multiple_sources_joined
 
-{{ filter_exceptions(model.name) }}
+{{ filter_exceptions() }}

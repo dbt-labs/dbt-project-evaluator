@@ -12,3 +12,16 @@ The macro accepts two parameters:
 
 - to pick between 2 types of formatting, set `format='table'` (default) or `format='csv'`
 - to add quotes to the database and schema (default = no quote), set ``quote='`'`` or `quote='"'`
+
+## Logging your custom rules
+
+You can also log the results of your custom rules by applying `dbt_project_evaluator.is_empty` to
+the custom models.
+
+```yaml
+models:
+  - name: my_custom_rule_model
+    description: This is my custom project evaluator check 
+    tests:
+      - dbt_project_evaluator.is_empty
+```
