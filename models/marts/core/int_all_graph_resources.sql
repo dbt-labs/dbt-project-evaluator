@@ -34,6 +34,7 @@ unioned_with_calc as (
         *,
         case 
             when resource_type = 'source' then  {{ dbt.concat(['source_name',"'.'",'name']) }}
+            when version is not null then {{ dbt.concat(['name',"'.v'",'version']) }} 
             else name 
         end as resource_name,
         case
