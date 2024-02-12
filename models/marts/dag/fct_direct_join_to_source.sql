@@ -30,7 +30,6 @@ final as (
         direct_model_relationships.parent,
         direct_model_relationships.parent_resource_type,
         direct_model_relationships.child,
-        direct_model_relationships.child_version,
         direct_model_relationships.child_resource_type,
         direct_model_relationships.distance
     from direct_model_relationships
