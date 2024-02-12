@@ -2,7 +2,6 @@
 with direct_source_relationships as (
     select distinct
         child,
-        child_version,
         parent
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
@@ -16,14 +15,13 @@ with direct_source_relationships as (
 multiple_sources_joined as (
     select
         child,
-        child_version,
         {{ dbt.listagg(
             measure='parent', 
             delimiter_text="', '", 
             order_by_clause='order by parent' if target.type in ['snowflake','redshift','duckdb','trino'])
         }} as source_parents
     from direct_source_relationships
-    group by 1, 2
+    group by 1
     having count(*) > 1
 )
 
