@@ -14,10 +14,9 @@ with model_relationships as (
 
 final as (
     select
-        child,
-        child_version,
+        child
     from model_relationships
-    group by 1, 2
+    group by 1
     having max(distance) = 0
 )
 
