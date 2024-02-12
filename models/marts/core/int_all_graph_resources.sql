@@ -83,6 +83,8 @@ joined as (
         unioned_with_calc.access, 
         unioned_with_calc.access = 'public' as is_public, 
         unioned_with_calc.latest_version, 
+        unioned_with_calc.version, 
+        unioned_with_calc.deprecation_date, 
         unioned_with_calc.is_contract_enforced, 
         unioned_with_calc.total_defined_columns, 
         unioned_with_calc.total_described_columns, 

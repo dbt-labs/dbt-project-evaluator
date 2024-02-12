@@ -28,6 +28,8 @@ all_relationships (
     parent_directory_path,
     parent_file_name,
     parent_is_excluded,
+    parent_version,
+    parent_deprecation_date,
     child_id,
     child,
     child_resource_type,
@@ -40,6 +42,8 @@ all_relationships (
     child_directory_path,
     child_file_name,
     child_is_excluded,
+    child_version,
+    child_deprecation_date,
     distance,
     path,
     is_dependent_on_chain_of_views
@@ -58,6 +62,8 @@ all_relationships (
         directory_path as parent_directory_path,
         file_name as parent_file_name,
         is_excluded as parent_is_excluded,
+        version as parent_version,
+        deprecation_date as parent_deprecation_date,
         resource_id as child_id,
         resource_name as child,
         resource_type as child_resource_type,
@@ -70,8 +76,10 @@ all_relationships (
         directory_path as child_directory_path,
         file_name as child_file_name,
         is_excluded as child_is_excluded,
+        version as child_version,
+        deprecation_date as child_deprecation_date,
         0 as distance,
-        {{ dbt.array_construct(['resource_name']) }} as path,
+        {{ dbt.array_construct(['resource_id']) }} as path,
         cast(null as boolean) as is_dependent_on_chain_of_views
 
     from direct_relationships
@@ -93,6 +101,8 @@ all_relationships (
         all_relationships.parent_directory_path as parent_directory_path,
         all_relationships.parent_file_name as parent_file_name,
         all_relationships.parent_is_excluded as parent_is_excluded,
+        all_relationships.parent_version as parent_version,
+        all_relationships.parent_deprecation_date as parent_deprecation_date,
         direct_relationships.resource_id as child_id,
         direct_relationships.resource_name as child,
         direct_relationships.resource_type as child_resource_type,
@@ -105,8 +115,10 @@ all_relationships (
         direct_relationships.directory_path as child_directory_path,
         direct_relationships.file_name as child_file_name,
         direct_relationships.is_excluded as child_is_excluded,
+        direct_relationships.version as child_version,
+        direct_relationships.deprecation_date as child_deprecation_date,
         all_relationships.distance+1 as distance,
-        {{ dbt.array_append('all_relationships.path', 'direct_relationships.resource_name') }} as path,
+        {{ dbt.array_append('all_relationships.path', 'direct_relationships.resource_id') }} as path,
         case
             when
                 all_relationships.child_materialized in ('view', 'ephemeral')
@@ -174,7 +186,7 @@ with direct_relationships as (
         child_access,
         child_is_excluded,
         0 as distance,
-        {{ dbt.array_construct(['resource_name']) }} as path,
+        {{ dbt.array_construct(['resource_id']) }} as path,
         cast(null as boolean) as is_dependent_on_chain_of_views
     from get_distinct
 )
@@ -190,7 +202,7 @@ with direct_relationships as (
         direct_relationships.access as child_access,
         direct_relationships.is_excluded as child_is_excluded,
         cte_{{i - 1}}.distance+1 as distance,
-        {{ dbt.array_append(prev_cte_path, 'direct_relationships.resource_name') }} as path,
+        {{ dbt.array_append(prev_cte_path, 'direct_relationships.resource_id') }} as path,
         case
             when
                 cte_{{i - 1}}.child_materialized in ('view', 'ephemeral')
@@ -231,6 +243,8 @@ with direct_relationships as (
         parent.directory_path as parent_directory_path,
         parent.file_name as parent_file_name,
         parent.is_excluded as parent_is_excluded,
+        parent.version as parent_version,
+        parent.deprecation_date as parent_deprecation_date,
         child.resource_id as child_id,
         child.resource_name as child,
         child.resource_type as child_resource_type,
@@ -243,6 +257,8 @@ with direct_relationships as (
         child.directory_path as child_directory_path,
         child.file_name as child_file_name,
         child.is_excluded as child_is_excluded,
+        child.version as child_version,
+        child.deprecation_date as child_deprecation_date,
         all_relationships_unioned.distance,
         all_relationships_unioned.path,
         all_relationships_unioned.is_dependent_on_chain_of_views

@@ -14,7 +14,9 @@ all_graph_resources as (
         is_public, 
         access, 
         source_name,
-        is_excluded
+        is_excluded,
+        version,
+        deprecation_date
     from {{ ref('int_all_graph_resources') }}
 ),
 
