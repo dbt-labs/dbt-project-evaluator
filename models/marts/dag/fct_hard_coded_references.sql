@@ -9,7 +9,6 @@ with models as (
 final as (
     select
         resource_name as model,
-        version as model_version, 
         hard_coded_references
     from models
     where hard_coded_references is not null
