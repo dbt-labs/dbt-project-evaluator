@@ -55,7 +55,6 @@ agg_test_relationships as (
 
 final as (
     select 
-        all_graph_resources.resource_id, 
         all_graph_resources.resource_name,
         all_graph_resources.resource_type,
         all_graph_resources.model_type,
