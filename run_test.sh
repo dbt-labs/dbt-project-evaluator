@@ -12,7 +12,7 @@ then
     then
         pip install "dbt-$1"
     else
-        pip install --pre "dbt-$1" protobuf==0.4
+        pip install --pre "dbt-$1" protobuf==4
     fi
 fi
 
