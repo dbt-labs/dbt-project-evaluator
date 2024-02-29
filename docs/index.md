@@ -50,7 +50,7 @@ This package will:
 2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
 3. Test those models to alert you to the presence of the misalignment
 
-Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`!
+Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`
 
 Each test warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
 
