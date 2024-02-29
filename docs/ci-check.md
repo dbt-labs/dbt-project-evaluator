@@ -15,7 +15,7 @@ By default the tests in this package are configured with "warn" severity, we can
 
     ```yaml title="dbt_project.yml"
     tests:
-    dbt_project_evaluator:
+      dbt_project_evaluator:
         +severity: "{{ env_var('DBT_PROJECT_EVALUATOR_SEVERITY', 'warn') }}"
     ```
 
@@ -25,7 +25,7 @@ By default the tests in this package are configured with "warn" severity, we can
 
         ```yaml title="dbt_project.yml"
         models:
-        dbt_project_evaluator:
+          dbt_project_evaluator:
             +enabled: "{{ env_var('ENABLE_DBT_PROJECT_EVALUATOR', 'true') | lower == 'true' | as_bool }}"
         ```
 
