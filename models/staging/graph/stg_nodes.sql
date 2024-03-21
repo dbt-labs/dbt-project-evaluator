@@ -26,6 +26,8 @@ select
     cast(null as {{ dbt.type_string() }}) as model_group,
     cast(null as {{ dbt.type_string() }}) as access,
     cast(null as {{ dbt.type_string() }}) as latest_version,
+    cast(null as {{ dbt.type_string() }}) as version,
+    cast(null as {{ dbt.type_string() }}) as deprecation_date,
     cast(True as boolean) as is_contract_enforced,
     cast(0 as {{ dbt.type_int() }}) as total_defined_columns,
     cast(0 as {{ dbt.type_int() }}) as total_described_columns,

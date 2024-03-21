@@ -27,6 +27,8 @@
                 wrap_string_with_quotes(node.group),
                 wrap_string_with_quotes(node.access),
                 wrap_string_with_quotes(node.latest_version),
+                wrap_string_with_quotes(node.version),
+                wrap_string_with_quotes(node.deprecation_date),
                 "cast(" ~ contract | trim  ~ " as boolean)",
                 node.columns.values() | list | length,
                 node.columns.values() | list | selectattr('description') | list | length,
