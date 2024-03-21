@@ -12,7 +12,7 @@ then
     then
         pip install "dbt-$1==1.7.1"
     else
-        pip install --pre "dbt-$1" protobuf==4.25
+        pip install --pre "dbt-$1" dbt-core protobuf==4.25
     fi
 fi
 
