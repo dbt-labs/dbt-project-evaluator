@@ -418,8 +418,6 @@ to the unused source. Within the YML file, remove the unused table name, along w
 or any other nested information.
 
   ```yaml title="sources.yml"
-  version: 2
-
   sources:
     - name: some_source
       database: raw
