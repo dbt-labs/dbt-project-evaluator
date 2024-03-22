@@ -5,7 +5,9 @@ models:
     description: test
     columns:
       - name: id 
-        description: hocus pocus
+        description: >
+          hocus pocus
+          pocus hocus
         tests:
           - unique
   - name: stg_model_3
