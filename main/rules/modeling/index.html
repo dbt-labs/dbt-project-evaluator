@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.10ba22f1.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -483,6 +483,15 @@
   <a href="#unused-sources" class="md-nav__link">
     <span class="md-ellipsis">
       Unused Sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#models-with-too-many-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Models with Too Many Joins
     </span>
   </a>
   
@@ -1128,6 +1137,18 @@ or any other nested information.</p>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_4</span><span class="w">  </span><span class="c1"># &lt;-- remove this line</span>
 </span></code></pre></div>
 <p><img alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png" width="500" /></p>
+<hr />
+<h2 id="models-with-too-many-joins">Models with Too Many Joins<a class="headerlink" href="#models-with-too-many-joins" title="Permanent link">#</a></h2>
+<p><code>fct_too_many_joins</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_too_many_joins.sql">source</a>) shows models with a reference to too many other models or sources.</p>
+<p>The number of different references to start raising errors is set to 7 by default, but you can set your own threshold by overriding the <code>too_many_joins_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
+<p><strong>Example</strong></p>
+<p><code>fct_model_1</code> directly references seven (7) staging models upstream.</p>
+<p><img alt="A DAG showing a model that directly references seven staging models upstream." src="https://github.com/BradCr/dbt-project-evaluator/assets/151274228/46ea1f78-1bd7-436b-b15b-f63c726601a1" width="600" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>This likely represents a model in which too much is being done. Having a model that too many upstream models introduces a lot of code complexity, which can be challenging to understand and maintain.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart. Rather than having too many joins, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.</p>
+<p><img alt="A DAG showing a model that directly references only two intermediate models. The intermediate models reference three and four staging models upstream." src="https://github.com/BradCr/dbt-project-evaluator/assets/151274228/4b630e3c-f13a-443c-94e5-2d93c713c8f2" width="700" /></p>
 
 
 
