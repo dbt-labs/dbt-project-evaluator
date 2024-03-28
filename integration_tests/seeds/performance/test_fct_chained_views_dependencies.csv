@@ -12,3 +12,6 @@ stg_model_1,int_model_5,1
 stg_model_1,int_model_4,1
 fct_model_9,stg_model_5,1
 stg_model_3,fct_model_6,1
+stg_model_1,fct_model_10,1
+stg_model_2,fct_model_10,1
+stg_model_3,fct_model_10,1
