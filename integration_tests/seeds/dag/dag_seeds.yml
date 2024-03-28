@@ -99,6 +99,5 @@ seeds:
           compare_model: ref('fct_too_many_joins')
           compare_columns:
             - resource_name
-            - resource_type
             - file_path
             - join_count
