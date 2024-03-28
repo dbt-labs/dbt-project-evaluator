@@ -38,16 +38,18 @@ vars:
 
 ## DAG Variables
 
-| variable    | description | default     |
-| ----------- | ----------- | ----------- |
-| `models_fanout_threshold` | threshold for unacceptable model fanout for `fct_model_fanout` | 3 models |
+| variable    | description  | default     |
+| ----------- | ------------ | ----------- |
+| `models_fanout_threshold`  | threshold for unacceptable model fanout for `fct_model_fanout` | 3 models |
+| `too_many_joins_threshold` | threshold for the number of references to flag in `fct_too_many_joins` | 7 references |
 
 ```yaml title="dbt_project.yml"
-# set your model fanout threshold to 10 instead of 3
+# set your model fanout threshold to 10 instead of 3 and too many joins from 6 instead of 7
 
 vars:
   dbt_project_evaluator:
     models_fanout_threshold: 10
+    too_many_joins_threshold: 6
 ```
 
 ## Naming Convention Variables

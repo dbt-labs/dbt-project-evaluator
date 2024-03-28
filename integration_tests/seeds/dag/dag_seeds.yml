@@ -91,3 +91,13 @@ seeds:
           compare_columns:
             - model
             - hard_coded_references
+
+  - name: test_fct_too_many_joins
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_too_many_joins
+          compare_model: ref('fct_too_many_joins')
+          compare_columns:
+            - resource_name
+            - file_path
+            - join_count
