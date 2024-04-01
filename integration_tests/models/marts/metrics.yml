@@ -36,7 +36,7 @@ metrics:
   # Specify the measure you are creating a proxy for. 
       measure: total_count 
     filter: |
-      {{ Dimension('dim__id') }} > 0
+      {{ Dimension('dim__id') }} > '2023-04-01'
   - name: new_metric_with_window
     label: "New cumulative Metric"
     type: cumulative 
