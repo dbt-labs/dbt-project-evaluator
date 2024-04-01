@@ -23,7 +23,7 @@ seeds:
             - total_models
             - total_tests
             - tested_models
-            - "{{ 'test_coverage_pct' if not target.name == 'duckdb' else 'tested_models' }}"
+            - "{{ 'test_coverage_pct' if not target.name in ['duckdb', 'databricks', 'trino'] else 'tested_models' }}"
             - test_to_model_ratio
             - staging_test_coverage_pct
             - intermediate_test_coverage_pct
