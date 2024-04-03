@@ -11,6 +11,8 @@
     {%- for node in nodes_list -%}
 
         {%- set hard_coded_references = dbt_project_evaluator.find_all_hard_coded_references(node) -%}
+        {%- set number_lines = dbt_project_evaluator.calculate_number_lines(node) -%}
+        {%- set sql_complexity = dbt_project_evaluator.calculate_sql_complexity(node) -%}
         {%- set contract = node.contract.enforced if node.contract else false -%}
         {%- set exclude_node = dbt_project_evaluator.set_is_excluded(node, resource_type="node") -%}
 
@@ -38,6 +40,8 @@
                 "''" if not node.column_name else wrap_string_with_quotes(dbt.escape_single_quotes(node.column_name)),
                 wrap_string_with_quotes(node.meta | tojson),
                 wrap_string_with_quotes(dbt.escape_single_quotes(hard_coded_references)),
+                number_lines,
+                sql_complexity,
                 wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as boolean)",
                 "cast(" ~ exclude_node ~ " as boolean)",
