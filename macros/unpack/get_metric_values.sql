@@ -9,7 +9,7 @@
     {%- set values = [] -%}
 
     {%- for node in nodes_list -%}
-          
+   
           {%- set values_line = 
             [
             wrap_string_with_quotes(node.unique_id),
@@ -20,7 +20,7 @@
             wrap_string_with_quotes(node.type),
             wrap_string_with_quotes(dbt.escape_single_quotes(node.label)),
             wrap_string_with_quotes(node.package_name),
-            wrap_string_with_quotes(node.filter | tojson),
+            wrap_string_with_quotes(dbt.escape_single_quotes(tojson(node.filter))),
             wrap_string_with_quotes(node.type_params.measure.name),
             wrap_string_with_quotes(node.type_params.measure.alias),
             wrap_string_with_quotes(node.type_params.numerator | tojson),
