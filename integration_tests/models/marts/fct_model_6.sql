@@ -76,7 +76,7 @@ select 1 as id
   from {{ var('my_table_reference') }}   
   union all
   
-  -- the following is SQL commented so it should be found as a hard coded reference
+  -- the following is SQL commented so it should not be found as a hard coded reference
 --   select
 --       6 as id
 --   from my_db.my_schema.my_table222
