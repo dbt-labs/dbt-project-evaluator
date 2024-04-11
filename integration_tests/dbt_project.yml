@@ -67,3 +67,5 @@ vars:
   new_model_type_folder_name: 'my_new_models'
   new_model_type_prefixes: 'nwmdl_'
   insert_batch_size: 100
+  too_many_joins_threshold: 3
+  chained_views_threshold: 2

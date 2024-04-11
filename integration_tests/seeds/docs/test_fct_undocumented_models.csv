@@ -8,5 +8,8 @@ model_8,marts
 fct_model_9,marts
 dim_model_7,marts
 int_model_4,intermediate
-int_model_5,intermediate
+int_model_5.v1,intermediate
+int_model_5.v2,intermediate
+int_model_5.v3,intermediate
 report_3,other
+fct_model_10,marts
