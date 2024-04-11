@@ -16,7 +16,7 @@ with dummy_cte as (
 select 
     cast(null as {{ dbt.type_string() }}) as node_unique_id,
     cast(null as {{ dbt.type_string()}}) as name,
-    cast(null as {{ dbt.type_string()}}) as description,
+    cast(null as {{ dbt_project_evaluator.type_large_string()}}) as description,
     cast(null as {{ dbt.type_string()}}) as data_type,
     cast(null as {{ dbt.type_string()}}) as quote
 
