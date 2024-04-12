@@ -22,7 +22,7 @@ models:
         tests:
           - not_null:
               config:
-                where: resource_type == 'model'
+                where: resource_type = 'model'
       - name: model_type
         tests: 
           - dbt_utils.expression_is_true:
