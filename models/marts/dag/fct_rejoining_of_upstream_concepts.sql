@@ -2,8 +2,8 @@ with all_relationships as (
     select  
         *
     from {{ ref('int_all_dag_relationships') }}
-    where parent_resource_type not in ('exposures', 'metrics')
-    and child_resource_type not in ('exposures', 'metrics')
+    where parent_resource_type not in ('exposure', 'metric')
+    and child_resource_type not in ('exposure', 'metric')
     and not parent_is_excluded
     and not child_is_excluded
 ),
