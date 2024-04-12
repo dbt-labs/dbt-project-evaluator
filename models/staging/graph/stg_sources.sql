@@ -35,7 +35,7 @@ select
     cast(null as {{ dbt.type_string() }}) as identifier,
     cast(null as {{ dbt.type_string() }}) as tags,
     cast(null as {{ dbt.type_string() }}) as freshness,
-    cast(null as {{ dbt.type_string() }}) as meta,
+    cast(null as {{ dbt.type_string() }})  as meta,
     cast(True as boolean) as is_excluded
 
 from dummy_cte
