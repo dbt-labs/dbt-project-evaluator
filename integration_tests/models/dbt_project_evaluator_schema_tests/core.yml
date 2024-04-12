@@ -17,6 +17,12 @@ models:
         tests:
           - unique
           - not_null
+      - name: on_schema_change
+        description: this contains the on_schema_change setting for incremental models. This column was sometimes an empty string, so should be tested to detect regressions
+        tests:
+          - not_null:
+              config:
+                where: resource_type == 'model'
       - name: model_type
         tests: 
           - dbt_utils.expression_is_true:
