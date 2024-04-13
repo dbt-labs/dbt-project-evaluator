@@ -16,6 +16,7 @@ final as (
     from all_relationships
     where is_dependent_on_chain_of_views
     and child_resource_type = 'model'
+    and distance > {{ var('chained_views_threshold') }}
 )
 
 select * from final
