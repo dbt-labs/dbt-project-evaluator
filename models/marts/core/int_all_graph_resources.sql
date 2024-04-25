@@ -112,6 +112,8 @@ joined as (
         unioned_with_calc.loader, 
         unioned_with_calc.identifier,
         unioned_with_calc.hard_coded_references, -- NULL for non-model resources
+        unioned_with_calc.number_lines, -- NULL for non-model resources
+        unioned_with_calc.sql_complexity, -- NULL for non-model resources
         unioned_with_calc.is_excluded -- NULL for metrics and exposures
 
     from unioned_with_calc

@@ -39,6 +39,8 @@ select
     cast(null as {{ dbt.type_string() }}) as column_name,
     cast(null as {{ dbt.type_string() }}) as meta,
     cast(null as {{ dbt.type_string() }}) as hard_coded_references,
+    cast(null as {{ dbt.type_int() }}) as number_lines,
+    cast(null as {{ dbt.type_float() }}) as sql_complexity,
     cast(null as {{ dbt.type_string() }}) as macro_dependencies,
     cast(True as boolean) as is_generic_test,
     cast(True as boolean) as is_excluded
