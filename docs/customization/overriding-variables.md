@@ -92,6 +92,13 @@ vars:
     chained_views_threshold: 8
 ```
 
+## SQL code analysis
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `comment_chars` | a list of strings used for inline comments | `["--"]` |
+| `token_costs` | a dictionary of SQL tokens (words) and associated complexity weight, <br>used to estimate models complexity | see in the `dbt_project.yml` file of the package |
+
 ## Execution
 
 | variable    | description | default     |

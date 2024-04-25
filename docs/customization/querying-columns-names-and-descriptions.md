@@ -1,6 +1,8 @@
-# Querying columns with SQL
+# Querying columns names and descriptions with SQL
 
-The model `stg_columns` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/staging/graph/stg_columns.sql)), created with the package, lists all the columns from all the dbt nodes (models, sources, tests, snapshots)
+The model `stg_columns` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/staging/graph/stg_columns.sql)), created with the package, lists all the columns configured in all the dbt nodes (models, sources, tests, snapshots).
+
+It will not list the columns of the models that have not explicitly been added to the YAML files.
 
 You can use this model to help with questions such as:
 
