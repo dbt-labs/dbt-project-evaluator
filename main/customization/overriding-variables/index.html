@@ -585,6 +585,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sql-code-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL code analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#execution" class="md-nav__link">
     <span class="md-ellipsis">
       Execution
@@ -693,11 +702,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../querying-columns/" class="md-nav__link">
+      <a href="../querying-columns-names-and-descriptions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Querying columns
+    Querying columns names and descriptions
   </span>
   
 
@@ -962,6 +971,28 @@
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="c1"># set your chained views threshold to 8 instead of 4</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">chained_views_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 </span></code></pre></div>
+<h2 id="sql-code-analysis">SQL code analysis<a class="headerlink" href="#sql-code-analysis" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>variable</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>comment_chars</code></td>
+<td>a list of strings used for inline comments</td>
+<td><code>["--"]</code></td>
+</tr>
+<tr>
+<td><code>token_costs</code></td>
+<td>a dictionary of SQL tokens (words) and associated complexity weight, <br>used to estimate models complexity</td>
+<td>see in the <code>dbt_project.yml</code> file of the package</td>
+</tr>
+</tbody>
+</table>
 <h2 id="execution">Execution<a class="headerlink" href="#execution" title="Permanent link">#</a></h2>
 <table>
 <thead>

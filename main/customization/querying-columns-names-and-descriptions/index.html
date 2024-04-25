@@ -20,7 +20,7 @@
     
     
       
-        <title>Querying columns - dbt_project_evaluator</title>
+        <title>Querying columns names and descriptions - dbt_project_evaluator</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#querying-columns-with-sql" class="md-skip">
+        <a href="#querying-columns-names-and-descriptions-with-sql" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Querying columns
+              Querying columns names and descriptions
             
           </span>
         </div>
@@ -621,7 +621,7 @@
           
   
   <span class="md-ellipsis">
-    Querying columns
+    Querying columns names and descriptions
   </span>
   
 
@@ -632,7 +632,7 @@
         
   
   <span class="md-ellipsis">
-    Querying columns
+    Querying columns names and descriptions
   </span>
   
 
@@ -753,7 +753,7 @@
                   
 
   
-    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/customization/querying-columns.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/customization/querying-columns-names-and-descriptions.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -761,8 +761,9 @@
   
 
 
-<h1 id="querying-columns-with-sql">Querying columns with SQL<a class="headerlink" href="#querying-columns-with-sql" title="Permanent link">#</a></h1>
-<p>The model <code>stg_columns</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/staging/graph/stg_columns.sql">source</a>), created with the package, lists all the columns from all the dbt nodes (models, sources, tests, snapshots)</p>
+<h1 id="querying-columns-names-and-descriptions-with-sql">Querying columns names and descriptions with SQL<a class="headerlink" href="#querying-columns-names-and-descriptions-with-sql" title="Permanent link">#</a></h1>
+<p>The model <code>stg_columns</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/staging/graph/stg_columns.sql">source</a>), created with the package, lists all the columns configured in all the dbt nodes (models, sources, tests, snapshots).</p>
+<p>It will not list the columns of the models that have not explicitly been added to the YAML files.</p>
 <p>You can use this model to help with questions such as:</p>
 <ul>
 <li>Are there columns with the same name in different nodes?</li>
