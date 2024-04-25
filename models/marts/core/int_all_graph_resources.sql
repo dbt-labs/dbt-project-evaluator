@@ -34,6 +34,7 @@ unioned_with_calc as (
         *,
         case 
             when resource_type = 'source' then  {{ dbt.concat(['source_name',"'.'",'name']) }}
+            when coalesce(version, '') != '' then {{ dbt.concat(['name',"'.v'",'version']) }} 
             else name 
         end as resource_name,
         case
@@ -83,6 +84,8 @@ joined as (
         unioned_with_calc.access, 
         unioned_with_calc.access = 'public' as is_public, 
         unioned_with_calc.latest_version, 
+        unioned_with_calc.version, 
+        unioned_with_calc.deprecation_date, 
         unioned_with_calc.is_contract_enforced, 
         unioned_with_calc.total_defined_columns, 
         unioned_with_calc.total_described_columns, 
