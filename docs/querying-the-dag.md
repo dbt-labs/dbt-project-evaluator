@@ -17,7 +17,7 @@ Building additional models and snapshots on top of this model could allow:
 
 ## Getting insights on potential refactoring work
 
-- identifying models with a lof of lines of code
+- identifying models with a lot of lines of code
 - identifying the models with the highest level of complexity leveraging the column `sql_complexity` from the table `int_all_graph_resources`, based on the weights defined in the `token_costs` variable
 - looking at the longest "chains" of models in a project
 - reviewing models with many/few direct dependents
