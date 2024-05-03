@@ -134,7 +134,7 @@
 
                 # third matching group
                 # at least 1 word character
-                (\w+)
+                (\w+-?\w+)
 
                 # fouth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark)
@@ -150,7 +150,7 @@
 
                 # seventh matching group
                 # at least 1 word character
-                (\w+)
+                (\w+-?\w+)
 
                 # eighth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark) folowed by a whitespace character or end of string
@@ -164,23 +164,23 @@
                 (?<!distinct\s)
 
                 # first matching group
-                # from or join followed by at least 1 whitespace character 
+                # from or join followed by at least 1 whitespace character
                 (from|join)\s+
 
                 # second matching group
-                # 1 or 0 of (opening bracket, backtick, or quotation mark)            
+                # 1 or 0 of (opening bracket, backtick, or quotation mark)
                 ([\[`\"\']?)
 
                 # third matching group
                 # at least 1 word character
-                (\w+)
+                (\w+-?\w+)
 
                 # fouth matching group
-                # 1 or 0 of (closing bracket, backtick, or quotation mark)            
+                # 1 or 0 of (closing bracket, backtick, or quotation mark)
                 ([\]`\"\']?)
 
                 # fifth matching group
-                # a period            
+                # a period
                 (\.)
 
                 # sixth matching group
@@ -188,24 +188,24 @@
                 ([\[`\"\']?)
 
                 # seventh matching group
-                # at least 1 word character            
-                (\w+)
+                # at least 1 word character
+                (\w+-?\w+)
 
                 # eighth matching group
-                # 1 or 0 of (closing bracket, backtick, or quotation mark) 
+                # 1 or 0 of (closing bracket, backtick, or quotation mark)
                 ([\]`\"\']?)
 
                 # ninth matching group
-                # a period             
+                # a period
                 (\.)
 
                 # tenth matching group
-                # 1 or 0 of (closing bracket, backtick, or quotation mark)             
+                # 1 or 0 of (closing bracket, backtick, or quotation mark)
                 ([\[`\"\']?)
 
                 # eleventh matching group
-                # at least 1 word character   
-                (\w+)
+                # at least 1 word character
+                (\w+-?\w+)
 
                 # twelfth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark) followed by a whitespace character or end of string
@@ -219,16 +219,16 @@
                 (?<!distinct\s)
 
                 # first matching group
-                # from or join followed by at least 1 whitespace character             
+                # from or join followed by at least 1 whitespace character
                 (from|join)\s+
 
                 # second matching group
-                # 1 of (opening bracket, backtick, or quotation mark)            
+                # 1 of (opening bracket, backtick, or quotation mark)
                 ([\[`\"\'])
 
                 # third matching group
                 # at least 1 word character
-                (\w+)
+                (\w+-?\w+)
                 
                 # fourth matching group
                 # 1 of (closing bracket, backtick, or quotation mark) folowed by a whitespace character or end of string
