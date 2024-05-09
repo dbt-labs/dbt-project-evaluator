@@ -31,7 +31,7 @@
               wrap_string_with_quotes(node.package_name),
               wrap_string_with_quotes(node.loader),
               wrap_string_with_quotes(node.identifier),
-              wrap_string_with_quotes(node.tags | tojson),
+              wrap_string_with_quotes(dbt.escape_single_quotes(tojson(node.tags))),
               wrap_string_with_quotes(node.freshness | tojson),
               wrap_string_with_quotes(node.meta | tojson),
               "cast(" ~ exclude_source ~ " as boolean)",
