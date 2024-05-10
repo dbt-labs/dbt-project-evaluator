@@ -48,7 +48,7 @@ count_column_constraints as (
             then 1
             else 0
         end as constraint_not_null_count,
-        cast((length(constraints) - length(replace(constraints, 'type', ''))) / 4 as int64) as constraints_count
+        cast((length(constraints) - length(replace(constraints, 'type', ''))) / 4 as int) as constraints_count
     from {{ ref('base_node_columns') }}
 
 ),
