@@ -5,7 +5,7 @@ models:
         enforced: true
     columns:
       - name: id
-        data_type: int64
+        data_type: int
         constraints:
           - type: not_null
         tests:
