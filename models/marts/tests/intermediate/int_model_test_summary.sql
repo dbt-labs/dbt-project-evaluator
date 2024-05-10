@@ -14,6 +14,7 @@ count_column_tests as (
     select 
         relationships.direct_parent_id, 
         all_graph_resources.column_name,
+        if(max(all_graph_resources.is_test_unique), 1, 0) as test_unique_count,
         {%- for test_set in var('primary_key_test_macros') %}
             {%- set outer_loop = loop -%}
         count(distinct case when 
@@ -32,6 +33,29 @@ count_column_tests as (
     group by 1,2
 ),
 
+count_column_constraints as (
+
+    select
+        node_unique_id as direct_parent_id,
+        name as column_name,
+        if(contains_substr(constraints, 'not_null'), 1, 0) as constraint_not_null_count,
+        cast((length(constraints) - length(replace(constraints, 'type', ''))) / 4 as int64) as constraints_count
+    from {{ ref('base_node_columns') }}
+
+),
+
+combine_column_counts as (
+
+    select
+        count_column_tests.*,
+        count_column_tests.test_unique_count + count_column_constraints.constraint_not_null_count as primary_key_mixed_method_count,
+        count_column_constraints.constraints_count
+    from count_column_tests
+    left join count_column_constraints
+        using (direct_parent_id, column_name)
+
+),
+
 agg_test_relationships as (
 
     select 
@@ -41,14 +65,16 @@ agg_test_relationships as (
                     {%- for test_set in var('primary_key_test_macros') %}
                         {%- set compare_value = test_set | length %}
                     primary_key_method_{{ loop.index }}_count >= {{ compare_value}}
-                        {%- if not loop.last %} or {% endif %}
-                    {%- endfor %} 
+                        or
+                    {%- endfor %}
+                    primary_key_mixed_method_count >= 2
                 ) then 1 
                 else 0 
             end
         ) >= 1 as is_primary_key_tested,
-        sum(tests_count) as number_of_tests_on_model
-    from count_column_tests
+        sum(tests_count) as number_of_tests_on_model,
+        sum(constraints_count) as number_of_constraints_on_model
+    from combine_column_counts
     group by 1
 
 ),
@@ -59,7 +85,8 @@ final as (
         all_graph_resources.resource_type,
         all_graph_resources.model_type,
         coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as is_primary_key_tested,
-        coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model
+        coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model,
+        coalesce(agg_test_relationships.number_of_constraints_on_model, 0) as number_of_constraints_on_model
     from all_graph_resources
     left join agg_test_relationships
         on all_graph_resources.resource_id = agg_test_relationships.direct_parent_id
