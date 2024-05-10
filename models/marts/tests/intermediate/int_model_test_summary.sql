@@ -44,7 +44,7 @@ count_column_constraints as (
         node_unique_id as direct_parent_id,
         name as column_name,
         case
-            when {{ replace("constraints", "'not_null'", "''") }} != constraints
+            when replace("constraints", "'not_null'", "''") != constraints
             then 1
             else 0
         end as constraint_not_null_count,
