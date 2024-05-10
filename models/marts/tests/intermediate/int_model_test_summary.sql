@@ -14,7 +14,12 @@ count_column_tests as (
     select 
         relationships.direct_parent_id, 
         all_graph_resources.column_name,
-        if(max({{ dbt.cast_bool_to_text("all_graph_resources.is_test_unique") }}) = 'true', 1, 0) as test_unique_count,
+        sum(case
+                when all_graph_resources.is_test_unique
+                then 1
+                else 0
+            end
+         ) as test_unique_count,
         {%- for test_set in var('primary_key_test_macros') %}
             {%- set outer_loop = loop -%}
         count(distinct case when 
