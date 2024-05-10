@@ -1,6 +1,18 @@
 models: 
   - name: int_model_5
     latest_version: 2
+    config:
+      materialized: table
+      contract: {enforced: true}
+    columns:
+      - name: id
+        data_type: string
+        description: "The primary key for this table"
+        constraints:
+          - type: not_null
+        tests:
+          - unique
+
     versions: 
      - v: 1
        deprecation_date: 2024-01-01
