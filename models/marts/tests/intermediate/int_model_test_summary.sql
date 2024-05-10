@@ -43,7 +43,11 @@ count_column_constraints as (
     select
         node_unique_id as direct_parent_id,
         name as column_name,
-        if(contains_substr(constraints, 'not_null'), 1, 0) as constraint_not_null_count,
+        case
+            when {{ dbt.replace("constraints", "not_null", "") }} != constraints
+            then 1
+            else 0
+        end as constraint_not_null_count,
         cast((length(constraints) - length(replace(constraints, 'type', ''))) / 4 as int64) as constraints_count
     from {{ ref('base_node_columns') }}
 
