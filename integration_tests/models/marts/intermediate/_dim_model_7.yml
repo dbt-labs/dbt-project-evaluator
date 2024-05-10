@@ -1,0 +1,12 @@
+models: 
+  - name: dim_model_7
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: int64
+        constraints:
+          - type: not_null
+        tests:
+           - unique
