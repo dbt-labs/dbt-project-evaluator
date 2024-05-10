@@ -6,7 +6,7 @@ models:
       contract: {enforced: true}
     columns:
       - name: id
-        data_type: string
+        data_type: int64
         description: "The primary key for this table"
         constraints:
           - type: not_null
