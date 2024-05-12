@@ -61,7 +61,8 @@ combine_column_counts as (
         count_column_constraints.constraints_count
     from count_column_tests
     left join count_column_constraints
-        using (direct_parent_id, column_name)
+        on count_column_tests.direct_parent_id = count_column_constraints.direct_parent_id
+        and count_column_tests.column_name = count_column_constraints.column_name
 
 ),
 
