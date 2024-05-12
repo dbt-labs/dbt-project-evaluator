@@ -71,4 +71,4 @@ integration_tests:
       schema: dbt_project_evaluator_integration_tests_trino
       threads: 5
       session_properties:
-        query_max_stage_count: 250
+        query_max_stage_count: 275
