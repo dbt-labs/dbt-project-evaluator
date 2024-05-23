@@ -11,7 +11,7 @@ final as (
         resource_name as model,
         hard_coded_references
     from models
-    where hard_coded_references is not null
+    where hard_coded_references != ''
 )
 
 select * from final
