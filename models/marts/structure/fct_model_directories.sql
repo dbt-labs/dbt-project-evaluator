@@ -1,6 +1,8 @@
 -- This model finds all cases where a model is NOT in the appropriate subdirectory:
     -- For staging models: The files should be nested in the staging folder in a subfolder that matches their source parent's name.
     -- For non-staging models: The files should be nested closest to their appropriate folder.  
+{{ config(materialized='table') }}
+
 {% set directory_pattern = get_directory_pattern() %}
  
 with all_graph_resources as (
@@ -40,8 +42,10 @@ staging_by_parent_source_count as (
         ,child_resource_type as resource_type
         ,child_model_type as model_type
         ,child_file_path as current_file_path
+        ,'models/' || 'staging' || '/' || staging_models.parent_source_name || '/' as list_agg_string
     from staging_models
     group by child, child_resource_type, child_model_type, child_file_path
+        ,'models/' || 'staging' || '/' || staging_models.parent_source_name || '/'
 ),
 
 --Added this CTE to listagg() the multiple suggested paths and advise the user to split the source file into those two places.
@@ -52,8 +56,9 @@ multiple_sources_staging_to_split as (
         staging_models.child_model_type as model_type,
         staging_models.child_file_path as current_file_path,
         'More than one source. Split into separate staging models in: ' ||
-          listagg('models/' || 'staging' || '/' || staging_models.parent_source_name || '/', ' AND ')
-          within group(order by 'models/' || 'staging' || '/' || staging_models.parent_source_name || '/') as change_file_path_to
+        -- {#   {{ dbt.listagg(measure="list_agg_string", delimiter_text="' AND '", order_by_clause="list_agg_string") }}  as change_file_path_to
+        -- #}
+        listagg(list_agg_string, ' AND ') as change_file_path_to --Using listagg because list_agg_string() isn't working for Duckdb
     from staging_models
     join staging_by_parent_source_count on staging_models.child = staging_by_parent_source_count.resource_name and
                                            staging_models.child_resource_type = staging_by_parent_source_count.resource_type and
