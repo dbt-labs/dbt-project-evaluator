@@ -81,7 +81,7 @@ nav:
     - Configuring exceptions to the rules: customization/exceptions.md
     - Excluding packages and models/sources based on path: customization/excluding-packages-and-paths.md
     - Display issues in the logs: customization/issues-in-log.md
-    - Querying columns: customization/querying-columns.md
+    - Querying columns names and descriptions: customization/querying-columns-names-and-descriptions.md
   - Run in CI Check: ci-check.md
   - Querying the DAG: querying-the-dag.md
   - Contributing: contributing.md

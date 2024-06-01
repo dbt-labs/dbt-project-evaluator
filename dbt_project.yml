@@ -90,3 +90,23 @@ vars:
 
   # -- Code complexity variables --
   comment_chars: ["--"]
+  token_costs: {
+    "and": 0.1,
+    "or": 0.1,
+    "when": 0.5,
+    "coalesce": 1,
+    "distinct": 1,
+    "greatest": 1,
+    "least": 1,
+    "group": 1,
+    "join": 1,
+    "order": 1,
+    "select": 1,
+    "where": 1,
+    "having": 2,
+    "flatten": 3,
+    "unnest": 3,
+    "pivot": 3,
+    "partition by": 3,
+    "qualify": 3,
+    }

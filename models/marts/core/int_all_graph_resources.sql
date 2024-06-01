@@ -34,7 +34,7 @@ unioned_with_calc as (
         *,
         case 
             when resource_type = 'source' then  {{ dbt.concat(['source_name',"'.'",'name']) }}
-            when version is not null then {{ dbt.concat(['name',"'.v'",'version']) }} 
+            when coalesce(version, '') != '' then {{ dbt.concat(['name',"'.v'",'version']) }} 
             else name 
         end as resource_name,
         case
@@ -112,6 +112,8 @@ joined as (
         unioned_with_calc.loader, 
         unioned_with_calc.identifier,
         unioned_with_calc.hard_coded_references, -- NULL for non-model resources
+        unioned_with_calc.number_lines, -- NULL for non-model resources
+        unioned_with_calc.sql_complexity, -- NULL for non-model resources
         unioned_with_calc.is_excluded -- NULL for metrics and exposures
 
     from unioned_with_calc
