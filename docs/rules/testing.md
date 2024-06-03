@@ -28,6 +28,18 @@ You can optionally extend this test to apply to more node types (`source`,`snaps
 Snapshots should always have a multi-field primary key in order to function, while sources and seeds may not. Depending on your expectations for duplicates and null values, different kinds of primary key tests may be appropriate. Consider your use case carefully.
 
 ---
+## Missing Source Freshness 
+
+`fct_sources_without_freshness` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_sources_without_freshness.sql)) lists every source that does not have a source freshness threshold defined. Any source that does not have one or both of warn_after and error_after will be flagged by this model.
+
+**Reason to Flag**
+
+Source freshness is useful for understanding if your data pipelines are in a healthy state and is a critical component of defining SLAs for your warehouse. Enabling freshness for sources also facilitates [referencing the source freshness results in the selectors](https://docs.getdbt.com/reference/node-selection/methods#the-source_status-method) for a more efficient execution. 
+
+**How to Remediate**
+
+Apply a [source freshness block](https://docs.getdbt.com/docs/build/sources#declaring-source-freshness) to the source definition. This can be implemented at either the source name or table name level.
+---
 
 ## Test Coverage
 
