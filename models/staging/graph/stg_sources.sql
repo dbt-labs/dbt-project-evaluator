@@ -22,9 +22,9 @@ select
     cast(null as {{ dbt.type_string() }}) as alias,
     cast(null as {{ dbt.type_string() }}) as resource_type,
     cast(null as {{ dbt.type_string() }}) as source_name,
-    cast(True as boolean) as is_source_described,
-    cast(True as boolean) as is_described,
-    cast(True as boolean) as is_enabled,
+    cast(True as {{ dbt.type_boolean() }}) as is_source_described,
+    cast(True as {{ dbt.type_boolean() }}) as is_described,
+    cast(True as {{ dbt.type_boolean() }}) as is_enabled,
     cast(null as {{ dbt.type_string() }}) as loaded_at_field,
     cast(null as {{ dbt.type_string() }}) as database,
     cast(null as {{ dbt.type_string() }}) as schema,
@@ -32,7 +32,7 @@ select
     cast(null as {{ dbt.type_string() }}) as loader,
     cast(null as {{ dbt.type_string() }}) as identifier,
     cast(null as {{ dbt.type_string() }})  as meta,
-    cast(True as boolean) as is_excluded
+    cast(True as {{ dbt.type_boolean() }}) as is_excluded
 
 from dummy_cte
 where false

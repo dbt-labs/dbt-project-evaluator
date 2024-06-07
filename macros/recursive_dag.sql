@@ -72,7 +72,7 @@ all_relationships (
         is_excluded as child_is_excluded,
         0 as distance,
         {{ dbt.array_construct(['resource_name']) }} as path,
-        cast(null as boolean) as is_dependent_on_chain_of_views
+        cast(null as {{ dbt.type_boolean() }}) as is_dependent_on_chain_of_views
 
     from direct_relationships
     -- where direct_parent_id is null {# optional lever to change filtering of anchor clause to only include root resources #}
@@ -175,7 +175,7 @@ with direct_relationships as (
         child_is_excluded,
         0 as distance,
         {{ dbt.array_construct(['resource_name']) }} as path,
-        cast(null as boolean) as is_dependent_on_chain_of_views
+        cast(null as {{ dbt.type_boolean() }}) as is_dependent_on_chain_of_views
     from get_distinct
 )
 

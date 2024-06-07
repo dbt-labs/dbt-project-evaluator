@@ -20,9 +20,9 @@
               wrap_string_with_quotes(node.alias),
               wrap_string_with_quotes(node.resource_type),
               wrap_string_with_quotes(node.source_name),
-              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.source_description) | trim ~ " as boolean)",
-              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
-              "cast(" ~ node.config.enabled ~ " as boolean)",
+              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.source_description) | trim ~ " as " ~ dbt.type_boolean()),
+              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as " ~ dbt.type_boolean()),
+              "cast(" ~ node.config.enabled ~ " as " ~ dbt.type_boolean()),
               wrap_string_with_quotes(node.loaded_at_field | replace("'", "_")),
               wrap_string_with_quotes(node.database),
               wrap_string_with_quotes(node.schema),
@@ -30,7 +30,7 @@
               wrap_string_with_quotes(node.loader),
               wrap_string_with_quotes(node.identifier),
               wrap_string_with_quotes(node.meta | tojson),
-              "cast(" ~ exclude_source ~ " as boolean)",
+              "cast(" ~ exclude_source ~ " as " ~ dbt.type_boolean()),
             ]
         %}
             

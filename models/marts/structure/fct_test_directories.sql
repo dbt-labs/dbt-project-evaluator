@@ -32,8 +32,8 @@ model_file_paths as (
         resources.resource_id as model_id,
         resources.resource_name as model_name,
         resources.directory_path as model_directory_path,
-        models_per_test.test_id,
-        models_per_test.parent_model_id
+        models_per_test.test_id as test_id,
+        models_per_test.parent_model_id as parent_model_id
     from resources
     inner join models_per_test
     on models_per_test.parent_model_id = resources.resource_id
@@ -58,13 +58,13 @@ test_file_paths as (
 all_file_paths as (
 
     select
-        test_file_paths.test_id,
-        test_file_paths.test_name,
-        test_file_paths.test_yml_directory_path,
-        test_file_paths.test_yml_name,
-        model_file_paths.model_id,
-        model_file_paths.model_name,
-        model_file_paths.model_directory_path
+        test_file_paths.test_id as test_id,
+        test_file_paths.test_name as test_name,
+        test_file_paths.test_yml_directory_path as test_yml_directory_path,
+        test_file_paths.test_yml_name as test_yml_name,
+        model_file_paths.model_id as model_id,
+        model_file_paths.model_name as model_name,
+        model_file_paths.model_directory_path as directory_path
     from model_file_paths
     inner join test_file_paths
     on model_file_paths.test_id = test_file_paths.test_id

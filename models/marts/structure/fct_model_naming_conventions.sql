@@ -28,10 +28,10 @@ appropriate_prefixes as (
 
 models as (
     select
-        all_graph_resources.resource_name,
-        all_graph_resources.prefix,
-        all_graph_resources.model_type,
-        naming_convention_prefixes.prefix_value
+        all_graph_resources.resource_name as resource_name,
+        all_graph_resources.prefix as prefix,
+        all_graph_resources.model_type as model_type,
+        naming_convention_prefixes.prefix_value as prefix_value
     from all_graph_resources 
     left join naming_convention_prefixes
         on all_graph_resources.model_type = naming_convention_prefixes.model_type
