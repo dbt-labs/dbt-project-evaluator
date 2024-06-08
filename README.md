@@ -23,7 +23,7 @@ Currently, the following adapters are supported:
 - Trino (tested with Iceberg connector)
 - AWS Athena (tested manually)
 - Greenplum (tested manually)
-- Clickhouse
+- Clickhouse (tested manually)
 
 ## Using This Package
 
