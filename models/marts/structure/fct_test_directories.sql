@@ -64,7 +64,7 @@ all_file_paths as (
         test_file_paths.test_yml_name as test_yml_name,
         model_file_paths.model_id as model_id,
         model_file_paths.model_name as model_name,
-        model_file_paths.model_directory_path as directory_path
+        model_file_paths.model_directory_path as model_directory_path 
     from model_file_paths
     inner join test_file_paths
     on model_file_paths.test_id = test_file_paths.test_id
