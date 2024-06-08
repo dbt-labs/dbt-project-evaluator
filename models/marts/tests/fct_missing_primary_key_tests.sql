@@ -12,7 +12,7 @@ tests as (
 final as (
 
     select 
-        *
+        resource_name, is_primary_key_tested, number_of_tests_on_model
     from tests
     where not(is_primary_key_tested)
 
