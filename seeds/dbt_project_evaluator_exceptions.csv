@@ -12,3 +12,9 @@ fct_test_coverage,'any',any,Default Exclusions
 fct_documentation_coverage,'any',any,Default Exclusions
 fct_model_naming_conventions,'any',any,Default Exclusions
 fct_chained_views_dependencies,'any',any,Default Exclusions
+fct_marts_or_intermediate_dependent_on_source,'any',any,Default Exclusions
+fct_direct_join_to_source,'any',any,Default Exclusions
+fct_multiple_sources_joined,'any',any,Default Exclusions
+fct_model_fanout,'any',any,Default Exclusions
+fct_source_fanout,'any',any,Default Exclusions
+fct_too_many_joins,'any',any,Default Exclusions
