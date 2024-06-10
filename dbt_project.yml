@@ -48,9 +48,9 @@ models:
         fct_model_fanout: 
           +enabled: false
         fct_marts_or_intermediate_dependent_on_source: 
-          +enabled: true
+          +enabled: false
         fct_direct_join_to_source: 
-          +enabled: true
+          +enabled: false
         fct_duplicate_sources: 
           +enabled: true
         fct_hard_coded_references: 
