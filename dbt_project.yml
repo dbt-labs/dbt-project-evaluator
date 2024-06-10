@@ -34,12 +34,11 @@ models:
         int_all_dag_relationships:
           # required for BigQuery, Redshift, and Databricks for performance/memory reasons
           +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
-      dag:
-        +materialized: table
     # Disable entire coverage suite
     # Tests need to be enabled 1 by 1 or for the entire suite
     # As of first half 2024 only a handful will be covered at the NYT
       dag:
+        +materialized: table
         fct_staging_dependent_on_staging: 
           +enabled: false
         fct_source_fanout: 
