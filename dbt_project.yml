@@ -39,7 +39,7 @@ models:
     # Disable entire coverage suite
     # Tests need to be enabled 1 by 1 or for the entire suite
     # As of first half 2024 only a handful will be covered at the NYT
-      modeling:
+      dag:
         fct_staging_dependent_on_staging: 
           +enabled: false
         fct_source_fanout: 
@@ -66,7 +66,7 @@ models:
           +enabled: false
         fct_too_many_joins: 
           +enabled: false
-      testing:
+      tests:
         fct_missing_primary_key_tests: 
           +enabled: true
         fct_test_coverage: 
