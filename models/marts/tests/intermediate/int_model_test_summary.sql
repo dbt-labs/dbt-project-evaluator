@@ -44,11 +44,11 @@ count_column_constraints as (
         node_unique_id as direct_parent_id,
         name as column_name,
         case
-            when replace(constraints, '"not_null"', '') != constraints
+            when has_not_null_constraint
             then 1
             else 0
         end as constraint_not_null_count,
-        cast((length(constraints) - length(replace(constraints, 'type', ''))) / 4 as int) as constraints_count
+        constraints_count
     from {{ ref('base_node_columns') }}
 
 ),
