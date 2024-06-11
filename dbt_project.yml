@@ -23,6 +23,7 @@ dispatch:
 
 models:
   dbt_project_evaluator:
+    +schema: dbt_project_evaluator
     +materialized: "{{ 'table' if target.type in ['duckdb'] else 'view' }}"
     marts:
       core:
