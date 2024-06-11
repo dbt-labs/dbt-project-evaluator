@@ -34,8 +34,72 @@ models:
         int_all_dag_relationships:
           # required for BigQuery, Redshift, and Databricks for performance/memory reasons
           +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
+    # Disable entire coverage suite
+    # Tests need to be enabled 1 by 1 or for the entire suite
+    # As of first half 2024 only a handful will be covered at the NYT
       dag:
         +materialized: table
+        fct_staging_dependent_on_staging: 
+          +enabled: false
+        fct_source_fanout: 
+          +enabled: false
+        fct_rejoining_of_upstream_concepts: 
+          +enabled: false
+        fct_model_fanout: 
+          +enabled: false
+        fct_marts_or_intermediate_dependent_on_source: 
+          +enabled: false
+        fct_direct_join_to_source: 
+          +enabled: false
+        fct_duplicate_sources: 
+          +enabled: true
+        fct_hard_coded_references: 
+          +enabled: true
+        fct_multiple_sources_joined: 
+          +enabled: false
+        fct_root_models: 
+          +enabled: false
+        fct_staging_dependent_on_marts_or_intermediate: 
+          +enabled: false
+        fct_unused_sources: 
+          +enabled: false
+        fct_too_many_joins: 
+          +enabled: false
+      tests:
+        fct_missing_primary_key_tests: 
+          +enabled: true
+        fct_test_coverage: 
+          +enabled: false
+      documentation:
+        fct_undocumented_models: 
+          +enabled: true
+        fct_documentation_coverage: 
+          +enabled: false
+        fct_undocumented_source_tables: 
+          +enabled: true
+        fct_undocumented_sources:  
+          +enabled: true
+      structure:
+        fct_model_naming_conventions:  
+          +enabled: false
+        fct_source_directories:  
+          +enabled: true
+        fct_model_directories:  
+          +enabled: true
+        fct_test_directories:  
+          +enabled: true
+      performance:
+        fct_chained_views_dependencies:  
+          +enabled: false
+        fct_exposure_parents_materializations:  
+          +enabled: true
+      governance:
+        fct_public_models_without_contracts:  
+          +enabled: true
+        fct_exposures_dependent_on_private_models:  
+          +enabled: true
+        fct_undocumented_public_models:  
+          +enabled: true
 
     staging:
       graph:
