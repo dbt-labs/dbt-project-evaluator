@@ -42,6 +42,7 @@ select
     cast(True as boolean) as is_described,
     cast(null as {{ dbt.type_string() }}) as column_name,
     cast(null as {{ dbt.type_string() }}) as meta,
+    cast(null as {{ dbt.type_string() }}) as tags,
     cast(null as {{ dbt.type_string() }}) as hard_coded_references,
     cast(null as {{ dbt.type_int() }}) as number_lines,
     cast(null as {{ dbt.type_float() }}) as sql_complexity,
