@@ -9,7 +9,14 @@ Incremental modelling makes my head hurt, but saves a lot of money $$$.  Read th
 https://docs.getdbt.com/docs/build/incremental-strategy
 */
 select 
-    stg_nodes.*,
+    stg_nodes.unique_id,
+    stg_nodes.name,
+    stg_nodes.resource_type,
+    stg_nodes.materialized,
+    stg_nodes.on_schema_change,
+    stg_nodes.incremental_strategy,
+    stg_nodes.partiton_by,
+    stg_nodes.full_refresh,
     tables_metadata.row_count,
     tables_metadata.size_bytes
 from {{ ref("stg_nodes") }}
