@@ -115,7 +115,8 @@ models:
           +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
 
 vars:
-
+  exclude_packages: ["dig_dbt_sources"]
+  
   # -- Tests and docs coverage variables --
   documentation_coverage_target: 100
   test_coverage_target: 100
