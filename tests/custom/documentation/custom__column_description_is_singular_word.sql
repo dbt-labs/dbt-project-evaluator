@@ -3,7 +3,13 @@
 Every column description should be meaningful.
 Flag all columns that are single word
 */
-select stg_columns.*
+select 
+    _dbt_source_relation,
+    node_unique_id,
+    name,
+    description,
+    data_type,
+    quote
 from {{ ref("stg_columns") }}
 left outer join
     {{ ref("stg_nodes") }} on stg_columns.node_unique_id = stg_nodes.unique_id
