@@ -49,7 +49,7 @@ select
     materialized,
     on_schema_change,
     incremental_strategy,
-    partiton_by,
+    partition_by,
     full_refresh
 from extract_json
 where
