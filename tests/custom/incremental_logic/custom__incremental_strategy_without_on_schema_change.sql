@@ -13,7 +13,15 @@ On schema change does not track nested column changes.
 https://docs.getdbt.com/docs/build/incremental-models#what-if-the-columns-of-my-incremental-model-change
 */
 
-select *
+select 
+    stg_nodes.unique_id,
+    stg_nodes.name,
+    stg_nodes.resource_type,
+    stg_nodes.materialized,
+    stg_nodes.on_schema_change,
+    stg_nodes.incremental_strategy,
+    stg_nodes.partiton_by,
+    stg_nodes.full_refresh
 from {{ ref("stg_nodes") }}
 where
     materialized = 'incremental'
