@@ -14,7 +14,7 @@ select
     stg_nodes.materialized,
     stg_nodes.on_schema_change,
     stg_nodes.incremental_strategy,
-    stg_nodes.partiton_by,
+    stg_nodes.partition_by,
     stg_nodes.full_refresh,
     tables_metadata.row_count,
     tables_metadata.size_bytes
