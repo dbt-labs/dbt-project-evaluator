@@ -9,7 +9,13 @@ Will not catch columns which have not been defined in the YAML.
 If dbt project evaluator rules enfore Governance suite (dbt mesh style), this will
 always work.
 */
-select stg_columns.*
+select 
+    stg_columns._dbt_source_relation,
+    stg_columns.node_unique_id,
+    stg_columns.name,
+    stg_columns.description,
+    stg_columns.data_type,
+    stg_columns.quote
 from {{ ref("stg_columns") }}
 left outer join {{ ref("stg_nodes") }} on stg_columns.node_unique_id = stg_nodes.unique_id
 where
