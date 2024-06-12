@@ -43,7 +43,14 @@ select
     coalesce(
         json_value(replace(persist_docs, ": True", ": 'True'"), '$.columns'), ''
     ) as persist_docs__columns,
-    *
+    unique_id,
+    name,
+    resource_type,
+    materialized,
+    on_schema_change,
+    incremental_strategy,
+    partiton_by,
+    full_refresh
 from extract_json
 where
     resource_type in ('model', 'snapshot')
