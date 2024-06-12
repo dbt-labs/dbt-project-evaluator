@@ -8,7 +8,14 @@ reductions with one parameter change .
 https://docs.getdbt.com/blog/bigquery-ingestion-time-partitioning-and-partition-copy-with-dbt
 */
 select 
-    stg_nodes.*,
+    stg_nodes.unique_id,
+    stg_nodes.name,
+    stg_nodes.resource_type,
+    stg_nodes.materialized,
+    stg_nodes.on_schema_change,
+    stg_nodes.incremental_strategy,
+    stg_nodes.partiton_by,
+    stg_nodes.full_refresh,
     tables_metadata.row_count,
     tables_metadata.size_bytes
 from {{ ref("stg_nodes") }}
