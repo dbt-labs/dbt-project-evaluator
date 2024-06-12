@@ -15,7 +15,7 @@ with recursive direct_relationships as (
 
 -- recursive CTE
 -- one record for every resource and each of its downstream children (including itself)
-all_relationships (
+all_relationships {% if target.name not in ['clickhouse'] %} (
     parent_id,
     parent,
     parent_resource_type,
@@ -43,7 +43,7 @@ all_relationships (
     distance,
     path,
     is_dependent_on_chain_of_views
-) as (
+    ) {% endif %} as (
     -- anchor
     select distinct
         resource_id as parent_id,

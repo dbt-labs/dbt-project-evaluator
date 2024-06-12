@@ -62,7 +62,7 @@ joined as (
         unioned_with_calc.file_name as file_name,
         case
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-            else naming_convention_prefixes.model_type
+            else nullif(naming_convention_prefixes.model_type, '')
         end as model_type_prefix,
         case
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
@@ -130,11 +130,11 @@ calculate_model_type as (
     select
         *,
         case
-            when resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
+            when joined.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
             -- by default we will define the model type based on its prefix in the case prefix and folder types are different
             else coalesce(model_type_prefix, model_type_folder, 'other')
         end as model_type,
-        row_number() over (partition by resource_id order by position_folder desc) as folder_name_rank
+        row_number() over (partition by joined.resource_id order by joined.position_folder desc) as folder_name_rank
     from joined
 ),
 

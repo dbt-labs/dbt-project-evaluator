@@ -70,7 +70,7 @@ agg_test_relationships as (
 
     select 
         direct_parent_id, 
-        sum(case 
+        cast(sum(case 
                 when (
                     {%- for test_set in var('primary_key_test_macros') %}
                         {%- set compare_value = test_set | length %}
@@ -81,9 +81,14 @@ agg_test_relationships as (
                 ) then 1 
                 else 0 
             end
-        ) >= 1 as is_primary_key_tested,
-        sum(tests_count) as number_of_tests_on_model,
-        sum(constraints_count) as number_of_constraints_on_model
+        ) >= 1 as {{ dbt.type_boolean() }}) as is_primary_key_tested,
+        {% if target.name in ['clickhouse'] %}
+          toInt32(sum(tests_count)) as number_of_tests_on_model
+          toInt32(sum(constraints_count)) as number_of_constraints_on_model
+        {% else %}
+          sum(tests_count) as number_of_tests_on_model
+          sum(constraints_count) as number_of_constraints_on_model
+        {% endif %}
     from combine_column_counts
     group by 1
 
@@ -94,9 +99,14 @@ final as (
         all_graph_resources.resource_name as resource_name,
         all_graph_resources.resource_type as resource_type,
         all_graph_resources.model_type as model_type,
-        coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as is_primary_key_tested,
-        coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model,
-        coalesce(agg_test_relationships.number_of_constraints_on_model, 0) as number_of_constraints_on_model
+        cast(coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as {{ dbt.type_boolean()}}) as is_primary_key_tested,
+        {% if target.name in ['clickhouse'] %}
+          toInt32(coalesce(agg_test_relationships.number_of_tests_on_model, 0)) as number_of_tests_on_model
+          toInt32(coalesce(agg_test_relationships.number_of_constraints_on_model, 0)) as number_of_constraints_on_model
+        {% else %}
+          coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model
+          coalesce(agg_test_relationships.number_of_constraints_on_model, 0) as number_of_constraints_on_model
+        {% endif %}
     from all_graph_resources
     left join agg_test_relationships
         on all_graph_resources.resource_id = agg_test_relationships.direct_parent_id

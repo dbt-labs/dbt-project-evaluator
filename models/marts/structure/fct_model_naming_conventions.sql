@@ -41,14 +41,14 @@ models as (
 
 inappropriate_model_names as (
     select 
-        models.resource_name,
-        models.prefix,
-        models.model_type,
-        appropriate_prefixes.appropriate_prefixes
+        models.resource_name as resource_name,
+        models.prefix as prefix,
+        models.model_type as model_type,
+        appropriate_prefixes.appropriate_prefixes as appropriate_prefixes
     from models
     left join appropriate_prefixes
         on models.model_type = appropriate_prefixes.model_type
-    where models.prefix_value is null
+        where models.prefix_value {{ "= ''" if target.type in ['clickhouse'] else 'is null' }} 
 
 )
 
