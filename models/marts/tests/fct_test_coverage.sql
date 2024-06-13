@@ -22,7 +22,7 @@ final as (
         {{ dbt.current_timestamp() if target.type != 'trino' else 'current_timestamp(6)' }} as measured_at,
         cast(count(*) as {{ dbt.type_int() }}) as total_models,
         cast(sum(number_of_tests_on_model) as {{ dbt.type_int() }}) as total_tests,
-        cast(sum(is_tested_model) as {{ dbt.type_int() }}) as tested_models,
+        sum(cast(is_tested_model as {{ dbt.type_int() }})) as tested_models,
         round(sum(is_tested_model) * 100.0 / count(*), 2) as test_coverage_pct,
         {% for model_type in var('model_types') %}
             round(
