@@ -23,7 +23,7 @@ final as (
         cast(count(*) as {{ dbt.type_int() }}) as total_models,
         cast(sum(number_of_tests_on_model) as {{ dbt.type_int() }}) as total_tests,
         sum(cast(is_tested_model as {{ dbt.type_int() }})) as tested_models,
-        round(sum(is_tested_model) * 100.0 / count(*), 2) as test_coverage_pct,
+        round(sum(cast(is_tested_model as {{ dbt.type_int() }})) * 100.0 / count(*), 2) as test_coverage_pct,
         {% for model_type in var('model_types') %}
             round(
                 {{ dbt_utils.safe_divide(
