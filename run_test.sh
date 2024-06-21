@@ -6,14 +6,8 @@ then
     python3 -m venv venv
     . $VENV
 
-    pip install --upgrade pip setuptools
+    pip install --upgrade pip setuptools "dbt-$1" dbt-core
 
-    if [[ $1 == "duckdb" ]]
-    then
-        pip install "dbt-$1==1.7.1"
-    else
-        pip install --pre "dbt-$1" dbt-core
-    fi
 fi
 
 . $VENV
