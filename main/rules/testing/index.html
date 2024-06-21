@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.21">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -176,7 +176,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -775,13 +775,14 @@
 <p><code>fct_missing_primary_key_tests</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_missing_primary_key_tests.sql">source</a>) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either</p>
 <ol>
 <li>a <code>not_null</code> test and a <code>unique</code> test applied to a single column OR</li>
-<li>a <code>dbt_utils.unique_combination_of_columns</code> test applied to a set of columns</li>
+<li>a <code>dbt_utils.unique_combination_of_columns</code> test applied to a set of columns OR</li>
+<li>a <code>not_null</code> constraint and a <code>unique</code> test applied to a single column</li>
 </ol>
 <p>will be flagged by this model.</p>
 <p><strong>Reason to Flag</strong></p>
 <p>Tests are assertions you make about your models and other resources in your dbt project (e.g. sources, seeds and snapshots). Defining tests is a great way to confirm that your code is working correctly, and helps prevent regressions when your code changes. Models without proper tests on their grain are a risk to the reliability and scalability of your project.</p>
 <p><strong>How to Remediate</strong></p>
-<p>Apply a <a href="https://docs.getdbt.com/reference/resource-properties/tests#unique">uniqueness test</a> and a <a href="https://docs.getdbt.com/reference/resource-properties/tests#not_null">not null test</a> to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the <a href="https://github.com/dbt-labs/dbt-utils#surrogate_key-source"><code>surrogate_key</code></a> macro from dbt_utils for more info! Alternatively, you can use the <a href="https://github.com/dbt-labs/dbt-utils#unique_combination_of_columns-source"><code>dbt_utils.unique_combination_of_columns</code></a> test from <code>dbt_utils</code>. Check out the <a href="../../customization/overriding-variables/">overriding variables section</a> to read more about configuring other primary key tests for your project!</p>
+<p>Apply a <a href="https://docs.getdbt.com/reference/resource-properties/tests#unique">uniqueness test</a> and a <a href="https://docs.getdbt.com/reference/resource-properties/tests#not_null">not null test</a> to the column that represents the grain of your model in its schema entry. For contracted models, optionally replace the not null test with the not null <a href="https://docs.getdbt.com/reference/resource-properties/constraints">constraint</a>. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the <a href="https://github.com/dbt-labs/dbt-utils#surrogate_key-source"><code>surrogate_key</code></a> macro from dbt_utils for more info! Alternatively, you can use the <a href="https://github.com/dbt-labs/dbt-utils#unique_combination_of_columns-source"><code>dbt_utils.unique_combination_of_columns</code></a> test from <code>dbt_utils</code>. Check out the <a href="../../customization/overriding-variables/">overriding variables section</a> to read more about configuring other primary key tests for your project!</p>
 <p>Additional tests can be configured by applying a <a href="https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests">generic test</a> in the model's <code>.yml</code> entry or by creating a <a href="https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests">singular test</a>
 in the <code>tests</code> directory of you project.</p>
 <p><strong>Enforcing on more node types(Advanced)</strong></p>
@@ -894,7 +895,7 @@ in the <code>tests</code> directory of you project.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.footer", "navigation.instant", "navigation.tracking", "content.action.edit", "toc.integrate"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a7c05c9e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
     
   </body>
