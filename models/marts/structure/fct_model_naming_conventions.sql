@@ -28,10 +28,10 @@ appropriate_prefixes as (
 
 models as (
     select
-        all_graph_resources.resource_name as resource_name,
-        all_graph_resources.prefix as prefix,
-        all_graph_resources.model_type as model_type,
-        naming_convention_prefixes.prefix_value as prefix_value
+        all_graph_resources.resource_name,
+        all_graph_resources.prefix,
+        all_graph_resources.model_type,
+        naming_convention_prefixes.prefix_value
     from all_graph_resources 
     left join naming_convention_prefixes
         on all_graph_resources.model_type = naming_convention_prefixes.model_type
@@ -41,10 +41,10 @@ models as (
 
 inappropriate_model_names as (
     select 
-        models.resource_name as resource_name,
-        models.prefix as prefix,
-        models.model_type as model_type,
-        appropriate_prefixes.appropriate_prefixes as appropriate_prefixes
+        models.resource_name,
+        models.prefix,
+        models.model_type,
+        appropriate_prefixes.appropriate_prefixes
     from models
     left join appropriate_prefixes
         on models.model_type = appropriate_prefixes.model_type
