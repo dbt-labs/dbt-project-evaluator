@@ -1,4 +1,3 @@
-{{ config(materialized='table') if target.name in ['clickhouse'] }}
 -- creates a cte called all_relationships that will either use "with recursive" or loops depending on the DW
 {{ dbt_project_evaluator.recursive_dag() }}
 

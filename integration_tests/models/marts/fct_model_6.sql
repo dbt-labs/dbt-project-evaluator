@@ -4,7 +4,7 @@
     )
 }}
 
-select {{ 'toInt32(1)' if target.name in ['clickhouse'] else '1' }} as id 
+select 'a' as id 
 
 -- depends on {{ ref('stg_model_3') }} 
 

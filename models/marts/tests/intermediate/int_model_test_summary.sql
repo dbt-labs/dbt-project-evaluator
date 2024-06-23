@@ -82,13 +82,8 @@ agg_test_relationships as (
                 else 0 
             end
         ) >= 1 as {{ dbt.type_boolean() }}) as is_primary_key_tested,
-        {% if target.name in ['clickhouse'] %}
-          toInt32(sum(tests_count)) as number_of_tests_on_model
-          toInt32(sum(constraints_count)) as number_of_constraints_on_model
-        {% else %}
-          sum(tests_count) as number_of_tests_on_model
-          sum(constraints_count) as number_of_constraints_on_model
-        {% endif %}
+        cast(sum(tests_count) as {{ dbt.type_int()}}) as number_of_tests_on_model,
+        cast(sum(constraints_count) as {{ dbt.type_int()}}) as number_of_constraints_on_model
     from combine_column_counts
     group by 1
 
@@ -100,13 +95,8 @@ final as (
         all_graph_resources.resource_type as resource_type,
         all_graph_resources.model_type as model_type,
         cast(coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as {{ dbt.type_boolean()}}) as is_primary_key_tested,
-        {% if target.name in ['clickhouse'] %}
-          toInt32(coalesce(agg_test_relationships.number_of_tests_on_model, 0)) as number_of_tests_on_model
-          toInt32(coalesce(agg_test_relationships.number_of_constraints_on_model, 0)) as number_of_constraints_on_model
-        {% else %}
-          coalesce(agg_test_relationships.number_of_tests_on_model, 0) as number_of_tests_on_model
-          coalesce(agg_test_relationships.number_of_constraints_on_model, 0) as number_of_constraints_on_model
-        {% endif %}
+        cast(coalesce(agg_test_relationships.number_of_tests_on_model, 0) as {{ dbt.type_int()}}) as number_of_tests_on_model,
+        cast(coalesce(agg_test_relationships.number_of_constraints_on_model, 0) as {{ dbt.type_int()}}) as number_of_constraints_on_model
     from all_graph_resources
     left join agg_test_relationships
         on all_graph_resources.resource_id = agg_test_relationships.direct_parent_id

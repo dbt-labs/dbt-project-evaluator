@@ -6,7 +6,7 @@
 
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
-    where not cast(is_excluded as {{ dbt.type_boolean() }})
+    where not is_excluded
 ),
 
 -- find all sources that are definied in a .yml file NOT in their subdirectory
