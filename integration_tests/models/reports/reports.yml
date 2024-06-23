@@ -20,4 +20,4 @@ models:
         enforced: true
     columns:
       - name: id 
-        data_type: string
+        data_type: integer

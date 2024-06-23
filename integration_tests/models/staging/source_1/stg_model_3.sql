@@ -1,4 +1,4 @@
 -- depends on: {{ source('source_2', 'table_3') }}
-select 'a' as id, 'blue' as color
+select -1234567890 as id, 'blue' as color
 union all 
-select 'a' as id, 'red' as color
+select -1234567890 as id, 'red' as color
