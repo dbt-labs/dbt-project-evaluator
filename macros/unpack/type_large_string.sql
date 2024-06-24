@@ -7,5 +7,5 @@
 {%- endmacro -%}
 
 {%- macro redshift__type_large_string() -%}
-    varchar(5000)
+    varchar(50000)
 {%- endmacro -%}
