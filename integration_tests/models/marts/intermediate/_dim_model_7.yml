@@ -5,7 +5,7 @@ models:
         enforced: true
     columns:
       - name: id
-        data_type: int
+        data_type: "{{ 'UInt8' if target.type in ['clickhouse'] else 'int' }}"
         constraints:
           - type: not_null
         tests:
