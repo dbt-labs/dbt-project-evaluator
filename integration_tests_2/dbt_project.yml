@@ -38,3 +38,4 @@ models:
 vars:
   max_depth_dag: 2
   chained_views_threshold: 2
+  primary_key_test_macros:  [["my_package.test_my_test", "dbt.test_not_null"]]
