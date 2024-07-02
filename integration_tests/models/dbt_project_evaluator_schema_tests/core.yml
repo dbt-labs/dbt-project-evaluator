@@ -6,7 +6,7 @@ models:
     columns:
       - name: path
         description: unique identifier representing a distinct path from each resource to another resource
-        tests:
+        data_tests:
           - unique
           - not_null 
 
@@ -14,17 +14,17 @@ models:
     description: "This table shows one record for each enabled resource in the graph and information about that resource."
     columns:
       - name: resource_id
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: on_schema_change
         description: this contains the on_schema_change setting for incremental models. This column was sometimes an empty string, so should be tested to detect regressions
-        tests:
+        data_tests:
           - not_null:
               config:
                 where: resource_type = 'model'
       - name: model_type
-        tests: 
+        data_tests: 
           - dbt_utils.expression_is_true:
               expression: "= 'base'"
               config:
@@ -34,6 +34,6 @@ models:
     description: "This table shows one record for each direct parent/child pair in the graph."
     columns:
       - name: unique_id
-        tests:
+        data_tests:
           - unique
           - not_null
