@@ -5,6 +5,6 @@ models:
     description: this model creates some initial metrics required for the downstream models related to testing
     columns:
       - name: resource_name
-        tests:
+        data_tests:
           - unique 
           - not_null 

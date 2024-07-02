@@ -14,7 +14,7 @@ disable the corresponding `fct` models as you would any other model in your `dbt
 models:
   dbt_project_evaluator:
     marts:
-      tests:
+      data_tests:
         # disable entire test coverage suite
         +enabled: false
       dag:

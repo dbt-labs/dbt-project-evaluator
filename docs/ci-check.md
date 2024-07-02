@@ -14,7 +14,7 @@ By default the tests in this package are configured with "warn" severity, we can
 1. Update you project.yml file to override the default severity for all tests in this package:
 
     ```yaml title="dbt_project.yml"
-    tests:
+    data_tests:
       dbt_project_evaluator:
         +severity: "{{ env_var('DBT_PROJECT_EVALUATOR_SEVERITY', 'warn') }}"
     ```

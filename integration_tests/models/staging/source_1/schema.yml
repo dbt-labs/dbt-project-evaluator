@@ -8,10 +8,10 @@ models:
         description: >
           hocus pocus
           pocus hocus
-        tests:
+        data_tests:
           - unique
   - name: stg_model_3
-    tests:
+    data_tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - id
@@ -19,6 +19,6 @@ models:
   - name: stg_model_2
     columns:
       - name: id 
-        tests:
+        data_tests:
           - unique
           - not_null
