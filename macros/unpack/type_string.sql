@@ -3,9 +3,9 @@
 {%- endmacro -%}
 
 {%- macro default__type_string() -%}
-    {{ return(dbt.type_string()) }}
+    {{ return(api.Column.string_type(600)) }}
 {%- endmacro -%}
 
-{%- macro redshift__type_string() -%}
-    varchar(600)
+{%- macro bigquery__type_string() -%}
+    {{ return("STRING") }}
 {%- endmacro -%}
