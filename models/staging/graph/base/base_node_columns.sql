@@ -14,14 +14,14 @@ with dummy_cte as (
 ) 
 
 select 
-    cast(null as {{ dbt_project_evaluator.type_string() }}) as node_unique_id,
-    cast(null as {{ dbt_project_evaluator.type_string()}}) as name,
+    cast(null as {{ api.Column.string_type(600) }}) as node_unique_id,
+    cast(null as {{ api.Column.string_type(600)}}) as name,
     cast(null as {{ dbt_project_evaluator.type_large_string()}}) as description,
-    cast(null as {{ dbt_project_evaluator.type_string()}}) as data_type,
-    cast(null as {{ dbt_project_evaluator.type_string()}}) as constraints,
+    cast(null as {{ api.Column.string_type(600)}}) as data_type,
+    cast(null as {{ api.Column.string_type(600)}}) as constraints,
     cast(True as boolean) as has_not_null_constraint,
     cast(0 as {{ dbt.type_int() }}) as constraints_count,
-    cast(null as {{ dbt_project_evaluator.type_string()}}) as quote
+    cast(null as {{ api.Column.string_type(600)}}) as quote
 
 from dummy_cte
 where false

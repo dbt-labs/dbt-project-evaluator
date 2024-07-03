@@ -14,8 +14,8 @@ with dummy_cte as (
 ) 
 
 select 
-    cast(null as {{ dbt_project_evaluator.type_string()}}) as resource_id,
-    cast(null as {{ dbt_project_evaluator.type_string()}}) as direct_parent_id,
+    cast(null as {{ api.Column.string_type(600)}}) as resource_id,
+    cast(null as {{ api.Column.string_type(600)}}) as direct_parent_id,
     cast(True as boolean) as is_primary_relationship
 
 from dummy_cte
