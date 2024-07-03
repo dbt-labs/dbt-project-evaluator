@@ -9,3 +9,7 @@
 {%- macro bigquery__type_string() -%}
     {{ return("STRING") }}
 {%- endmacro -%}
+
+{%- macro databricks__type_string() -%}
+    {{ return("STRING") }}
+{%- endmacro -%}
