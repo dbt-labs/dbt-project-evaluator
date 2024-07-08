@@ -8,6 +8,9 @@ sources:
     tables:
       - name: table_1
         description: this is table 1.
+        columns:
+          - name: my_column
+            description: description for my source column
       - name: table_2
       - name: table_4
       - name: table_5
