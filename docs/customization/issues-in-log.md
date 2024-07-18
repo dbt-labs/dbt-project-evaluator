@@ -22,6 +22,6 @@ the custom models.
 models:
   - name: my_custom_rule_model
     description: This is my custom project evaluator check 
-    tests:
+    data_tests:
       - dbt_project_evaluator.is_empty
 ```

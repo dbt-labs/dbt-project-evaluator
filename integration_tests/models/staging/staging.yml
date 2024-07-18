@@ -4,19 +4,19 @@ models:
   - name: stg_model_4
     columns:
       - name: id
-        tests:
+        data_tests:
           - unique
           - not_null
           - relationships:
               to: ref('stg_model_2')
               field: id
       - name: "concat(coalesce('fake_column', ' '),'for_testing')"
-        tests:
+        data_tests:
           - not_null
 
   - name: int_model_4
     columns:
       - name: id
-        tests:
+        data_tests:
           - unique
           - not_null
