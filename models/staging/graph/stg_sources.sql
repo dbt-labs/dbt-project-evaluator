@@ -26,6 +26,7 @@ select
     cast(True as boolean) as is_described,
     cast(True as boolean) as is_enabled,
     cast(null as {{ dbt.type_string() }}) as loaded_at_field,
+    cast(True as boolean) as is_freshness_enabled,
     cast(null as {{ dbt.type_string() }}) as database,
     cast(null as {{ dbt.type_string() }}) as schema,
     cast(null as {{ dbt.type_string() }}) as package_name,
