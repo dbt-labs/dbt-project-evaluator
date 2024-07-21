@@ -18,6 +18,9 @@ select
     cast(null as {{ dbt.type_string()}}) as name,
     cast(null as {{ dbt_project_evaluator.type_large_string()}}) as description,
     cast(null as {{ dbt.type_string()}}) as data_type,
+    cast(null as {{ dbt.type_string()}}) as constraints,
+    cast(True as boolean) as has_not_null_constraint,
+    cast(0 as {{ dbt.type_int() }}) as constraints_count,
     cast(null as {{ dbt.type_string()}}) as quote
 
 from dummy_cte
