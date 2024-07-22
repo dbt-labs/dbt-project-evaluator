@@ -7,6 +7,8 @@
         {%- do test_macro_list.append(test) -%}
       {%- endfor %}
 {%- endfor -%}
+{%- do test_macro_list.append("dbt.test_unique") -%}
+{%- set test_macro_set = set_strict(test_macro_list) -%}
 
 {%- set quoted_directory_pattern = wrap_string_with_quotes(get_directory_pattern()) %}
 
@@ -69,7 +71,7 @@ joined as (
         end as model_type_folder,
         {{ dbt.position(dbt.concat([quoted_directory_pattern, 'naming_convention_folders.folder_name_value', quoted_directory_pattern]),'unioned_with_calc.directory_path') }} as position_folder,  
         nullif(unioned_with_calc.column_name, '') as column_name,
-        {% for test in test_macro_list %}
+        {% for test in test_macro_set %}
         unioned_with_calc.macro_dependencies like '%macro.{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[1] }},  
         {% endfor %}
         unioned_with_calc.is_enabled, 
