@@ -36,3 +36,19 @@
       arrayStringConcat({{ arr }}, {{delimiter_text}})
     {%- endif %}
 {%- endmacro %}
+
+{% macro clickhouse__load_csv_rows(model, agate_table) %}
+  {% set cols_sql = get_seed_column_quoted_csv(model, agate_table.column_names) %}
+  {% set data_sql = adapter.get_csv_data(agate_table) %}
+
+  {% if data_sql %}
+    {% set sql -%}
+      insert into {{ this.render() }} ({{ cols_sql }})
+      {{ adapter.get_model_query_settings(model) }}
+      format CSV
+      {{ data_sql }}
+    {%- endset %}
+
+    {% do adapter.add_query(sql, bindings=agate_table, abridge_sql_log=True) %}
+  {% endif %}
+{% endmacro %}
