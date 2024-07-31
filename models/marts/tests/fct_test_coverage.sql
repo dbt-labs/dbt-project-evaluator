@@ -8,7 +8,7 @@ test_counts as (
 conversion as (
     select
         resource_name,
-        case when number_of_tests_on_model > 0 then 1 else 0 end as is_tested_model,
+        cast(case when number_of_tests_on_model > 0 then 1 else 0 end as {{ dbt.type_boolean() }}) as is_tested_model,
         {% for model_type in var('model_types') %}
             case when model_type = '{{ model_type }}' then 1.0 else NULL end as is_{{ model_type }}_model,
             case when number_of_tests_on_model > 0 and model_type = '{{ model_type }}' then 1.0 else 0 end as is_tested_{{ model_type }}_model{% if not loop.last %},{% endif %}
@@ -20,10 +20,10 @@ conversion as (
 final as (
     select
         {{ dbt.current_timestamp() if target.type != 'trino' else 'current_timestamp(6)' }} as measured_at,
-        count(*) as total_models,
-        sum(number_of_tests_on_model) as total_tests,
-        sum(is_tested_model) as tested_models,
-        round(sum(is_tested_model) * 100.0 / count(*), 2) as test_coverage_pct,
+        cast(count(*) as {{ dbt.type_int() }}) as total_models,
+        cast(sum(number_of_tests_on_model) as {{ dbt.type_int() }}) as total_tests,
+        sum(cast(is_tested_model as {{ dbt.type_int() }})) as tested_models,
+        round(sum(cast(is_tested_model as {{ dbt.type_int() }})) * 100.0 / count(*), 2) as test_coverage_pct,
         {% for model_type in var('model_types') %}
             round(
                 {{ dbt_utils.safe_divide(

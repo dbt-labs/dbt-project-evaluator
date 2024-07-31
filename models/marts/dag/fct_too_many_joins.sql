@@ -10,7 +10,7 @@ final as (
     select
         child as resource_name,
         child_file_path as file_path,
-        count(distinct parent) as join_count
+        cast(count(distinct parent) as {{ dbt.type_int() }}) as join_count
     from all_dag_relationships
     where distance = 1
     group by 1, 2

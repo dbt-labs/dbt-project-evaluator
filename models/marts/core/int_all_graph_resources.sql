@@ -62,7 +62,7 @@ joined as (
         unioned_with_calc.file_name,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null
-            else naming_convention_prefixes.model_type 
+            else nullif(naming_convention_prefixes.model_type, '')
         end as model_type_prefix,
         case 
             when unioned_with_calc.resource_type in ('test', 'source', 'metric', 'exposure', 'seed') then null

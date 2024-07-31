@@ -17,7 +17,7 @@
               wrap_string_with_quotes(node.name),
               wrap_string_with_quotes(node.resource_type),
               wrap_string_with_quotes(node.original_file_path | replace("\\","\\\\")),
-              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as boolean)",
+              "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
               wrap_string_with_quotes(node.type),
               wrap_string_with_quotes(node.maturity),
               wrap_string_with_quotes(node.package_name),
