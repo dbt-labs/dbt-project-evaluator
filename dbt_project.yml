@@ -86,7 +86,7 @@ vars:
 
   # -- Execution variables --
   insert_batch_size: "{{ 500 if target.type in ['athena', 'bigquery'] else 10000 }}"
-  max_depth_dag: "{{ 9 if target.type in ['bigquery', 'spark', 'databricks'] else 4 if target.type in ['athena', 'trino'] else -1 }}"
+  max_depth_dag: "{{ 9 if target.type in ['bigquery', 'spark', 'databricks'] else 4 if target.type in ['athena', 'trino', 'clickhouse'] else -1 }}"
 
   # -- Code complexity variables --
   comment_chars: ["--"]
