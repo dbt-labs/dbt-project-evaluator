@@ -32,3 +32,9 @@ seeds:
             - intermediate_test_coverage_pct
             - marts_test_coverage_pct
             - other_test_coverage_pct
+
+  - name: test_fct_sources_without_freshness
+    tests:
+      - dbt_utils.equality:
+          name: equality_fct_sources_without_freshness
+          compare_model: ref('fct_sources_without_freshness')

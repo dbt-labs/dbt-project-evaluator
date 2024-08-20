@@ -26,6 +26,7 @@ select
     cast(True as boolean) as is_described,
     cast(True as boolean) as is_enabled,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as loaded_at_field,
+    cast(True as boolean) as is_freshness_enabled,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as database,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as schema,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as package_name,
