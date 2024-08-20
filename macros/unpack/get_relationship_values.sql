@@ -23,8 +23,8 @@
 
                 {%- set values_line = 
                   [
-                    "cast('" ~ node.unique_id ~ "' as " ~ dbt.type_string() ~ ")",
-                    "cast(NULL as " ~ dbt.type_string() ~ ")",
+                    "cast('" ~ node.unique_id ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
+                    "cast(NULL as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
                     "FALSE",
                   ] 
                 %}
@@ -37,8 +37,8 @@
 
                     {%- set values_line = 
                         [
-                            "cast('" ~ node.unique_id ~ "' as " ~ dbt.type_string() ~ ")",
-                            "cast('" ~ parent ~ "' as " ~ dbt.type_string() ~ ")",
+                            "cast('" ~ node.unique_id ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
+                            "cast('" ~ parent ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
                             "" ~ loop.last ~ "" if node.unique_id.split('.')[0] == 'test' else "FALSE"
                         ]
                     %}

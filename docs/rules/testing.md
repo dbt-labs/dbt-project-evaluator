@@ -6,7 +6,8 @@
 `fct_missing_primary_key_tests` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either
 
 1. a `not_null` test and a `unique` test applied to a single column OR
-2. a `dbt_utils.unique_combination_of_columns` test applied to a set of columns
+2. a `dbt_utils.unique_combination_of_columns` test applied to a set of columns OR
+3. a `not_null` constraint and a `unique` test applied to a single column
 
 will be flagged by this model.
 
@@ -16,7 +17,7 @@ Tests are assertions you make about your models and other resources in your dbt 
 
 **How to Remediate**
 
-Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info! Alternatively, you can use the [`dbt_utils.unique_combination_of_columns`](https://github.com/dbt-labs/dbt-utils#unique_combination_of_columns-source) test from `dbt_utils`. Check out the [overriding variables section](../customization/overriding-variables.md) to read more about configuring other primary key tests for your project!
+Apply a [uniqueness test](https://docs.getdbt.com/reference/resource-properties/tests#unique) and a [not null test](https://docs.getdbt.com/reference/resource-properties/tests#not_null) to the column that represents the grain of your model in its schema entry. For contracted models, optionally replace the not null test with the not null [constraint](https://docs.getdbt.com/reference/resource-properties/constraints). For models that are unique across a combination of columns, we recommend adding a surrogate key column to your model, then applying these tests to that new model. See the [`surrogate_key`](https://github.com/dbt-labs/dbt-utils#surrogate_key-source) macro from dbt_utils for more info! Alternatively, you can use the [`dbt_utils.unique_combination_of_columns`](https://github.com/dbt-labs/dbt-utils#unique_combination_of_columns-source) test from `dbt_utils`. Check out the [overriding variables section](../customization/overriding-variables.md) to read more about configuring other primary key tests for your project!
 
 Additional tests can be configured by applying a [generic test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#generic-tests) in the model's `.yml` entry or by creating a [singular test](https://docs.getdbt.com/docs/building-a-dbt-project/tests#singular-tests)
 in the `tests` directory of you project.
