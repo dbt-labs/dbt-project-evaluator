@@ -16,8 +16,7 @@ sources:
       - name: table_2
       - name: table_4
       - name: table_5
-        freshness: # default freshness
-          warn_after: null
+        freshness: null
       - name: raw_table_5
         identifier: table_5
 
