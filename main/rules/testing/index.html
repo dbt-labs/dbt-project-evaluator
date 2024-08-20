@@ -411,6 +411,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#missing-source-freshness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Source Freshness
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apply-a-source-freshness-block-to-the-source-definition-this-can-be-implemented-at-either-the-source-name-or-table-name-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      Apply a source freshness block to the source definition. This can be implemented at either the source name or table name level.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#test-coverage" class="md-nav__link">
     <span class="md-ellipsis">
       Test Coverage
@@ -789,6 +807,12 @@ in the <code>tests</code> directory of you project.</p>
 <p>You can optionally extend this test to apply to more node types (<code>source</code>,<code>snapshot</code>, <code>seed</code>). By configuring the variable <code>enforced_primary_key_node_types</code> to be a set of node types for which you wish to enforce primary key test coverage in addition to (or instead of) just models. Check out the <a href="../../customization/overriding-variables/">overriding variables section</a> for instructions</p>
 <p>Snapshots should always have a multi-field primary key in order to function, while sources and seeds may not. Depending on your expectations for duplicates and null values, different kinds of primary key tests may be appropriate. Consider your use case carefully.</p>
 <hr />
+<h2 id="missing-source-freshness">Missing Source Freshness<a class="headerlink" href="#missing-source-freshness" title="Permanent link">#</a></h2>
+<p><code>fct_sources_without_freshness</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_sources_without_freshness.sql">source</a>) lists every source that does not have a source freshness threshold defined. Any source that does not have one or both of warn_after and error_after will be flagged by this model.</p>
+<p><strong>Reason to Flag</strong></p>
+<p>Source freshness is useful for understanding if your data pipelines are in a healthy state and is a critical component of defining SLAs for your warehouse. Enabling freshness for sources also facilitates <a href="https://docs.getdbt.com/reference/node-selection/methods#the-source_status-method">referencing the source freshness results in the selectors</a> for a more efficient execution. </p>
+<p><strong>How to Remediate</strong></p>
+<h2 id="apply-a-source-freshness-block-to-the-source-definition-this-can-be-implemented-at-either-the-source-name-or-table-name-level">Apply a <a href="https://docs.getdbt.com/docs/build/sources#declaring-source-freshness">source freshness block</a> to the source definition. This can be implemented at either the source name or table name level.<a class="headerlink" href="#apply-a-source-freshness-block-to-the-source-definition-this-can-be-implemented-at-either-the-source-name-or-table-name-level" title="Permanent link">#</a></h2>
 <h2 id="test-coverage">Test Coverage<a class="headerlink" href="#test-coverage" title="Permanent link">#</a></h2>
 <p><code>fct_test_coverage</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_test_coverage.sql">source</a>) contains metrics pertaining to project-wide test coverage.
 Specifically, this models measures:</p>
