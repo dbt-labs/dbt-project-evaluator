@@ -111,6 +111,7 @@ joined as (
         unioned_with_calc.source_name, -- NULL for non-source resources
         unioned_with_calc.is_source_described, 
         unioned_with_calc.loaded_at_field, 
+        unioned_with_calc.is_freshness_enabled, 
         unioned_with_calc.loader, 
         unioned_with_calc.identifier,
         unioned_with_calc.hard_coded_references, -- NULL for non-model resources
