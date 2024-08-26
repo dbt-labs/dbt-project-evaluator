@@ -15,8 +15,35 @@ with recursive direct_relationships as (
 
 -- recursive CTE
 -- one record for every resource and each of its downstream children (including itself)
-all_relationships {{ recursive_dag__all_relationships_cte_aliases() }}
-    as (
+all_relationships (
+    parent_id,
+    parent,
+    parent_resource_type,
+    parent_model_type,
+    parent_materialized,
+    parent_access,
+    parent_is_public,
+    parent_source_name,
+    parent_file_path,
+    parent_directory_path,
+    parent_file_name,
+    parent_is_excluded,
+    child_id,
+    child,
+    child_resource_type,
+    child_model_type,
+    child_materialized,
+    child_access,
+    child_is_public,
+    child_source_name,
+    child_file_path,
+    child_directory_path,
+    child_file_name,
+    child_is_excluded,
+    distance,
+    path,
+    is_dependent_on_chain_of_views
+) as (
     -- anchor
     select distinct
         resource_id as parent_id,
@@ -104,41 +131,6 @@ all_relationships {{ recursive_dag__all_relationships_cte_aliases() }}
 
 )
 
-{% endmacro %}
-
-
-{% macro recursive_dag__all_relationships_cte_aliases() %}
-  {% if target.name not in ['clickhouse'] %} 
-    (
-      parent_id,
-      parent,
-      parent_resource_type,
-      parent_model_type,
-      parent_materialized,
-      parent_access,
-      parent_is_public,
-      parent_source_name,
-      parent_file_path,
-      parent_directory_path,
-      parent_file_name,
-      parent_is_excluded,
-      child_id,
-      child,
-      child_resource_type,
-      child_model_type,
-      child_materialized,
-      child_access,
-      child_is_public,
-      child_source_name,
-      child_file_path,
-      child_directory_path,
-      child_file_name,
-      child_is_excluded,
-      distance,
-      path,
-      is_dependent_on_chain_of_views
-    )
-  {% endif %}
 {% endmacro %}
 
 
@@ -252,8 +244,8 @@ with direct_relationships as (
         child.file_name as child_file_name,
         child.is_excluded as child_is_excluded,
         cast(all_relationships_unioned.distance as {{ dbt.type_int() }}) as distance,
-        all_relationships_unioned.path as path,
-        all_relationships_unioned.is_dependent_on_chain_of_views as is_dependent_on_chain_of_views
+        all_relationships_unioned.path,
+        all_relationships_unioned.is_dependent_on_chain_of_views
 
     from all_relationships_unioned
     left join resource_info as parent

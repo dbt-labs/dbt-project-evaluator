@@ -4,7 +4,7 @@
     )
 }}
 
-select -1234567890 as id
+select 1 as id
 
 -- depends on {{ ref('stg_model_3') }} 
 
