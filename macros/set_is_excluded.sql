@@ -19,12 +19,11 @@
     
 
     {#- we duplicate the exclusion list to account for windows directory patterns -#}
-    {%- set exclude_paths_from_project = var('exclude_paths_from_project',[]) -%}
-    {%- set exclude_all_os_paths_from_project = exclude_paths_from_project -%}
+    {%- set exclude_all_os_paths_from_project = [] -%}
 
-    {%- for exclude_paths_pattern in exclude_paths_from_project -%}
+    {%- for exclude_paths_pattern in var('exclude_paths_from_project',[]) -%}
         {%- set windows_path_pattern = exclude_paths_pattern | replace("/", "\\\\") -%}
-        {%- do exclude_all_os_paths_from_project.append(windows_path_pattern) -%}
+        {%- do exclude_all_os_paths_from_project.extend([exclude_paths_pattern, windows_path_pattern]) -%}
     {%- endfor -%}
 
     {#- we exclude the resource if it is from the current project and matches the pattern -#}
