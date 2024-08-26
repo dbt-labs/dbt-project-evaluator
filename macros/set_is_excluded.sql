@@ -22,7 +22,7 @@
     {%- set exclude_all_os_paths_from_project = [] -%}
 
     {%- for exclude_paths_pattern in var('exclude_paths_from_project',[]) -%}
-        {%- set windows_path_pattern = exclude_paths_pattern | replace("/", "\\\\") -%}
+        {%- set windows_path_pattern = exclude_paths_pattern | replace("/", "\\\\\\\\") -%}
         {%- do exclude_all_os_paths_from_project.extend([exclude_paths_pattern, windows_path_pattern]) -%}
     {%- endfor -%}
 
