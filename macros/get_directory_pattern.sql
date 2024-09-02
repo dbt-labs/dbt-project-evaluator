@@ -1,7 +1,7 @@
 -- these macros will read a user’s home environment and detect whether a computer’s operating system is Windows based or Mac/Linux, and display the right directory pattern.
 {% macro is_os_mac_or_linux() %}
   {% for val in graph.nodes.values() %}
-    {{ return("/" in val.get("original_file_path","")) }}
+    {{ return("\\" not in val.get("original_file_path","")) }}
   {% endfor %}
   {{ return(true) }}
 {% endmacro %}
