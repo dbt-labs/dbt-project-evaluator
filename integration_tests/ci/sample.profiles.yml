@@ -72,3 +72,13 @@ integration_tests:
       threads: 5
       session_properties:
         query_max_stage_count: 275
+
+    clickhouse:
+      type: clickhouse
+      host: "{{ env_var('CLICKHOUSE_TEST_HOST') }}"
+      port: "{{ env_var('CLICKHOUSE_TEST_PORT') | as_number }}"
+      user: "{{ env_var('CLICKHOUSE_TEST_USER') }}"
+      password: "{{ env_var('CLICKHOUSE_TEST_PASS') }}"
+      dbname: "{{ env_var('CLICKHOUSE_TEST_DBNAME') }}"
+      schema: dbt_project_evaluator_integration_tests_clickhouse
+      threads: 5

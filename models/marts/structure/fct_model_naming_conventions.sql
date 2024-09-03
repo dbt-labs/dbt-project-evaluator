@@ -48,7 +48,7 @@ inappropriate_model_names as (
     from models
     left join appropriate_prefixes
         on models.model_type = appropriate_prefixes.model_type
-    where models.prefix_value is null
+    where nullif(models.prefix_value, '') is null
 
 )
 

@@ -72,7 +72,7 @@ all_relationships (
         is_excluded as child_is_excluded,
         0 as distance,
         {{ dbt.array_construct(['resource_name']) }} as path,
-        cast(null as boolean) as is_dependent_on_chain_of_views
+        cast(null as {{ dbt.type_boolean() }}) as is_dependent_on_chain_of_views
 
     from direct_relationships
     -- where direct_parent_id is null {# optional lever to change filtering of anchor clause to only include root resources #}
@@ -175,7 +175,7 @@ with direct_relationships as (
         child_is_excluded,
         0 as distance,
         {{ dbt.array_construct(['resource_name']) }} as path,
-        cast(null as boolean) as is_dependent_on_chain_of_views
+        cast(null as {{ dbt.type_boolean() }}) as is_dependent_on_chain_of_views
     from get_distinct
 )
 
@@ -243,7 +243,7 @@ with direct_relationships as (
         child.directory_path as child_directory_path,
         child.file_name as child_file_name,
         child.is_excluded as child_is_excluded,
-        all_relationships_unioned.distance,
+        cast(all_relationships_unioned.distance as {{ dbt.type_int() }}) as distance,
         all_relationships_unioned.path,
         all_relationships_unioned.is_dependent_on_chain_of_views
 
@@ -256,6 +256,10 @@ with direct_relationships as (
 
 {% endmacro %}
 
+
+{% macro clickhouse__recursive_dag() %}
+    {{ return(bigquery__recursive_dag()) }}
+{% endmacro %}
 
 {% macro spark__recursive_dag() %}
 -- as of June 2022 databricks SQL doesn't support "with recursive" in the same way as other DWs
