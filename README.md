@@ -23,7 +23,7 @@ Currently, the following adapters are supported:
 - Trino (tested with Iceberg connector)
 - AWS Athena (tested manually)
 - Greenplum (tested manually)
-- Clickhouse (tested manually)
+- ClickHouse (tested manually)
 
 ## Using This Package
 
@@ -31,7 +31,7 @@ Currently, the following adapters are supported:
   
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
-### Additional setup for Databricks/Spark/DuckDB/Redshift/Clickhouse
+### Additional setup for Databricks/Spark/DuckDB/Redshift/ClickHouse
 
 In your `dbt_project.yml`, add the following config:
 
