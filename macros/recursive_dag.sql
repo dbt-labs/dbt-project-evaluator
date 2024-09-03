@@ -258,7 +258,6 @@ with direct_relationships as (
 
 
 {% macro clickhouse__recursive_dag() %}
--- as of June 2022 databricks SQL doesn't support "with recursive" in the same way as other DWs
     {{ return(bigquery__recursive_dag()) }}
 {% endmacro %}
 
