@@ -32,8 +32,8 @@ single_use_resources as (
 -- all cases where one of the parent's direct children (child) is ALSO the direct child of ANOTHER one of the parent's direct childen (parent_and_child)
 triad_relationships as (
     select 
-        rejoined.parent as parent,
-        rejoined.child as child,
+        rejoined.parent,
+        rejoined.child,
         direct_child.parent as parent_and_child
     from rejoined
     left join all_relationships as direct_child

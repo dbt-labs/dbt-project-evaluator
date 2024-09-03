@@ -45,7 +45,7 @@ direct_metrics_relationships as (
 -- for all resources in the graph, find their direct parent
 direct_relationships as (
     select
-        all_graph_resources.resource_id as resource_id,
+        all_graph_resources.resource_id,
         all_graph_resources.resource_name,
         all_graph_resources.resource_type,
         all_graph_resources.file_path,
@@ -54,7 +54,7 @@ direct_relationships as (
         all_graph_resources.model_type,
         all_graph_resources.materialized,
         all_graph_resources.is_public, 
-        all_graph_resources.access as access, 
+        all_graph_resources.access, 
         all_graph_resources.source_name,
         all_graph_resources.is_excluded,
         case 

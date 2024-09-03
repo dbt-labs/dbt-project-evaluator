@@ -91,9 +91,9 @@ agg_test_relationships as (
 
 final as (
     select 
-        all_graph_resources.resource_name as resource_name,
-        all_graph_resources.resource_type as resource_type,
-        all_graph_resources.model_type as model_type,
+        all_graph_resources.resource_name,
+        all_graph_resources.resource_type,
+        all_graph_resources.model_type,
         cast(coalesce(agg_test_relationships.is_primary_key_tested, FALSE) as {{ dbt.type_boolean()}}) as is_primary_key_tested,
         cast(coalesce(agg_test_relationships.number_of_tests_on_model, 0) as {{ dbt.type_int()}}) as number_of_tests_on_model,
         cast(coalesce(agg_test_relationships.number_of_constraints_on_model, 0) as {{ dbt.type_int()}}) as number_of_constraints_on_model
