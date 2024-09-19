@@ -7,7 +7,9 @@
         {%- do test_macro_list.append(test) -%}
       {%- endfor %}
 {%- endfor -%}
-{%- do test_macro_list.append("dbt.test_unique") -%}
+{%- if test_macro_list | length == 0 -%}
+    {%- do test_macro_list.append("dbt.test_unique") -%}
+{%- endif -%}
 {%- set test_macro_set = set_strict(test_macro_list) -%}
 
 {%- set quoted_directory_pattern = wrap_string_with_quotes(get_directory_pattern()) %}
