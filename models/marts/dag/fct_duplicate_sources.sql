@@ -27,3 +27,5 @@ source_duplicates as (
 )
 
 select * from source_duplicates
+
+{{ filter_exceptions() }}
