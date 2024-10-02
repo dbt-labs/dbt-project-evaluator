@@ -33,7 +33,7 @@
         {% set db_schema = model_database ~ "." ~ model_schema if model_database else model_schema %}
 
         {% set sql_statement %}
-        select * from {{db_schema}}.{{name_model_checked}}
+        select * from {{ model_details['relation_name'] }}
         {% endset %}
 
         {% set query_results = run_query(sql_statement) %}
