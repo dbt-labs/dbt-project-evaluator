@@ -10,8 +10,8 @@ window.addEventListener("DOMContentLoaded", function() {
                 latest_version = "/" + versions[id].version + "/";
             }
         }
-        if (!window.location.pathname.includes("/latest/") && (latest_version.length > 0 && !window.location.pathname.includes(latest_version))) {
-            document.querySelector("div[data-md-component=announce]").innerHTML = "<div id='announce-msg'>This documentation is for a previous version. We recommend you <a href='/latest/'>use the latest</a>.</div>";
+        if (!window.location.pathname.includes("/dbt-project-evaluator/latest/") && (latest_version.length > 0 && !window.location.pathname.includes(latest_version))) {
+            document.querySelector("div[data-md-component=announce]").innerHTML = "<div id='announce-msg'>This documentation is for a previous version. We recommend you <a href='/dbt-project-evaluator/latest/'>use the latest</a>.</div>";
         }
     };
     xhr.send();
