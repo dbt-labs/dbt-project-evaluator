@@ -1,7 +1,7 @@
 // Show warning banner when displaying old content versions
 window.addEventListener("DOMContentLoaded", function() {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "/versions.json");
+    xhr.open("GET", "/dbt-project-evaluator/versions.json");
     xhr.onload = function() {
         var versions = JSON.parse(this.responseText);
         latest_version = ""
