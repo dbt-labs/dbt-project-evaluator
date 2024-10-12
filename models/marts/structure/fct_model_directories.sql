@@ -42,10 +42,12 @@ staging_by_parent_source_count as (
         ,child_resource_type as resource_type
         ,child_model_type as model_type
         ,child_file_path as current_file_path
-        ,'models/' || 'staging' || '/' || staging_models.parent_source_name || '/' as list_agg_string
+        --,'models/' || 'staging' || '/' || staging_models.parent_source_name || '/' as list_agg_string
+        ,'models{{ directory_pattern }}staging{{ directory_pattern }}' || staging_models.parent_source_name || '{{ directory_pattern }}' as list_agg_string
     from staging_models
     group by child, child_resource_type, child_model_type, child_file_path
-        ,'models/' || 'staging' || '/' || staging_models.parent_source_name || '/'
+        --,'models/' || 'staging' || '/' || staging_models.parent_source_name || '/'
+        ,'models{{ directory_pattern }}staging{{ directory_pattern }}' || staging_models.parent_source_name || '{{ directory_pattern }}'
 ),
 
 --Added this CTE to listagg() the multiple suggested paths and advise the user to split the source file into those two places.
