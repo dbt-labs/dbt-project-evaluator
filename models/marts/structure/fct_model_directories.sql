@@ -56,7 +56,7 @@ multiple_sources_staging_to_split as (
         staging_models.child_model_type as model_type,
         staging_models.child_file_path as current_file_path,
         'More than one source. Split into separate staging models in: ' ||
-        {{ dbt.listagg(measure="list_agg_string", delimiter_text="' AND '", order_by_clause="order by current_file_path") }} as change_file_path_to
+        {{ dbt.listagg(measure='list_agg_string', delimiter_text="' AND '", order_by_clause='order by current_file_path'  if target.type in ['snowflake','redshift','duckdb','trino']) }} as change_file_path_to
     from staging_models
     join staging_by_parent_source_count on staging_models.child = staging_by_parent_source_count.resource_name and
                                            staging_models.child_resource_type = staging_by_parent_source_count.resource_type and
