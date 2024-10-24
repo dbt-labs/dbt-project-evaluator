@@ -25,15 +25,10 @@
         {{ print("\n-- " ~ result.node.fqn | join(".") ~ " --") }}
 
         {% set unique_id_model_checked = result.node.depends_on.nodes[0] %}
-
         {% set model_details = graph["nodes"][unique_id_model_checked] %}
-        {% set name_model_checked = model_details.alias %}
-        {% set model_schema = quote ~ model_details.schema ~ quote %}
-        {% set model_database = quote ~ model_details.database ~ quote if model_details.database  else None %}
-        {% set db_schema = model_database ~ "." ~ model_schema if model_database else model_schema %}
 
         {% set sql_statement %}
-        select * from {{db_schema}}.{{name_model_checked}}
+        select * from {{ model_details.relation_name }}
         {% endset %}
 
         {% set query_results = run_query(sql_statement) %}
