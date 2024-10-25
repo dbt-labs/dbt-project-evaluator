@@ -19,8 +19,9 @@ hide:
 |Modeling                                      |[Root Models](../rules/modeling/#root-models)                                                                          |`fct_root_models`|
 |Modeling                                      |[Staging Models Dependent on Downstream Models](../rules/modeling/#staging-models-dependent-on-downstream-models)      |`fct_staging_dependent_on_marts_or_intermediate`|
 |Modeling                                      |[Unused Sources](../rules/modeling/#unused-sources)                                                                    |`fct_unused_sources`|
-|Modeling                                      |[Models with Too Many Joins](../rules/modeling/#models-with-too-many-joins)                                           |`fct_too_many_joins`|
+|Modeling                                      |[Models with Too Many Joins](../rules/modeling/#models-with-too-many-joins)                                            |`fct_too_many_joins`|
 |Testing                                       |[Missing Primary Key Tests](../rules/testing/#missing-primary-key-tests)                                               |`fct_missing_primary_key_tests`|
+|Testing                                       |[Missing Source Freshness](../rules/testing/#missing-source-freshness)                                                 |`fct_sources_without_freshness`|
 |Testing                                       |[Test Coverage](../rules/testing/#test-coverage)                                                                       |`fct_test_coverage`|
 |Documentation                                 |[Undocumented Models](../rules/documentation/#undocumented-models)                                                     |`fct_undocumented_models`|
 |Documentation                                 |[Documentation Coverage](../rules/documentation/#documentation-coverage)                                               |`fct_documentation_coverage`|
