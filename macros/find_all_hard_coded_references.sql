@@ -134,7 +134,7 @@
 
                 # third matching group
                 # at least 1 word character
-                (\w+-?\w+)
+                (\w+-?\w*)
 
                 # fouth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark)
@@ -150,7 +150,7 @@
 
                 # seventh matching group
                 # at least 1 word character
-                (\w+-?\w+)
+                (\w+-?\w*)
 
                 # eighth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark) folowed by a whitespace character or end of string
@@ -173,7 +173,7 @@
 
                 # third matching group
                 # at least 1 word character
-                (\w+-?\w+)
+                (\w+-?\w*)
 
                 # fouth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark)
@@ -189,7 +189,7 @@
 
                 # seventh matching group
                 # at least 1 word character
-                (\w+-?\w+)
+                (\w+-?\w*)
 
                 # eighth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark)
@@ -205,7 +205,7 @@
 
                 # eleventh matching group
                 # at least 1 word character
-                (\w+-?\w+)
+                (\w+-?\w*)
 
                 # twelfth matching group
                 # 1 or 0 of (closing bracket, backtick, or quotation mark) followed by a whitespace character or end of string

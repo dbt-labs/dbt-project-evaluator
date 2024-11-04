@@ -5,10 +5,3 @@
     {{ dbt.string_literal(str) }}
   {% endif %}
 {% endmacro %}
-
-{#
-  To be removed when https://github.com/dbt-labs/dbt-bigquery/pull/1089 is merged
-#}
-{% macro bigquery__string_literal(value) -%}
-  '''{{ value }}'''
-{%- endmacro %}
