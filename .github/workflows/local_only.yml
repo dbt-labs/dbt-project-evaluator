@@ -47,6 +47,7 @@ jobs:
             fail-fast: false
             matrix:
                 # these adapters are tested in this repo but are not tested as part of the dbt Cloud images.
+                # This list should include anything not listed in supported_adapters.env
                 adapter: [duckdb, postgres]
 
         steps:
