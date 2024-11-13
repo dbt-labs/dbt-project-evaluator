@@ -37,8 +37,13 @@ jobs:
         SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
         SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
         SNOWFLAKE_SCHEMA: "dbt_utils_integration_tests_snowflake_${{ github.run_number }}"
+        # databricks
+        DATABRICKS_SCHEMA: "integration_tests_databricks_${{ github.run_number }}"
+        DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+        DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
       secrets:
         DBT_ENV_SECRET_REDSHIFT_PASS: ${{ secrets.REDSHIFT_PASS }}
         BIGQUERY_KEYFILE_JSON: ${{ secrets.BIGQUERY_KEYFILE_JSON }}
         SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
         DBT_ENV_SECRET_SNOWFLAKE_PASS: ${{ secrets.SNOWFLAKE_PASS }}
+        DBT_SECRET_ENV_DATABRICKS_TOKEN: ${{ secrets.DBT_SECRET_ENV_DATABRICKS_TOKEN }}
