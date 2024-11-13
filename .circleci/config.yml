@@ -15,7 +15,7 @@ jobs:
           environment:
             POSTGRES_HOST: localhost
             POSTGRES_USER: root
-            POSTGRES_PASS: ''
+            DBT_ENV_SECRET_POSTGRES_PASS: ''
             POSTGRES_PORT: 5432
             POSTGRES_DATABASE: circle_test
           command: ./run_test.sh postgres
