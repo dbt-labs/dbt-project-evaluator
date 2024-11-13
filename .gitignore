@@ -3,7 +3,8 @@
 venv/
 
 # Environment variables
-.env
+# .env
+test.env
 
 # DBT artifacts
 target/

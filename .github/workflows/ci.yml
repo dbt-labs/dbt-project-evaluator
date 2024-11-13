@@ -32,10 +32,10 @@ jobs:
         BIGQUERY_PROJECT: ${{ vars.BIGQUERY_PROJECT }}
         BIGQUERY_SCHEMA: "dbt_utils_integration_tests_bigquery_${{ github.run_number }}"
         # snowflake
-        SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_TEST_USER }}
-        SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_TEST_ROLE }}
-        SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_TEST_DATABASE }}
-        SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_TEST_WAREHOUSE }}
+        SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+        SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+        SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+        SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
         SNOWFLAKE_SCHEMA: "dbt_utils_integration_tests_snowflake_${{ github.run_number }}"
       secrets:
         DBT_ENV_SECRET_REDSHIFT_PASS: ${{ secrets.REDSHIFT_PASS }}
