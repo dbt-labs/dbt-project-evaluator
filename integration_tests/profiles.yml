@@ -1,5 +1,5 @@
 
-# HEY! This file is used in the integration tests with CircleCI.
+# HEY! This file is used in the integration tests with CI.
 # You should __NEVER__ check credentials into version control. Thanks for reading :)
 
 config:
@@ -16,7 +16,7 @@ integration_tests:
       pass: "{{ env_var('DBT_ENV_SECRET_POSTGRES_PASS') }}"
       port: "{{ env_var('POSTGRES_PORT') | as_number }}"
       dbname: "{{ env_var('POSTGRES_DATABASE') }}"
-      schema: "{{ env_var('POSTGRES_SCHEMA', 'dbt_project_evaluator_test') }}"
+      schema: "{{ env_var('POSTGRES_SCHEMA', 'dbt_project_evaluator_integration_tests_postgres') }}"
       threads: 5
 
     redshift:
@@ -26,7 +26,7 @@ integration_tests:
       pass: "{{ env_var('DBT_ENV_SECRET_REDSHIFT_PASS') }}"
       dbname: "{{ env_var('REDSHIFT_DATABASE') }}"
       port: "{{ env_var('REDSHIFT_PORT') | as_number }}"
-      schema: "{{ env_var('REDSHIFT_SCHEMA') }}"
+      schema: "{{ env_var('REDSHIFT_SCHEMA', 'dbt_project_evaluator_integration_tests_redshift') }}"
       threads: 5
 
     bigquery:
@@ -35,7 +35,7 @@ integration_tests:
       keyfile_json:
         "{{ env_var('BIGQUERY_KEYFILE_JSON') | as_native }}"
       project: "{{ env_var('BIGQUERY_PROJECT') }}"
-      dataset: "{{ env_var('BIGQUERY_SCHEMA') }}"
+      dataset: "{{ env_var('BIGQUERY_SCHEMA', 'dbt_project_evaluator_integration_tests_bigquery') }}"
       threads: 10
 
     snowflake:
@@ -46,7 +46,7 @@ integration_tests:
       role: "{{ env_var('SNOWFLAKE_ROLE') }}"
       database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
       warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
-      schema: "{{ env_var('SNOWFLAKE_SCHEMA') }}"
+      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'dbt_project_evaluator_integration_tests_snowflake') }}"
       threads: 10
 
     databricks:
