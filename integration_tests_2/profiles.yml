@@ -53,7 +53,7 @@ integration_tests:
       schema: "{{ env_var('DATABRICKS_SCHEMA', 'dbt_project_evaluator_integration_tests_databricks') }}"
       host: "{{ env_var('DATABRICKS_HOST') }}"
       http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
-      token: "{{ env_var('DBT_SECRET_ENV_DATABRICKS_TOKEN') }}"
+      token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
       threads: 10
 
     duckdb:
