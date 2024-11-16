@@ -18,8 +18,16 @@
     {% endif %}
     
 
-    {#- we exclude the resource if it is from the current project and matches the pattern -#}
+    {#- we duplicate the exclusion list to account for windows directory patterns -#}
+    {%- set exclude_all_os_paths_from_project = [] -%}
+
     {%- for exclude_paths_pattern in var('exclude_paths_from_project',[]) -%}
+        {%- set windows_path_pattern = exclude_paths_pattern | replace("/", "\\\\\\\\") -%}
+        {%- do exclude_all_os_paths_from_project.extend([exclude_paths_pattern, windows_path_pattern]) -%}
+    {%- endfor -%}
+
+    {#- we exclude the resource if it is from the current project and matches the pattern -#}
+    {%- for exclude_paths_pattern in exclude_all_os_paths_from_project -%}
         {%- set matched_path = re.search(exclude_paths_pattern, resource_path, re.IGNORECASE) -%}
         {%- if matched_path and resource.package_name == project_name %}
             {% set ns.exclude = true %}

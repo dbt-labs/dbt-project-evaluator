@@ -15,18 +15,18 @@ with dummy_cte as (
 
 select 
 
-    cast(null as {{ dbt.type_string() }} ) as unique_id,
-    cast(null as {{ dbt.type_string() }} ) as name,
-    cast(null as {{ dbt.type_string() }} ) as resource_type,
-    cast(null as {{ dbt.type_string() }} ) as file_path,
-    cast(True as boolean) as is_described,
-    cast(null as {{ dbt.type_string() }} ) as exposure_type,
-    cast(null as {{ dbt.type_string() }} ) as maturity,
-    cast(null as {{ dbt.type_string() }} ) as package_name,
-    cast(null as {{ dbt.type_string() }} ) as url,
-    cast(null as {{ dbt.type_string() }} ) as owner_name,
-    cast(null as {{ dbt.type_string() }} ) as owner_email,
-    cast(null as {{ dbt.type_string() }} ) as meta
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as unique_id,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as name,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as resource_type,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as file_path,
+    cast(True as {{ dbt.type_boolean() }}) as is_described,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as exposure_type,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as maturity,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as package_name,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as url,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as owner_name,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as owner_email,
+    cast(null as {{ dbt_project_evaluator.type_string_dpe() }} ) as meta
 
 from dummy_cte
 where false 

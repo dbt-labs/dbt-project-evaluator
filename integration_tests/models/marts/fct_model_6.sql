@@ -92,6 +92,13 @@ select 1 as id
   select
       5 as id
   from {{ var('my_table_reference', 'table_d') }}
-
+  union all
+  select 
+      5 as id
+  from a.b.c
+  union all
+  select 
+      5 as id
+  from a.b
 
 #}
