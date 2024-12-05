@@ -8,5 +8,5 @@ models:
         data_type: "{{ 'UInt8' if target.type in ['clickhouse'] else 'int' }}"
         constraints:
           - type: not_null
-        tests:
+        data_tests:
            - unique
