@@ -1,0 +1,1245 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../testing/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.47">
+    
+    
+      
+        <title>Modeling - dbt_project_evaluator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modeling" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="dbt_project_evaluator" class="md-header__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+      
+  <img src="../../assets/dbt-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            dbt_project_evaluator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Modeling
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dbt-labs/dbt-project-evaluator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbt-labs/dbt-project-evaluator
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="dbt_project_evaluator" class="md-nav__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+      
+  <img src="../../assets/dbt-logo.svg" alt="logo">
+
+    </a>
+    dbt_project_evaluator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dbt-labs/dbt-project-evaluator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbt-labs/dbt-project-evaluator
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Rules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Rules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    List of rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Modeling
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Modeling
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#direct-join-to-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      Direct Join to Source
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#downstream-models-dependent-on-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      Downstream Models Dependent on Source
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duplicate-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Duplicate Sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hard-coded-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hard Coded References
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-fanout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Fanout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-sources-joined" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Sources Joined
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rejoining-of-upstream-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rejoining of Upstream Concepts
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#root-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Root Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-fanout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source Fanout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#staging-models-dependent-on-downstream-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Staging Models Dependent on Downstream Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#staging-models-dependent-on-other-staging-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Staging Models Dependent on Other Staging Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unused-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unused Sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#models-with-too-many-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Models with Too Many Joins
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../structure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Performance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../governance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Governance
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Customization
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Customization
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/overriding-variables/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overriding variables
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/customization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Disabling checks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/exceptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuring exceptions to the rules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/excluding-packages-and-paths/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Excluding packages and models/sources based on path
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/issues-in-log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Display issues in the logs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../customization/querying-columns-names-and-descriptions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Querying columns names and descriptions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ci-check/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Run in CI Check
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../querying-the-dag/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Querying the DAG
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/rules/modeling.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="modeling">Modeling<a class="headerlink" href="#modeling" title="Permanent link">#</a></h1>
+<h2 id="direct-join-to-source">Direct Join to Source<a class="headerlink" href="#direct-join-to-source" title="Permanent link">#</a></h2>
+<p><code>fct_direct_join_to_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/dag/fct_direct_join_to_source.sql" target="_blank">source</a>) shows each parent/child relationship where a model has a reference to
+both a model and a source.</p>
+<p><strong>Example</strong></p>
+<p><code>int_model_4</code> is pulling in both a model and a source.</p>
+<p><img alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>We highly recommend having a one-to-one relationship between sources and their corresponding <code>staging</code> model, and not having any other model reading from the source. Those <code>staging</code> models are then the ones read from by the other downstream models.</p>
+<p>This allows renaming your columns and doing minor transformation on your source data only once and being consistent
+across all the models that will consume the source data.</p>
+<p><strong>How to Remediate</strong></p>
+<p>In our example, we would want to:</p>
+<ol>
+<li>create a <code>staging</code> model for our source data if it doesn't exist already</li>
+<li>and join this <code>staging</code> model to other ones to create our downstream transformation instead of using the source</li>
+</ol>
+<p>After refactoring your downstream model to select from the staging layer, your DAG should look like this:</p>
+<p><img alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png" width="500" /></p>
+<hr />
+<h2 id="downstream-models-dependent-on-source">Downstream Models Dependent on Source<a class="headerlink" href="#downstream-models-dependent-on-source" title="Permanent link">#</a></h2>
+<p><code>fct_marts_or_intermediate_dependent_on_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql">source</a>) shows each downstream model (<code>marts</code> or <code>intermediate</code>)
+that depends directly on a source node.</p>
+<p><strong>Example</strong></p>
+<p><code>fct_model_9</code>, a marts model, builds from <code>source_1.table_5</code> a source.</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>We very strongly believe that a staging model is the atomic unit of data modeling. Each staging
+model bears a one-to-one relationship with the source data table it represents. It has the same
+granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent
+format. With that in mind, if a <code>marts</code> or <code>intermediate</code> type model joins directly to a <code>{{ source() }}</code>
+node, there likely is a missing model that needs to be added.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Add the reference to the appropriate <code>staging</code> model to maintain an abstraction layer between your raw data
+and your downstream data artifacts.</p>
+<p>After refactoring your downstream model to select from the staging layer, your DAG should look like this:</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png" width="700" /></p>
+<hr />
+<h2 id="duplicate-sources">Duplicate Sources<a class="headerlink" href="#duplicate-sources" title="Permanent link">#</a></h2>
+<p><code>fct_duplicate_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_duplicate_sources.sql">source</a>) shows each database object that corresponds to more than one source node.</p>
+<p><strong>Example</strong></p>
+<p>Imagine you have two separate source nodes - <code>source_1.table_5</code> and <code>source_1.raw_table_5</code>.</p>
+<p><img alt="two source nodes in DAG" src="https://user-images.githubusercontent.com/53586774/226765218-2302deab-8c98-49ce-968a-007ee8ba571a.png" width="400" /></p>
+<p>But both source definitions point to the exact same location in your database - <code>real_database</code>.<code>real_schema</code>.<code>table_5</code>.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">sources</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_1</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">real_schema</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">real_database</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">tables</span><span class="p">:</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_5</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw_table_5</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nt">identifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_5</span>
+</span></code></pre></div>
+<p><strong>Reason to Flag</strong></p>
+<p>If you dbt project has multiple source nodes pointing to the exact same location in your data warehouse, you will have an inaccurate view of your lineage.  </p>
+<p><strong>How to Remediate</strong></p>
+<p>Combine the duplicate source nodes so that each source database location only has a single source definition in your dbt project.</p>
+<hr />
+<h2 id="hard-coded-references">Hard Coded References<a class="headerlink" href="#hard-coded-references" title="Permanent link">#</a></h2>
+<p><code>fct_hard_coded_references</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_hard_coded_references.sql">source</a>) shows each instance where a model contains hard coded reference(s).</p>
+<p><strong>Example</strong></p>
+<p><code>fct_orders</code> uses hard coded direct relation references (<code>my_db.my_schema.orders</code> and <code>my_schema.customers</code>).</p>
+<div class="language-sql highlight"><span class="filename">fct_orders.sql</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">with</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">my_db</span><span class="p">.</span><span class="n">my_schema</span><span class="p">.</span><span class="n">orders</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">),</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">customers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">my_schema</span><span class="p">.</span><span class="n">customers</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">select</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="n">orders</span><span class="p">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="n">customers</span><span class="p">.</span><span class="n">name</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">from</span><span class="w"> </span><span class="n">orders</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">customers</span><span class="w"> </span><span class="k">on</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="n">orders</span><span class="p">.</span><span class="n">customer_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">customers</span><span class="p">.</span><span class="n">id</span>
+</span></code></pre></div>
+<p><strong>Reason to Flag</strong></p>
+<p>Always use the <code>ref</code> function when selecting from another model and the <code>source</code> function when selecting from raw data, rather than using the direct relation reference (e.g. <code>my_schema.my_table</code>). Direct relation references are determined via regex mapping <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/find_all_hard_coded_references.sql">here</a>.</p>
+<p>The <code>ref</code> and <code>source</code> functions are part of what makes dbt so powerful! Using these functions allows dbt to infer dependencies (and check that you haven't created any circular dependencies), properly generate your DAG, and ensure that models are built in the correct order. This also ensures that your current model selects from upstream tables and views in the same environment that you're working in.</p>
+<p><strong>How to Remediate</strong></p>
+<p>For each hard coded reference:</p>
+<ul>
+<li>if the hard coded reference is to a model, update the sql to instead use the <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/ref">ref</a> function</li>
+<li>if the hard coded reference is to raw data, create any needed <a href="https://docs.getdbt.com/docs/build/sources#declaring-a-source">sources</a> and update the sql to instead use the <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/source">source</a> function</li>
+</ul>
+<p>For the above example, our updated <code>fct_orders.sql</code> file would look like:</p>
+<div class="language-sql highlight"><span class="filename">fct_orders.sql</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">with</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">&#39;orders&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">),</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">customers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="k">ref</span><span class="p">(</span><span class="s1">&#39;customers&#39;</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">select</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="n">orders</span><span class="p">.</span><span class="n">order_id</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="n">customers</span><span class="p">.</span><span class="n">name</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">from</span><span class="w"> </span><span class="n">orders</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">left</span><span class="w"> </span><span class="k">join</span><span class="w"> </span><span class="n">customers</span><span class="w"> </span><span class="k">on</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="n">orders</span><span class="p">.</span><span class="n">customer_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">customers</span><span class="p">.</span><span class="n">id</span>
+</span></code></pre></div>
+<hr />
+<h2 id="model-fanout">Model Fanout<a class="headerlink" href="#model-fanout" title="Permanent link">#</a></h2>
+<p><code>fct_model_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_model_fanout.sql">source</a>) shows all parents with more than 3 direct leaf children.
+You can set your own threshold for model fanout by overriding the <code>models_fanout_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
+<p><strong>Example</strong></p>
+<p><code>fct_model</code> has three direct leaf children.</p>
+<p><img alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>This might indicate some transformations should move to the BI layer, or a common business transformations
+should be moved upstream.</p>
+<p><strong>Exceptions</strong></p>
+<p>Some BI tools are better than others at joining and data exploration. For example, with Looker you could
+end your DAG after marts (i.e. fcts &amp; dims) and join those artifacts together (with a little know how
+and setup time) to make your reports. For others, like Tableau, model fanouts might be more
+beneficial, as this tool prefers big tables over joins, so predefining some reports is usually more performant.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Queries and transformations can move around between dbt and the BI tool, so how do we try to stay
+effortful in what we decide to put where?</p>
+<p>You can think of dbt as our assembly line which produces expected outputs every time.</p>
+<p>You can think of the BI layer as the place where we take the items produced from our assembly line to
+customize them in order to meet our stakeholder's needs.</p>
+<!---
+TODO: edit this line in 6 months after more progress is made on the metrics server
+-->
+<p>Your dbt project needs a defined end point! Until the metrics server comes to fruition, you cannot possibly
+predefine every query or quandary your team might have. So decide as a team where that line is and maintain it.</p>
+<hr />
+<h2 id="multiple-sources-joined">Multiple Sources Joined<a class="headerlink" href="#multiple-sources-joined" title="Permanent link">#</a></h2>
+<p><code>fct_multiple_sources_joined</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_multiple_sources_joined.sql">source</a>) shows each instance where a model references more than one source.</p>
+<p><strong>Example</strong></p>
+<p><code>model_1</code> references two source tables.</p>
+<p><img alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>We very strongly believe that a staging model is the atomic unit of data modeling. Each staging
+model bears a one-to-one relationship with the source data table it represents. It has the same
+granularity, but the columns have been renamed, recast, or usefully reconsidered into a consistent
+format. With that in mind, two <code>{{ source() }}</code> declarations in one staging model likely means we are
+not being composable enough and there are individual building blocks which could be broken out into
+their respective models.</p>
+<p><strong>Exceptions</strong></p>
+<p>Sometimes companies have a bunch of <a href="https://discourse.getdbt.com/t/unioning-identically-structured-data-sources/921">identical sources across systems</a>. When these identical sources will only ever be used collectively, you should union them once and create a staging layer on the combined result.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p><strong>How to Remediate</strong></p>
+<p>In this example specifically, those raw sources, <code>source_1.table_1</code> and <code>source_1.table_2</code> should each
+have their own staging model (<code>stg_model_1</code> and <code>stg_model_2</code>), as transitional steps, which will
+then be combined into a new <code>int_model_2</code>. Alternatively, you could keep <code>stg_model_2</code> and add
+<code>base__</code> models as transitional steps.</p>
+<p>To fix this, try out the <a href="https://hub.getdbt.com/dbt-labs/codegen/latest/">codegen</a> package! With
+this package you can dynamically generate the SQL for a staging (what they call base) model, which
+you will use to populate <code>stg_model_1</code> and <code>stg_model_2</code> directly from the source data. Create a
+new model <code>int_model_2</code>. Afterwards, within <code>int_model_2</code>, update your <code>{{ source() }}</code> macros to
+<code>{{ ref() }}</code> macros and point them to your newly built staging models. If you had type casting,
+field aliasing, or other simple improvements made in your original <code>stg_model_2</code> SQL, then attempt
+to move that logic back to the new staging models instead. This will help colocate those
+transformations and avoid duplicate code, so that all downstream models can leverage the same
+set of transformations.</p>
+<p>Post-refactor, your DAG should look like this:</p>
+<p><img alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png" width="500" /></p>
+<p>or if you want to use base_ models and keep stg_model_2 as is:</p>
+<p><img alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png" width="500" /></p>
+<hr />
+<h2 id="rejoining-of-upstream-concepts">Rejoining of Upstream Concepts<a class="headerlink" href="#rejoining-of-upstream-concepts" title="Permanent link">#</a></h2>
+<p><code>fct_rejoining_of_upstream_concepts</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_rejoining_of_upstream_concepts.sql">source</a>) contains all cases where one of the parent's direct children
+is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
+where the model "in between" the parent and child has NO other downstream dependencies.</p>
+<p><strong>Example</strong></p>
+<p><code>stg_model_1</code>, <code>int_model_4</code>, and <code>int_model_5</code> create a "loop" in the DAG. <code>int_model_4</code> has no other downstream dependencies other than <code>int_model_5</code>.</p>
+<p><img width="500" alt="A DAG showing three resources. A staging model is referenced by both an int model (<code>int_model_4</code>) and a second int model (<code>int_model_5</code>). <code>int_model_4</code> is also being referenced by <code>int_model_5</code>. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png"></p>
+<p><strong>Reason to Flag</strong></p>
+<p>This could happen for a variety of reasons: Accidentally duplicating some business concepts in multiple
+data flows, hesitance to touch (and break) someone else’s model, or perhaps trying to snowflake out
+or modularize everything without awareness of what will help build time.</p>
+<p>As a general rule, snowflaking out models in a thoughtful manner allows for concurrency, but in this
+example nothing downstream can run until <code>int_model_4</code> finishes, so it is not saving any time in
+parallel processing by being its own model. Since both <code>int_model_4</code> and <code>int_model_5</code> depend solely
+on <code>stg_model_1</code>, there is likely a better way to write the SQL within one model (<code>int_model_5</code>) and
+simplify the DAG, potentially at the expense of more rows of SQL within the model.</p>
+<p><strong>Exceptions</strong></p>
+<p>The one major exception to this would be when using a function from
+<a href="https://hub.getdbt.com/dbt-labs/dbt_utils/latest/">dbt_utils</a> package, such as <code>star</code> or <code>get_column_values</code>,
+(or similar functions / packages) that require a <a href="https://docs.getdbt.com/reference/dbt-classes#relation">relation</a>
+as an argument input. If the shape of the data in the output of <code>stg_model_1</code> is not the same as what you
+need for the input to the function within <code>int_model_5</code>, then you will indeed need <code>int_model_4</code> to create
+that relation, in which case, leave it.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from <code>int_model_4</code> into a CTE within <code>int_model_5</code>, and swap all <code>{{ ref('int_model_4') }}</code> references to the new CTE(s).</p>
+<p>Post-refactor, your DAG should look like this:</p>
+<p><img alt="A refactored DAG removing the 'loop', by folding int_model_4 into int_model_5." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png" width="500" /></p>
+<hr />
+<h2 id="root-models">Root Models<a class="headerlink" href="#root-models" title="Permanent link">#</a></h2>
+<p><code>fct_root_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_root_models.sql">source</a>) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.</p>
+<p><strong>Example</strong></p>
+<p><code>model_4</code> has no direct parents</p>
+<p><img alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models" src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></b></p>
+<p>This likely means that the model (<code>model_4</code>  below) contains raw table references, either to a raw data source, or another model in the project without using the <code>{{ source() }}</code> or <code>{{ ref() }}</code> functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies.</p>
+<p><strong>Exceptions</strong></p>
+<p>This behavior may be observed in the case of a manually defined reference table that does not have any dependencies. A good example of this is a <code>dim_calendar</code> table that is generated by the <code>{{ dbt_utils.date_spine() }}</code> macro — this SQL logic is completely self contained, and does not require any external data sources to execute.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Start by mapping any table references in the <code>FROM</code> clause of the model definition to the models or raw tables that they draw from, and replace those references with the <code>{{ ref() }}</code> if the dependency is another dbt model, or the <code>{{ source() }}</code> function if the table is a raw data source (this may require the declaration of a new source table). Then, visualize this model in the DAG, and refactor as appropriate according to best practices.</p>
+<hr />
+<h2 id="source-fanout">Source Fanout<a class="headerlink" href="#source-fanout" title="Permanent link">#</a></h2>
+<p><code>fct_source_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_source_fanout.sql">source</a>) shows each instance where a source is the direct parent of multiple resources in the DAG.</p>
+<p><strong>Example</strong></p>
+<p><code>source.table_1</code> has more than one direct child model.</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>Each source node should be referenced by a single model that performs basic operations, such as renaming, recasting, and other light transformations to maintain consistency through out the project. The role of this staging model is to mirror the raw data but align it with project conventions. The staging model should act as a source of truth and a buffer- any model which depends on the data from a given source should reference the cleaned data in the staging model as opposed to referencing the source directly. This approach keeps the code DRY (any light transformations that need to be done on the raw data are performed only once). Minimizing references to the raw data will also make it easier to update the project should the format of the raw data change.</p>
+<p><strong>Exceptions</strong></p>
+<p>NoSQL databases or heavily nested data sources often have so much info json packed into a table
+that you need to break one raw data source into multiple base models.</p>
+<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Create a staging model which references the source and cleans the raw data (e.g. renaming, recasting). Any models referencing the source directly should be refactored to point towards the staging model instead.</p>
+<p>After refactoring the above example, the DAG would look something like this:</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png" width="500" /></p>
+<hr />
+<h2 id="staging-models-dependent-on-downstream-models">Staging Models Dependent on Downstream Models<a class="headerlink" href="#staging-models-dependent-on-downstream-models" title="Permanent link">#</a></h2>
+<p><code>fct_staging_dependent_on_marts_or_intermediate</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql">source</a>) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.</p>
+<p><strong>Example</strong></p>
+<p><code>stg_model_5</code>, a staging model, builds from <code>fct_model_9</code> a marts model.</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>This likely represents a misnamed file. According to dbt best practices, staging models should only
+select from source nodes. Dependence on downstream models indicates that this model may need to be either
+renamed, or reconfigured to only select from source nodes.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Rename the file in the <code>child</code> column to use to appropriate prefix, or change the models lineage
+by pointing the staging model to the appropriate <code>{{ source() }}</code>.</p>
+<p>After updating the model to use the appropriate <code>{{ source() }}</code> function, your graph should look like this:</p>
+<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png" width="500" /></p>
+<h2 id="staging-models-dependent-on-other-staging-models">Staging Models Dependent on Other Staging Models<a class="headerlink" href="#staging-models-dependent-on-other-staging-models" title="Permanent link">#</a></h2>
+<p><code>fct_staging_dependent_on_staging</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_staging.sql">source</a>) shows each parent/child relationship where models in the staging layer are
+dependent on each other.</p>
+<p><strong>Example</strong></p>
+<p><code>stg_model_2</code> is a parent of <code>stg_model_4</code>.</p>
+<p><img alt="A DAG showing stg_model_2 as a parent of stg_model_4." src="https://user-images.githubusercontent.com/53586774/164788355-4c6e58b5-21e0-45c6-bfde-af82952bb495.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>This may indicate a change in naming is necessary, or that the child model should instead reference a source.</p>
+<p><strong>How to Remediate</strong></p>
+<p>You should either change the model type of the <code>child</code> (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate <code>{{ source() }}</code>.</p>
+<p>In our example, we might realize that <code>stg_model_4</code> is <em>actually</em> an intermediate model. We should move this file to the appropriate intermediate directory and update the file name to <code>int_model_4</code>.</p>
+<hr />
+<h2 id="unused-sources">Unused Sources<a class="headerlink" href="#unused-sources" title="Permanent link">#</a></h2>
+<p><code>fct_unused_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_unused_sources.sql">source</a>) shows each source with 0 children.</p>
+<p><strong>Example</strong></p>
+<p><code>source.table_4</code> isn't being referenced.</p>
+<p><img alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png" width="500" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>This represents either a source that you have defined in YML but never brought into a model or a
+model that was deprecated and the corresponding rows in the source block of the YML file were
+not deleted at the same time. This simply represents the buildup of cruft in the project that
+doesn’t need to be there.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Navigate to the <code>sources.yml</code> file (or whatever your company has called the file) that corresponds
+to the unused source. Within the YML file, remove the unused table name, along with descriptions
+or any other nested information.</p>
+<div class="language-yaml highlight"><span class="filename">sources.yml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">sources</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">some_source</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">tables</span><span class="p">:</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_1</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_2</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_3</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_4</span><span class="w">  </span><span class="c1"># &lt;-- remove this line</span>
+</span></code></pre></div>
+<p><img alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png" width="500" /></p>
+<hr />
+<h2 id="models-with-too-many-joins">Models with Too Many Joins<a class="headerlink" href="#models-with-too-many-joins" title="Permanent link">#</a></h2>
+<p><code>fct_too_many_joins</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_too_many_joins.sql">source</a>) shows models with a reference to too many other models or sources.</p>
+<p>The number of different references to start raising errors is set to 7 by default, but you can set your own threshold by overriding the <code>too_many_joins_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
+<p><strong>Example</strong></p>
+<p><code>fct_model_1</code> directly references seven (7) staging models upstream.</p>
+<p><img alt="A DAG showing a model that directly references seven staging models upstream." src="https://github.com/BradCr/dbt-project-evaluator/assets/151274228/46ea1f78-1bd7-436b-b15b-f63c726601a1" width="600" /></p>
+<p><strong>Reason to Flag</strong></p>
+<p>This likely represents a model in which too much is being done. Having a model that too many upstream models introduces a lot of code complexity, which can be challenging to understand and maintain.</p>
+<p><strong>How to Remediate</strong></p>
+<p>Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart. Rather than having too many joins, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.</p>
+<p><img alt="A DAG showing a model that directly references only two intermediate models. The intermediate models reference three and four staging models upstream." src="https://github.com/BradCr/dbt-project-evaluator/assets/151274228/4b630e3c-f13a-443c-94e5-2d93c713c8f2" width="700" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: List of rules">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                List of rules
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../testing/" class="md-footer__link md-footer__link--next" aria-label="Next: Testing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Testing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.footer", "navigation.instant", "navigation.tracking", "content.action.edit", "toc.integrate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
