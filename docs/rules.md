@@ -21,6 +21,7 @@ hide:
 |Modeling                                      |[Unused Sources](../rules/modeling/#unused-sources)                                                                    |`fct_unused_sources`|
 |Modeling                                      |[Models with Too Many Joins](../rules/modeling/#models-with-too-many-joins)                                            |`fct_too_many_joins`|
 |Testing                                       |[Missing Primary Key Tests](../rules/testing/#missing-primary-key-tests)                                               |`fct_missing_primary_key_tests`|
+|Testing                                       |[Missing Source Freshness](../rules/testing/#missing-source-freshness)                                                 |`fct_sources_without_freshness`|
 |Testing                                       |[Test Coverage](../rules/testing/#test-coverage)                                                                       |`fct_test_coverage`|
 |Testing                                       |[Source Freshness](../rules/testing/#missing-source-freshness)                                                         |`fct_sources_without_freshness`|
 |Documentation                                 |[Undocumented Models](../rules/documentation/#undocumented-models)                                                     |`fct_undocumented_models`|
