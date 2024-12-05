@@ -1,0 +1,83 @@
+# **what?**
+# Run tests for packages not supported for cloud testing
+#
+# **why?**
+# To ensure that packages works as expected with all supported adapters
+
+# **when?**
+# On push, PR or manually called
+
+
+name: Package Integration Tests - Local Only
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    workflow_dispatch:
+
+env:
+    PYTHON_VERSION: "3.11"
+    POSTGRES_HOST: "localhost"
+    POSTGRES_USER: "root"
+    POSTGRES_PORT: "5432"
+    POSTGRES_DATABASE: "postgres_test"
+    DBT_ENV_SECRET_POSTGRES_PASS: "password"  # this isn't actually a secret since it only runs on the runner
+
+jobs:
+    run-tests:
+        runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres
+                env:
+                    POSTGRES_USER: ${{ env.POSTGRES_USER }}
+                    POSTGRES_PASSWORD: ${{ env.DBT_ENV_SECRET_POSTGRES_PASS }}
+                    POSTGRES_DB: ${{ env.POSTGRES_DATABASE }}
+                    POSTGRES_HOST: ${{ env.POSTGRES_HOST }}
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
+        strategy:
+            fail-fast: false
+            matrix:
+                # these adapters are tested in this repo but are not tested as part of the dbt Cloud images.
+                # This list should include anything not listed in supported_adapters.env
+                adapter: [duckdb, postgres]
+
+        steps:
+            - name: "Checkout ${{ github.event.repository }} "
+              uses: actions/checkout@v4
+
+            - name: "Set up Python ${{ env.PYTHON_VERSION }}"
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ env.PYTHON_VERSION }}
+
+            - name: "Install ${{ matrix.adapter }}"
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install dbt-${{ matrix.adapter }}
+
+            - name: "Install tox"
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install tox
+
+            - name: "Run integration tests with tox on ${{ matrix.adapter }}"
+              run: |
+                  tox -e dbt_integration_${{ matrix.adapter }}
+              env:
+                # postgres
+                POSTGRES_HOST: ${{ env.POSTGRES_HOST }}
+                POSTGRES_USER: ${{ env.POSTGRES_USER }}
+                DBT_ENV_SECRET_POSTGRES_PASS: ${{ env.DBT_ENV_SECRET_POSTGRES_PASS }}
+                POSTGRES_PORT: ${{ env.POSTGRES_PORT }}
+                POSTGRES_DATABASE: ${{ env.POSTGRES_DATABASE }}
+                POSTGRES_SCHEMA: "integration_tests_postgres_${{ github.run_number }}"
+                # duckdb - needs no vars

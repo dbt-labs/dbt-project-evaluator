@@ -1,0 +1,84 @@
+
+# HEY! This file is used in the integration tests with CI.
+# You should __NEVER__ check credentials into version control. Thanks for reading :)
+
+config:
+    send_anonymous_usage_stats: False
+    use_colors: True
+
+integration_tests:
+  target: postgres
+  outputs:
+    postgres:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST') }}"
+      user: "{{ env_var('POSTGRES_USER') }}"
+      pass: "{{ env_var('DBT_ENV_SECRET_POSTGRES_PASS') }}"
+      port: "{{ env_var('POSTGRES_PORT') | as_number }}"
+      dbname: "{{ env_var('POSTGRES_DATABASE') }}"
+      schema: "{{ env_var('POSTGRES_SCHEMA', 'dbt_project_evaluator_integration_tests_postgres') }}"
+      threads: 5
+
+    redshift:
+      type: redshift
+      host: "{{ env_var('REDSHIFT_HOST') }}"
+      user: "{{ env_var('REDSHIFT_USER') }}"
+      pass: "{{ env_var('DBT_ENV_SECRET_REDSHIFT_PASS') }}"
+      dbname: "{{ env_var('REDSHIFT_DATABASE') }}"
+      port: "{{ env_var('REDSHIFT_PORT') | as_number }}"
+      schema: "{{ env_var('REDSHIFT_SCHEMA', 'dbt_project_evaluator_integration_tests_redshift') }}"
+      threads: 5
+
+    bigquery:
+      type: bigquery
+      method: service-account-json
+      keyfile_json: "{{ env_var('BIGQUERY_KEYFILE_JSON') | as_native }}"
+      project: "{{ env_var('BIGQUERY_PROJECT') }}"
+      dataset: "{{ env_var('BIGQUERY_SCHEMA', 'dbt_project_evaluator_integration_tests_bigquery') }}"
+      threads: 10
+
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('DBT_ENV_SECRET_SNOWFLAKE_PASS') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
+      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'dbt_project_evaluator_integration_tests_snowflake') }}"
+      threads: 10
+
+    databricks:
+      type: databricks
+      schema: "{{ env_var('DATABRICKS_SCHEMA', 'dbt_project_evaluator_integration_tests_databricks') }}"
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
+      token: "{{ env_var('DBT_ENV_SECRET_DATABRICKS_TOKEN') }}"
+      threads: 10
+
+    duckdb:
+      type: duckdb
+      path: ./duck.db
+
+    trino:
+      type: trino
+      host: "{{ env_var('TRINO_TEST_HOST') }}"
+      port: "{{ env_var('TRINO_TEST_PORT') | as_number }}"
+      method: ldap
+      user: "{{ env_var('TRINO_TEST_USER') }}"
+      password: "{{ env_var('TRINO_TEST_PASS') }}"
+      catalog: "{{ env_var('TRINO_TEST_CATALOG_NAME') }}"
+      schema: dbt_project_evaluator_integration_tests_trino
+      threads: 5
+      session_properties:
+        query_max_stage_count: 275
+
+    clickhouse:
+      type: clickhouse
+      host: "{{ env_var('CLICKHOUSE_TEST_HOST') }}"
+      port: "{{ env_var('CLICKHOUSE_TEST_PORT') | as_number }}"
+      user: "{{ env_var('CLICKHOUSE_TEST_USER') }}"
+      password: "{{ env_var('CLICKHOUSE_TEST_PASS') }}"
+      dbname: "{{ env_var('CLICKHOUSE_TEST_DBNAME') }}"
+      schema: dbt_project_evaluator_integration_tests_clickhouse
+      threads: 5

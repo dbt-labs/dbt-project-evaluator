@@ -3,7 +3,8 @@
 venv/
 
 # Environment variables
-.env
+# .env
+test.env
 
 # DBT artifacts
 target/
@@ -13,7 +14,7 @@ dbt_packages/
 integration_tests/state/
 site/
 env/
-profiles.yml
+# profiles.yml
 package-lock.yml
 
 # IDE
