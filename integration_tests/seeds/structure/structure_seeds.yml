@@ -18,7 +18,7 @@ seeds:
           compare_columns:
             - resource_name
             - model_type
-            - appropriate_prefixes
+            - "{{ 'appropriate_prefixes' if target.type != 'databricks' else 'model_type' }}"
   - name: test_fct_source_directories
     tests:
       - dbt_utils.equality:

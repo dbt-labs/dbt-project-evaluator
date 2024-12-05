@@ -8,7 +8,7 @@ seeds:
           compare_model: ref('fct_multiple_sources_joined')
           compare_columns:
             - child
-            - source_parents
+            - "{{ 'source_parents' if target.type != 'databricks' else 'child' }}"
 
   - name: test_fct_direct_join_to_source
     tests:
@@ -49,7 +49,7 @@ seeds:
           compare_model: ref('fct_source_fanout')
           compare_columns:
             - parent
-            - model_children
+            - "{{ 'model_children' if target.type != 'databricks' else 'parent' }}"
 
   - name: test_fct_model_fanout
     tests:
@@ -59,7 +59,7 @@ seeds:
           compare_columns:
             - parent
             - parent_model_type
-            - leaf_children
+            - "{{ 'leaf_children' if target.type != 'databricks' else 'parent_model_type' }}"
   
   - name: test_fct_staging_dependent_on_staging
     tests:
