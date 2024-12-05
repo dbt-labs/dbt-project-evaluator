@@ -23,7 +23,6 @@ hide:
 |Testing                                       |[Missing Primary Key Tests](../rules/testing/#missing-primary-key-tests)                                               |`fct_missing_primary_key_tests`|
 |Testing                                       |[Missing Source Freshness](../rules/testing/#missing-source-freshness)                                                 |`fct_sources_without_freshness`|
 |Testing                                       |[Test Coverage](../rules/testing/#test-coverage)                                                                       |`fct_test_coverage`|
-|Testing                                       |[Source Freshness](../rules/testing/#missing-source-freshness)                                                         |`fct_sources_without_freshness`|
 |Documentation                                 |[Undocumented Models](../rules/documentation/#undocumented-models)                                                     |`fct_undocumented_models`|
 |Documentation                                 |[Documentation Coverage](../rules/documentation/#documentation-coverage)                                               |`fct_documentation_coverage`|
 |Documentation                                 |[Undocumented Source Tables](../rules/documentation/#undocumented-source-tables)                                       |`fct_undocumented_source_tables`|
