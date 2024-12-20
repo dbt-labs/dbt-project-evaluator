@@ -44,7 +44,16 @@ dispatch:
 ```
 
 This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the [cross_db_shim directory](macros/cross_db_shim/).
-  
+
+In a model section you can add a snippet - in that case new models  for project evaluator will be created in a separate folder
+
+```yml
+# dbt_project.yml
+models:
+	dbt_project_evaluator:
+		+schema: dbt_project_evaluator
+```
+
 ## Documentation
 
 The full documentation and list of rules are available on [this website](https://dbt-labs.github.io/dbt-project-evaluator/)
