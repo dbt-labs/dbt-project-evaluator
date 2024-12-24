@@ -5,7 +5,7 @@ seeds:
     config:
       tags:
         - docs
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_undocumented_models
           compare_model: ref('fct_undocumented_models')
@@ -19,7 +19,7 @@ seeds:
         other_documentation_coverage_pct: *float
       tags:
         - docs
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_documentation_coverage
           compare_model: ref('fct_documentation_coverage')
@@ -36,7 +36,7 @@ seeds:
     config:
       tags:
         - docs
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_undocumented_source_tables
           compare_model: ref('fct_undocumented_source_tables')
@@ -45,7 +45,7 @@ seeds:
     config:
       tags:
         - docs
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_undocumented_sources
           compare_model: ref('fct_undocumented_sources')

@@ -40,8 +40,8 @@ Source freshness is useful for understanding if your data pipelines are in a hea
 **How to Remediate**
 
 Apply a [source freshness block](https://docs.getdbt.com/docs/build/sources#declaring-source-freshness) to the source definition. This can be implemented at either the source name or table name level.
----
 
+---
 ## Test Coverage
 
 `fct_test_coverage` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.

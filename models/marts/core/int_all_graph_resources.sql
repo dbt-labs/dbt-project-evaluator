@@ -2,12 +2,18 @@
 
 {# flatten the sets of permissable primary key test sets to one level for later iteration #}
 {%- set test_macro_list = [] %}
+{%- set test_macro_names_list = [] %}
 {%- for test_set in var('primary_key_test_macros') -%}
       {%- for test in test_set %}
-        {%- do test_macro_list.append(test) -%}
+            {%- do test_macro_list.append(test) -%}
       {%- endfor %}
 {%- endfor -%}
-{%- do test_macro_list.append("dbt.test_unique") -%}
+{% for test in test_macro_list %}
+        {%- do test_macro_names_list.append(test.split('.')[1]) -%}
+{%- endfor -%}
+{%- if "test_unique" not in test_macro_names_list -%}
+    {%- do test_macro_list.append("dbt.test_unique") -%}
+{%- endif -%}
 {%- set test_macro_set = set_strict(test_macro_list) -%}
 
 {%- set quoted_directory_pattern = wrap_string_with_quotes(get_directory_pattern()) %}

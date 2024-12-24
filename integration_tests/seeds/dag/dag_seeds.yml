@@ -2,16 +2,16 @@ version: 2
 
 seeds:
   - name: test_fct_multiple_sources_joined
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_multiple_sources_joined
           compare_model: ref('fct_multiple_sources_joined')
           compare_columns:
             - child
-            - source_parents
+            - "{{ 'source_parents' if target.type != 'databricks' else 'child' }}"
 
   - name: test_fct_direct_join_to_source
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_direct_join_to_source
           compare_model: ref('fct_direct_join_to_source')
@@ -23,7 +23,7 @@ seeds:
             - distance
 
   - name: test_fct_duplicate_sources
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_duplicate_sources
           compare_model: ref('fct_duplicate_sources')
@@ -31,38 +31,38 @@ seeds:
             - source_names
 
   - name: test_fct_root_models
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_root_models
           compare_model: ref('fct_root_models')
 
   - name: test_fct_unused_sources
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_unused_sources
           compare_model: ref('fct_unused_sources')
 
   - name: test_fct_source_fanout
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_source_fanout
           compare_model: ref('fct_source_fanout')
           compare_columns:
             - parent
-            - model_children
+            - "{{ 'model_children' if target.type != 'databricks' else 'parent' }}"
 
   - name: test_fct_model_fanout
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_model_fanout
           compare_model: ref('fct_model_fanout')
           compare_columns:
             - parent
             - parent_model_type
-            - leaf_children
+            - "{{ 'leaf_children' if target.type != 'databricks' else 'parent_model_type' }}"
   
   - name: test_fct_staging_dependent_on_staging
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_staging_dependent_on_staging
           compare_model: ref('fct_staging_dependent_on_staging')
@@ -73,7 +73,7 @@ seeds:
             - child_model_type
   
   - name: test_fct_rejoining_of_upstream_concepts
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_rejoining_of_upstream_concepts
           compare_model: ref('fct_rejoining_of_upstream_concepts')
@@ -84,7 +84,7 @@ seeds:
             - is_loop_independent
 
   - name: test_fct_hard_coded_references
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_hard_coded_references
           compare_model: ref('fct_hard_coded_references')
@@ -93,7 +93,7 @@ seeds:
             - hard_coded_references
 
   - name: test_fct_too_many_joins
-    tests:
+    data_tests:
       - dbt_utils.equality:
           name: equality_fct_too_many_joins
           compare_model: ref('fct_too_many_joins')

@@ -34,7 +34,7 @@ models:
     +materialized: ephemeral
   dbt_project_evaluator:
     marts:
-      tests:
+      data_tests:
         fct_test_coverage:
           # materialize as a table to ensure SQL query runs successfully
           +materialized: table
