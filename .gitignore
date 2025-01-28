@@ -24,3 +24,7 @@ package-lock.yml
 # MacOS
 .DS_Store
 integration_tests/package-lock.yml
+
+# duckdb
+*.db
+*.duckdb
