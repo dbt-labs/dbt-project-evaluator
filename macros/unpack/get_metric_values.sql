@@ -26,8 +26,8 @@
             wrap_string_with_quotes(node.type_params.numerator | tojson),
             wrap_string_with_quotes(node.type_params.denominator | tojson),
             wrap_string_with_quotes(node.type_params.expr),
-            wrap_string_with_quotes(node.type_params.cumulative_type_params.window | tojson),
-            wrap_string_with_quotes(node.type_params.cumulative_type_params.grain_to_date),
+            wrap_string_with_quotes((node.type_params.cumulative_type_params.window or node.type_params.window) | tojson),
+            wrap_string_with_quotes((node.type_params.cumulative_type_params.grain_to_date or node.type_params.grain_to_date)),
             wrap_string_with_quotes(node.meta | tojson)
             ]
           %}
