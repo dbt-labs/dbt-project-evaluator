@@ -1,4 +1,4 @@
--- metricflow_time_spine.sql
+-- metricflow time spine
 {% set date_expr = "current_date()" if target.type in ["duckdb"] else dbt.current_timestamp() %}
 {{
     config(
