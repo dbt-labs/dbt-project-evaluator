@@ -6,3 +6,6 @@ models:
     columns:
       - name: date_day
         granularity: day
+        data_tests:
+          - unique
+          - not_null

@@ -1,11 +1,22 @@
 -- all models with inappropriate (or lack of) pre-fix
 -- ensure dbt project has consistent naming conventions
 
+{% if execute %}
+{% set metric_flow_time_spine_names = graph.nodes.values()
+     | selectattr("resource_type", "equalto", "model") 
+     | rejectattr("time_spine", "none") 
+     | map(attribute = "name") 
+     | join("', '")
+%}
+{% endif %}
+
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
     where not is_excluded
-    -- exclude required metricflow time spine
-    and resource_name != 'metricflow_time_spine'
+    -- exclude required time spine
+    {% if metric_flow_time_spine_names %}
+    and resource_name not in ('{{ metric_flow_time_spine_names }}')
+    {% endif %}
 ),
 
 naming_convention_prefixes as (
