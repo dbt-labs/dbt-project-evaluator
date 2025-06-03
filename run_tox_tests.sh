@@ -2,6 +2,7 @@
 
 echo "Running tests for the first project"
 cd integration_tests
+dbt debug
 dbt deps --target $1 || exit 1
 dbt build -x --target $1 --full-refresh || exit 1
 
