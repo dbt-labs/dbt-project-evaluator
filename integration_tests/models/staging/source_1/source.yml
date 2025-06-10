@@ -12,7 +12,7 @@ sources:
         description: this is table 1.
         columns:
           - name: my_column
-            description: description for my source column
+            description: description for my source column with weird chars like \Something\Another\Thing 
       - name: table_2
       - name: table_4
       - name: table_5
