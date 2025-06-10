@@ -39,7 +39,7 @@ vars:
 
 ```yaml title="dbt_project.yml"
 vars:
-  exclude_paths_from_project: ["/models/legacy/"]
+  exclude_paths_from_project: ["models/legacy/"]
 ```
 
 ### Example to exclude both a package and models/sources in 2 different paths
@@ -47,7 +47,7 @@ vars:
 ```yaml title="dbt_project.yml"
 vars:
   exclude_packages: ["upstream_package"]
-  exclude_paths_from_project: ["/models/legacy/", "/my_date_spine.sql"]
+  exclude_paths_from_project: ["models/legacy/", "/my_date_spine.sql"]
 ```
 
 ## Tips and tricks
