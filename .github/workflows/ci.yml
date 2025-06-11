@@ -36,7 +36,7 @@ jobs:
         SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
         SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
         SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
-        SNOWFLAKE_SCHEMA: "dbt_utils_integration_tests_snowflake_${{ github.run_number }}"
+        SNOWFLAKE_SCHEMA: "dbt_project_evaluator_integration_tests_snowflake_${{ github.run_number }}"
         # databricks
         DATABRICKS_SCHEMA: "integration_tests_databricks_${{ github.run_number }}"
         DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
