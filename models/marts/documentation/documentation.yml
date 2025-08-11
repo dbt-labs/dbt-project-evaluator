@@ -10,9 +10,11 @@ models:
         description: the number of models in the project with a description divided by the total number of models in the project
         data_tests:
           - dbt_utils.accepted_range:
-              name: valid_documentation_coverage
-              min_value: "{{ var('documentation_coverage_target') }}"
-              severity: warn
+              config:
+                name: valid_documentation_coverage
+                severity: warn
+              arguments:
+                min_value: "{{ var('documentation_coverage_target') }}"
   - name: fct_undocumented_models
     description: >
       This model contains all models that do not have a description configured in a YML file. 

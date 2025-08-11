@@ -28,3 +28,4 @@ integration_tests/package-lock.yml
 # duckdb
 *.db
 *.duckdb
+dbt_internal_packages/

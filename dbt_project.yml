@@ -2,7 +2,7 @@ name: 'dbt_project_evaluator'
 version: '1.0.0'
 config-version: 2
 
-require-dbt-version: [">=1.8.0", "<2.0.0"]
+require-dbt-version: [">=1.10.6", "<3.0.0"]
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
@@ -16,6 +16,9 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+flags:
+  require_nested_cumulative_type_params: True
+  require_yaml_configuration_for_mf_time_spines: True
 
 dispatch:
   - macro_namespace: dbt

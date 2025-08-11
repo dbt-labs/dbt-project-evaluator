@@ -28,13 +28,18 @@ dispatch:
   - macro_namespace: dbt
     search_order: ['dbt_project_evaluator', 'dbt']
 
+flags:
+  require_nested_cumulative_type_params: True
+  require_yaml_configuration_for_mf_time_spines: True
+  require_generic_test_arguments_property: True
+
 models:
   dbt_project_evaluator_integration_tests:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
     +materialized: ephemeral
   dbt_project_evaluator:
     marts:
-      data_tests:
+      tests:
         fct_test_coverage:
           # materialize as a table to ensure SQL query runs successfully
           +materialized: table

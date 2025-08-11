@@ -1,10 +1,15 @@
 version: 2
 
+groups:
+  - name: my_awesome_group
+    owner:
+      email: thegoat@jaffleshop.com
+
 models:
   - name: report_1
     description: tom cruise's minority report
-    access: public
     config:
+      access: public
       materialized: table
     columns:
       - name: col 
@@ -13,9 +18,10 @@ models:
 
   - name: report_2
     description: the colbert report
-    access: public
     config:
+      access: public
       materialized: table
+      group: my_awesome_group
       contract:
         enforced: true
     columns:
