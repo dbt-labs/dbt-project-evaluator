@@ -8,4 +8,5 @@ models:
       the chain to table or incremental. 
     data_tests:
       - is_empty:
-          severity: warn
+          config:
+            severity: warn

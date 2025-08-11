@@ -6,10 +6,11 @@ exposures:
     type: dashboard
     url: dave.com/metrics
     maturity: low
-    tags: ['proserv']
     owner:
       name: dave's davey
       email: proserv@dbt.com
+    config:
+      tags: ['proserv']
     
     depends_on:
       - ref('fct_model_6')

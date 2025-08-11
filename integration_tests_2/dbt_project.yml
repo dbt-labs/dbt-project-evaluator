@@ -33,6 +33,7 @@ on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
 flags:
   require_nested_cumulative_type_params: True
   require_yaml_configuration_for_mf_time_spines: True
+  require_generic_test_arguments_property: True
 
 models:
   dbt_project_evaluator_integration_tests_2:

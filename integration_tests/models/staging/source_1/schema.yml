@@ -13,9 +13,10 @@ models:
   - name: stg_model_3
     data_tests:
       - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - id
-            - color
+          arguments:
+            combination_of_columns:
+              - id
+              - color
   - name: stg_model_2
     columns:
       - name: id 
