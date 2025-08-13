@@ -12,7 +12,7 @@
         {%- set model_raw_sql = '' -%}
         {%- endif -%}
 
-        {{ return(model_raw_sql.count("\n")) + 1 }}
+        {{ return(model_raw_sql.count("\n") + 1) }}
 
     {% endif %}
 
