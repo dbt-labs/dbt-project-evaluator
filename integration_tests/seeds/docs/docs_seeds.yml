@@ -7,8 +7,7 @@ seeds:
         - docs
     data_tests:
       - dbt_utils.equality:
-          config:
-            name: equality_fct_undocumented_models
+          name: equality_fct_undocumented_models
           arguments:
             compare_model: ref('fct_undocumented_models')
 
@@ -23,8 +22,7 @@ seeds:
         - docs
     data_tests:
       - dbt_utils.equality:
-          config:
-            name: equality_fct_documentation_coverage
+          name: equality_fct_documentation_coverage
           arguments:
             compare_model: ref('fct_documentation_coverage')
             compare_columns:
@@ -42,8 +40,7 @@ seeds:
         - docs
     data_tests:
       - dbt_utils.equality:
-          config:
-            name: equality_fct_undocumented_source_tables
+          name: equality_fct_undocumented_source_tables
           arguments:
             compare_model: ref('fct_undocumented_source_tables')
 
@@ -53,7 +50,6 @@ seeds:
         - docs
     data_tests:
       - dbt_utils.equality:
-          config:
-            name: equality_fct_undocumented_sources
+          name: equality_fct_undocumented_sources
           arguments:
             compare_model: ref('fct_undocumented_sources')

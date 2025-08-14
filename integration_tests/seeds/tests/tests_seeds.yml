@@ -4,8 +4,7 @@ seeds:
   - name: test_fct_missing_primary_key_tests
     data_tests:
       - dbt_utils.equality:
-          config:
-            name: equality_fct_missing_primary_key_tests
+          name: equality_fct_missing_primary_key_tests
           arguments:
             compare_model: ref('fct_missing_primary_key_tests')
             exclude_columns:
@@ -22,8 +21,7 @@ seeds:
         other_test_coverage_pct: *float
     data_tests:
       - dbt_utils.equality:
-          config:
-            name: equality_fct_test_coverage
+          name: equality_fct_test_coverage
           arguments:
             compare_model: ref('fct_test_coverage')
             compare_columns:
@@ -40,7 +38,6 @@ seeds:
   - name: test_fct_sources_without_freshness
     data_tests:
       - dbt_utils.equality:
-          config:
-            name: equality_fct_sources_without_freshness
+          name: equality_fct_sources_without_freshness  
           arguments:
             compare_model: ref('fct_sources_without_freshness')
