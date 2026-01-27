@@ -1,5 +1,5 @@
 
-pip==23.3
+pip>=25.3
 dbt-snowflake~=1.1.0
 dbt-redshift~=1.1.0
 dbt-bigquery~=1.1.0
