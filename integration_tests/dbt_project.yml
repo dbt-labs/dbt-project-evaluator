@@ -63,6 +63,8 @@ seeds:
       +enabled: false
 
 vars:
+  # Set to true when running with dbt Fusion to disable tests that are not compatible
+  deactivate_for_fusion: false
   # ensure integration tests run successfully when there are 0 of a given model type (extra)
   exclude_packages: ['exclude_package']
   exclude_paths_from_project: ["/to_exclude/","source_3.table_6"]
