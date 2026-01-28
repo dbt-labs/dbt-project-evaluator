@@ -713,6 +713,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#output-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Variables
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1194,8 +1205,37 @@
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="c1"># update the number of records inserted from the graph from 10,000 to 500 to reduce query size</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">insert_batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="c1"># set the maximum distance between nodes to 5 </span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="c1"># set the maximum distance between nodes to 5</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">max_depth_dag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+</span></code></pre></div>
+<h2 id="output-variables">Output Variables<a class="headerlink" href="#output-variables" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>variable</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>use_native_agate_printing</code></td>
+<td>whether to use agate's native <code>print_table()</code> for the <code>print_dbt_project_evaluator_issues</code> macro</td>
+<td>true</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note on use_native_agate_printing</strong></p>
+<p>The <code>print_dbt_project_evaluator_issues</code> macro uses agate's <code>print_table()</code> and <code>print_csv()</code> functions by default. However, these don't work in all environments:</p>
+<ul>
+<li><strong>dbt Cloud CLI / IDE</strong>: neither <code>print_table()</code> nor <code>print_csv()</code> work</li>
+<li><strong>dbt Fusion</strong>: <code>print_table()</code> works, but <code>print_csv()</code> does not</li>
+</ul>
+<p>If you're using dbt Cloud CLI or IDE, or if you want to use <code>format='csv'</code> with dbt Fusion, set this variable to <code>false</code> to use a pure Jinja implementation instead.</p>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">vars</span><span class="p">:</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="c1"># use pure Jinja printing for dbt Cloud CLI, IDE, or Fusion with CSV format</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">use_native_agate_printing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </span></code></pre></div>
 
 
