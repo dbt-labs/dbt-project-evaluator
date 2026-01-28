@@ -118,6 +118,28 @@ vars:
   dbt_project_evaluator:
     # update the number of records inserted from the graph from 10,000 to 500 to reduce query size
     insert_batch_size: 500
-    # set the maximum distance between nodes to 5 
+    # set the maximum distance between nodes to 5
     max_depth_dag: 5
+```
+
+## Output Variables
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `use_native_agate_printing` | whether to use agate's native `print_table()` for the `print_dbt_project_evaluator_issues` macro | true |
+
+**Note on use_native_agate_printing**
+
+The `print_dbt_project_evaluator_issues` macro uses agate's `print_table()` and `print_csv()` functions by default. However, these don't work in all environments:
+
+- **dbt Cloud CLI / IDE**: neither `print_table()` nor `print_csv()` work
+- **dbt Fusion**: `print_table()` works, but `print_csv()` does not
+
+If you're using dbt Cloud CLI or IDE, or if you want to use `format='csv'` with dbt Fusion, set this variable to `false` to use a pure Jinja implementation instead.
+
+```yaml title="dbt_project.yml"
+vars:
+  dbt_project_evaluator:
+    # use pure Jinja printing for dbt Cloud CLI, IDE, or Fusion with CSV format
+    use_native_agate_printing: false
 ```
