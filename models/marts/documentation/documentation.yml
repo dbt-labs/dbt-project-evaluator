@@ -11,8 +11,10 @@ models:
         data_tests:
           - dbt_utils.accepted_range:
               name: valid_documentation_coverage
-              min_value: "{{ var('documentation_coverage_target') }}"
-              severity: warn
+              config:
+                severity: warn
+              arguments:
+                min_value: "{{ var('documentation_coverage_target') }}"
   - name: fct_undocumented_models
     description: >
       This model contains all models that do not have a description configured in a YML file. 

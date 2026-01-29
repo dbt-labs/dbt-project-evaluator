@@ -5,13 +5,15 @@ seeds:
     data_tests:
       - dbt_utils.equality:
           name: equality_fct_chained_views_dependencies
-          compare_model: ref('fct_chained_views_dependencies')
-          compare_columns:
-            - parent
-            - child
-            - distance
+          arguments:
+            compare_model: ref('fct_chained_views_dependencies')
+            compare_columns:
+              - parent
+              - child
+              - distance
             
   - name: test_fct_exposure_parents_materializations
     data_tests:
       - dbt_utils.equality:
-          compare_model: ref('fct_exposure_parents_materializations')
+          arguments:
+            compare_model: ref('fct_exposure_parents_materializations')

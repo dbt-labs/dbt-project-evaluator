@@ -43,6 +43,7 @@ metrics:
     type_params:
   # Specify the measure you are creating a proxy for. 
       measure: total_count 
-      window: 30 days
+      cumulative_type_params:
+        window: 30 days
     filter: |
       {{ Dimension('dim__id') }} > 0

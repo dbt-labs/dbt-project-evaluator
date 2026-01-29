@@ -8,8 +8,9 @@ models:
           - unique
           - not_null
           - relationships:
-              to: ref('stg_model_2')
-              field: id
+              arguments:
+                to: ref('stg_model_2')
+                field: id
       - name: "concat(coalesce('fake_column', ' '),'for_testing')"
         data_tests:
           - not_null

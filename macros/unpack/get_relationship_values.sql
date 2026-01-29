@@ -35,11 +35,14 @@
 
                 {%- for parent in node.get('depends_on',{}).get('nodes',[]) -%}
 
-                    {%- set values_line = 
+                    {# Use attached_node to determine primary relationship for tests (works in both Core and Fusion) #}
+                    {# Fall back to loop.last for backwards compatibility if attached_node is not available #}
+                    {%- set is_primary = (parent == node.get('attached_node')) if node.get('attached_node') else loop.last -%}
+                    {%- set values_line =
                         [
                             "cast('" ~ node.unique_id ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
                             "cast('" ~ parent ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
-                            "" ~ loop.last ~ "" if node.unique_id.split('.')[0] == 'test' else "FALSE"
+                            "" ~ is_primary ~ "" if node.unique_id.split('.')[0] == 'test' else "FALSE"
                         ]
                     %}
                       

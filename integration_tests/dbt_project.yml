@@ -28,13 +28,18 @@ dispatch:
   - macro_namespace: dbt
     search_order: ['dbt_project_evaluator', 'dbt']
 
+flags:
+  require_nested_cumulative_type_params: True
+  require_yaml_configuration_for_mf_time_spines: True
+  require_generic_test_arguments_property: True
+
 models:
   dbt_project_evaluator_integration_tests:
     # materialize as ephemeral to prevent the fake models from executing, but keep them enabled
     +materialized: ephemeral
   dbt_project_evaluator:
     marts:
-      data_tests:
+      tests:
         fct_test_coverage:
           # materialize as a table to ensure SQL query runs successfully
           +materialized: table
@@ -58,6 +63,8 @@ seeds:
       +enabled: false
 
 vars:
+  # Set to true when running with dbt Fusion to disable tests that are not compatible
+  deactivate_for_fusion: false
   # ensure integration tests run successfully when there are 0 of a given model type (extra)
   exclude_packages: ['exclude_package']
   exclude_paths_from_project: ["/to_exclude/","source_3.table_6"]

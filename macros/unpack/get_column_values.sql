@@ -22,7 +22,7 @@
                     [
                         wrap_string_with_quotes(node.unique_id),
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.name)),
-                        wrap_string_with_quotes(dbt.escape_single_quotes(column.description)),
+                        wrap_string_with_quotes(dbt.escape_single_quotes(column.description | replace("\\","\\\\"))),
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.data_type)),
                         wrap_string_with_quotes(dbt.escape_single_quotes(tojson(column.constraints))),
                         column.constraints | selectattr('type', 'equalto', 'not_null') | list | length > 0,

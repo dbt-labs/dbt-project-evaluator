@@ -15,8 +15,10 @@ models:
         data_tests:
           - dbt_utils.accepted_range:
               name: valid_test_coverage
-              min_value: "{{ var('test_coverage_target') }}"
-              severity: warn
+              config:
+                severity: warn
+              arguments:
+                min_value: "{{ var('test_coverage_target') }}"
   - name: fct_missing_primary_key_tests
     description: this model has one record for every model without unique and not null tests configured on a single column
     data_tests:

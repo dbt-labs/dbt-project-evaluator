@@ -4,19 +4,21 @@ sources:
   - name: source_1
     description: this is source 1.
     schema: real_schema
-    freshness: # default freshness
-      warn_after: {count: 12, period: hour}
+    config:
+      freshness: # default freshness
+        warn_after: {count: 12, period: hour}
     # database: real_database
     tables:
       - name: table_1
         description: this is table 1.
         columns:
           - name: my_column
-            description: description for my source column
+            description: description for my source column with weird chars like \Something\Another\Thing 
       - name: table_2
       - name: table_4
       - name: table_5
-        freshness: null
+        config:
+          freshness: null
       - name: raw_table_5
         identifier: table_5
 

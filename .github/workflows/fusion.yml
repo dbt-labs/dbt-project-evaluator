@@ -1,0 +1,71 @@
+# **what?**
+# Run tests using dbt Fusion against Snowflake
+
+# **why?**
+# To ensure that dbt-project-evaluator works as expected with dbt Fusion
+# This runs alongside (not replacing) the existing dbt-core tests
+
+# **when?**
+# On every PR, and every push to main and when manually triggered
+
+# **note**
+# Currently only Snowflake is tested with Fusion. Additional adapters can be
+# added to the matrix as Fusion support expands. Credentials are shared with
+# the existing dbt-core Snowflake tests.
+
+name: Fusion Integration Tests
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    workflow_dispatch:
+
+env:
+    PYTHON_VERSION: "3.11"
+
+jobs:
+    run-tests:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                # Only Snowflake for now - add more adapters here as Fusion support expands
+                adapter: [snowflake]
+
+        steps:
+            - name: "Checkout ${{ github.event.repository }}"
+              uses: actions/checkout@v4
+
+            - name: "Set up Python ${{ env.PYTHON_VERSION }}"
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ env.PYTHON_VERSION }}
+
+            - name: "Install dbt Fusion"
+              run: |
+                  curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh
+                  echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+            - name: "Verify Fusion installation"
+              run: |
+                  dbt --version
+
+            - name: "Install tox"
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install tox
+
+            - name: "Run Fusion integration tests on ${{ matrix.adapter }}"
+              run: |
+                  tox -e dbt_integration_fusion_${{ matrix.adapter }}
+              env:
+                # snowflake
+                SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+                DBT_ENV_SECRET_SNOWFLAKE_PASS: ${{ secrets.SNOWFLAKE_PASS }}
+                SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+                SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+                SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+                SNOWFLAKE_SCHEMA: "fusion_integration_tests_${{ matrix.adapter }}_${{ github.run_number }}"

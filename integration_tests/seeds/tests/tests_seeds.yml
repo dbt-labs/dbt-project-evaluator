@@ -5,36 +5,43 @@ seeds:
     data_tests:
       - dbt_utils.equality:
           name: equality_fct_missing_primary_key_tests
-          compare_model: ref('fct_missing_primary_key_tests')
-          exclude_columns:
-            - resource_type
-            - model_type
+          # Fusion has column_name empty for tests in the graph (issue #1243)
+          config:
+            enabled: "{{ not var('deactivate_for_fusion', false) }}"
+          arguments:
+            compare_model: ref('fct_missing_primary_key_tests')
+            exclude_columns:
+              - resource_type
+              - model_type
 
   - name: test_fct_test_coverage
     config:
       column_types:
-        test_coverage_pct: &float "{{ 'float' if target.type not in ['athena', 'trino'] else 'double' }}"
+        test_coverage_pct: &float "{{ 'float' if target.type not in ['athena', 'trino', 'duckdb'] else 'double' }}"
         staging_test_coverage_pct: *float
         intermediate_test_coverage_pct: *float
         marts_test_coverage_pct: *float
         other_test_coverage_pct: *float
+        test_to_model_ratio: *float
     data_tests:
       - dbt_utils.equality:
           name: equality_fct_test_coverage
-          compare_model: ref('fct_test_coverage')
-          compare_columns:
-            - total_models
-            - total_tests
-            - tested_models
-            - "{{ 'test_coverage_pct' if not target.name in ['duckdb', 'databricks', 'trino'] else 'tested_models' }}"
-            - test_to_model_ratio
-            - staging_test_coverage_pct
-            - intermediate_test_coverage_pct
-            - marts_test_coverage_pct
-            - other_test_coverage_pct
+          arguments:
+            compare_model: ref('fct_test_coverage')
+            compare_columns:
+              - total_models
+              - total_tests
+              - tested_models
+              - "{{ 'test_coverage_pct' if not target.name in ['duckdb', 'databricks', 'trino'] else 'tested_models' }}"
+              - test_to_model_ratio
+              - staging_test_coverage_pct
+              - intermediate_test_coverage_pct
+              - marts_test_coverage_pct
+              - other_test_coverage_pct
 
   - name: test_fct_sources_without_freshness
     data_tests:
       - dbt_utils.equality:
-          name: equality_fct_sources_without_freshness
-          compare_model: ref('fct_sources_without_freshness')
+          name: equality_fct_sources_without_freshness  
+          arguments:
+            compare_model: ref('fct_sources_without_freshness')

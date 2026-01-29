@@ -1,5 +1,14 @@
 -- this model finds cases where a model has 0 direct parents, likely due to a lack of source or ref function
 
+{% if execute %}
+{% set metric_flow_time_spine_names = graph.nodes.values()
+     | selectattr("resource_type", "equalto", "model") 
+     | rejectattr("time_spine", "none") 
+     | map(attribute = "name") 
+     | join("', '")
+%}
+{% endif %}
+
 with model_relationships as (
     select  
         *
@@ -9,7 +18,9 @@ with model_relationships as (
         -- filtering parents could result in incorrectly flagging nodes that depend on excluded nodes
     and not child_is_excluded
     -- exclude required time spine
-    and child != 'metricflow_time_spine'
+    {% if metric_flow_time_spine_names %}
+    and child not in ('{{ metric_flow_time_spine_names }}')
+    {% endif %}
 ),
 
 final as (
