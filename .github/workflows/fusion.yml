@@ -19,7 +19,7 @@ on:
     push:
         branches:
             - main
-    pull_request:
+    pull_request_target:
     workflow_dispatch:
 
 env:
@@ -35,8 +35,11 @@ jobs:
                 adapter: [snowflake]
 
         steps:
-            - name: "Checkout ${{ github.event.repository }}"
+            - name: "Checkout PR code"
               uses: actions/checkout@v4
+              with:
+                  # For pull_request_target, we must explicitly checkout the PR head
+                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
 
             - name: "Set up Python ${{ env.PYTHON_VERSION }}"
               uses: actions/setup-python@v5
