@@ -26,7 +26,8 @@ models:
       - name: model_type
         data_tests: 
           - dbt_utils.expression_is_true:
-              expression: "= 'base'"
+              arguments:
+                expression: "= 'base'"
               config:
                 where: "resource_name = 'base_model_10'"
 
