@@ -1,0 +1,9 @@
+models: 
+  - name: int_model_5
+    latest_version: 2
+    versions: 
+     - v: 1
+       deprecation_date: 2024-01-01
+     - v: 2
+       deprecation_date: 2029-01-01
+     - v: 3

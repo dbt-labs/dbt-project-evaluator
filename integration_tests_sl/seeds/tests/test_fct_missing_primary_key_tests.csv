@@ -1,0 +1,13 @@
+﻿resource_name,is_primary_key_tested,number_of_tests_on_model,number_of_constraints_on_model
+fct_model_6,FALSE,0,0
+model_8,FALSE,0,0
+fct_model_9,FALSE,0,0
+int_model_5.v1,FALSE,0,0
+int_model_5.v2,FALSE,0,0
+int_model_5.v3,FALSE,0,0
+report_1,FALSE,0,0
+report_2,FALSE,0,0
+report_3,FALSE,0,0
+stg_model_1,FALSE,2,0
+stg_model_5,FALSE,0,0
+fct_model_10,FALSE,0,0

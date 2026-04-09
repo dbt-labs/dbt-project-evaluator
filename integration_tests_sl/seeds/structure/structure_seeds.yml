@@ -1,0 +1,44 @@
+version: 2
+
+seeds:
+  - name: test_fct_model_directories
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_model_directories
+          arguments:
+            compare_model: ref('fct_model_directories')
+            compare_columns:
+              - resource_name
+              - current_file_path
+              - change_file_path_to
+  - name: test_fct_model_naming_conventions
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_model_naming_conventions
+          arguments:
+            compare_model: ref('fct_model_naming_conventions')
+            compare_columns:
+              - resource_name
+              - model_type
+              - "{{ 'appropriate_prefixes' if target.type != 'databricks' else 'model_type' }}"
+  - name: test_fct_source_directories
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_source_directories
+          arguments:
+            compare_model: ref('fct_source_directories')
+            compare_columns:
+              - resource_name
+              - current_file_path
+              - change_file_path_to
+  - name: test_fct_test_directories
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_test_directories
+          arguments:
+            compare_model: ref('fct_test_directories')
+            compare_columns:
+              - test_name
+              - model_name
+              - current_test_directory
+              - change_test_directory_to

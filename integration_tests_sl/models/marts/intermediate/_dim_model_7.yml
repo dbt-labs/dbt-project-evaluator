@@ -1,0 +1,48 @@
+models:
+  - name: dim_model_7
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        description: A multiline description containing example values that might\nbe held in this column. These examples include one with a format like something\Something\Another\Thing
+        data_type: "{{ 'UInt8' if target.type in ['clickhouse'] else 'int' }}"
+        constraints:
+          - type: not_null
+        data_tests:
+          - unique
+        entity:
+          type: primary
+          name: dim
+        dimension:
+          type: categorical
+      - name: date_day
+        dimension:
+          type: time
+        granularity: day
+    semantic_model:
+      enabled: true
+      name: dim_model_7
+    agg_time_dimension: date_day
+    metrics:
+      - name: new_metric
+        label: "New Metric"
+        type: simple
+        filter: |
+          {{ Dimension('dim__id') }} > '2023-04-01'
+        agg: count
+        expr: 1
+      - name: total_count
+        description: "The total count."
+        agg: count
+        expr: 1
+
+        type: simple
+        hidden: true
+      - name: new_metric_with_window
+        label: "New cumulative Metric"
+        type: cumulative
+        filter: |-
+          {{ Dimension('dim__id') }} > 0
+        window: 30 days
+        input_metric: total_count
