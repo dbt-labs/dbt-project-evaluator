@@ -1,0 +1,56 @@
+version: 2
+
+seeds:
+  - name: test_fct_undocumented_models
+    config:
+      tags:
+        - docs
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_undocumented_models
+          arguments:
+            compare_model: ref('fct_undocumented_models')
+
+  - name: test_fct_documentation_coverage
+    config:
+      column_types:
+        documentation_coverage_pct: &float "{{ 'float' if target.type not in ['athena', 'databricks', 'duckdb','trino', 'spark'] else 'decimal(10,2)' }}"
+        staging_documentation_coverage_pct: *float
+        intermediate_documentation_coverage_pct: *float
+        marts_documentation_coverage_pct: *float
+        other_documentation_coverage_pct: *float
+      tags:
+        - docs
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_documentation_coverage
+          arguments:
+            compare_model: ref('fct_documentation_coverage')
+            compare_columns:
+              - total_models
+              - documented_models
+              - documentation_coverage_pct
+              - staging_documentation_coverage_pct
+              - intermediate_documentation_coverage_pct
+              - marts_documentation_coverage_pct
+              - other_documentation_coverage_pct
+  
+  - name: test_fct_undocumented_source_tables
+    config:
+      tags:
+        - docs
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_undocumented_source_tables
+          arguments:
+            compare_model: ref('fct_undocumented_source_tables')
+
+  - name: test_fct_undocumented_sources
+    config:
+      tags:
+        - docs
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_undocumented_sources
+          arguments:
+            compare_model: ref('fct_undocumented_sources')

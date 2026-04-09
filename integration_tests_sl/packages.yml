@@ -1,0 +1,3 @@
+packages:
+  - local: ../
+  - local: exclude_package/

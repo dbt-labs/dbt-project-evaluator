@@ -26,7 +26,42 @@ env:
     PYTHON_VERSION: "3.11"
 
 jobs:
-    run-tests:
+    run-duckdb-tests:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+            - name: "Checkout PR code"
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
+
+            - name: "Set up Python ${{ env.PYTHON_VERSION }}"
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ env.PYTHON_VERSION }}
+
+            - name: "Install dbt Fusion"
+              run: |
+                  curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh
+                  echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+            - name: "Verify Fusion installation"
+              run: |
+                  dbt --version
+
+            - name: "Install tox"
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install tox
+
+            - name: "Run Fusion integration tests on duckdb"
+              run: |
+                  tox -e dbt_integration_fusion_duckdb
+
+    run-cloud-tests:
+        needs: run-duckdb-tests
         runs-on: ubuntu-latest
         environment: ${{ (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository) && 'cloud-tests' || '' }}
         strategy:

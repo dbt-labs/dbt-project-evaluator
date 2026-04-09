@@ -1,0 +1,5 @@
+resource_name,model_type,appropriate_prefixes
+report_1,other,rpt_
+report_2,other,rpt_
+report_3,other,rpt_
+model_8,marts,"dim_, fct_"

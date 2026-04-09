@@ -1,0 +1,2 @@
+parent,child,parent_and_child,is_loop_independent
+stg_model_1,int_model_5.v2,int_model_4,true

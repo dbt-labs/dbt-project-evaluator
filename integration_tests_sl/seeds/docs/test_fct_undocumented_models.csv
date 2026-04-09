@@ -1,0 +1,15 @@
+resource_name,model_type
+stg_model_2,staging
+stg_model_3,staging
+stg_model_4,staging
+stg_model_5,staging
+fct_model_6,marts
+model_8,marts
+fct_model_9,marts
+dim_model_7,marts
+int_model_4,intermediate
+int_model_5.v1,intermediate
+int_model_5.v2,intermediate
+int_model_5.v3,intermediate
+report_3,other
+fct_model_10,marts

@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: int_model_test_summary_dpe
+    description: this model creates some initial metrics required for the downstream models related to testing
+    columns:
+      - name: resource_name
+        data_tests:
+          - unique
+          - not_null

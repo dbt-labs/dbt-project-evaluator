@@ -17,3 +17,8 @@ cd ../integration_tests_2
 dbt deps --target $1 || exit 1
 dbt seed --full-refresh --target $1 --static-analysis=off --vars "$FUSION_VARS" || exit 1
 dbt run -x --target $1 --full-refresh --static-analysis=off --vars "$FUSION_VARS" || exit 1
+
+echo "Running Fusion tests for the SL project (new semantic layer spec)"
+cd ../integration_tests_sl
+dbt deps --target $1 || exit 1
+SNOWFLAKE_SCHEMA="${SNOWFLAKE_SCHEMA}_sl" dbt build -x --target $1 --full-refresh --static-analysis=off --vars "$FUSION_VARS" || exit 1

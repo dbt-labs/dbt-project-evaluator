@@ -1,0 +1,3 @@
+parent,model_children
+source_1.table_2,"int_model_4, stg_model_2"
+source_1.table_1,"stg_model_1, stg_model_2"
