@@ -21,7 +21,7 @@ permissions:
 
 jobs:
     core-tests:
-        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox.yml@v2
+        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox.yml@5d4d8561b9fd193dc0ef2c5a302ad0acc8f68b64
         with:
             # Adapters are read from supported_adapters.env if not specified here
             adapters: "snowflake,bigquery,redshift,databricks"
