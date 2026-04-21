@@ -62,7 +62,7 @@ jobs:
 
     fusion-tests:
         needs: run-duckdb-tests
-        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@v2
+        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@5d4d8561b9fd193dc0ef2c5a302ad0acc8f68b64
         with:
             # Only Snowflake for now - add more adapters here as Fusion support expands
             adapters: "snowflake"
