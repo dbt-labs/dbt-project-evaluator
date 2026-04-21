@@ -19,64 +19,41 @@ on:
 permissions:
     contents: read
 
-env:
-    PYTHON_VERSION: "3.11"
-
 jobs:
-    run-tests:
-        runs-on: ubuntu-latest
-        environment: ${{ (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository) && 'cloud-tests' || '' }}
-        strategy:
-            fail-fast: false
-            matrix:
-                adapter: [snowflake, bigquery, redshift, databricks]
-
-        steps:
-            - name: "Checkout PR code"
-              uses: actions/checkout@v4
-              with:
-                  # For pull_request_target, we must explicitly checkout the PR head
-                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
-
-            - name: "Set up Python ${{ env.PYTHON_VERSION }}"
-              uses: actions/setup-python@v5
-              with:
-                  python-version: ${{ env.PYTHON_VERSION }}
-
-            - name: "Install dbt-${{ matrix.adapter }}"
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install dbt-${{ matrix.adapter }}
-
-            - name: "Install tox"
-              run: |
-                  pip install tox
-
-            - name: "Run integration tests on ${{ matrix.adapter }}"
-              run: |
-                  tox -e dbt_integration_${{ matrix.adapter }}
-              env:
-                # snowflake
-                SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
-                DBT_ENV_SECRET_SNOWFLAKE_PASS: ${{ secrets.SNOWFLAKE_PASS }}
-                SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
-                SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
-                SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
-                SNOWFLAKE_SCHEMA: "dbt_project_evaluator_integration_tests_snowflake_${{ github.run_number }}"
-                # bigquery
-                BIGQUERY_PROJECT: ${{ vars.BIGQUERY_PROJECT }}
-                BIGQUERY_KEYFILE_JSON: ${{ secrets.BIGQUERY_KEYFILE_JSON }}
-                BIGQUERY_SCHEMA: "dpe_integration_tests_bigquery_${{ github.run_number }}"
-                # redshift
-                REDSHIFT_HOST: ${{ vars.REDSHIFT_HOST }}
-                REDSHIFT_USER: ${{ vars.REDSHIFT_USER }}
-                DBT_ENV_SECRET_REDSHIFT_PASS: ${{ secrets.REDSHIFT_PASS }}
-                REDSHIFT_DATABASE: ${{ vars.REDSHIFT_DATABASE }}
-                REDSHIFT_SCHEMA: "dpe_integration_tests_redshift_${{ github.run_number }}"
-                REDSHIFT_PORT: 5439
-                # databricks
-                DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
-                DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
-                DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
-                DATABRICKS_SCHEMA: "integration_tests_databricks_${{ github.run_number }}"
+    core-tests:
+        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox.yml@v2
+        with:
+            # Adapters are read from supported_adapters.env if not specified here
+            adapters: "snowflake,bigquery,redshift,databricks"
+            # For pull_request_target: require environment approval for fork PRs
+            environment: >-
+                ${{ github.event_name == 'pull_request_target'
+                    && github.event.pull_request.head.repo.full_name != github.repository
+                    && 'cloud-tests' || '' }}
+            # For pull_request_target: checkout the PR head, not the base branch
+            ref: ${{ github.event.pull_request.head.sha || '' }}
+            # snowflake
+            SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+            SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+            SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+            SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+            SNOWFLAKE_SCHEMA: "dbt_project_evaluator_integration_tests_snowflake_${{ github.run_number }}"
+            # bigquery
+            BIGQUERY_PROJECT: ${{ vars.BIGQUERY_PROJECT }}
+            BIGQUERY_SCHEMA: "dpe_integration_tests_bigquery_${{ github.run_number }}"
+            # redshift
+            REDSHIFT_HOST: ${{ vars.REDSHIFT_HOST }}
+            REDSHIFT_USER: ${{ vars.REDSHIFT_USER }}
+            REDSHIFT_DATABASE: ${{ vars.REDSHIFT_DATABASE }}
+            REDSHIFT_SCHEMA: "dpe_integration_tests_redshift_${{ github.run_number }}"
+            REDSHIFT_PORT: "5439"
+            # databricks
+            DATABRICKS_SCHEMA: "integration_tests_databricks_${{ github.run_number }}"
+            DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+            DATABRICKS_HTTP_PATH: ${{ vars.DATABRICKS_HTTP_PATH }}
+        secrets:
+            SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+            DBT_ENV_SECRET_SNOWFLAKE_PASS: ${{ secrets.SNOWFLAKE_PASS }}
+            BIGQUERY_KEYFILE_JSON: ${{ secrets.BIGQUERY_KEYFILE_JSON }}
+            DBT_ENV_SECRET_REDSHIFT_PASS: ${{ secrets.REDSHIFT_PASS }}
+            DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}

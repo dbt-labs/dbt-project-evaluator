@@ -1,5 +1,5 @@
 # **what?**
-# Run tests using dbt Fusion against Snowflake
+# Run tests using dbt Fusion against supported adapters
 
 # **why?**
 # To ensure that dbt-project-evaluator works as expected with dbt Fusion
@@ -9,9 +9,8 @@
 # On every PR, and every push to main and when manually triggered
 
 # **note**
-# Currently only Snowflake is tested with Fusion. Additional adapters can be
-# added to the matrix as Fusion support expands. Credentials are shared with
-# the existing dbt-core Snowflake tests.
+# DuckDB runs first as a quick check that does not require cloud credentials.
+# Cloud adapter tests use the reusable workflow from dbt-labs/dbt-package-testing.
 
 name: Fusion Integration Tests
 
@@ -22,14 +21,15 @@ on:
     pull_request_target:
     workflow_dispatch:
 
+permissions:
+    contents: read
+
 env:
     PYTHON_VERSION: "3.11"
 
 jobs:
     run-duckdb-tests:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
 
         steps:
             - name: "Checkout PR code"
@@ -60,51 +60,23 @@ jobs:
               run: |
                   tox -e dbt_integration_fusion_duckdb
 
-    run-cloud-tests:
+    fusion-tests:
         needs: run-duckdb-tests
-        runs-on: ubuntu-latest
-        environment: ${{ (github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository) && 'cloud-tests' || '' }}
-        strategy:
-            fail-fast: false
-            matrix:
-                # Only Snowflake for now - add more adapters here as Fusion support expands
-                adapter: [snowflake]
-
-        steps:
-            - name: "Checkout PR code"
-              uses: actions/checkout@v4
-              with:
-                  # For pull_request_target, we must explicitly checkout the PR head
-                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
-
-            - name: "Set up Python ${{ env.PYTHON_VERSION }}"
-              uses: actions/setup-python@v5
-              with:
-                  python-version: ${{ env.PYTHON_VERSION }}
-
-            - name: "Install dbt Fusion"
-              run: |
-                  curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh
-                  echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-            - name: "Verify Fusion installation"
-              run: |
-                  dbt --version
-
-            - name: "Install tox"
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install tox
-
-            - name: "Run Fusion integration tests on ${{ matrix.adapter }}"
-              run: |
-                  tox -e dbt_integration_fusion_${{ matrix.adapter }}
-              env:
-                # snowflake
-                SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-                SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
-                DBT_ENV_SECRET_SNOWFLAKE_PASS: ${{ secrets.SNOWFLAKE_PASS }}
-                SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
-                SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
-                SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
-                SNOWFLAKE_SCHEMA: "fusion_integration_tests_${{ matrix.adapter }}_${{ github.run_number }}"
+        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@v2
+        with:
+            # Only Snowflake for now - add more adapters here as Fusion support expands
+            adapters: "snowflake"
+            environment: >-
+                ${{ github.event_name == 'pull_request_target'
+                    && github.event.pull_request.head.repo.full_name != github.repository
+                    && 'cloud-tests' || '' }}
+            ref: ${{ github.event.pull_request.head.sha || '' }}
+            # snowflake
+            SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
+            SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
+            SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
+            SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+            SNOWFLAKE_SCHEMA: "fusion_integration_tests_snowflake_${{ github.run_number }}"
+        secrets:
+            SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+            DBT_ENV_SECRET_SNOWFLAKE_PASS: ${{ secrets.SNOWFLAKE_PASS }}

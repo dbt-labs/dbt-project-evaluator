@@ -17,6 +17,7 @@ models:
         dimension:
           type: categorical
       - name: date_day
+        data_type: date
         dimension:
           type: time
         granularity: day

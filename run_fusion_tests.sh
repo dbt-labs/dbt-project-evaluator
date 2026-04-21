@@ -15,7 +15,9 @@ dbt build -x --target $1 --full-refresh --static-analysis=off --vars "$FUSION_VA
 echo "Running Fusion tests for the second project"
 cd ../integration_tests_2
 dbt deps --target $1 || exit 1
-dbt seed --full-refresh --target $1 --static-analysis=off --vars "$FUSION_VARS" || exit 1
+# Skip `dbt seed` under Fusion: it mis-resolves the package seed path with a
+# doubled `dbt_packages/dbt_project_evaluator/...` prefix. Not needed here
+# because this project runs `dbt run` only (no tests → no exceptions lookup).
 dbt run -x --target $1 --full-refresh --static-analysis=off --vars "$FUSION_VARS" || exit 1
 
 echo "Running Fusion tests for the SL project (new semantic layer spec)"
