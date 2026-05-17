@@ -22,7 +22,7 @@ models_per_test as (
         direct_parent_id as parent_model_id
     from relationships
     where resource_type = 'test'
-    and is_primary_test_relationship
+    and is_primary_test_relationship = cast(1 as {{ dbt.type_boolean() }})
 
 ),
 
