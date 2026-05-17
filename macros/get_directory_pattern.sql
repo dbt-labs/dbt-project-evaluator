@@ -25,7 +25,12 @@
 {% macro get_dbtreplace_directory_pattern() %}
   {% if execute %}
     {%- if target.type == 'fabric' -%}
-      left(file_path, len(file_path) - charindex('/', reverse(file_path)))
+      {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
+      {%- if on_mac_or_linux -%}
+        left(file_path, len(file_path) - charindex('/', reverse(file_path)))
+      {%- else -%}
+        left(file_path, len(file_path) - charindex('\', reverse(file_path)))
+      {%- endif -%}
     {%- else -%}
       {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
       {%- if on_mac_or_linux -%}

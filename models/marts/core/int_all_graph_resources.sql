@@ -51,7 +51,12 @@ unioned_with_calc as (
         end as prefix,
         {{ get_dbtreplace_directory_pattern() }} as directory_path,
         {% if target.type == 'fabric' %}
+        {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
+        {%- if on_mac_or_linux -%}
         right(file_path, charindex('/', reverse(file_path)) - 1) as file_name
+        {%- else -%}
+        right(file_path, charindex('\', reverse(file_path)) - 1) as file_name
+        {%- endif -%}
         {% else %}
         regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name
         {% endif %}
