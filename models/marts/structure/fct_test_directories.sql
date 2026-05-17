@@ -4,7 +4,7 @@ with
 resources as (
 
     select * from {{ ref('int_all_graph_resources') }}
-    where not is_excluded
+    where is_excluded = cast(0 as {{ dbt.type_boolean() }})
 
 ),
 
@@ -51,7 +51,7 @@ test_file_paths as (
     from resources
     where 
         resource_type = 'test'
-        and is_generic_test
+        and is_generic_test = cast(1 as {{ dbt.type_boolean() }})
 
 ),
 

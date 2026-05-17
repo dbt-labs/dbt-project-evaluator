@@ -19,7 +19,7 @@ select
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as name,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as resource_type,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as file_path,
-    cast(True as {{ dbt.type_boolean() }}) as is_described,
+    cast(1 as {{ dbt.type_boolean() }}) as is_described,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as metric_type,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as label,
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as package_name,
@@ -34,4 +34,4 @@ select
     cast(null as {{ dbt_project_evaluator.type_string_dpe() }}) as meta
 
 from dummy_cte
-where false 
+where 1=0

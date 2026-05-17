@@ -16,7 +16,7 @@ with model_relationships as (
     where child_resource_type = 'model'
     -- only filter out excluded children nodes
         -- filtering parents could result in incorrectly flagging nodes that depend on excluded nodes
-    and not child_is_excluded
+    and child_is_excluded = cast(0 as {{ dbt.type_boolean() }})
     -- exclude required time spine
     {% if metric_flow_time_spine_names %}
     and child not in ('{{ metric_flow_time_spine_names }}')
@@ -27,7 +27,7 @@ final as (
     select
         child
     from model_relationships
-    group by 1
+    group by child
     having max(distance) = 0
 )
 

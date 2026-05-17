@@ -3,16 +3,16 @@ with
 models as (
     select * from {{ ref('int_all_graph_resources') }}
     where resource_type = 'model'
-    and not is_excluded
+    and is_excluded = cast(0 as {{ dbt.type_boolean() }})
 ),
 
 conversion as (
     select
         resource_id,
-        case when is_described then 1 else 0 end as is_described_model,
+        case when is_described = cast(1 as {{ dbt.type_boolean() }}) then 1 else 0 end as is_described_model,
         {% for model_type in var('model_types') %}
             case when model_type = '{{ model_type }}' then 1.0 else NULL end as is_{{ model_type }}_model,
-            case when is_described and model_type = '{{ model_type }}' then 1.0 else 0 end as is_described_{{ model_type }}_model{% if not loop.last %},{% endif %}
+            case when is_described = cast(1 as {{ dbt.type_boolean() }}) and model_type = '{{ model_type }}' then 1.0 else 0 end as is_described_{{ model_type }}_model{% if not loop.last %},{% endif %}
         {% endfor %}
 
     from models

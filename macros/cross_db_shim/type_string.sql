@@ -9,3 +9,7 @@
 {%- macro redshift__type_string_dpe() -%}
     {{ return(api.Column.string_type(600)) }}
 {%- endmacro -%}
+
+{%- macro fabric__type_string_dpe() -%}
+    {{ return("varchar(8000)") }}
+{%- endmacro -%}

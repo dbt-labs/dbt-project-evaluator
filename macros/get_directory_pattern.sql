@@ -24,11 +24,15 @@
  
 {% macro get_dbtreplace_directory_pattern() %}
   {% if execute %}
-    {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
-    {%- if on_mac_or_linux -%}
-      {{ dbt.replace("file_path", "regexp_replace(file_path,'.*/','')", "''") }}
-    {% else %}
-      {{ dbt.replace("file_path", "regexp_replace(file_path,'.*\\\\\\\\','')", "''") }}
-    {% endif %}
+    {%- if target.type == 'fabric' -%}
+      left(file_path, len(file_path) - charindex('/', reverse(file_path)))
+    {%- else -%}
+      {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
+      {%- if on_mac_or_linux -%}
+        {{ dbt.replace("file_path", "regexp_replace(file_path,'.*/','')", "''") }}
+      {% else %}
+        {{ dbt.replace("file_path", "regexp_replace(file_path,'.*\\\\\\\\','')", "''") }}
+      {% endif %}
+    {%- endif -%}
   {% endif %}
-{% endmacro %} 
+{% endmacro %}

@@ -12,7 +12,7 @@
 
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
-    where not is_excluded
+    where is_excluded = cast(0 as {{ dbt.type_boolean() }})
     -- exclude required time spine
     {% if metric_flow_time_spine_names %}
     and resource_name not in ('{{ metric_flow_time_spine_names }}')
@@ -21,17 +21,19 @@ with all_graph_resources as (
 
 naming_convention_prefixes as (
     select * from {{ ref('stg_naming_convention_prefixes') }}
+    {% if target.type not in ['fabric'] %}
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by prefix_value
-), 
+    {% endif %}
+),
 
 appropriate_prefixes as (
-    select 
-        model_type, 
+    select
+        model_type,
         {{ dbt.listagg(
-            measure='prefix_value', 
-            delimiter_text="', '", 
-            order_by_clause='order by prefix_value' if target.type in ['snowflake','redshift','duckdb','trino'])
+            measure='prefix_value',
+            delimiter_text="', '",
+            order_by_clause='order by prefix_value' if target.type in ['snowflake','redshift','duckdb','trino','fabric'])
         }} as appropriate_prefixes
     from naming_convention_prefixes
     group by model_type
