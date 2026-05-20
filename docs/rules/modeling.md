@@ -431,6 +431,26 @@ or any other nested information.
 ![A refactored DAG showing three sources which are each being referenced by an accompanying staging model](https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png){ width=500 }
 
 ---
+## Unused Staging Models
+
+`fct_unused_staging_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_unused_staging_models.sql)) shows each staging model with 0 children.
+
+**Example**
+
+`model.stg_auditboard__teams` isn't being referenced.
+
+![A DAG showing three staging_models which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all](../img/unused_staging_models.png){ width=500 }
+
+**Reason to Flag**
+
+This represents a staging models that was created but never used in downstream models. This simply 
+represents the buildup of cruft in the project that doesn’t need to be there.
+
+**How to Remediate**
+
+Remove the unused staging model and their sources from the project.
+
+---
 
 ## Models with Too Many Joins
 
