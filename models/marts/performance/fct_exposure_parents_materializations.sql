@@ -14,7 +14,7 @@ direct_exposure_relationships as (
             )
         )
         -- no test on child_is_excluded because exposures are never excluded
-        and not parent_is_excluded
+        and parent_is_excluded = cast(0 as {{ dbt.type_boolean() }})
 ),
 
 final as (

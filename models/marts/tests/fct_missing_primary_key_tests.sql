@@ -19,7 +19,7 @@ final as (
         number_of_tests_on_model,
         number_of_constraints_on_model
     from tests
-    where not(is_primary_key_tested)
+    where is_primary_key_tested = cast(0 as {{ dbt.type_boolean() }})
 
 )
 

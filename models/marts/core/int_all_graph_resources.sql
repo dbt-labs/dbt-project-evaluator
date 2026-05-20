@@ -47,12 +47,21 @@ unioned_with_calc as (
         end as resource_name,
         case
             when resource_type = 'source' then null
-            else {{ dbt.split_part('name', "'_'", 1) }}||'_' 
+            else {{ dbt.concat([dbt.split_part('name', "'_'", 1), "'_'"]) }}
         end as prefix,
         {{ get_dbtreplace_directory_pattern() }} as directory_path,
+        {% if target.type == 'fabric' %}
+        {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
+        {%- if on_mac_or_linux -%}
+        right(file_path, charindex('/', reverse(file_path)) - 1) as file_name
+        {%- else -%}
+        right(file_path, charindex('\', reverse(file_path)) - 1) as file_name
+        {%- endif -%}
+        {% else %}
         regexp_replace(file_path,'.*{{ get_regexp_directory_pattern() }}','') as file_name
+        {% endif %}
     from unioned
-    where coalesce(is_enabled, True) = True and package_name != 'dbt_project_evaluator'
+    where coalesce(is_enabled, cast(1 as {{ dbt.type_boolean() }})) = cast(1 as {{ dbt.type_boolean() }}) and package_name != 'dbt_project_evaluator'
 ), 
 
 joined as (
@@ -78,19 +87,19 @@ joined as (
         {{ dbt.position(dbt.concat([quoted_directory_pattern, 'naming_convention_folders.folder_name_value', quoted_directory_pattern]),'unioned_with_calc.directory_path') }} as position_folder,  
         nullif(unioned_with_calc.column_name, '') as column_name,
         {% for test in test_macro_set %}
-        unioned_with_calc.macro_dependencies like '%macro.{{ test }}%' and unioned_with_calc.resource_type = 'test' as is_{{ test.split('.')[1] }},  
+        case when unioned_with_calc.macro_dependencies like '%macro.{{ test }}%' and unioned_with_calc.resource_type = 'test' then cast(1 as {{ dbt.type_boolean() }}) else cast(0 as {{ dbt.type_boolean() }}) end as is_{{ test.split('.')[1] }},
         {% endfor %}
         unioned_with_calc.is_enabled, 
         unioned_with_calc.materialized, 
         unioned_with_calc.on_schema_change, 
-        unioned_with_calc.database, 
-        unioned_with_calc.schema, 
+        unioned_with_calc.{{ dbt_project_evaluator.quote_identifier('database') }},
+        unioned_with_calc.{{ dbt_project_evaluator.quote_identifier('schema') }},
         unioned_with_calc.package_name, 
         unioned_with_calc.alias, 
         unioned_with_calc.is_described, 
         unioned_with_calc.model_group, 
         unioned_with_calc.access, 
-        unioned_with_calc.access = 'public' as is_public, 
+        case when unioned_with_calc.access = 'public' then cast(1 as {{ dbt.type_boolean() }}) else cast(0 as {{ dbt.type_boolean() }}) end as is_public,
         unioned_with_calc.latest_version, 
         unioned_with_calc.version, 
         unioned_with_calc.deprecation_date, 

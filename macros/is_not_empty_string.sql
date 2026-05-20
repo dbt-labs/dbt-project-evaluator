@@ -11,3 +11,7 @@
     {% endif %}
 
 {% endmacro %}
+
+{% macro fabric__is_not_empty_string(str) %}
+    {% if str %}1{% else %}0{% endif %}
+{% endmacro %}

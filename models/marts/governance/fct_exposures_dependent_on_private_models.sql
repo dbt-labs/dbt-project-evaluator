@@ -7,9 +7,9 @@ direct_exposure_relationships as (
         and child_resource_type = 'exposure'
         and not (
                 parent_resource_type = 'model'
-                and parent_is_public
+                and parent_is_public = cast(1 as {{ dbt.type_boolean() }})
             )
-        and not parent_is_excluded
+        and parent_is_excluded = cast(0 as {{ dbt.type_boolean() }})
 ),
 
 final as (

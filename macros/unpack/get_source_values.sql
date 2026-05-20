@@ -22,15 +22,15 @@
               wrap_string_with_quotes(node.source_name),
               "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.source_description) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
               "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
-              "cast(" ~ node.config.enabled ~ " as " ~ dbt.type_boolean() ~ ")",
+              "cast(" ~ dbt_project_evaluator.bool_literal(node.config.enabled) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
               wrap_string_with_quotes(node.loaded_at_field | replace("'", "_")),
 
-              "cast(" ~ (
-                ((node.config.freshness != None) and (dbt_project_evaluator.is_not_empty_string(node.config.freshness.warn_after.count) 
-                  or dbt_project_evaluator.is_not_empty_string(node.config.freshness.error_after.count))) 
-                or ((node.freshness != None) and (dbt_project_evaluator.is_not_empty_string(node.freshness.warn_after.count) 
+              "cast(" ~ dbt_project_evaluator.bool_literal(
+                ((node.config.freshness != None) and (dbt_project_evaluator.is_not_empty_string(node.config.freshness.warn_after.count)
+                  or dbt_project_evaluator.is_not_empty_string(node.config.freshness.error_after.count)))
+                or ((node.freshness != None) and (dbt_project_evaluator.is_not_empty_string(node.freshness.warn_after.count)
                   or dbt_project_evaluator.is_not_empty_string(node.freshness.error_after.count)))
-                ) | trim ~ " as boolean)",
+                ) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
 
               wrap_string_with_quotes(node.database),
               wrap_string_with_quotes(node.schema),
@@ -38,7 +38,7 @@
               wrap_string_with_quotes(node.loader),
               wrap_string_with_quotes(node.identifier),
               wrap_string_with_quotes(node.meta | tojson),
-              "cast(" ~ exclude_source ~ " as " ~ dbt.type_boolean() ~ ")",
+              "cast(" ~ dbt_project_evaluator.bool_literal(exclude_source) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
             ]
         %}
             

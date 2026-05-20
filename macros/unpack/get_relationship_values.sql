@@ -21,12 +21,12 @@
 
             {%- if node.get('depends_on',{}).get('nodes',[]) |length == 0 -%}
 
-                {%- set values_line = 
+                {%- set values_line =
                   [
                     "cast('" ~ node.unique_id ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
                     "cast(NULL as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
-                    "FALSE",
-                  ] 
+                    "cast(" ~ dbt_project_evaluator.bool_literal(false) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
+                  ]
                 %}
                   
                 {%- do values.append(values_line) -%}
@@ -42,7 +42,7 @@
                         [
                             "cast('" ~ node.unique_id ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
                             "cast('" ~ parent ~ "' as " ~ dbt_project_evaluator.type_string_dpe() ~ ")",
-                            "" ~ is_primary ~ "" if node.unique_id.split('.')[0] == 'test' else "FALSE"
+                            "cast(" ~ dbt_project_evaluator.bool_literal(is_primary if node.unique_id.split('.')[0] == 'test' else false) | trim ~ " as " ~ dbt.type_boolean() ~ ")"
                         ]
                     %}
                       
