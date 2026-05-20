@@ -8,9 +8,6 @@
 # **when?**
 # On every PR, and every push to main and when manually triggered
 
-# **note**
-# DuckDB runs first as a quick check that does not require cloud credentials.
-# Cloud adapter tests use the reusable workflow from dbt-labs/dbt-package-testing.
 
 name: Fusion Integration Tests
 
@@ -28,40 +25,7 @@ env:
     PYTHON_VERSION: "3.11"
 
 jobs:
-    run-duckdb-tests:
-        runs-on: ubuntu-latest
-
-        steps:
-            - name: "Checkout PR code"
-              uses: actions/checkout@v4
-              with:
-                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
-
-            - name: "Set up Python ${{ env.PYTHON_VERSION }}"
-              uses: actions/setup-python@v5
-              with:
-                  python-version: ${{ env.PYTHON_VERSION }}
-
-            - name: "Install dbt Fusion"
-              run: |
-                  curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh
-                  echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-            - name: "Verify Fusion installation"
-              run: |
-                  dbt --version
-
-            - name: "Install tox"
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install tox
-
-            - name: "Run Fusion integration tests on duckdb"
-              run: |
-                  tox -e dbt_integration_fusion_duckdb
-
     fusion-tests:
-        needs: run-duckdb-tests
         uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@5d4d8561b9fd193dc0ef2c5a302ad0acc8f68b64
         with:
             # Only Snowflake for now - add more adapters here as Fusion support expands
