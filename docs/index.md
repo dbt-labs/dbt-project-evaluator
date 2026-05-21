@@ -25,6 +25,8 @@ Currently, the following adapters are supported:
 - AWS Athena (tested manually)
 - Greenplum (tested manually)
 - ClickHouse (tested manually)
+- Microsoft Fabric Data Warehouse (tested manually)
+- Microsoft Fabric Spark (tested manually)
 
 ## Using This Package
 
@@ -32,7 +34,7 @@ Currently, the following adapters are supported:
   
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
-### Additional setup for Databricks/Spark/DuckDB/Redshift
+### Additional setup for Databricks/Spark/DuckDB/Redshift/Fabric
 
 In your `dbt_project.yml`, add the following config:
 
@@ -64,8 +66,8 @@ Each test warning indicates the presence of a type of misalignment. To troublesh
 
 ## Limitations
 
-### BigQuery and Databricks
+### BigQuery, Databricks, and Microsoft Fabric Data Warehouse
 
-BigQuery current support for recursive CTEs is limited and Databricks SQL doesn't support recursive CTEs.
+BigQuery has limited support for recursive CTEs, while Databricks SQL and Microsoft Fabric Data Warehouse do not support them.
 
 For those Data Warehouses, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is configured with `max_depth_dag` and defaulted to 9. This means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
