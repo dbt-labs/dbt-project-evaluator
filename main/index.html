@@ -343,10 +343,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#additional-setup-for-databrickssparkduckdbredshift" class="md-nav__link">
+  <a href="#additional-setup-for-databrickssparkduckdbredshiftfabric" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Additional setup for Databricks/Spark/DuckDB/Redshift
+        Additional setup for Databricks/Spark/DuckDB/Redshift/Fabric
       
     </span>
   </a>
@@ -382,10 +382,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#bigquery-and-databricks" class="md-nav__link">
+  <a href="#bigquery-databricks-and-microsoft-fabric-data-warehouse" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BigQuery and Databricks
+        BigQuery, Databricks, and Microsoft Fabric Data Warehouse
       
     </span>
   </a>
@@ -1007,11 +1007,13 @@ Specifically, this package tests for:</p>
 <li>AWS Athena (tested manually)</li>
 <li>Greenplum (tested manually)</li>
 <li>ClickHouse (tested manually)</li>
+<li>Microsoft Fabric Data Warehouse (tested manually)</li>
+<li>Microsoft Fabric Spark (tested manually)</li>
 </ul>
 <h2 id="using-this-package">Using This Package<a class="headerlink" href="#using-this-package" title="Permanent link">#</a></h2>
 <h3 id="cloning-via-dbt-package-hub">Cloning via dbt Package Hub<a class="headerlink" href="#cloning-via-dbt-package-hub" title="Permanent link">#</a></h3>
 <p>Check <a href="https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/">dbt Hub</a> for the latest installation instructions, or <a href="https://docs.getdbt.com/docs/package-management">read the docs</a> for more information on installing packages.</p>
-<h3 id="additional-setup-for-databrickssparkduckdbredshift">Additional setup for Databricks/Spark/DuckDB/Redshift<a class="headerlink" href="#additional-setup-for-databrickssparkduckdbredshift" title="Permanent link">#</a></h3>
+<h3 id="additional-setup-for-databrickssparkduckdbredshiftfabric">Additional setup for Databricks/Spark/DuckDB/Redshift/Fabric<a class="headerlink" href="#additional-setup-for-databrickssparkduckdbredshiftfabric" title="Permanent link">#</a></h3>
 <p>In your <code>dbt_project.yml</code>, add the following config:</p>
 <div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">dispatch</span><span class="p">:</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">macro_namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dbt</span>
@@ -1034,8 +1036,8 @@ Specifically, this package tests for:</p>
 </ol>
 <hr />
 <h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">#</a></h2>
-<h3 id="bigquery-and-databricks">BigQuery and Databricks<a class="headerlink" href="#bigquery-and-databricks" title="Permanent link">#</a></h3>
-<p>BigQuery current support for recursive CTEs is limited and Databricks SQL doesn't support recursive CTEs.</p>
+<h3 id="bigquery-databricks-and-microsoft-fabric-data-warehouse">BigQuery, Databricks, and Microsoft Fabric Data Warehouse<a class="headerlink" href="#bigquery-databricks-and-microsoft-fabric-data-warehouse" title="Permanent link">#</a></h3>
+<p>BigQuery has limited support for recursive CTEs, while Databricks SQL and Microsoft Fabric Data Warehouse do not support them.</p>
 <p>For those Data Warehouses, the model <code>int_all_dag_relationships</code> needs to be created by looping CTEs instead. The number of loops is configured with <code>max_depth_dag</code> and defaulted to 9. This means that dependencies between models of more than 9 levels of separation won't show in the model <code>int_all_dag_relationships</code> but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.</p>
 
 

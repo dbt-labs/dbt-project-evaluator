@@ -1186,7 +1186,7 @@
 <tr>
 <td><code>max_depth_dag</code></td>
 <td>limits the maximum distance between nodes calculated in <code>int_all_dag_relationships</code></td>
-<td>9 for bigquery and spark, -1 for other adatpters</td>
+<td>9 for bigquery, spark, and fabric, -1 for other adapters</td>
 </tr>
 <tr>
 <td><code>insert_batch_size</code></td>
@@ -1198,7 +1198,7 @@
 <p><strong>Note on max_depth_dag</strong></p>
 <p>The default behavior for limiting the relationships calculated in the <code>int_all_dag_relationships</code> model differs depending on your adapter.</p>
 <ul>
-<li>For Bigquery &amp; Spark/Databricks the maximum distance between two nodes in your DAG, calculated in <code>int_all_dag_relationships</code>, is set by the <code>max_depth_dag</code> variable, which is defaulted to 9. So by default, <code>int_all_dag_relationships</code> contains a row for every path less than or equal to 9 nodes in length between two nodes in your DAG. This is because these adapters do not currently support recursive SQL, and queries often fail on more than 9 recursive joins.</li>
+<li>For BigQuery, Spark/Databricks, and Microsoft Fabric Data Warehouse the maximum distance between two nodes in your DAG, calculated in <code>int_all_dag_relationships</code>, is set by the <code>max_depth_dag</code> variable, which is defaulted to 9. So by default, <code>int_all_dag_relationships</code> contains a row for every path less than or equal to 9 nodes in length between two nodes in your DAG. This is because these adapters do not currently support recursive SQL, and queries often fail on more than 9 recursive joins.</li>
 <li>For all other adapters <code>int_all_dag_relationships</code> by default contains a row for every single path between two nodes in your DAG. If you experience long runtimes for the <code>int_all_dag_relationships</code> model, you may consider limiting the length of your generated DAG paths. To do this, set <code>max_depth_dag: {{ whatever limit you want to enforce }}</code>. The value of <code>max_depth_dag</code> must be greater than 2 for all DAG tests to work, and greater than <code>chained_views_threshold</code> to ensure your performance tests to work. By default, the value of this variable for these adapters is -1, which the package interprets as "no limit".</li>
 </ul>
 <div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">vars</span><span class="p">:</span>
