@@ -6,7 +6,7 @@
 
 with all_graph_resources as (
     select * from {{ ref('int_all_graph_resources') }}
-    where not is_excluded
+    where is_excluded = cast(0 as {{ dbt.type_boolean() }})
 ),
 
 -- find all sources that are definied in a .yml file NOT in their subdirectory
@@ -15,10 +15,10 @@ inappropriate_subdirectories_sources as (
         resource_name,
         resource_type,
         file_path as current_file_path,
-        'models{{ directory_pattern  }}' || '{{ var("staging_folder_name") }}' || '{{ directory_pattern }}' || source_name || '{{ directory_pattern }}' || file_name as change_file_path_to
+        {{ dbt.concat(["'models" ~ directory_pattern ~ "'", "'" ~ var("staging_folder_name") ~ "'", "'" ~ directory_pattern ~ "'", 'source_name', "'" ~ directory_pattern ~ "'", 'file_name']) }} as change_file_path_to
     from all_graph_resources
     where resource_type = 'source'
-    and directory_path not like '%' || source_name || '%'
+    and directory_path not like {{ dbt.concat(["'%'", 'source_name', "'%'"]) }}
 )
 
 select * from inappropriate_subdirectories_sources

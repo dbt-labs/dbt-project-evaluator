@@ -64,10 +64,7 @@ direct_relationships as (
             when all_graph_resources.resource_type in ('model', 'snapshot', 'test') then models.direct_parent_id
             else null
         end as direct_parent_id,
-        (
-            all_graph_resources.resource_type = 'test'
-            and models.is_primary_relationship
-        ) as is_primary_test_relationship
+        case when all_graph_resources.resource_type = 'test' and models.is_primary_relationship = cast(1 as {{ dbt.type_boolean() }}) then cast(1 as {{ dbt.type_boolean() }}) else cast(0 as {{ dbt.type_boolean() }}) end as is_primary_test_relationship
     from all_graph_resources
     left join direct_model_relationships as models
         on all_graph_resources.resource_id = models.resource_id

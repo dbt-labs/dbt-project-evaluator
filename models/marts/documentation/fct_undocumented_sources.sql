@@ -2,7 +2,7 @@ with
 
 all_resources as (
     select * from {{ ref('int_all_graph_resources') }}
-    where not is_excluded
+    where is_excluded = cast(0 as {{ dbt.type_boolean() }})
 
 ),
 
@@ -12,7 +12,7 @@ final as (
         source_name
 
     from all_resources
-    where not is_source_described and resource_type = 'source'
+    where is_source_described = cast(0 as {{ dbt.type_boolean() }}) and resource_type = 'source'
 
 )
 

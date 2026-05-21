@@ -25,7 +25,7 @@
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.description | replace("\\","\\\\"))),
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.data_type)),
                         wrap_string_with_quotes(dbt.escape_single_quotes(tojson(column.constraints))),
-                        column.constraints | selectattr('type', 'equalto', 'not_null') | list | length > 0,
+                        "cast(" ~ dbt_project_evaluator.bool_literal(column.constraints | selectattr('type', 'equalto', 'not_null') | list | length > 0) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
                         column.constraints | length,
                         wrap_string_with_quotes(dbt.escape_single_quotes(column.quote))
                     ]

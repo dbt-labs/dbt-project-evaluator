@@ -23,7 +23,7 @@
                 wrap_string_with_quotes(node.name),
                 wrap_string_with_quotes(node.resource_type),
                 wrap_string_with_quotes(node.original_file_path | replace("\\","\\\\")),
-                "cast(" ~ node.config.enabled | trim ~ " as " ~ dbt.type_boolean() ~ ")",
+                "cast(" ~ dbt_project_evaluator.bool_literal(node.config.enabled) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
                 wrap_string_with_quotes(node.config.materialized),
                 wrap_string_with_quotes(node.config.on_schema_change),
                 wrap_string_with_quotes(node.group),
@@ -31,7 +31,7 @@
                 wrap_string_with_quotes(node.latest_version),
                 wrap_string_with_quotes(node.version),
                 wrap_string_with_quotes(node.deprecation_date),
-                "cast(" ~ contract | trim  ~ " as " ~ dbt.type_boolean() ~ ")",
+                "cast(" ~ dbt_project_evaluator.bool_literal(contract) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
                 node.columns.values() | list | length,
                 node.columns.values() | list | selectattr('description') | list | length,
                 wrap_string_with_quotes(node.database),
@@ -46,7 +46,7 @@
                 sql_complexity,
                 wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
-                "cast(" ~ exclude_node ~ " as " ~ dbt.type_boolean() ~ ")",
+                "cast(" ~ dbt_project_evaluator.bool_literal(exclude_node) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
             ]
         %}
 

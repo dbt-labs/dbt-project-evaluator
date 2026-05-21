@@ -4,8 +4,8 @@ with all_relationships as (
     from {{ ref('int_all_dag_relationships') }}
     where parent_resource_type not in ('exposure', 'metric')
     and child_resource_type not in ('exposure', 'metric')
-    and not parent_is_excluded
-    and not child_is_excluded
+    and parent_is_excluded = cast(0 as {{ dbt.type_boolean() }})
+    and child_is_excluded = cast(0 as {{ dbt.type_boolean() }})
 ),
 
 -- all parent/child relationships where the parent is BOTH the direct parent of the child and the second level parent of the child 
@@ -14,8 +14,8 @@ rejoined as (
         parent,
         child
     from all_relationships
-    group by 1, 2
-    having (sum(case when distance = 1 then 1 else 0 end) >= 1 
+    group by parent, child
+    having (sum(case when distance = 1 then 1 else 0 end) >= 1
         and sum(case when distance = 2 then 1 else 0 end) >= 1)
 ),
 
@@ -25,7 +25,7 @@ single_use_resources as (
         parent
     from all_relationships
     where distance = 1
-    group by 1
+    group by parent
     having count(*) = 1
 ),
 
@@ -50,9 +50,9 @@ triad_relationships as (
 final as (
     select
         triad_relationships.*,
-        case 
-            when single_use_resources.parent is not null then true 
-            else false
+        case
+            when single_use_resources.parent is not null then cast(1 as {{ dbt.type_boolean() }})
+            else cast(0 as {{ dbt.type_boolean() }})
         end as is_loop_independent
     from triad_relationships
     left join single_use_resources 
@@ -61,7 +61,7 @@ final as (
 
 final_filtered as (
     select * from final
-    where is_loop_independent
+    where is_loop_independent = cast(1 as {{ dbt.type_boolean() }})
 )
 
 select * from final_filtered

@@ -26,17 +26,17 @@ dispatch:
 
 models:
   dbt_project_evaluator:
-    +materialized: "{{ 'table' if target.type in ['duckdb'] else 'view' }}"
+    +materialized: "{{ 'table' if target.type in ['duckdb', 'fabric'] else 'view' }}"
     marts:
       core:
         int_all_graph_resources:
           +materialized: table   
         int_direct_relationships:
-          # required for BigQuery and Redshift for performance/memory reasons
-          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks'] else 'view' }}"
+          # required for BigQuery, Redshift, Databricks, and Fabric for performance/memory reasons
+          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks', 'fabric'] else 'view' }}"
         int_all_dag_relationships:
-          # required for BigQuery, Redshift, and Databricks for performance/memory reasons
-          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks', 'clickhouse'] else 'view' }}"
+          # required for BigQuery, Redshift, Databricks, Clickhouse, and Fabric for performance/memory reasons
+          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks', 'clickhouse', 'fabric'] else 'view' }}"
       dag:
         +materialized: table
     staging:
@@ -45,11 +45,11 @@ models:
           +materialized: table
       variables:
         stg_naming_convention_folders:
-          # required for Redshift because listagg runs only on tables
-          +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
+          # required for Redshift and Fabric because listagg runs only on tables
+          +materialized: "{{ 'table' if target.type in ['redshift', 'fabric'] else 'view' }}"
         stg_naming_convention_prefixes:
-          # required for Redshift because listagg runs only on tables
-          +materialized: "{{ 'table' if target.type == 'redshift' else 'view' }}"
+          # required for Redshift and Fabric because listagg runs only on tables
+          +materialized: "{{ 'table' if target.type in ['redshift', 'fabric'] else 'view' }}"
 
 
 vars:
@@ -89,7 +89,7 @@ vars:
 
   # -- Execution variables --
   insert_batch_size: "{{ 500 if target.type in ['athena', 'bigquery'] else 10000 }}"
-  max_depth_dag: "{{ 9 if target.type in ['bigquery', 'spark', 'databricks'] else 4 if target.type in ['athena', 'trino', 'clickhouse'] else -1 }}"
+  max_depth_dag: "{{ 9 if target.type in ['bigquery', 'spark', 'databricks', 'fabric'] else 4 if target.type in ['athena', 'trino', 'clickhouse'] else -1 }}"
 
   # -- Code complexity variables --
   comment_chars: ["--"]

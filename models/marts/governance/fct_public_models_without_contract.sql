@@ -2,7 +2,7 @@ with
 
 all_resources as (
     select * from {{ ref('int_all_graph_resources') }}
-    where not is_excluded
+    where is_excluded = cast(0 as {{ dbt.type_boolean() }})
 ),
 
 final as (
@@ -14,8 +14,8 @@ final as (
         
     from all_resources
     where 
-        is_public 
-        and not is_contract_enforced
+        is_public = cast(1 as {{ dbt.type_boolean() }})
+        and is_contract_enforced = cast(0 as {{ dbt.type_boolean() }})
 )
 
 select * from final

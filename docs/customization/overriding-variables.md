@@ -103,14 +103,14 @@ vars:
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `max_depth_dag` | limits the maximum distance between nodes calculated in `int_all_dag_relationships` | 9 for bigquery and spark, -1 for other adatpters |
+| `max_depth_dag` | limits the maximum distance between nodes calculated in `int_all_dag_relationships` | 9 for bigquery, spark, and fabric, -1 for other adapters |
 | `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
 
 **Note on max_depth_dag**
 
 The default behavior for limiting the relationships calculated in the `int_all_dag_relationships` model differs depending on your adapter.
 
-- For Bigquery & Spark/Databricks the maximum distance between two nodes in your DAG, calculated in `int_all_dag_relationships`, is set by the `max_depth_dag` variable, which is defaulted to 9. So by default, `int_all_dag_relationships` contains a row for every path less than or equal to 9 nodes in length between two nodes in your DAG. This is because these adapters do not currently support recursive SQL, and queries often fail on more than 9 recursive joins.
+- For BigQuery, Spark/Databricks, and Microsoft Fabric Data Warehouse the maximum distance between two nodes in your DAG, calculated in `int_all_dag_relationships`, is set by the `max_depth_dag` variable, which is defaulted to 9. So by default, `int_all_dag_relationships` contains a row for every path less than or equal to 9 nodes in length between two nodes in your DAG. This is because these adapters do not currently support recursive SQL, and queries often fail on more than 9 recursive joins.
 - For all other adapters `int_all_dag_relationships` by default contains a row for every single path between two nodes in your DAG. If you experience long runtimes for the `int_all_dag_relationships` model, you may consider limiting the length of your generated DAG paths. To do this, set `max_depth_dag: {{ whatever limit you want to enforce }}`. The value of `max_depth_dag` must be greater than 2 for all DAG tests to work, and greater than `chained_views_threshold` to ensure your performance tests to work. By default, the value of this variable for these adapters is -1, which the package interprets as "no limit".
 
 ```yaml title="dbt_project.yml"
