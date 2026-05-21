@@ -39,6 +39,6 @@ final as (
 )
 
 select * from final
-order by child
 
 {{ filter_exceptions() }}
+order by child
