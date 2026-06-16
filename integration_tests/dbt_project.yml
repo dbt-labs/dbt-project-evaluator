@@ -33,6 +33,7 @@ flags:
   require_yaml_configuration_for_mf_time_spines: True
   require_generic_test_arguments_property: True
   require_ref_prefers_node_package_to_root: True
+  validate_macro_args: True
 
 models:
   dbt_project_evaluator_integration_tests:
