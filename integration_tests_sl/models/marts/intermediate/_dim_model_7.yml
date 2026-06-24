@@ -47,3 +47,9 @@ models:
           {{ Dimension('dim__id') }} > 0
         window: 30 days
         input_metric: total_count
+      - name: metric_with_expr_single_quote
+        label: "Metric with single quote in expr"
+        description: "Regression test: expr containing single quotes must be escaped before INSERT"
+        type: simple
+        agg: count
+        expr: "case when id = 'active' then 1 else 0 end"
