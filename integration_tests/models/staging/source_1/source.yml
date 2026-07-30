@@ -27,6 +27,9 @@ sources:
     # database: real_database
     tables:
       - name: table_3
+        config:
+          freshness: # regression test for issue #520: error_after only, no warn_after
+            error_after: {count: 24, period: hour}
 
   - name: source_3
     schema: real_schema_3
