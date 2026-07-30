@@ -26,10 +26,10 @@
               wrap_string_with_quotes(node.loaded_at_field | replace("'", "_")),
 
               "cast(" ~ dbt_project_evaluator.bool_literal(
-                ((node.config.freshness != None) and (dbt_project_evaluator.is_not_empty_string(node.config.freshness.warn_after.count)
-                  or dbt_project_evaluator.is_not_empty_string(node.config.freshness.error_after.count)))
-                or ((node.freshness != None) and (dbt_project_evaluator.is_not_empty_string(node.freshness.warn_after.count)
-                  or dbt_project_evaluator.is_not_empty_string(node.freshness.error_after.count)))
+                ((node.config.freshness != None) and (node.config.freshness.warn_after.count is not none
+                  or node.config.freshness.error_after.count is not none))
+                or ((node.freshness != None) and (node.freshness.warn_after.count is not none
+                  or node.freshness.error_after.count is not none))
                 ) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
 
               wrap_string_with_quotes(node.database),
