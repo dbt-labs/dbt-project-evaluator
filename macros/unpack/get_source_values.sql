@@ -37,7 +37,7 @@
               wrap_string_with_quotes(node.package_name),
               wrap_string_with_quotes(node.loader),
               wrap_string_with_quotes(node.identifier),
-              wrap_string_with_quotes(node.meta | tojson),
+              wrap_string_with_quotes(dbt.escape_single_quotes(tojson(node.meta))),
               "cast(" ~ dbt_project_evaluator.bool_literal(exclude_source) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
             ]
         %}
