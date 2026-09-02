@@ -40,11 +40,11 @@
                 wrap_string_with_quotes(node.alias),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.description) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
                 "''" if not node.column_name else wrap_string_with_quotes(dbt.escape_single_quotes(node.column_name)),
-                wrap_string_with_quotes(node.meta | tojson),
+                wrap_string_with_quotes(dbt.escape_single_quotes(tojson(node.meta))),
                 wrap_string_with_quotes(dbt.escape_single_quotes(hard_coded_references)),
                 number_lines,
                 sql_complexity,
-                wrap_string_with_quotes(node.get('depends_on',{}).get('macros',[]) | tojson),
+                wrap_string_with_quotes(dbt.escape_single_quotes(tojson(node.get('depends_on',{}).get('macros',[])))),
                 "cast(" ~ dbt_project_evaluator.is_not_empty_string(node.test_metadata) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
                 "cast(" ~ dbt_project_evaluator.bool_literal(exclude_node) | trim ~ " as " ~ dbt.type_boolean() ~ ")",
             ]
