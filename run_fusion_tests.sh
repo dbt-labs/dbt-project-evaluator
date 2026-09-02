@@ -8,6 +8,16 @@
 
 FUSION_VARS='{"deactivate_for_fusion": true}'
 
+if dbt check --help >/dev/null 2>&1; then
+    echo "Running native-check package consumer tests"
+    cd integration_tests_native_checks
+    dbt deps --target $1 --profiles-dir ../integration_tests || exit 1
+    dbt check --target $1 --profiles-dir ../integration_tests || exit 1
+    cd ..
+else
+    echo "Skipping native-check package consumer tests: installed Fusion has no dbt check command"
+fi
+
 echo "Running Fusion tests for the first project"
 cd integration_tests
 dbt deps --target $1 || exit 1

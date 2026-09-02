@@ -1,0 +1,20 @@
+name: dbt_project_evaluator_native_checks
+version: 1.0.0
+config-version: 2
+profile: integration_tests
+
+model-paths: ["models"]
+
+models:
+  dbt_project_evaluator_native_checks:
+    +materialized: ephemeral
+  dbt_project_evaluator:
+    +enabled: false
+
+checks:
+  dbt_project_evaluator:
+    +enabled: true
+    +severity: warn
+
+flags:
+  send_anonymous_usage_stats: false

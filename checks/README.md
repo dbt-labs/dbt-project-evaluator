@@ -3,8 +3,54 @@
 These checks reproduce 28 of the 29 dbt-project-evaluator rules using
 parse-time dbt information-schema metadata. Each SQL file follows the native
 checks contract: zero rows pass; returned rows are violations.
-They default to `severity: warn`, matching the package's advisory behavior and
-allowing ordinary `dbt build` invocations to continue after reporting findings.
+Installed-package checks are disabled until the root project explicitly opts
+in. Once enabled, they default to `severity: warn`, matching the package's
+advisory behavior and allowing ordinary `dbt build` invocations to continue
+after reporting findings.
+
+## Opt in from a consuming project
+
+To replace the package's legacy warehouse models with every native check, add
+this to the consuming project's `dbt_project.yml`:
+
+```yaml
+models:
+  dbt_project_evaluator:
+    +enabled: false
+
+checks:
+  dbt_project_evaluator:
+    +enabled: true
+```
+
+Run the checks directly with `dbt check`. They also run as a precondition of
+`dbt build`; a check configured with `severity: error` blocks the build when it
+returns violations. `dbt run` does not execute native checks.
+
+To enable only selected rules, keep the package disabled and opt individual
+checks back in by name:
+
+```yaml
+models:
+  dbt_project_evaluator:
+    +enabled: false
+
+checks:
+  dbt_project_evaluator:
+    +enabled: false
+
+    fct_undocumented_models:
+      +enabled: true
+      +severity: error
+
+    fct_undocumented_source_tables:
+      +enabled: true
+      +severity: warn
+```
+
+Configuration in the consuming project takes precedence over the package's
+defaults. This lets teams start with advisory checks, promote selected rules to
+build-blocking errors, and leave the remaining rules disabled.
 
 ## Implemented
 
