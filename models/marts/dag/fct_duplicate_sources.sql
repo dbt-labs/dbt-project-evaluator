@@ -9,7 +9,7 @@ with sources as (
     from {{ ref('int_all_graph_resources') }}
     where resource_type = 'source'
     and is_excluded = cast(0 as {{ dbt.type_boolean() }})
-    {% if target.type not in ['fabric', 'sqlserver'] %}
+    {% if target.type not in ['fabric', 'sqlserver', 'synapse'] %}
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by 1, 2
     {% endif %}
@@ -21,7 +21,7 @@ source_duplicates as (
         {{ dbt.listagg(
             measure = 'resource_name',
             delimiter_text = "', '",
-            order_by_clause = 'order by resource_name' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver'])
+            order_by_clause = 'order by resource_name' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver','synapse'])
         }} as source_names
     from sources
     group by source_db_location

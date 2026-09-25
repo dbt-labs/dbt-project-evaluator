@@ -21,7 +21,7 @@ with all_graph_resources as (
 
 naming_convention_prefixes as (
     select * from {{ ref('stg_naming_convention_prefixes') }}
-    {% if target.type not in ['fabric', 'sqlserver'] %}
+    {% if target.type not in ['fabric', 'sqlserver', 'synapse'] %}
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by prefix_value
     {% endif %}
@@ -33,7 +33,7 @@ appropriate_prefixes as (
         {{ dbt.listagg(
             measure='prefix_value',
             delimiter_text="', '",
-            order_by_clause='order by prefix_value' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver'])
+            order_by_clause='order by prefix_value' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver','synapse'])
         }} as appropriate_prefixes
     from naming_convention_prefixes
     group by model_type

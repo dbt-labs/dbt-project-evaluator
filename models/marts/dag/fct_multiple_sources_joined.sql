@@ -8,7 +8,7 @@ with direct_source_relationships as (
     and parent_resource_type = 'source'
     and parent_is_excluded = cast(0 as {{ dbt.type_boolean() }})
     and child_is_excluded = cast(0 as {{ dbt.type_boolean() }})
-    {% if target.type not in ['fabric', 'sqlserver'] %}
+    {% if target.type not in ['fabric', 'sqlserver', 'synapse'] %}
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by 1, 2
     {% endif %}
@@ -20,7 +20,7 @@ multiple_sources_joined as (
         {{ dbt.listagg(
             measure='parent',
             delimiter_text="', '",
-            order_by_clause='order by parent' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver'])
+            order_by_clause='order by parent' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver','synapse'])
         }} as source_parents
     from direct_source_relationships
     group by child

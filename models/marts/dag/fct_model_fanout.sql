@@ -28,7 +28,7 @@ model_fanout as (
         on all_dag_relationships.child = models_without_children.parent
     where all_dag_relationships.distance = 1 and all_dag_relationships.child_resource_type = 'model'
     group by all_dag_relationships.parent, all_dag_relationships.parent_model_type, all_dag_relationships.child
-    {% if target.type not in ['fabric', 'sqlserver'] %}
+    {% if target.type not in ['fabric', 'sqlserver', 'synapse'] %}
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by 1, 2, 3
     {% endif %}
@@ -41,7 +41,7 @@ model_fanout_agg as (
         {{ dbt.listagg(
             measure = 'child',
             delimiter_text = "', '",
-            order_by_clause = 'order by child' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver'])
+            order_by_clause = 'order by child' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver','synapse'])
         }} as leaf_children
     from model_fanout
     group by parent, parent_model_type

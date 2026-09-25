@@ -33,7 +33,7 @@ Currently, the following adapters are supported:
   
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
-### Additional setup for Databricks/Spark/DuckDB/Redshift/ClickHouse/Fabric/SQL Server
+### Additional setup for Databricks/Spark/DuckDB/Redshift/ClickHouse/Fabric/SQL Server/Synapse
 
 In your `dbt_project.yml`, add the following config:
 
