@@ -23,4 +23,6 @@ select * from final
 
 {{ filter_exceptions() }}
 
+{% if target.type != 'sqlserver' %}
 order by distance desc
+{% endif %}

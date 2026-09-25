@@ -6,3 +6,5 @@
 {% macro default__bool_literal(value) %}{{ value | trim }}{% endmacro %}
 
 {% macro fabric__bool_literal(value) %}{% if value %}1{% else %}0{% endif %}{% endmacro %}
+
+{% macro sqlserver__bool_literal(value) %}{{ return(dbt_project_evaluator.fabric__bool_literal(value)) }}{% endmacro %}

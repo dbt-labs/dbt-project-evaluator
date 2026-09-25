@@ -1,6 +1,6 @@
 -- these macros will read a user’s home environment and detect whether a computer’s operating system is Windows based or Mac/Linux, and display the right directory pattern.
 {% macro is_os_mac_or_linux() %}
-  {% for val in graph.nodes.values() %}
+  {% for val in graph.get("nodes", {}).values() %}
     {{ return("\\" not in val.get("original_file_path","")) }}
   {% endfor %}
   {{ return(true) }}
@@ -41,9 +41,13 @@
   {% if execute %}
     {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
     {%- if on_mac_or_linux -%}
-      left(file_path, len(file_path) - charindex('/', reverse(file_path)))
+      left(file_path, len(file_path) - charindex('/', reverse(file_path)) + 1)
     {%- else -%}
-      left(file_path, len(file_path) - charindex('\', reverse(file_path)))
+      left(file_path, len(file_path) - charindex('\', reverse(file_path)) + 1)
     {%- endif -%}
   {% endif %}
+{% endmacro %}
+
+{% macro sqlserver__get_dbtreplace_directory_pattern() %}
+  {{ return(dbt_project_evaluator.fabric__get_dbtreplace_directory_pattern()) }}
 {% endmacro %}

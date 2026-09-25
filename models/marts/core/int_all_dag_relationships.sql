@@ -2,4 +2,6 @@
 {{ dbt_project_evaluator.recursive_dag() }}
 
 select * from all_relationships
+{% if target.type != 'sqlserver' %}
 order by parent, distance
+{% endif %}

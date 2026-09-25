@@ -41,4 +41,6 @@ final as (
 select * from final
 
 {{ filter_exceptions() }}
+{% if target.type != 'sqlserver' %}
 order by child
+{% endif %}

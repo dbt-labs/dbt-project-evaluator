@@ -15,3 +15,7 @@
 {% macro fabric__is_not_empty_string(str) %}
     {% if str %}1{% else %}0{% endif %}
 {% endmacro %}
+
+{% macro sqlserver__is_not_empty_string(str) %}
+    {{ return(dbt_project_evaluator.fabric__is_not_empty_string(str)) }}
+{% endmacro %}
