@@ -47,6 +47,12 @@ seeds:
           arguments:
             compare_model: ref('fct_unused_sources')
 
+  - name: test_fct_unused_staging_models
+    data_tests:
+      - dbt_utils.equality:
+          name: equality_fct_unused_staging_models
+          compare_model: ref('fct_unused_staging_models')
+
   - name: test_fct_source_fanout
     data_tests:
       - dbt_utils.equality:
