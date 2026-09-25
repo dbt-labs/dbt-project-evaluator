@@ -26,4 +26,9 @@ echo "$selected" | grep -q "check 'fct_undocumented_models' found with 1 violati
 echo "$selected" | grep -q "check 'fct_test_coverage' found with 1 violation" || { echo "--select should not scope fct_test_coverage"; exit 1; }
 echo "$selected" | grep -q "fct_model_fanout" && echo "$selected" | grep -q "check 'fct_model_fanout' found" && { echo "--select did not scope fct_model_fanout"; exit 1; }
 
-echo "All native checks returned the expected violations."
+# hard-coded relation names moved to dbt lint (DBT05, enabled in .sqlfluff)
+lint=$(dbt lint --profiles-dir . --format json 2>/dev/null)
+echo "$lint" | grep -q '"filepath":"models/marts/fct_hard_coded.sql","violations":\[{[^]]*"code":"DBT05"' \
+    || { echo "dbt lint did not report DBT05 on models/marts/fct_hard_coded.sql"; exit 1; }
+
+echo "All native checks and lint rules returned the expected violations."
