@@ -9,7 +9,7 @@
     {{ check_model_is_table(model) }}
 {% endif %}
 /* Bigquery won't let us `where` without `from` so we use this workaround */
-with dummy_cte as (
+with dummy_cte_source_columns as (
     select 1 as foo
 ) 
 
@@ -23,5 +23,5 @@ select
     cast(0 as {{ dbt.type_int() }}) as constraints_count,
     cast(null as {{ dbt_project_evaluator.type_string_dpe()}}) as quote
 
-from dummy_cte
+from dummy_cte_source_columns
 where 1=0

@@ -9,7 +9,7 @@
     {{ check_model_is_table(model) }}
 {% endif %}
 /* Bigquery won't let us `where` without `from` so we use this workaround */
-with dummy_cte as (
+with dummy_cte_node_relationships as (
     select 1 as foo
 ) 
 
@@ -18,5 +18,5 @@ select
     cast(null as {{ dbt_project_evaluator.type_string_dpe()}}) as direct_parent_id,
     cast(1 as {{ dbt.type_boolean() }}) as is_primary_relationship
 
-from dummy_cte
+from dummy_cte_node_relationships
 where 1=0
