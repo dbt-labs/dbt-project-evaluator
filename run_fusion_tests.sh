@@ -8,6 +8,11 @@
 
 FUSION_VARS='{"deactivate_for_fusion": true}'
 
+# Native checks run locally in DuckDB against parse-time metadata, so this step
+# does not depend on the target warehouse.
+echo "Running native checks against the checks fixture"
+./integration_tests_checks/run_checks.sh || exit 1
+
 echo "Running Fusion tests for the first project"
 cd integration_tests
 dbt deps --target $1 || exit 1

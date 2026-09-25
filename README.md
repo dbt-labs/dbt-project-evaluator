@@ -29,6 +29,12 @@ Currently, the following adapters are supported:
 
 ## Using This Package
 
+### dbt v2: native checks
+
+Version 2 implements every rule as a native [dbt check](https://docs.getdbt.com/docs/build/checks)
+that runs locally at parse time, with no warehouse models. See [checks/README.md](checks/README.md).
+dbt Core users should stay on 1.x; the rest of this README describes the 1.x model-based implementation.
+
 ### Cloning via dbt Package Hub
   
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.

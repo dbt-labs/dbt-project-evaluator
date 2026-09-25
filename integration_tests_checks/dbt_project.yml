@@ -1,0 +1,13 @@
+name: dbt_project_evaluator_checks_tests
+version: 1.0.0
+config-version: 2
+profile: dbt_project_evaluator_checks_tests
+model-paths: ["models", "tests_yaml"]
+
+info_schema:
+  version: 1
+
+models:
+  dbt_project_evaluator:
+    # the legacy warehouse models are not needed when using the native checks
+    +enabled: false

@@ -3,7 +3,7 @@
 -- unique_id is the intermediate model (B), which is the one to refactor.
 with nodes as (
     select node.unique_id, node.name, node.version
-    from {{ info_schema('graph_nodes') }} node
+    from {{ evaluator_nodes() }} node
     where {{ evaluator_check_in_scope('node') }}
       and node.resource_type not in ('exposure', 'metric', 'test', 'data_test', 'unit_test')
 ),

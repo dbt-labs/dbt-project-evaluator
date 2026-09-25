@@ -12,7 +12,7 @@ leaf_models as (
     where not exists (
         select 1
         from {{ info_schema('edges') }} edge
-        join {{ info_schema('graph_nodes') }} child on child.unique_id = edge.child_unique_id
+        join {{ evaluator_nodes() }} child on child.unique_id = edge.child_unique_id
         where edge.parent_unique_id = models.unique_id
           and child.resource_type not in ('test', 'data_test', 'unit_test')
           and {{ evaluator_check_in_scope('child') }}

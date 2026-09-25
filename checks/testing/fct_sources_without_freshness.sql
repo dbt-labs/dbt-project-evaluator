@@ -4,9 +4,6 @@ select source.unique_id,
 from {{ info_schema('sources') }} source
 where {{ evaluator_check_in_scope('source') }}
   and (
-      source.freshness is null
-      or (
-          json_extract_string(source.freshness, '$.warn_after.count') is null
-          and json_extract_string(source.freshness, '$.error_after.count') is null
-      )
+      json_extract_string(source.config, '$.freshness.warn_after.count') is null
+      and json_extract_string(source.config, '$.freshness.error_after.count') is null
   )

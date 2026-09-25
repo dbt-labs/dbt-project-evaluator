@@ -1,0 +1,28 @@
+models:
+  - name: fct_orders
+    description: Orders fact.
+    config:
+      materialized: table
+      access: public
+      contract: {enforced: false}  # public without contract
+    columns:
+      - name: order_id
+        description: Primary key.
+        data_tests: [unique, not_null]
+      - name: customer_id  # undocumented column on a public model
+  - name: dim_customers
+    description: Customers.
+    config:
+      materialized: table
+    columns:
+      - name: customer_id
+        description: Primary key.
+exposures:
+  - name: orders_dashboard
+    type: dashboard
+    owner: {name: Analytics}
+    depends_on:
+      - ref('fct_orders')
+      - ref('dim_customers')  # private model
+      - ref('orders_summary')  # view
+      - source('raw_shop', 'orders')  # source

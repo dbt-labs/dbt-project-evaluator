@@ -2,7 +2,7 @@
 -- unique_id is the model at the end of the chain; `parent` is where the chain of views starts.
 with recursive nodes as (
     select node.unique_id, node.name, node.resource_type, node.materialized
-    from {{ info_schema('graph_nodes') }} node
+    from {{ evaluator_nodes() }} node
     where {{ evaluator_check_in_scope('node') }}
 ),
 

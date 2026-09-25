@@ -1,8 +1,9 @@
 name: 'dbt_project_evaluator'
-version: '1.0.0'
+version: '2.0.0'
 config-version: 2
 
-require-dbt-version: [">=1.10.6", "<3.0.0"]
+# v2 is built on native checks, which need dbt v2 (dbt Core users: pin dbt_project_evaluator 1.x)
+require-dbt-version: [">=2.0.0", "<3.0.0"]
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
@@ -10,6 +11,11 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
+check-paths: ["checks"]
+
+# required in the package's own dbt_project.yml for its checks to run
+info_schema:
+  version: 1
 
 target-path: "target"  # directory which will store compiled SQL files
 clean-targets:         # directories to be removed by `dbt clean`
@@ -51,6 +57,29 @@ models:
           # required for Redshift, Fabric, SQL Server, and Synapse because listagg runs only on tables
           +materialized: "{{ 'table' if target.type in ['redshift', 'fabric', 'sqlserver', 'synapse'] else 'view' }}"
 
+
+# Every rule is advisory by default. Override severity or enabled per folder or per
+# check from the root project, e.g.
+#   checks:
+#     dbt_project_evaluator:
+#       structure:
+#         +severity: error
+checks:
+  dbt_project_evaluator:
+    +severity: warn
+    +tags: ["dbt_project_evaluator"]
+    modeling:
+      +tags: ["modeling"]
+    documentation:
+      +tags: ["documentation"]
+    governance:
+      +tags: ["governance"]
+    performance:
+      +tags: ["performance"]
+    structure:
+      +tags: ["structure"]
+    testing:
+      +tags: ["testing"]
 
 vars:
 
