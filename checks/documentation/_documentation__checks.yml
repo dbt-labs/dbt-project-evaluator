@@ -1,0 +1,13 @@
+version: 2
+
+checks:
+  - name: fct_documentation_coverage
+    description: "Project-wide: the share of documented models is below `documentation_coverage_target`. Always evaluates the whole project."
+    config:
+      selection_filter_on: none
+  - name: fct_undocumented_models
+    description: "Models without a description."
+  - name: fct_undocumented_source_tables
+    description: "Source tables without a description."
+  - name: fct_undocumented_sources
+    description: "Sources (the top-level `sources:` entry) without a description. One row per table of the source."

@@ -1,0 +1,11 @@
+version: 2
+
+checks:
+  - name: fct_missing_primary_key_tests
+    description: "Resources (of `enforced_primary_key_node_types`) without a column that carries one full set of `primary_key_test_macros`."
+  - name: fct_sources_without_freshness
+    description: "Source tables with neither a warn_after nor an error_after freshness threshold."
+  - name: fct_test_coverage
+    description: "Project-wide: the share of models with at least one test is below `test_coverage_target`. Always evaluates the whole project."
+    config:
+      selection_filter_on: none

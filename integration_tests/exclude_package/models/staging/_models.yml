@@ -1,9 +1,0 @@
-models:
-  - name: excluded_model
-    config: 
-      access: public
-      contract: 
-        enforced: true
-    columns: 
-      - name: id
-        data_type: "{{ 'UInt8' if target.type in ['clickhouse'] else 'integer' }}"
