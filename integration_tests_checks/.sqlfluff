@@ -1,5 +1,0 @@
-[sqlfluff]
-templater = dbt
-dialect = duckdb
-# DBT05 replaces dbt_project_evaluator 1.x's fct_hard_coded_references
-rules = DBT05

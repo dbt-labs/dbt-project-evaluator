@@ -31,9 +31,9 @@ Currently, the following adapters are supported:
 
 ### dbt v2: native checks
 
-Version 2 implements every rule as a native [dbt check](https://docs.getdbt.com/docs/build/checks)
-that runs locally at parse time, with no warehouse models. Hard-coded references are covered by
-the `dbt lint` rule `DBT05` instead. See [checks/README.md](checks/README.md).
+Version 2 implements the rules as native
+[dbt checks](https://docs.getdbt.com/docs/build/checks) that run locally at parse time, with no warehouse models. `fct_hard_coded_references` is no longer
+included (see the caveat in [checks/README.md](checks/README.md) for the partial `dbt lint` replacement).
 dbt Core users should stay on 1.x; the rest of this README describes the 1.x model-based implementation.
 
 ### Cloning via dbt Package Hub

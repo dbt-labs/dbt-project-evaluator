@@ -1,6 +1,6 @@
 # Native checks (dbt v2)
 
-Every dbt-project-evaluator rule is a [dbt check](https://docs.getdbt.com/docs/build/checks):
+Every dbt-project-evaluator rule except `fct_hard_coded_references` (see the caveat below) is a [dbt check](https://docs.getdbt.com/docs/build/checks):
 a DuckDB SQL query over the dbt Information Schema (`{{ info_schema('models') }}`, `edges`, …)
 that returns one row per violation. Checks run locally at parse time. They need no warehouse
 connection and don't build any models.
@@ -65,29 +65,40 @@ Each check returns the resource to fix as `unique_id`, so `--select` scopes its 
 Shared logic, such as scoping, model-type classification from the prefix and folder vars, and
 DAG node attributes, lives in `macros/checks/`.
 
-## Hard-coded references: use `dbt lint`
+## Caveat: hard-coded references are no longer covered by this package
 
-1.x's `fct_hard_coded_references` now lives in [`dbt lint`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules)
-as rule `DBT05` (`dbt.hard_coded_reference`). It flags `from my_schema.my_table`-style relations
-that should be a `ref()` or `source()`. It needs the SQL text, which checks can't see (the
-`models` view has no `raw_code`), so it can't be written as a check.
+1.x's `fct_hard_coded_references` is **not** part of v2. It needs each model's SQL text, and the
+check-time `models` view doesn't include `raw_code`, even after `dbt compile --generate-info-schema`.
+(The full information schema has the column, so `dbt show` can read it, but checks can't.)
 
-A package can't turn on lint rules for your project. Add them to your own `.sqlfluff`:
+The closest replacement is the `dbt lint` rule
+[`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules)
+(`dbt.hard_coded_reference`). It's off by default, and only your project can turn it on, in your
+own `.sqlfluff`:
 
 ```ini
 [sqlfluff]
 templater = dbt
 dialect = snowflake   # your dialect
-rules = DBT05         # optionally also DBT01 (import CTEs), DBT02–DBT04
+rules = DBT05
 ```
 
-Then run `dbt lint`. It exits 0 on violations, so like the checks it's advisory unless your CI
-treats its output as blocking; `--format github-annotation` works well there. One difference
-from 1.x: DBT05 doesn't flag `{{ var('...') }}` used as a table name.
+DBT05 doesn't match 1.x exactly. Tested with dbt 2.0.6:
+
+| Pattern | 1.x `fct_hard_coded_references` | `dbt lint` DBT05 |
+|---|---|---|
+| `from my_schema.my_table` | flagged | flagged |
+| `from my_db.my_schema.my_table` | flagged | flagged |
+| `from "my_db"."my_schema"."my_table"` | flagged | flagged |
+| `from {{ var('orders_table') }}` | flagged | **not flagged** |
+
+The last row matters most. Using a var to hold a table name is a common way to dodge
+`ref()`/`source()`, and dbt lint renders the var to its value without treating it as hard-coded.
+Also note that `dbt lint` exits 0 when it finds violations.
 
 ## Differences from 1.x
 
-- `fct_hard_coded_references` is replaced by the `dbt lint` rule `DBT05` (see above).
+- `fct_hard_coded_references` has been removed; the `dbt lint` rule `DBT05` partly covers it (see the caveat above).
 - The `dbt_project_evaluator_exceptions` seed isn't supported, because checks can't read seeds.
   Use `exclude_paths_from_project`, disable a rule, or keep it at `warn`.
 - `fct_missing_primary_key_tests` doesn't count column `not_null` constraints, because constraints
