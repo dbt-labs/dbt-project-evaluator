@@ -1,51 +1,19 @@
 -- project-wide: fails when the share of models with at least one test is below `test_coverage_target`.
--- Returns no unique_id on purpose, so it always evaluates the whole project.
+-- A test covers every model it depends on (via edges, which also catches singular tests).
 with models as (
-    select model.unique_id,
-           {{ evaluator_model_type('model') }} as model_type
-    from {{ info_schema('models') }} model
-    where {{ evaluator_check_in_scope('model') }}
-),
-
--- a test covers every model it depends on (generic tests via node_unique_id, others via edges)
-test_attachments as (
-    select test.unique_id as test_unique_id, test.node_unique_id as model_unique_id
-    from {{ info_schema('data_tests') }} test
-    where test.node_unique_id is not null
-
-    union
-
-    select edge.child_unique_id, edge.parent_unique_id
-    from {{ info_schema('edges') }} edge
-    join {{ info_schema('data_tests') }} test on test.unique_id = edge.child_unique_id
-    where test.node_unique_id is null
-),
-
-model_tests as (
-    select models.unique_id,
-           models.model_type,
-           count(distinct test_attachments.test_unique_id) as test_count
-    from models
-    left join test_attachments on test_attachments.model_unique_id = models.unique_id
-    group by models.unique_id, models.model_type
-),
-
-coverage as (
-    select count(*) as total_models,
-           count(*) filter (where test_count > 0) as tested_models,
-           coalesce(sum(test_count), 0) as total_tests,
-           round(count(*) filter (where test_count > 0) * 100.0 / nullif(count(*), 0), 2) as test_coverage_pct,
-           round(coalesce(sum(test_count), 0) * 1.0 / nullif(count(*), 0), 4) as test_to_model_ratio
-           {%- for model_type in var('model_types') %},
-           round(
-               count(*) filter (where test_count > 0 and model_type = '{{ model_type }}') * 100.0
-               / nullif(count(*) filter (where model_type = '{{ model_type }}'), 0),
-               2
-           ) as {{ model_type }}_test_coverage_pct
-           {%- endfor %}
-    from model_tests
+    select model.model_type, count(distinct edge.child_unique_id) as test_count
+    from {{ evaluator_models() }} model
+    left join {{ info_schema('edges') }} edge
+      on edge.parent_unique_id = model.unique_id
+     and edge.child_unique_id in (select unique_id from {{ info_schema('data_tests') }})
+    group by model.unique_id, model.model_type
 )
 
-select *
-from coverage
-where test_coverage_pct < {{ var('test_coverage_target') }}
+select count(*) as total_models,
+       count(*) filter (where test_count > 0) as tested_models,
+       sum(test_count) as total_tests,
+       round(tested_models * 100.0 / nullif(total_models, 0), 2) as test_coverage_pct,
+       round(total_tests * 1.0 / nullif(total_models, 0), 4) as test_to_model_ratio,
+       {{ evaluator_pct_by_model_type('test_count > 0', 'test_coverage_pct') }}
+from models
+having test_coverage_pct < {{ var('test_coverage_target') }}

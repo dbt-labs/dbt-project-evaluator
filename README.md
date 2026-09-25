@@ -76,8 +76,9 @@ Each check returns the resource to fix as `unique_id`, so `--select` scopes its 
 | `structure` | `fct_model_directories`, `fct_model_naming_conventions`, `fct_source_directories`, `fct_test_directories` |
 | `testing` | `fct_missing_primary_key_tests`, `fct_sources_without_freshness`, `fct_test_coverage` |
 
-Shared logic, such as scoping, model-type classification from the prefix and folder vars, and
-DAG node attributes, lives in `macros/checks/`.
+Checks build on three shared relations in `macros/checks/`: `evaluator_models()` (in-scope models
+typed by the naming-convention vars), `evaluator_sources()` and `evaluator_edges()` (DAG edges
+with both ends' names, types and materializations).
 
 ## Caveat: hard-coded references are no longer covered by this package
 

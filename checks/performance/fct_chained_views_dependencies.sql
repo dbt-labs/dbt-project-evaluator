@@ -1,48 +1,26 @@
--- models sitting at the end of a chain of more than `chained_views_threshold` views/ephemeral models.
+-- models at the end of a chain of more than `chained_views_threshold` views/ephemeral models.
 -- unique_id is the model at the end of the chain; `parent` is where the chain of views starts.
-with recursive nodes as (
-    select node.unique_id, node.name, node.resource_type, node.materialized
-    from {{ evaluator_nodes() }} node
-    where {{ evaluator_check_in_scope('node') }}
-),
+with recursive
+edges as (select * from {{ evaluator_edges() }}),
 
-direct_edges as (
-    select distinct edge.parent_unique_id, edge.child_unique_id
-    from {{ info_schema('edges') }} edge
-    join nodes parent on parent.unique_id = edge.parent_unique_id
-    join nodes child on child.unique_id = edge.child_unique_id
-),
+-- walk downstream from every view, continuing only through views
+chains(origin_name, unique_id, name, resource_type, is_view, distance) as (
+    select parent_name, child_unique_id, child_name, child_resource_type,
+           child_materialized in ('view', 'ephemeral'), 1
+    from edges
+    where parent_materialized in ('view', 'ephemeral')
 
--- walk downstream only through views and ephemeral models
-chains(origin, current_node, distance, path) as (
-    select edge.parent_unique_id,
-           edge.child_unique_id,
-           1,
-           [edge.parent_unique_id, edge.child_unique_id]
-    from direct_edges edge
-    join nodes parent on parent.unique_id = edge.parent_unique_id
-    where coalesce(parent.materialized, '') in ('view', 'ephemeral')
+    union
 
-    union all
-
-    select chains.origin,
-           edge.child_unique_id,
-           chains.distance + 1,
-           list_append(chains.path, edge.child_unique_id)
+    select chains.origin_name, edges.child_unique_id, edges.child_name, edges.child_resource_type,
+           edges.child_materialized in ('view', 'ephemeral'), chains.distance + 1
     from chains
-    join nodes current_node on current_node.unique_id = chains.current_node
-    join direct_edges edge on edge.parent_unique_id = chains.current_node
-    where coalesce(current_node.materialized, '') in ('view', 'ephemeral')
-      and not list_contains(chains.path, edge.child_unique_id)
+    join edges on edges.parent_unique_id = chains.unique_id
+    where chains.is_view
 )
 
-select child.unique_id,
-       child.name as child,
-       parent.name as parent,
-       max(chains.distance) as distance
+select unique_id, name as child, origin_name as parent, max(distance) as distance
 from chains
-join nodes parent on parent.unique_id = chains.origin
-join nodes child on child.unique_id = chains.current_node
-where child.resource_type = 'model'
-  and chains.distance > {{ var('chained_views_threshold') }}
-group by child.unique_id, child.name, parent.name
+where resource_type = 'model'
+  and distance > {{ var('chained_views_threshold') }}
+group by all
