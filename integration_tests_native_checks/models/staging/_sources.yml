@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: raw_shop
+    description: Raw shop data.
+    schema: raw
+    tables:
+      - name: orders
+        description: Raw orders.
+
+models:
+  - name: stg_orders
+    description: Staged orders.
+    columns:
+      - name: order_id
+        description: Primary key.
+        data_tests:
+          - unique
+          - not_null

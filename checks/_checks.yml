@@ -1,0 +1,90 @@
+info_schema:
+  version: 1
+
+# Native checks are disabled by default when this package is installed. Once a root project opts
+# in, these package-local defaults make findings advisory unless the root project overrides them.
+checks:
+  - name: fct_chained_views_dependencies
+    config:
+      severity: warn
+  - name: fct_direct_join_to_source
+    config:
+      severity: warn
+  - name: fct_documentation_coverage
+    config:
+      severity: warn
+  - name: fct_duplicate_sources
+    config:
+      severity: warn
+  - name: fct_exposure_parents_materializations
+    config:
+      severity: warn
+  - name: fct_exposures_dependent_on_private_models
+    config:
+      severity: warn
+  - name: fct_marts_or_intermediate_dependent_on_source
+    config:
+      severity: warn
+  - name: fct_missing_primary_key_tests
+    config:
+      severity: warn
+  - name: fct_model_directories
+    config:
+      severity: warn
+  - name: fct_model_fanout
+    config:
+      severity: warn
+  - name: fct_model_naming_conventions
+    config:
+      severity: warn
+  - name: fct_multiple_sources_joined
+    config:
+      severity: warn
+  - name: fct_public_models_without_contract
+    config:
+      severity: warn
+  - name: fct_rejoining_of_upstream_concepts
+    config:
+      severity: warn
+  - name: fct_root_models
+    config:
+      severity: warn
+  - name: fct_source_directories
+    config:
+      severity: warn
+  - name: fct_source_fanout
+    config:
+      severity: warn
+  - name: fct_sources_without_freshness
+    config:
+      severity: warn
+  - name: fct_staging_dependent_on_marts_or_intermediate
+    config:
+      severity: warn
+  - name: fct_staging_dependent_on_staging
+    config:
+      severity: warn
+  - name: fct_test_coverage
+    config:
+      severity: warn
+  - name: fct_test_directories
+    config:
+      severity: warn
+  - name: fct_too_many_joins
+    config:
+      severity: warn
+  - name: fct_undocumented_models
+    config:
+      severity: warn
+  - name: fct_undocumented_public_models
+    config:
+      severity: warn
+  - name: fct_undocumented_source_tables
+    config:
+      severity: warn
+  - name: fct_undocumented_sources
+    config:
+      severity: warn
+  - name: fct_unused_sources
+    config:
+      severity: warn

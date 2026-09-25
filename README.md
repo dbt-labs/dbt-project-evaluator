@@ -29,6 +29,28 @@ Currently, the following adapters are supported:
 
 ## Using This Package
 
+### Fusion native checks (v2)
+
+Version 2 includes native, parse-time project checks for 28 of the package's 29
+rules. Installing the package does not enable them automatically. Fusion users
+can disable the legacy warehouse models and opt into all native checks from the
+root project's `dbt_project.yml`:
+
+```yml
+models:
+  dbt_project_evaluator:
+    +enabled: false
+
+checks:
+  dbt_project_evaluator:
+    +enabled: true
+```
+
+The checks are advisory by default. Root-project configuration can enable one
+rule at a time or override `severity`; see [the native-check guide](checks/README.md)
+for package-wide and selective examples. The existing model-based implementation
+remains available for dbt Core projects.
+
 ### Cloning via dbt Package Hub
   
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
