@@ -1,0 +1,37 @@
+# **what?**
+# Run the package's native checks against the integration_tests_checks fixture
+
+# **why?**
+# Checks run locally in DuckDB against parse-time metadata, so no warehouse
+# credentials are needed
+
+# **when?**
+# On every PR, and every push to main and when manually triggered
+
+name: Native Checks
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    checks:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.11"
+
+            - name: Install dbt v2
+              run: pip install "dbt>=2.0.0,<3.0.0"
+
+            - name: Run checks against the fixture
+              run: ./integration_tests_checks/run_checks.sh

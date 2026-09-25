@@ -5,58 +5,16 @@ config-version: 2
 # v2 is built on native checks, which need dbt v2 (dbt Core users: pin dbt_project_evaluator 1.x)
 require-dbt-version: [">=2.0.0", "<3.0.0"]
 
-model-paths: ["models"]
-analysis-paths: ["analysis"]
-test-paths: ["tests"]
-seed-paths: ["seeds"]
-macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
 check-paths: ["checks"]
+macro-paths: ["macros"]
 
 # required in the package's own dbt_project.yml for its checks to run
 info_schema:
   version: 1
 
-target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
+clean-targets:
   - "target"
   - "dbt_packages"
-
-flags:
-  require_nested_cumulative_type_params: True
-  require_yaml_configuration_for_mf_time_spines: True
-
-dispatch:
-  - macro_namespace: dbt
-    search_order: ['dbt_project_evaluator', 'dbt']
-
-models:
-  dbt_project_evaluator:
-    +materialized: "{{ 'table' if target.type in ['duckdb', 'fabric', 'sqlserver', 'synapse'] else 'view' }}"
-    marts:
-      core:
-        int_all_graph_resources:
-          +materialized: table   
-        int_direct_relationships:
-          # required for BigQuery, Redshift, Databricks, Fabric, SQL Server, and Synapse for performance/memory reasons
-          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks', 'fabric', 'sqlserver', 'synapse'] else 'view' }}"
-        int_all_dag_relationships:
-          # required for BigQuery, Redshift, Databricks, Clickhouse, Fabric, SQL Server, and Synapse for performance/memory reasons
-          +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks', 'clickhouse', 'fabric', 'sqlserver', 'synapse'] else 'view' }}"
-      dag:
-        +materialized: table
-    staging:
-      graph:
-        stg_node_relationships:
-          +materialized: table
-      variables:
-        stg_naming_convention_folders:
-          # required for Redshift, Fabric, SQL Server, and Synapse because listagg runs only on tables
-          +materialized: "{{ 'table' if target.type in ['redshift', 'fabric', 'sqlserver', 'synapse'] else 'view' }}"
-        stg_naming_convention_prefixes:
-          # required for Redshift, Fabric, SQL Server, and Synapse because listagg runs only on tables
-          +materialized: "{{ 'table' if target.type in ['redshift', 'fabric', 'sqlserver', 'synapse'] else 'view' }}"
-
 
 # Every rule is advisory by default. Override severity or enabled per folder or per
 # check from the root project, e.g.
@@ -89,7 +47,6 @@ vars:
 
   primary_key_test_macros: [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]
 
-  # -- Graph variables --
   # node types to test for primary key coverage. acceptable node types: model, source, snapshot, seed
   enforced_primary_key_node_types: ["model"]
 
@@ -98,15 +55,15 @@ vars:
   too_many_joins_threshold: 7
 
   # -- Naming conventions variables --
-  # to add a new "model type", update the variable model_types 
-  # and create new variables with the names <model_type>_folder_name and/or <model_type>_prefixes 
+  # to add a new "model type", update the variable model_types
+  # and create new variables with the names <model_type>_folder_name and/or <model_type>_prefixes
   model_types: ['base', 'staging', 'intermediate', 'marts', 'other']
 
   base_folder_name: 'base'
   staging_folder_name: 'staging'
   intermediate_folder_name: 'intermediate'
   marts_folder_name: 'marts'
-  
+
   base_prefixes: ['base_']
   staging_prefixes: ['stg_']
   intermediate_prefixes: ['int_']
@@ -114,31 +71,4 @@ vars:
   other_prefixes: ['rpt_']
 
   # -- Performance variables --
-  chained_views_threshold: "{{ 5 if target.type not in ['athena', 'trino', 'clickhouse'] else 4 }}"
-
-  # -- Execution variables --
-  insert_batch_size: "{{ 500 if target.type in ['athena', 'bigquery'] else 10000 }}"
-  max_depth_dag: "{{ 9 if target.type in ['bigquery', 'spark', 'databricks', 'fabric', 'sqlserver', 'synapse'] else 4 if target.type in ['athena', 'trino', 'clickhouse'] else -1 }}"
-
-  # -- Code complexity variables --
-  comment_chars: ["--"]
-  token_costs: {
-    "and": 0.1,
-    "or": 0.1,
-    "when": 0.5,
-    "coalesce": 1,
-    "distinct": 1,
-    "greatest": 1,
-    "least": 1,
-    "group": 1,
-    "join": 1,
-    "order": 1,
-    "select": 1,
-    "where": 1,
-    "having": 2,
-    "flatten": 3,
-    "unnest": 3,
-    "pivot": 3,
-    "partition by": 3,
-    "qualify": 3,
-    }
+  chained_views_threshold: 5

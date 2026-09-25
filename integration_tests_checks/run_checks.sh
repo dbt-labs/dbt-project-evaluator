@@ -5,7 +5,7 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 
-if [ -z "${SKIP_DEPS:-}" ]; then dbt deps --profiles-dir . || exit 1; fi
+dbt deps --profiles-dir . || exit 1
 output=$(dbt check --profiles-dir . 2>&1)
 echo "$output"
 
