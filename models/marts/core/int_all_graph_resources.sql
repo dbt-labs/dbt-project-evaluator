@@ -50,7 +50,7 @@ unioned_with_calc as (
             else {{ dbt.concat([dbt.split_part('name', "'_'", 1), "'_'"]) }}
         end as prefix,
         {{ get_dbtreplace_directory_pattern() }} as directory_path,
-        {% if target.type == 'fabric' %}
+        {% if target.type in ['fabric', 'sqlserver', 'synapse'] %}
         {%- set on_mac_or_linux = dbt_project_evaluator.is_os_mac_or_linux() -%}
         {%- if on_mac_or_linux -%}
         right(file_path, charindex('/', reverse(file_path)) - 1) as file_name

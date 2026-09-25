@@ -6,10 +6,10 @@ seeds:
 
     config:
       column_types:
-        fct_name: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'string' }}"
-        column_name: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'string' }}"
-        id_to_exclude: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'string' }}"
-        comment: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'string' }}"
+        fct_name: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'varchar(8000)' if target.type in ['sqlserver'] else 'string' }}"
+        column_name: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'varchar(8000)' if target.type in ['sqlserver'] else 'string' }}"
+        id_to_exclude: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'varchar(8000)' if target.type in ['sqlserver'] else 'string' }}"
+        comment: "{{ 'varchar' if target.type in ['redshift', 'postgres', 'snowflake', 'trino', 'greenplum'] else 'String' if target.type in ['clickhouse'] else 'varchar(8000)' if target.type in ['sqlserver'] else 'string' }}"
 
     columns:
       - name: fct_name

@@ -376,6 +376,10 @@ with direct_relationships as (
 {% endmacro %}
 
 
+{% macro sqlserver__recursive_dag() %}
+    {{ return(dbt_project_evaluator.fabric__recursive_dag()) }}
+{% endmacro %}
+
 {% macro clickhouse__recursive_dag() %}
     {{ return(bigquery__recursive_dag()) }}
 {% endmacro %}

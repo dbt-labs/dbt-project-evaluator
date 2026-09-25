@@ -13,3 +13,7 @@
 {%- macro fabric__type_string_dpe() -%}
     {{ return("varchar(8000)") }}
 {%- endmacro -%}
+
+{%- macro sqlserver__type_string_dpe() -%}
+    {{ return(dbt_project_evaluator.fabric__type_string_dpe()) }}
+{%- endmacro -%}

@@ -23,4 +23,7 @@ select * from final
 
 {{ filter_exceptions() }}
 
+{#- dbt-sqlserver and dbt-synapse build tables via a temp view, which can't contain ORDER BY -#}
+{% if target.type not in ['sqlserver', 'synapse'] %}
 order by distance desc
+{% endif %}
