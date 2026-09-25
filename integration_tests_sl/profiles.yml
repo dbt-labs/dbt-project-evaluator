@@ -46,6 +46,7 @@ integration_tests:
 
     databricks:
       type: databricks
+      catalog: "{{ env_var('DATABRICKS_CATALOG', 'dbt_project_evaluator_ci') }}"
       schema: "{{ env_var('DATABRICKS_SCHEMA', 'dbt_project_evaluator_integration_tests_databricks') }}"
       host: "{{ env_var('DATABRICKS_HOST') }}"
       http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
