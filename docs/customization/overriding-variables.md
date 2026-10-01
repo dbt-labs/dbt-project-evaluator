@@ -111,6 +111,21 @@ vars:
 
 See [excluding packages and paths](excluding-packages-and-paths.md) for the details.
 
+## Exceptions Variable
+
+| variable    | description | default     |
+| ----------- | ----------- | ----------- |
+| `dbt_project_evaluator_exceptions` | the violations to accept, as a mapping from the name of a check to a list of `LIKE` patterns | none |
+
+```yaml title="dbt_project.yml"
+vars:
+  dbt_project_evaluator_exceptions:
+    fct_multiple_sources_joined:
+      - stg_%_unioned
+```
+
+This variable is the default implementation of the macro `dbt_project_evaluator_exceptions`, which can also be overridden in your project. See [configuring exceptions to the rules](exceptions.md) for the details.
+
 ## Variables removed in version 2
 
 The variables `insert_batch_size`, `max_depth_dag`, `comment_chars`, `token_costs` and `use_native_agate_printing` configured the models created in the warehouse by version 1 (unpacking of the graph, recursive DAG, SQL complexity and printing of the violations in the logs). They don't exist anymore and can be removed from your `dbt_project.yml`.

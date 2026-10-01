@@ -58,7 +58,7 @@ Each warning indicates the presence of a type of misalignment. To troubleshoot a
 
 1. Locate the related documentation in the [list of rules](rules.md)
 2. Read the `dbt check` output, which lists the first resources that violate the rule (see [reading the output of `dbt check`](customization/issues-in-log.md))
-3. Either fix the issue(s) or [customize](customization/exceptions.md) the package to exclude them
+3. Either fix the issue(s) or [accept them as exceptions](customization/exceptions.md)
 
 ### Configuration
 
@@ -79,7 +79,7 @@ See [running as a CI check](ci-check.md) and [disabling checks](customization/cu
 ### Differences from 1.x
 
 - `fct_hard_coded_references` has been removed, because it needs the SQL code of the models and this isn't available to checks. The `dbt lint` rule [`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) (`dbt.hard_coded_reference`) partly covers it, see [hard coded references](rules/modeling.md#hard-coded-references).
-- The `dbt_project_evaluator_exceptions` seed isn't supported, because checks can't read seeds. See [other ways to exclude results](customization/exceptions.md).
+- The `dbt_project_evaluator_exceptions` seed is replaced by the variable (or macro) `dbt_project_evaluator_exceptions`, because checks can't read seeds. See [configuring exceptions](customization/exceptions.md) and [migrating to version 2](migrating-to-v2.md). Patterns are compared with the name (or `unique_id`) of the resource a row points at, not with any other column of the result, and the two coverage checks ignore them.
 - `fct_missing_primary_key_tests` doesn't count `not_null` column constraints as `not_null` tests, because constraints aren't available in the information schema at check time.
 - The warehouse models are gone, including `int_all_dag_relationships`. To query your DAG, use the information schema directly, see [querying the DAG](querying-the-dag.md).
 - The `print_dbt_project_evaluator_issues` `on-run-end` macro is gone. `dbt check` and `dbt build` report the violations themselves.

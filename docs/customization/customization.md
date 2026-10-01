@@ -3,7 +3,8 @@
 !!! note
 
     This section is describing how to completely deactivate checks from the package.
-    If you are looking to deactivate models/sources from being checked, you can look at [excluding packages and paths](excluding-packages-and-paths.md)
+    If you are looking to deactivate models/sources from being checked, you can look at [excluding packages and paths](excluding-packages-and-paths.md).
+    To accept some violations of a check while still evaluating it for the other resources, see [configuring exceptions](exceptions.md).
 
 All the rules of the package are native [dbt checks](https://docs.getdbt.com/docs/build/checks), organized in one folder per category: `modeling`, `testing`, `documentation`, `structure`, `performance` and `governance`.
 

@@ -5,7 +5,7 @@ hide:
 
 # List of the rules currently defined
 
-Each rule is a [native dbt check](https://docs.getdbt.com/docs/build/checks) with the name listed in the last column. Use it to [run](index.md#how-it-works), [configure](customization/customization.md) or [select](customization/exceptions.md) a given rule, for example with `dbt check fct_root_models`. The checks are tagged with their type, for example `dbt ls --resource-type check --select tag:modeling`.
+Each rule is a [native dbt check](https://docs.getdbt.com/docs/build/checks) with the name listed in the last column. Use it to [run](index.md#how-it-works), [configure](customization/customization.md) or [select](index.md#how-it-works) a given rule, for example with `dbt check fct_root_models`. The same name is the key to use to [accept some violations of a rule](customization/exceptions.md). The checks are tagged with their type, for example `dbt ls --resource-type check --select tag:modeling`.
 
 |Type                                          |Friendly name                                                                                                        |check name   |
 |----------------------------------------------|---------------------------------------------------------------------------------------------------------------------|-------------|

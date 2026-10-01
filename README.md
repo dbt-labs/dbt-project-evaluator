@@ -52,6 +52,26 @@ Thresholds and conventions use the same vars as 1.x: `models_fanout_threshold`,
 `model_types`, `<model_type>_prefixes`, `<model_type>_folder_name`, `exclude_packages` and
 `exclude_paths_from_project`.
 
+## Exceptions
+
+To accept some violations of a check without disabling it, map the name of the check to a list of
+patterns in the var `dbt_project_evaluator_exceptions`. Each pattern is a SQL `LIKE` pattern compared
+with the name (`stg_legacy_x`, `source_name.table_name`, `name.v2`) or the `unique_id` of the resource
+that a row of the check points at:
+
+```yaml
+vars:
+  dbt_project_evaluator_exceptions:
+    fct_multiple_sources_joined:
+      - stg_%_unioned
+    fct_unused_sources:
+      - raw_shop.unused_table
+```
+
+For long lists, define `default__dbt_project_evaluator_exceptions()` in your own macros and return
+`fromyaml(...)` of a YAML string, which allows comments. A name that isn't a check of the package is a
+compile error. See [Configuring exceptions](https://dbt-labs.github.io/dbt-project-evaluator/latest/customization/exceptions/).
+
 ## Run
 
 ```shell
@@ -121,8 +141,10 @@ Also note that `dbt lint` exits 0 when it finds violations.
 ## Differences from 1.x
 
 - `fct_hard_coded_references` has been removed; the `dbt lint` rule `DBT05` partly covers it (see the caveat above).
-- The `dbt_project_evaluator_exceptions` seed isn't supported, because checks can't read seeds.
-  Use `exclude_paths_from_project`, disable a rule, or keep it at `warn`.
+- The `dbt_project_evaluator_exceptions` seed is replaced by the var (or macro) of the same name,
+  because checks can't read seeds, see [Exceptions](#exceptions) and `docs/migrating-to-v2.md`.
+  Patterns are compared with the name (or `unique_id`) of the resource a row points at, not with
+  any other column of the result, and the two coverage checks ignore them.
 - `fct_missing_primary_key_tests` doesn't count column `not_null` constraints, because constraints
   aren't in the check-time information schema.
 - The warehouse models are gone, including `int_all_dag_relationships`. To query your DAG, use the
