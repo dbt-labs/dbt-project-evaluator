@@ -78,7 +78,7 @@ For long lists, define `default__dbt_project_evaluator_exceptions()` in your own
 `fromyaml(...)` of a YAML string, which allows comments. A name that isn't a check of the package is a
 compile error. See [Configuring exceptions](https://dbt-labs.github.io/dbt-project-evaluator/latest/customization/exceptions/).
 
-Coming from version 1? `python scripts/migrate_to_v2.py` converts your exceptions seed, see
+Coming from version 1? `python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py` converts your exceptions seed, see
 [Migrating from version 1](https://dbt-labs.github.io/dbt-project-evaluator/latest/migrating-to-v2/).
 
 ## Run

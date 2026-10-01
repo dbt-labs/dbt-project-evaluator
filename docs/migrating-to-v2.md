@@ -14,52 +14,55 @@ Version 2 is a rewrite: the rules are native [dbt checks](https://docs.getdbt.co
 
 ## How to migrate
 
-Migrating is a handful of steps, most of them deleting configuration that only existed for version 1. A helper script, `migrate_to_v2.py`, is available but **optional**: everything it does can be done by hand with the steps below. It does two separate things:
+Migrating is a handful of steps, most of them deleting configuration that only existed for version 1. A helper script, `migrate_to_v2.py`, is **optional**: everything it does can be done by hand with the steps below. It comes with the package, and it does two separate things:
 
-- **A checklist** (`--check-only`): it reads your project and lists what has to change, with file and line numbers. It only reads files and is safe to run on your version 1 project, before you upgrade.
-- **The conversion of the exceptions seed**: it writes the equivalent of your `dbt_project_evaluator_exceptions.csv` for version 2. You only need this if you used the seed.
+- <span class="pill pill-checklist">Checklist</span> **A checklist** (`--check-only`): it reads your project and lists what has to change, with file and line numbers. It only reads files and never needs your project to parse, so you can run it as soon as the package is installed.
+- <span class="pill pill-script">Script converts</span> **The conversion of the exceptions seed**: it writes the equivalent of your `dbt_project_evaluator_exceptions.csv` for version 2. You only need this if you used the seed.
+
+Every step below is labelled with what can be done for it:
+
+| Label | Meaning |
+| ----- | ------- |
+| <span class="pill pill-manual">Manual</span> | You do it by hand. |
+| <span class="pill pill-checklist">Checklist</span> | The checklist finds it for you, with the file and the line. You still make the change. |
+| <span class="pill pill-script">Script converts</span> | The script does the work for you. |
 
 The recommended order:
 
-1. *(script, optional)* Run the checklist on your version 1 project to see the size of the migration.
-2. Update the package ([step 1](#1-update-the-package)).
+1. Update the package and run `dbt deps` ([step 1](#1-update-the-package)). The script is now in `dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py`.
+2. Run the checklist to see the size of the migration.
 3. Apply the manual steps 2 and 4 to 7. The checklist says where.
-4. *(script, only if you used the seed)* Convert the exceptions ([step 3](#3-convert-the-exceptions)).
+4. Only if you used the seed, convert the exceptions ([step 3](#3-convert-the-exceptions)).
 5. Run `dbt check` and compare it with what you expect.
-6. *(script, optional)* Run the checklist again until it reports nothing.
+6. Run the checklist again until it reports nothing.
 
-| Step | Manual | The script can help |
-| ---- | ------ | ------------------- |
-| [1. Update the package](#1-update-the-package) | yes | the checklist flags a package that is not pinned to 2.x |
-| [2. Remove the version 1 configuration](#2-remove-the-version-1-configuration) | yes | the checklist lists each item with its line |
-| [3. Convert the exceptions](#3-convert-the-exceptions) | possible, but long | **converts the seed** |
-| [4. Hard-coded references](#4-hard-coded-references) | yes | no |
-| [5. Update your CI](#5-update-your-ci) | yes | the checklist flags selectors and files that use the package's models |
-| [6. Replace the queries on the package's tables](#6-replace-the-queries-on-the-packages-tables) | yes | the checklist lists the models that reference a removed table |
-| [7. Check the exclusions](#7-check-the-exclusions) | yes | the checklist flags entries that look like regular expressions |
+| Step | What can be done |
+| ---- | ---------------- |
+| [1. Update the package](#1-update-the-package) | <span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> |
+| [2. Remove the version 1 configuration](#2-remove-the-version-1-configuration) | <span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> |
+| [3. Convert the exceptions](#3-convert-the-exceptions) | <span class="pill pill-script">Script converts</span> <span class="pill pill-manual">Manual</span> |
+| [4. Hard-coded references](#4-hard-coded-references) | <span class="pill pill-manual">Manual</span> |
+| [5. Update your CI](#5-update-your-ci) | <span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> |
+| [6. Replace the queries on the package's tables](#6-replace-the-queries-on-the-packages-tables) | <span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> |
+| [7. Check the exclusions](#7-check-the-exclusions) | <span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> |
 
-### Getting and running the script
+### Running the script
 
-The script is a single Python 3 file with no dependency. Before you upgrade, download it into your project:
-
-```shell
-curl --create-dirs -o scripts/migrate_to_v2.py https://raw.githubusercontent.com/dbt-labs/dbt-project-evaluator/main/scripts/migrate_to_v2.py
-```
-
-(in PowerShell: `Invoke-WebRequest -OutFile scripts/migrate_to_v2.py -Uri <the same URL>`). Once version 2 is installed, it is also in the package: `dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py`.
-
-Run it from the root of your project, or pass `--project-dir`:
+After `dbt deps`, run it from the root of your project (or pass `--project-dir`):
 
 ```shell
-python scripts/migrate_to_v2.py --check-only   # the checklist, writes nothing
-python scripts/migrate_to_v2.py                # also converts the exceptions seed into a macro
+# the checklist, writes nothing
+python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py --check-only
+
+# the checklist, and the conversion of the exceptions seed into a macro
+python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py
 ```
 
-If `python` is not found, use `python3` (macOS, Linux) or `py` (Windows), or run it with [uv](https://docs.astral.sh/uv/) on any system: `uv run scripts/migrate_to_v2.py`.
+It is a single Python 3 file with no dependency. If `python` is not found, use `python3` (macOS, Linux) or `py` (Windows), or run it with [uv](https://docs.astral.sh/uv/) on any system: `uv run dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py`. If you changed `packages-install-path`, use that folder instead of `dbt_packages`.
 
 ## 1. Update the package
 
-*Manual.*
+<span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist flags a package that is not pinned to 2.x.
 
 ```yaml title="packages.yml"
 packages:
@@ -71,7 +74,7 @@ The package has no dependency any more: if `dbt_utils` is only in your `packages
 
 ## 2. Remove the version 1 configuration
 
-*Manual; the checklist reports each item with its line number.*
+<span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> Each item is reported with its line number.
 
 Delete the following from your `dbt_project.yml`.
 
@@ -101,16 +104,16 @@ All the other variables (`models_fanout_threshold`, `documentation_coverage_targ
 
 ## 3. Convert the exceptions
 
-*The script can convert the seed. Skip this step if you never used the seed.*
+<span class="pill pill-script">Script converts</span> <span class="pill pill-manual">Manual</span> Skip this step if you never used the seed.
 
 The seed `dbt_project_evaluator_exceptions.csv` cannot be used any more, because checks cannot read seeds. Exceptions are now a mapping from the name of a check to a list of entries, see [configuring exceptions](customization/exceptions.md). An entry is either a pattern for the resource the violation points at, or a mapping `{column: pattern}` on a column that the check returns.
 
 The script converts your seed into a macro (or into a `vars:` snippet with `--format var`):
 
 ```shell
-python scripts/migrate_to_v2.py                                   # writes macros/dbt_project_evaluator_exceptions.sql
-python scripts/migrate_to_v2.py --format var                      # prints the snippet to add under `vars:`
-python scripts/migrate_to_v2.py --exceptions-csv path/to/file.csv --output macros/my_exceptions.sql
+python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py                                   # writes macros/dbt_project_evaluator_exceptions.sql
+python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py --format var                      # prints the snippet to add under `vars:`
+python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py --exceptions-csv path/to/file.csv --output macros/my_exceptions.sql
 ```
 
 The seed is found automatically in `seeds/**/dbt_project_evaluator_exceptions.csv`. The script refuses to overwrite an existing file unless you pass `--force`. Once the generated macro is in place, delete the seed file and the `seeds: dbt_project_evaluator:` configuration.
@@ -166,13 +169,13 @@ Things that behave differently from version 1:
 
 ## 4. Hard-coded references
 
-*Manual.*
+<span class="pill pill-manual">Manual</span>
 
 `fct_hard_coded_references` is not a check in version 2: hard-coded references are reported by `dbt lint`. Turn on the rule [`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) in your `.sqlfluff` with `rules = DBT05`, and delete the exceptions you had for `fct_hard_coded_references`.
 
 ## 5. Update your CI
 
-*Manual; the checklist flags the files that select or exclude the package.*
+<span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist flags the files that select or exclude the package.
 
 | Version 1 | Version 2 |
 | --------- | --------- |
@@ -185,13 +188,13 @@ Things that behave differently from version 1:
 
 ## 6. Replace the queries on the package's tables
 
-*Manual; the checklist lists the models that reference a removed table.*
+<span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist lists the models that reference a removed table.
 
 The tables of version 1 (`int_all_dag_relationships`, `int_all_graph_resources`, `int_direct_relationships`, `stg_nodes`, the `fct_` models...) do not exist any more. Models of yours that `ref()` them must query the information schema instead: `{{ info_schema('edges') }}`, `{{ info_schema('models') }}`... See [querying the DAG](querying-the-dag.md). The script lists the models that reference a removed table.
 
 ## 7. Check the exclusions
 
-*Manual; the checklist flags entries that look like regular expressions.*
+<span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist flags entries that look like regular expressions.
 
 `exclude_packages` works as in version 1, including `['all']` and the rule that your own project is never excluded. `exclude_paths_from_project` has changed:
 
@@ -207,7 +210,7 @@ See [excluding packages and paths](customization/excluding-packages-and-paths.md
 ## Checklist
 
 - [ ] `packages.yml` pins `[">=2.0.0", "<3.0.0"]` and `dbt deps` passes
-- [ ] (optional) `python scripts/migrate_to_v2.py --check-only` reports nothing left to change
+- [ ] (optional) `python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py --check-only` reports nothing left to change
 - [ ] the exceptions macro (or var) is in place, its `NEEDS REVIEW` lines are handled, and the seed is deleted
 - [ ] `dbt check` runs and reports the violations you expect
 - [ ] CI uses `dbt check` and severity comes from the `checks:` configuration

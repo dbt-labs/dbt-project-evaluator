@@ -8,7 +8,7 @@ This is what the variable `dbt_project_evaluator_exceptions` is for. It replaces
 
 !!! info "Coming from version 1?"
 
-    If you used the seed, you don't have to rewrite it by hand: run `python scripts/migrate_to_v2.py` from the root of your project. It reads the seed and writes the equivalent macro in `macros/dbt_project_evaluator_exceptions.sql` (or a `vars:` snippet with `--format var`). The rows it cannot translate are never dropped: they are written as `# NEEDS REVIEW` comments with the reason. The script is optional; see [migrating to version 2](../migrating-to-v2.md#3-convert-the-exceptions) for where to get it and how to run it.
+    If you used the seed, you don't have to rewrite it by hand: run `python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py` from the root of your project. It reads the seed and writes the equivalent macro in `macros/dbt_project_evaluator_exceptions.sql` (or a `vars:` snippet with `--format var`). The rows it cannot translate are never dropped: they are written as `# NEEDS REVIEW` comments with the reason. The script is optional; see [migrating to version 2](../migrating-to-v2.md#3-convert-the-exceptions) for where to get it and how to run it.
 
 ## Accepting violations of a check
 
