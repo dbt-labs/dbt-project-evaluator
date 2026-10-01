@@ -26,7 +26,7 @@ env:
 
 jobs:
     fusion-tests:
-        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@a1ff7cc9cbba3ceaf945b5ad9b31745ad1bd2688
+        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@5d4d8561b9fd193dc0ef2c5a302ad0acc8f68b64
         with:
             # Only Snowflake for now - add more adapters here as Fusion support expands
             adapters: "snowflake"
@@ -43,5 +43,4 @@ jobs:
             SNOWFLAKE_SCHEMA: "fusion_integration_tests_snowflake_${{ github.run_number }}"
         secrets:
             SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-            DBT_ENV_SECRET_SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
-            DBT_ENV_SECRET_SNOWFLAKE_PKEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PKEY_PASSPHRASE }}
+            DBT_ENV_SECRET_SNOWFLAKE_PASS: ${{ secrets.SNOWFLAKE_PASS }}
