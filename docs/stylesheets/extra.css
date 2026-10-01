@@ -7,3 +7,8 @@
 --md-typeset-a-color:             #ff694a;
 --md-accent-fg-color:             #047377;
 }
+/* Mermaid diagrams: node fills are dark in both color schemes, so keep the labels white */
+.mermaid {
+  --md-mermaid-label-fg-color: #fff;
+  --md-mermaid-node-fg-color: #fff;
+}

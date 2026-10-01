@@ -15,8 +15,8 @@ You can set your own threshold for chained views by overriding the `chained_view
 
 ```mermaid
 flowchart LR
-    classDef model fill:#6b7f99,stroke:#4a5a70,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     view_1["view_1"]:::model
     view_2["view_2"]:::model
     view_3["view_3"]:::model
@@ -53,16 +53,16 @@ The best practice to determine top candidates for changing materialization from 
 
 ```mermaid
 flowchart LR
-    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
-    classDef exposure fill:#ff694b,stroke:#c9482d,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef exposure fill:#c2410c,stroke:#8f2f08,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     dim_model_7["dim_model_7"]:::marts
     exposure_1["exposure_1"]:::exposure
     fct_model_6["fct_model_6"]:::marts
     dim_model_7 --> exposure_1
     fct_model_6 --> exposure_1
     class dim_model_7 flagged
-    linkStyle 0 stroke:#d9272e,stroke-width:3px
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
 ```
 
 In this case, the parents of `exposure_1` are not both materialized as tables -- `dim_model_7` is ephemeral, while `fct_model_6` is a table. This check would return a row for the `dim_model_7 --> exposure_1` relationship.

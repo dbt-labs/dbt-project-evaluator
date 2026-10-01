@@ -12,17 +12,17 @@ Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) tha
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef intermediate fill:#3f6fb5,stroke:#2a4f87,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     stg_model_1["stg_model_1"]:::staging
     int_model_4["int_model_4"]:::intermediate
     source_1_table_2["source_1.table_2"]:::source
     stg_model_1 --> int_model_4
     source_1_table_2 --> int_model_4
     class int_model_4 flagged
-    linkStyle 1 stroke:#d9272e,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
 ```
 
 **Reason to Flag**
@@ -43,8 +43,8 @@ After refactoring your downstream model to select from the staging layer, your D
 
 ```mermaid
 flowchart LR
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef intermediate fill:#3f6fb5,stroke:#2a4f87,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
     stg_model_1["stg_model_1"]:::staging
     int_model_4["int_model_4"]:::intermediate
     stg_model_2["stg_model_2"]:::staging
@@ -65,14 +65,14 @@ that depends directly on a source node.
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     source_1_table_5["source_1.table_5"]:::source
     fct_model_9["fct_model_9"]:::marts
     source_1_table_5 --> fct_model_9
     class fct_model_9 flagged
-    linkStyle 0 stroke:#d9272e,stroke-width:3px
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
 ```
 
 **Reason to Flag**
@@ -92,9 +92,9 @@ After refactoring your downstream model to select from the staging layer, your D
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
     source_1_table_5["source_1.table_5"]:::source
     stg_model_5["stg_model_5"]:::staging
     fct_model_9["fct_model_9"]:::marts
@@ -114,8 +114,8 @@ Imagine you have two separate source nodes - `source_1.table_5` and `source_1.ra
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     source_1_table_5["source_1.table_5"]:::source
     source_1_raw_table_5["source_1.raw_table_5"]:::source
     class source_1_table_5 flagged
@@ -217,9 +217,9 @@ You can set your own threshold for model fanout by overriding the `models_fanout
 
 ```mermaid
 flowchart LR
-    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
-    classDef model fill:#6b7f99,stroke:#4a5a70,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     fct_model["fct_model"]:::marts
     model_1["model_1"]:::model
     model_2["model_2"]:::model
@@ -272,17 +272,17 @@ predefine every query or quandary your team might have. So decide as a team wher
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     source_1_table_1["source_1.table_1"]:::source
     stg_model_2["stg_model_2"]:::staging
     source_1_table_2["source_1.table_2"]:::source
     source_1_table_1 --> stg_model_2
     source_1_table_2 --> stg_model_2
     class stg_model_2 flagged
-    linkStyle 0 stroke:#d9272e,stroke-width:3px
-    linkStyle 1 stroke:#d9272e,stroke-width:3px
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
 ```
 
 **Reason to Flag**
@@ -321,9 +321,9 @@ Post-refactor, your DAG should look like this:
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef intermediate fill:#3f6fb5,stroke:#2a4f87,color:#fff
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
     source_1_table_1["source_1.table_1"]:::source
     stg_model_1["stg_model_1"]:::staging
     source_1_table_2["source_1.table_2"]:::source
@@ -339,8 +339,8 @@ or if you want to use base_ models and keep stg_model_2 as is:
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     source_1_table_1["source_1.table_1"]:::source
     base__model_1["base__model_1"]:::staging
     source_1_table_2["source_1.table_2"]:::source
@@ -366,9 +366,9 @@ where the model "in between" the parent and child has NO other downstream depend
 
 ```mermaid
 flowchart LR
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef intermediate fill:#3f6fb5,stroke:#2a4f87,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     stg_model_1["stg_model_1"]:::staging
     int_model_4["int_model_4"]:::intermediate
     int_model_5["int_model_5"]:::intermediate
@@ -376,7 +376,7 @@ flowchart LR
     stg_model_1 --> int_model_5
     int_model_4 --> int_model_5
     class int_model_4 flagged
-    linkStyle 1 stroke:#d9272e,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
 ```
 
 **Reason to Flag**
@@ -410,8 +410,8 @@ Post-refactor, your DAG should look like this:
 
 ```mermaid
 flowchart LR
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef intermediate fill:#3f6fb5,stroke:#2a4f87,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
     stg_model_1["stg_model_1"]:::staging
     int_model_5["int_model_5"]:::intermediate
     stg_model_1 --> int_model_5
@@ -429,10 +429,10 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef model fill:#6b7f99,stroke:#4a5a70,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     source_table_1["source.table_1"]:::source
     stg_model_1["stg_model_1"]:::staging
     model_1["model_1"]:::model
@@ -478,17 +478,17 @@ Start by mapping any table references in the `FROM` clause of the model definiti
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     source_1_table_1["source_1.table_1"]:::source
     stg_model_1["stg_model_1"]:::staging
     stg_model_2["stg_model_2"]:::staging
     source_1_table_1 --> stg_model_1
     source_1_table_1 --> stg_model_2
     class source_1_table_1 flagged
-    linkStyle 0 stroke:#d9272e,stroke-width:3px
-    linkStyle 1 stroke:#d9272e,stroke-width:3px
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
 ```
 
 **Reason to Flag**
@@ -510,9 +510,9 @@ After refactoring the above example, the DAG would look something like this:
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef model fill:#6b7f99,stroke:#4a5a70,color:#fff
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
     source_1_table_1["source_1.table_1"]:::source
     stg_model["stg_model"]:::staging
     model_1["model_1"]:::model
@@ -534,14 +534,14 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     fct_model_9["fct_model_9"]:::marts
     stg_model_5["stg_model_5"]:::staging
     fct_model_9 --> stg_model_5
     class stg_model_5 flagged
-    linkStyle 0 stroke:#d9272e,stroke-width:3px
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
 ```
 
 **Reason to Flag**
@@ -559,8 +559,8 @@ After updating the model to use the appropriate `{{ source() }}` function, your 
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     source_1_table_5["source_1.table_5"]:::source
     stg_model_5["stg_model_5"]:::staging
     source_1_table_5 --> stg_model_5
@@ -576,13 +576,13 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     stg_model_2["stg_model_2"]:::staging
     stg_model_4["stg_model_4"]:::staging
     stg_model_2 --> stg_model_4
     class stg_model_4 flagged
-    linkStyle 0 stroke:#d9272e,stroke-width:3px
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
 ```
 
 **Reason to Flag**
@@ -607,9 +607,9 @@ In our example, we might realize that `stg_model_4` is _actually_ an intermediat
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     source_1_table_1["source_1.table_1"]:::source
     stg_model_1["stg_model_1"]:::staging
     source_1_table_2["source_1.table_2"]:::source
@@ -649,8 +649,8 @@ or any other nested information.
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     source_1_table_1["source_1.table_1"]:::source
     stg_model_1["stg_model_1"]:::staging
     source_1_table_2["source_1.table_2"]:::source
@@ -674,9 +674,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
-    classDef flagged stroke:#d9272e,stroke-width:4px
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
     stg_model_1["stg_model_1"]:::staging
     fct_model_1["fct_model_1"]:::marts
     stg_model_2["stg_model_2"]:::staging
@@ -705,9 +705,9 @@ Bringing together a reasonable number (typically 4 to 6) of entities or concepts
 
 ```mermaid
 flowchart LR
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
-    classDef intermediate fill:#3f6fb5,stroke:#2a4f87,color:#fff
-    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
     stg_model_1["stg_model_1"]:::staging
     int_model_1["int_model_1"]:::intermediate
     stg_model_2["stg_model_2"]:::staging

@@ -58,7 +58,7 @@ For example, after modifying the model `stg_orders`, the checks that look at ind
 
 !!! warning
 
-    With dbt 2.0.6, `--select` cannot select sources, and `state:modified` does not detect a changed source. The checks that report sources (`fct_unused_sources`, `fct_sources_without_freshness`, `fct_undocumented_source_tables`, `fct_undocumented_sources`, `fct_duplicate_sources`, `fct_source_directories`, `fct_source_fanout`) therefore report nothing when a selector is set. Run them without `--select` (for example in a separate, non-blocking step) to catch source violations.
+    With dbt 2.0.6, `dbt check --select` cannot scope source rows ([dbt-labs/dbt#16554](https://github.com/dbt-labs/dbt/issues/16554)), so `state:modified` does not pick up a changed source. The checks that report sources (`fct_unused_sources`, `fct_sources_without_freshness`, `fct_undocumented_source_tables`, `fct_undocumented_sources`, `fct_duplicate_sources`, `fct_source_directories`, `fct_source_fanout`) therefore report nothing when a selector is set. Run them without `--select` (for example in a separate, non-blocking step) to catch source violations.
 
 ### Example with GitHub Actions
 

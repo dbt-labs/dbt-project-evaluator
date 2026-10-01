@@ -49,8 +49,8 @@ Consider `stg_model_3` which is a staging model for `source_2.table_3`:
 
 ```mermaid
 flowchart LR
-    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
-    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     source_2_table_3["source_2.table_3"]:::source
     stg_model_3["stg_model_3"]:::staging
     source_2_table_3 --> stg_model_3
