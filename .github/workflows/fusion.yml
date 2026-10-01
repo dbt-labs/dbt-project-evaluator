@@ -26,8 +26,7 @@ env:
 
 jobs:
     fusion-tests:
-        # TODO: switch back to a tagged release once dbt-labs/dbt-package-testing#51 is merged and tagged
-        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@8c31a9c4b7ec88f190f3004f4c1b8f30f03ada03
+        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox_fusion.yml@v2
         with:
             # Only Snowflake for now - add more adapters here as Fusion support expands
             adapters: "snowflake"
