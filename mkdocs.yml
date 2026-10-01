@@ -72,6 +72,7 @@ edit_uri: edit/main/docs/
 nav:
   - Home: index.md
   - Migrating from version 1: migrating-to-v2.md
+  - Agent skills: skills.md
   - Rules: 
     - List of rules: rules.md
     - Modeling: rules/modeling.md

@@ -19,6 +19,15 @@ Each check is a DuckDB SQL query over the Information Schema (`{{ info_schema('m
 `edges`, …) that returns one row per violation. Every 1.x rule is covered, and hard-coded
 references are reported by [`dbt lint`](#hard-coded-references).
 
+## Why version 2?
+
+- **Native.** The rules are dbt checks, not models: you run them with `dbt check`, list them with `dbt ls --resource-type check`, and configure their severity, tags or whether they run in `dbt_project.yml`, as for any other resource.
+- **Checked before every build.** Checks run before anything compiles on `dbt build`, so a rule set to `severity: error` stops a build that breaks it, instead of reporting after the fact.
+- **Fast.** Nothing is built and nothing is read in your warehouse. On a project of about 1,900 models, all the checks take about 15 seconds, parsing included, against about 2 minutes for the version 1 `dbt build` on Snowflake.
+- **Selectable.** `dbt check --select` and `state:modified` only report the violations on the resources you changed, which is what a pull request needs. Version 1 always evaluated the whole project.
+- **No warehouse needed.** No credentials, no compute cost, the same result for every adapter, and CI that doesn't need secrets.
+- **Smaller and easier to extend.** There is no dependency and no per-adapter code. A check is a short SQL query (6 lines for the median) over the same information schema that you can query yourself, so you can [write your own](https://dbt-labs.github.io/dbt-project-evaluator/latest/querying-the-dag/) next to the package's.
+
 ## Install
 
 ```yaml
@@ -104,6 +113,22 @@ cannot scope source rows, so the checks that report sources (`fct_unused_sources
 `fct_duplicate_sources`, `fct_source_directories`, `fct_source_fanout`) report nothing when you pass a
 selector, and `state:modified` does not pick up a changed source. Run them without `--select` to see
 source violations.
+
+## Skills
+
+The package ships two agent skills (the AgentSkills format) that teach a coding agent (Claude Code, Cursor, Codex...) how to work with it:
+
+- `using-dbt-project-evaluator`: run `dbt check`, read and fix violations, check only changed resources, set severity, thresholds, exclusions and exceptions, and use the checks in CI.
+- `migrating-dbt-project-evaluator-to-v2`: migrate a project from version 1, with the migration script, the exceptions seed and the CI.
+
+To install them, tell dbt which agent you use in `dbt_project.yml`, then run `dbt deps`:
+
+```yaml
+flags:
+  ai_provider: claude      # or cursor, codex, openai, gemini, wizard; a list is accepted
+```
+
+dbt copies the skills into `.claude/skills/` (Claude Code) or `.agents/skills/` (the other agents), and updates them on every `dbt deps`. Without `ai_provider`, `dbt deps` warns and installs nothing. To turn them off, set `skills: dbt_project_evaluator: +enabled: false` (or the name of one skill under `dbt_project_evaluator:`) and run `dbt deps` again. See [the skills page](https://dbt-labs.github.io/dbt-project-evaluator/latest/skills/).
 
 ## Rules
 

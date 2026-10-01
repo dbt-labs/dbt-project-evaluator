@@ -27,6 +27,8 @@ Every step below is labelled with what can be done for it:
 | <span class="pill pill-checklist">Checklist</span> | The checklist finds it for you, with the file and the line. You still make the change. |
 | <span class="pill pill-script">Script converts</span> | The script does the work for you. |
 
+If you work with a coding agent, the package ships a skill that follows these steps for you: [`migrating-dbt-project-evaluator-to-v2`](skills.md). Install the package, run `dbt deps` with an `ai_provider` set, and ask the agent to migrate the project.
+
 The recommended order:
 
 1. Update the package and run `dbt deps` ([step 1](#1-update-the-package)). The script is now in `dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py`.

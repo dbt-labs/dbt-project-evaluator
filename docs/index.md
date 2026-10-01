@@ -16,6 +16,15 @@ Version 2 implements each rule as a native [dbt check](https://docs.getdbt.com/d
 
     Version 2 requires dbt `>=2.0.0`. If you are on dbt Core, stay on version 1.x of the package, which is implemented as models in your warehouse. The documentation for 1.x is available in the version selector of this site, and the code is on the [`v1.4.0` tag](https://github.com/dbt-labs/dbt-project-evaluator/tree/v1.4.0).
 
+## Why version 2?
+
+- **Native.** The rules are dbt checks, not models: you run them with `dbt check`, list them with `dbt ls --resource-type check`, and configure their severity, tags or whether they run in `dbt_project.yml`, as for any other resource.
+- **Checked before every build.** Checks run before anything compiles on `dbt build`, so a rule set to `severity: error` stops a build that breaks it, instead of reporting after the fact.
+- **Fast.** Nothing is built and nothing is read in your warehouse. On a project of about 1,900 models, all the checks take about 15 seconds, parsing included, against about 2 minutes for the version 1 `dbt build` on Snowflake.
+- **Selectable.** `dbt check --select` and `state:modified` only report the violations on the resources you changed, which is what a pull request needs. Version 1 always evaluated the whole project.
+- **No warehouse needed.** No credentials, no compute cost, the same result for every adapter, and CI that doesn't need secrets.
+- **Smaller and easier to extend.** There is no dependency and no per-adapter code. A check is a short SQL query (6 lines for the median) over the same information schema that you can query yourself, so you can [write your own](querying-the-dag.md) next to the package's.
+
 ## Using This Package
 
 ### Cloning via dbt Package Hub
