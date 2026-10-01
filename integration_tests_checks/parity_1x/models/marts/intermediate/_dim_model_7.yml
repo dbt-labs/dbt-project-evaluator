@@ -1,0 +1,13 @@
+models: 
+  - name: dim_model_7
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        description: A multiline description containing example values that might\nbe held in this column. These examples include one with a format like something\Something\Another\Thing
+        data_type: "{{ 'UInt8' if target.type in ['clickhouse'] else 'int' }}"
+        constraints:
+          - type: not_null
+        data_tests:
+           - unique

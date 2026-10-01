@@ -1,0 +1,46 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'dbt_project_evaluator_integration_tests'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'integration_tests'
+
+# These configurations specify where dbt should look for different types of files.
+# The `source-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+flags:
+  require_nested_cumulative_type_params: True
+  require_yaml_configuration_for_mf_time_spines: True
+  require_generic_test_arguments_property: True
+  require_ref_prefers_node_package_to_root: True
+
+models:
+  dbt_project_evaluator_integration_tests:
+    # keep the fake models from executing
+    +materialized: ephemeral
+
+vars:
+  # ensure integration tests run successfully when there are 0 of a given model type (extra)
+  exclude_packages: ['exclude_package']
+  exclude_paths_from_project: ["/to_exclude/","source_3.table_6"]
+  model_types: ['base','staging', 'intermediate', 'marts', 'other', 'extra', 'new_model_type']
+  new_model_type_folder_name: 'my_new_models'
+  new_model_type_prefixes: 'nwmdl_'
+  too_many_joins_threshold: 3
+  chained_views_threshold: 2

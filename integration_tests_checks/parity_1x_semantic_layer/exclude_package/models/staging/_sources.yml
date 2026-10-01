@@ -1,0 +1,4 @@
+sources:
+  - name: fake_source
+    tables:
+      - name: fake_source
