@@ -10,7 +10,7 @@ output=$(dbt check --profiles-dir . 2>&1)
 echo "$output"
 
 actual=$(echo "$output" \
-    | sed -n "s/.*check '\([a-z_]*\)' \(found\|failed\) with \([0-9]*\) violation.*/\1,\3/p" \
+    | sed -En "s/.*check '([a-z_]+)' (found|failed) with ([0-9]+) violation.*/\1,\3/p" \
     | sort -u)
 expected=$(tail -n +2 expected_violations.csv | sort)
 

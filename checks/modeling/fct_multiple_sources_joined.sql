@@ -1,6 +1,6 @@
--- models that select from more than one source
+-- models and snapshots that select from more than one source
 select child_unique_id as unique_id, child_name as name, count(*) as source_parents
 from {{ evaluator_edges() }}
-where parent_resource_type = 'source' and child_resource_type = 'model'
+where parent_resource_type = 'source' and child_resource_type in ('model', 'snapshot')
 group by all
 having source_parents > 1

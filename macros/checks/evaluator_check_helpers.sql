@@ -34,6 +34,12 @@ regexp_extract(replace({{ path }}, chr(92), '/'), '[^/]+$', 0)
 {%- endmacro %}
 
 
+{# enabled data tests (disabled ones are not part of the DAG, as in 1.x) #}
+{% macro evaluator_data_tests() -%}
+(select * from {{ info_schema('data_tests') }} where enabled)
+{%- endmacro %}
+
+
 {# prefixes configured for a model type (the var may be a string or a list) #}
 {% macro evaluator_prefixes(model_type) -%}
     {%- set prefixes = var(model_type ~ '_prefixes', []) -%}
@@ -78,7 +84,7 @@ regexp_extract(replace({{ path }}, chr(92), '/'), '[^/]+$', 0)
                cast(null as varchar) as folder_model_type
                {%- endif %}
         from {{ info_schema('models') }} model
-        where {{ evaluator_check_in_scope('model') }}
+        where model.enabled and {{ evaluator_check_in_scope('model') }}
     )
 )
 {%- endmacro %}
@@ -92,7 +98,7 @@ regexp_extract(replace({{ path }}, chr(92), '/'), '[^/]+$', 0)
            {{ evaluator_directory('source.original_file_path') }} as directory_path,
            {{ evaluator_file_name('source.original_file_path') }} as file_name
     from {{ info_schema('sources') }} source
-    where {{ evaluator_check_in_scope('source') }}
+    where source.enabled and {{ evaluator_check_in_scope('source') }}
 )
 {%- endmacro %}
 
@@ -115,7 +121,7 @@ regexp_extract(replace({{ path }}, chr(92), '/'), '[^/]+$', 0)
         {%- for view in ['seeds', 'snapshots'] %}
         union all
         select unique_id, resource_type, name, materialized, access, null
-        from {{ info_schema(view) }} node where {{ evaluator_check_in_scope('node') }}
+        from {{ info_schema(view) }} node where node.enabled and {{ evaluator_check_in_scope('node') }}
         {%- endfor %}
         {%- for view in ['exposures', 'metrics', 'saved_queries'] %}
         union all

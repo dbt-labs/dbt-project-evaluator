@@ -2,7 +2,7 @@
 -- the resource itself) carries every test of one of the `primary_key_test_macros` sets
 with resources as (
     {%- for view in ['models', 'seeds', 'snapshots', 'sources'] %}
-    select unique_id, name, resource_type, package_name, original_file_path from {{ info_schema(view) }}
+    select unique_id, name, resource_type, package_name, original_file_path from {{ info_schema(view) }} where enabled
     {%- if not loop.last %} union all{% endif %}
     {%- endfor %}
 ),
@@ -10,8 +10,9 @@ with resources as (
 tests as (
     select node_unique_id, column_name,
            coalesce(nullif(test_definition_package, ''), 'dbt') || '.test_' || test_name as full_test_name
-    from {{ info_schema('data_tests') }}
-    where test_name is not null
+    from {{ evaluator_data_tests() }}
+    -- singular tests have no node_unique_id, which would make the `not in` below match nothing
+    where test_name is not null and node_unique_id is not null
 )
 
 select unique_id, name, resource_type

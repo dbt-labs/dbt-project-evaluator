@@ -8,9 +8,9 @@ fct_exposures_dependent_on_private_models,3
 fct_marts_or_intermediate_dependent_on_source,1
 fct_missing_primary_key_tests,23
 fct_model_directories,2
-fct_model_fanout,1
+fct_model_fanout,2
 fct_model_naming_conventions,1
-fct_multiple_sources_joined,1
+fct_multiple_sources_joined,2
 fct_public_models_without_contract,1
 fct_rejoining_of_upstream_concepts,1
 fct_root_models,1
@@ -26,4 +26,4 @@ fct_undocumented_models,22
 fct_undocumented_public_models,1
 fct_undocumented_source_tables,3
 fct_undocumented_sources,3
-fct_unused_sources,1
+fct_unused_sources,3

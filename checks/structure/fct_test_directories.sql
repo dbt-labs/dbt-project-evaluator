@@ -4,5 +4,5 @@ select unique_id,
        properties_yml_file_path as current_properties_yml_file_path,
        directory_path as change_properties_yml_directory_to
 from {{ evaluator_models() }}
-where unique_id in (select node_unique_id from {{ info_schema('data_tests') }})
+where unique_id in (select node_unique_id from {{ evaluator_data_tests() }})
   and {{ evaluator_directory('properties_yml_file_path') }} != directory_path
