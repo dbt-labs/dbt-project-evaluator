@@ -7,10 +7,20 @@
       evaluator_edges()    DAG edges between in-scope nodes (tests excluded), with both ends' attributes
 #}
 
-{# true unless the resource is excluded by `exclude_packages` / `exclude_paths_from_project` #}
+{#
+    true unless the resource is excluded by `exclude_packages` / `exclude_paths_from_project`.
+    As in 1.x, `exclude_packages` never excludes the root project, and ['all'] excludes every package
+    but the root project.
+#}
 {% macro evaluator_check_in_scope(alias) -%}
+{%- set excluded_packages = var('exclude_packages', []) -%}
 (
-    coalesce({{ alias }}.package_name, '') not in ('dbt_project_evaluator'{% for package in var('exclude_packages', []) %}, '{{ package }}'{% endfor %})
+    coalesce({{ alias }}.package_name, '') != 'dbt_project_evaluator'
+    {%- if 'all' in excluded_packages %}
+    and {{ alias }}.package_name = '{{ project_name }}'
+    {%- elif excluded_packages %}
+    and ({{ alias }}.package_name = '{{ project_name }}' or coalesce({{ alias }}.package_name, '') not in ({% for package in excluded_packages %}'{{ package }}'{% if not loop.last %}, {% endif %}{% endfor %}))
+    {%- endif %}
     {%- for path in var('exclude_paths_from_project', []) %}
     and coalesce({{ alias }}.original_file_path, '') not like '%{{ path }}%'
     and {{ alias }}.unique_id not like '%{{ path | replace("/", "") }}%'

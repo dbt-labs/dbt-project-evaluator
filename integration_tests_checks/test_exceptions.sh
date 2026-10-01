@@ -70,5 +70,17 @@ echo "$output" | grep -q "check 'fct_undocumented_models' found with 1 violation
     || fail "violations: --select combined with an exception should report only stg_orders"
 popd > /dev/null
 
+# 5. exclude_packages: ['all'] keeps only the root project, and the root project is never excluded
+pushd parity_1x > /dev/null || exit 1
+counts() { sed -En "s/.*check '([a-z_]+)' (found|failed) with ([0-9]+) violation.*/\1,\3/p" | sort -u; }
+expected=$(tail -n +2 expected_violations.csv | sort)
+[ "$(dbt check --vars '{exclude_packages: [all]}' --profiles-dir . 2>&1 | counts)" = "$expected" ] \
+    || fail "parity_1x: exclude_packages ['all'] should give the same violations as excluding exclude_package"
+[ "$(dbt check --vars '{exclude_packages: [dbt_project_evaluator_integration_tests, exclude_package]}' --profiles-dir . 2>&1 | counts)" = "$expected" ] \
+    || fail "parity_1x: exclude_packages must not exclude the root project"
+[ "$(dbt check --vars '{exclude_packages: []}' --profiles-dir . 2>&1 | counts)" != "$expected" ] \
+    || fail "parity_1x: the resources of exclude_package should be reported when it is not excluded"
+popd > /dev/null
+
 [ $status -eq 0 ] && echo "Exception tests passed."
 exit $status
