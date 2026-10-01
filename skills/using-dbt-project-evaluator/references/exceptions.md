@@ -4,7 +4,7 @@ Only add an exception after the user confirmed the violation is intentional. Ask
 
 ## Shape
 
-A mapping from a **check name** to a list of **entries**. A name that is not a check of the package is a compile error that lists the valid names (see [checks.md](checks.md)). The two coverage checks cannot have exceptions.
+A mapping from a **check name** to a list of **entries**. A name that is not a check of the package is a compile error that lists the valid names (see [check-columns.md](check-columns.md)). The two coverage checks cannot have exceptions.
 
 ```yaml
 fct_model_naming_conventions:
@@ -18,7 +18,7 @@ fct_unused_sources: raw_shop.orders     # a single string is accepted instead of
 ## Entries
 
 - **String**: a SQL `LIKE` pattern compared with the name of the resource the violation points at (the `unique_id` column of the check) and with its whole `unique_id`. Names: `stg_orders` for a model, `int_model.v2` for a version of a versioned model (the bare name does not match), `source_name.table_name` for a source table. `%` is any sequence, `_` any single character; matching is case-sensitive. Examples: `stg_%_unioned`, `raw_shop.orders`, `model.my_project.stg_orders`, `model.%.stg_legacy_%`.
-- **Mapping**: `{column: pattern}` on the columns the check returns (see [checks.md](checks.md); run the check to see them). All the keys of one mapping must match (AND), which accepts exactly one pair: `{name: stg_a, parent: stg_b}`. A column can have several patterns: `{parent: [stg_x%, stg_y%]}` (any of them). Separate entries are alternatives (OR).
+- **Mapping**: `{column: pattern}` on the columns the check returns (see [check-columns.md](check-columns.md); run the check to see them). All the keys of one mapping must match (AND), which accepts exactly one pair: `{name: stg_a, parent: stg_b}`. A column can have several patterns: `{parent: [stg_x%, stg_y%]}` (any of them). Separate entries are alternatives (OR).
 - **List columns** (`source_parents`, `model_parents`, `leaf_children`, `model_children`): the entry matches when **any element** matches, and then the whole violation is dropped, not just that parent.
 - Path columns can accept a folder: `{original_file_path: models/utils/%}`.
 - Errors: an unknown column fails with DuckDB's message `does not have a column named "x"`; an empty mapping, a column without a pattern and a column name that is not a plain identifier are compile errors.

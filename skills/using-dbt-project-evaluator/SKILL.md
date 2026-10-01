@@ -1,6 +1,6 @@
 ---
 name: using-dbt-project-evaluator
-description: Use when running, configuring or acting on the dbt_project_evaluator package version 2 (native dbt checks named fct_*), for example "run dbt check", "fix the violations of fct_root_models", "only check the models I changed", "make the evaluator fail the build", "disable a check", "change a threshold", "exclude a package or folder", "accept this violation" or "add the evaluator to CI". Covers exceptions (dbt_project_evaluator_exceptions). Do not use to migrate from version 1 (use migrating-dbt-project-evaluator-to-v2).
+description: Use when running, selecting, configuring or accepting violations of the dbt_project_evaluator package version 2 (native dbt checks named fct_*), for example "run dbt check", "only check the models I changed", "make the evaluator fail the build", "disable a check", "change a threshold", "exclude a package or folder", "accept this violation", "add an exception" or "add the evaluator to CI". Covers exceptions (dbt_project_evaluator_exceptions). Hands off to fixing-dbt-project-evaluator-violations to actually fix violations, and does not migrate from version 1 (use migrating-dbt-project-evaluator-to-v2).
 ---
 
 # Using dbt_project_evaluator (version 2)
@@ -37,16 +37,9 @@ Per-resource checks then report only the changed resources. `fct_documentation_c
 
 Known limitation (dbt 2.0.6): `dbt check --select` cannot scope the checks that report **sources** (`fct_unused_sources`, `fct_sources_without_freshness`, `fct_undocumented_source_tables`, `fct_undocumented_sources`, `fct_duplicate_sources`, `fct_source_directories`, `fct_source_fanout`); with a selector they report nothing, and `state:modified` does not see a changed source. Run them without `--select`. Tracked in https://github.com/dbt-labs/dbt/issues/16554.
 
-## 4. Fix the violations
+## 4. Fixing violations
 
-1. Pick one check. Look it up in [references/checks.md](references/checks.md): what it flags, the usual fix, the columns it returns.
-2. Read the explanation and remediation in `dbt_packages/dbt_project_evaluator/docs/rules/<category>.md`.
-3. Fix the resource named in `unique_id` (not the symptom), then re-run only that check on the affected area: `dbt check <check> --select <resource>`.
-4. Repeat until the check is clean, then run `dbt check` once to confirm nothing else moved.
-
-Prefer fixing over silencing. Do **not** add an exception, disable a check or raise a threshold to make a violation go away unless the user asks for it or confirms that the violation is intentional.
-
-Two rules are not checks any more: hard-coded references are reported by `dbt lint` (rule `DBT05`, enabled with `rules = DBT05` in `.sqlfluff`), and constraints are not counted by `fct_missing_primary_key_tests` yet (a short-term limitation, https://github.com/dbt-labs/dbt/issues/16553): a model with a `not_null` constraint plus a `unique` test is still reported.
+To fix the violations a check reports, use the fixing-dbt-project-evaluator-violations skill. Prefer fixing over silencing: do **not** add an exception, disable a check or raise a threshold to make a violation go away unless the user asks for it or confirms that the violation is intentional.
 
 ## 5. Configure
 
@@ -78,7 +71,7 @@ Set the severity of the checks that should block merges to `error` in `dbt_proje
 
 ## Pitfalls
 
-- A check name that is not a check of the package in the exceptions is a compile error that lists the valid names: copy names from [references/checks.md](references/checks.md).
+- A check name that is not a check of the package in the exceptions is a compile error that lists the valid names: copy names and columns from [references/check-columns.md](references/check-columns.md).
 - `_` in a pattern is a LIKE wildcard, patterns are case-sensitive, and versioned models are named `name.v2`.
 - `exclude_paths_from_project` is a literal substring match (not a regular expression) applied to every package.
 - Disabled models, sources and tests are ignored by the checks, as in version 1.

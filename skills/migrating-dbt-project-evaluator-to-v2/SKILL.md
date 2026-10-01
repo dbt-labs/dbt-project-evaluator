@@ -39,7 +39,7 @@ python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py --format var 
 ```
 
 Then:
-1. Read the generated file with the user. Every line under `# NEEDS REVIEW` is a 1.x exception that could not be translated (a column that no longer exists, an unknown check, an empty pattern...). For each one, decide with the user: rewrite it on a column the 2.x check returns ([references/steps.md](references/steps.md) and the `using-dbt-project-evaluator` skill's `references/checks.md` list them), or drop it deliberately and say so.
+1. Read the generated file with the user. Every line under `# NEEDS REVIEW` is a 1.x exception that could not be translated (a column that no longer exists, an unknown check, an empty pattern...). For each one, decide with the user: rewrite it on a column the 2.x check returns ([references/steps.md](references/steps.md) and the `using-dbt-project-evaluator` skill's `references/check-columns.md` list them), or drop it deliberately and say so.
 2. `# NOT APPLICABLE` lines (`fct_hard_coded_references`, the coverage checks) are expected: no action.
 3. Delete the seed file only after the generated entries are in place.
 

@@ -116,9 +116,10 @@ source violations.
 
 ## Skills
 
-The package ships two agent skills (the AgentSkills format) that teach a coding agent (Claude Code, Cursor, Codex...) how to work with it:
+The package ships three agent skills (the AgentSkills format) that teach a coding agent (Claude Code, Cursor, Codex...) how to work with it:
 
-- `using-dbt-project-evaluator`: run `dbt check`, read and fix violations, check only changed resources, set severity, thresholds, exclusions and exceptions, and use the checks in CI.
+- `using-dbt-project-evaluator`: run `dbt check`, check only changed resources, set severity, thresholds and exclusions, accept violations with exceptions, and use the checks in CI.
+- `fixing-dbt-project-evaluator-violations`: fix the violations one check at a time, with a recipe per rule and a scoped re-run to prove each fix.
 - `migrating-dbt-project-evaluator-to-v2`: migrate a project from version 1, with the migration script, the exceptions seed and the CI.
 
 To install them, tell dbt which agent you use in `dbt_project.yml`, then run `dbt deps`:

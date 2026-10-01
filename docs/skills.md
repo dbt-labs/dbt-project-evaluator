@@ -1,13 +1,14 @@
 # Agent skills
 
-The package ships two agent skills (the AgentSkills format): instructions that a coding agent (Claude Code, Cursor, Codex...) loads when your request matches, so that it knows how to run, configure and migrate this package. dbt installs them into your project when you run `dbt deps`.
+The package ships three agent skills (the AgentSkills format): instructions that a coding agent (Claude Code, Cursor, Codex...) loads when your request matches, so that it knows how to run, configure, fix and migrate this package. dbt installs them into your project when you run `dbt deps`.
 
 | Skill | Use it to |
 | ----- | --------- |
-| `using-dbt-project-evaluator` | run `dbt check`, read and fix the violations rule by rule, check only the resources you changed, set severity or disable a check, change thresholds, exclude packages or paths, [accept violations with exceptions](customization/exceptions.md) and run the checks in CI |
+| `using-dbt-project-evaluator` | run `dbt check`, check only the resources you changed, set severity or disable a check, change thresholds, exclude packages or paths, [accept violations with exceptions](customization/exceptions.md) and run the checks in CI |
+| `fixing-dbt-project-evaluator-violations` | fix the violations that `dbt check` reports: one check at a time, with a recipe per rule (descriptions, tests, freshness, contracts, staging models, moves and renames, materializations), a scoped re-run to prove each fix, and a question before any change that touches many files |
 | `migrating-dbt-project-evaluator-to-v2` | migrate a project from version 1: it runs the [migration script](migrating-to-v2.md), converts the exceptions seed, helps you handle what could not be translated, updates the CI and verifies the result |
 
-The skills contain no secret and run nothing by themselves: the agent follows them with the tools you give it, and asks you before accepting a violation.
+The skills contain no secret and run nothing by themselves: the agent follows them with the tools you give it, and asks you before accepting a violation or making a change that touches many files.
 
 ## Install
 
@@ -53,4 +54,4 @@ skills:
 
 ## Use them
 
-Ask your agent in plain words, for example "migrate this project to dbt_project_evaluator 2", "run the evaluator on the models I changed" or "accept the violation of `fct_root_models` for `dim_calendar`". The agent picks the matching skill from its description.
+Ask your agent in plain words, for example "migrate this project to dbt_project_evaluator 2", "fix the undocumented models", "run the evaluator on the models I changed" or "accept the violation of `fct_root_models` for `dim_calendar`". The agent picks the matching skill from its description.
