@@ -3,12 +3,15 @@
     a check name to a list of patterns, e.g.
 
         fct_model_naming_conventions:
-          - stg_legacy_%
-        fct_root_models:
-          - rpt_manual_%
+          - stg_legacy_%                  # the resource the violation points at
+        fct_staging_dependent_on_staging:
+          - parent: stg_base_%            # a column of the check
+          - {name: stg_a, parent: stg_b}  # several columns: all of them must match
 
-    A violation is dropped when the name of the resource it points at (`stg_legacy_x`,
-    `source_name.table`, `model.package.stg_legacy_x`...) matches a pattern, using SQL LIKE.
+    A string is matched with SQL LIKE against the name of the resource the violation points at
+    (`stg_legacy_x`, `source_name.table`) and against its unique_id. A mapping is matched against
+    columns of the check: all its keys must match, and a column that is a list matches when any of
+    its elements does. A violation is dropped when any entry of its check matches.
 
     The mapping comes from `dbt_project_evaluator_exceptions()`, which is dispatched so that a project
     can override it by defining `default__dbt_project_evaluator_exceptions()` in its own macros. The
@@ -57,6 +60,23 @@
 {%- endmacro %}
 
 
+{# SQL condition: the resource a violation points at matches `pattern` #}
+{% macro evaluator_resource_matches(pattern) -%}
+    (violation.unique_id like '{{ pattern }}' or regexp_replace(violation.unique_id, '^[^.]+\.[^.]+\.', '') like '{{ pattern }}')
+{%- endmacro %}
+
+
+{# SQL condition: `column` of a violation, or one of its elements when it is a list, matches `pattern` #}
+{% macro evaluator_column_matches(column, pattern) -%}
+    len(list_filter(coalesce(try_cast(violation."{{ column }}" as varchar[]), [cast(violation."{{ column }}" as varchar)]), element -> element like '{{ pattern }}')) > 0
+{%- endmacro %}
+
+
+{% macro evaluator_sql_literal(value) -%}
+    {{ return(value | string | replace("'", "''")) }}
+{%- endmacro %}
+
+
 {#
     Wraps the query of a check (one row per violation, with a `unique_id` column) so that the
     violations matching an exception of `check_name` are dropped.
@@ -70,20 +90,43 @@
             ~ known_checks | join(', ')
         ) }}
     {%- endfor %}
-    {%- set patterns = exception_map.get(check_name) or [] -%}
-    {%- if patterns is string %}{% set patterns = [patterns] %}{% endif -%}
-    {%- if patterns | length == 0 -%}
+    {%- set entries = exception_map.get(check_name) or [] -%}
+    {%- if entries is string or entries is mapping %}{% set entries = [entries] %}{% endif -%}
+    {%- set conditions = [] -%}
+    {%- for entry in entries -%}
+        {%- if entry is mapping -%}
+            {%- if entry | length == 0 -%}
+                {{ exceptions.raise_compiler_error("dbt_project_evaluator_exceptions: an entry of '" ~ check_name ~ "' is an empty mapping") }}
+            {%- endif -%}
+            {%- set parts = [] -%}
+            {%- for column, column_patterns in entry.items() -%}
+                {%- if not (column | string).replace('_', '').isalnum() -%}
+                    {{ exceptions.raise_compiler_error("dbt_project_evaluator_exceptions: '" ~ column ~ "' is not a valid column name (check '" ~ check_name ~ "')") }}
+                {%- endif -%}
+                {%- if column_patterns is none or (column_patterns is not string and column_patterns | length == 0) -%}
+                    {{ exceptions.raise_compiler_error("dbt_project_evaluator_exceptions: column '" ~ column ~ "' of '" ~ check_name ~ "' needs at least one pattern") }}
+                {%- endif -%}
+                {%- set column_patterns = [column_patterns] if column_patterns is string else column_patterns -%}
+                {%- set alternatives = [] -%}
+                {%- for pattern in column_patterns -%}
+                    {%- do alternatives.append(evaluator_column_matches(column, evaluator_sql_literal(pattern))) -%}
+                {%- endfor -%}
+                {%- do parts.append('(' ~ alternatives | join(' or ') ~ ')') -%}
+            {%- endfor -%}
+            {%- do conditions.append('(' ~ parts | join(' and ') ~ ')') -%}
+        {%- else -%}
+            {%- do conditions.append(evaluator_resource_matches(evaluator_sql_literal(entry))) -%}
+        {%- endif -%}
+    {%- endfor -%}
+    {%- if conditions | length == 0 -%}
         {{ query }}
     {%- else -%}
         select *
         from (
             {{ query }}
         ) violation
-        where not exists (
-            select 1
-            from (values {% for pattern in patterns %}('{{ pattern | string | replace("'", "''") }}'){% if not loop.last %}, {% endif %}{% endfor %}) exception(pattern)
-            where violation.unique_id like exception.pattern
-               or regexp_replace(violation.unique_id, '^[^.]+\.[^.]+\.', '') like exception.pattern
+        where not (
+            {{ conditions | join('\n            or ') }}
         )
     {%- endif -%}
 {%- endmacro %}

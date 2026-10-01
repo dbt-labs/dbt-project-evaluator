@@ -59,5 +59,14 @@ vars:
       - exposure_1                   # an exposure
     fct_undocumented_source_tables:
       - "o'brien_%"                  # a quote must not break the query; matches nothing
+    fct_marts_or_intermediate_dependent_on_source:
+      - {name: fct_model_9, source_name: source_1.table_5}   # all the keys must match: this pair only
+      - {name: int_model_4, source_name: source_1.table_9}   # this one matches nothing: int_model_4 stays
+    fct_multiple_sources_joined:
+      - source_parents: source_1.table_2   # a list column: any of its elements
+    fct_rejoining_of_upstream_concepts:
+      - child: int_model_5.v2              # a column of the check, not the resource it points at
+    fct_direct_join_to_source:
+      - model_parents: [no_such_%, stg_model_1]   # several patterns for a column: any of them
     fct_too_many_joins: []           # an empty list does nothing
     fct_model_fanout:                # neither does an empty value

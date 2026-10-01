@@ -49,6 +49,20 @@ echo "$output" | grep -q "'fct_not_a_check' is not a check of dbt_project_evalua
 rm -rf macros
 popd > /dev/null
 
+# 3b. entries on a column are validated: bad name, unknown column, empty mapping, no pattern
+pushd parity_1x > /dev/null || exit 1
+for case in \
+    '{fct_root_models: [{"bad col": x}]}|is not a valid column name' \
+    '{fct_root_models: [{nope: x}]}|nope' \
+    '{fct_root_models: [{}]}|is an empty mapping' \
+    '{fct_root_models: [{name: null}]}|needs at least one pattern'; do
+    vars=${case%%|*}; expected=${case##*|}
+    output=$(dbt check fct_root_models --vars "{dbt_project_evaluator_exceptions: $vars}" --profiles-dir . 2>&1)
+    status_code=$?
+    [ $status_code -ne 0 ] && echo "$output" | grep -q "$expected" || fail "parity_1x: $vars should fail with '$expected'"
+done
+popd > /dev/null
+
 # 4. --select still applies to what is left: int_chain_1 is excepted, stg_orders is not
 pushd violations > /dev/null || exit 1
 output=$(dbt check fct_undocumented_models --select stg_orders int_chain_1 --profiles-dir . 2>&1)
