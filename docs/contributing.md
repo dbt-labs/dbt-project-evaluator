@@ -21,14 +21,15 @@ The script installs the package in the project `integration_tests_checks`, runs 
 
 ## Running docs locally
 
-Docs are generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). To test them locally, run the following commands (use a Python virtual environment):
+Docs are generated using [Zensical](https://zensical.org/), which reads its settings from `mkdocs.yml`. To test them locally, run the following command:
 
 ```bash
-pip install mkdocs-material
-mkdocs serve
+uvx zensical serve
 ```
 
-Docs are then automatically pushed to the website as part of our CI/CD process. We use [mike](https://github.com/jimporter/mike) as part of the process to publish different versions of the docs.
+To check that the site builds without warnings, run `uvx zensical build --strict`.
+
+Docs are then automatically pushed to the website as part of our CI/CD process. We use [Zensical's fork of mike](https://github.com/squidfunk/mike) as part of the process to publish different versions of the docs.
 
 Diagrams can be written as [Mermaid](https://mermaid.js.org/) charts in code blocks with the language `mermaid`, and are rendered by the site.
 
