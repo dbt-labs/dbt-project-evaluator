@@ -4,7 +4,11 @@ While the rules defined in this package are considered best practices, we realiz
 
 An example would be excluding all models with names matching with `stg_..._unioned` from `fct_multiple_sources_joined` as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the check to report those models.
 
-This is what the variable `dbt_project_evaluator_exceptions` is for. It replaces the seed `dbt_project_evaluator_exceptions.csv` of version 1, see [migrating to version 2](../migrating-to-v2.md) to convert an existing seed.
+This is what the variable `dbt_project_evaluator_exceptions` is for. It replaces the seed `dbt_project_evaluator_exceptions.csv` of version 1.
+
+!!! info "Coming from version 1?"
+
+    If you used the seed, you don't have to rewrite it by hand: run `python scripts/migrate_to_v2.py` from the root of your project. It reads the seed and writes the equivalent macro in `macros/dbt_project_evaluator_exceptions.sql` (or a `vars:` snippet with `--format var`). The rows it cannot translate are never dropped: they are written as `# NEEDS REVIEW` comments with the reason. The script is optional; see [migrating to version 2](../migrating-to-v2.md#3-convert-the-exceptions) for where to get it and how to run it.
 
 ## Accepting violations of a check
 
@@ -185,7 +189,7 @@ An invalid column name, a mapping without any key and a column without a pattern
 - An exception drops a whole **row**. When a row lists several resources in a column (`source_parents`, `model_parents`, `leaf_children`, `model_children`), accepting one of them accepts the row, even if the other elements would still be a violation by themselves.
 - Patterns are matched per check, on the columns of that check only, and are case-sensitive.
 - `fct_documentation_coverage` and `fct_test_coverage` are measures of the whole project, not lists of resources, so they ignore the exceptions. To remove resources from them, use `exclude_packages` or `exclude_paths_from_project`.
-- `fct_hard_coded_references` isn't part of version 2, so there is nothing to configure.
+- Hard coded references are reported by `dbt lint`, not by a check, so there is nothing to configure here.
 
 ## Other ways to ignore results
 

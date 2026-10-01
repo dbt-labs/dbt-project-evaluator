@@ -17,7 +17,7 @@ In that case, this package provides the ability to exclude whole packages and/or
 
 The variables `exclude_packages` and `exclude_paths_from_project` allow you to define a list of packages and paths to exclude from being reported as errors. Excluded resources are ignored by all the checks.
 
-- `exclude_packages` accepts a list of package names to exclude from the tool. The package `dbt_project_evaluator` itself is always excluded
+- `exclude_packages` accepts a list of package names to exclude from the tool, or `["all"]` to exclude every package but your own project. Your own project is never excluded, even if you list its name, and the package `dbt_project_evaluator` itself is always excluded
 - `exclude_paths_from_project` accepts a list of strings. A resource is excluded when one of those strings appears in
     - its file path (`original_file_path`), for example `models/legacy/` or `/my_date_spine.sql`, allowing to exclude whole folders or individual models
     - or its `unique_id`, for example `raw_crm.contacts` to exclude the source table `contacts` from the source `raw_crm`, as the path of a source is the YAML file that lists all its tables. In the `unique_id`, the `/` characters in the string are removed before looking for a match
@@ -28,7 +28,8 @@ The variables `exclude_packages` and `exclude_paths_from_project` allow you to d
 
     - the values are **not** regular expressions. They are matched literally, as a substring, with the SQL operator `LIKE '%<value>%'`: matching is **case-sensitive**, and the characters `%` and `_` are wildcards (`%` for any sequence of characters and `_` for exactly one character). In particular, `.` doesn't mean "any character" anymore
     - they apply to the resources of all the packages, not only the ones of the current project
-    - `exclude_packages: ["all"]` isn't supported anymore: `all` is considered the name of a package. To exclude all the packages, list all their names (or exclude the folder `dbt_packages/` with `exclude_paths_from_project`)
+
+    `exclude_packages` works as in version 1, including `["all"]`.
 
 The same rules apply to exposures, metrics and saved queries: they are excluded when their package, file path or `unique_id` matches.
 
@@ -44,6 +45,13 @@ vars:
 ```yaml title="dbt_project.yml"
 vars:
   exclude_paths_from_project: ["models/legacy/"]
+```
+
+### Example to exclude all the packages
+
+```yaml title="dbt_project.yml"
+vars:
+  exclude_packages: ["all"]
 ```
 
 ### Example to exclude both a package and models/sources in 2 different paths

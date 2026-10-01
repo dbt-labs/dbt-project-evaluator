@@ -9,9 +9,12 @@
 Python 3 standard library only. Nothing is changed in the project except the file written by
 `--output` (never overwritten without `--force`).
 
-    python3 scripts/migrate_to_v2.py                      # convert the seed + checklist
-    python3 scripts/migrate_to_v2.py --check-only         # checklist only
-    python3 scripts/migrate_to_v2.py --format var         # YAML snippet for `vars:` on stdout
+    python scripts/migrate_to_v2.py                       # convert the seed + checklist
+    python scripts/migrate_to_v2.py --check-only          # checklist only
+    python scripts/migrate_to_v2.py --format var          # YAML snippet for `vars:` on stdout
+
+Use `python3` instead of `python` if `python` is not found (macOS, Linux), `py` on Windows, or
+`uv run scripts/migrate_to_v2.py` anywhere.
 """
 import argparse
 import csv
@@ -172,7 +175,7 @@ V2_COLUMNS = {
 }
 
 NOT_APPLICABLE = {
-    "fct_hard_coded_references": "the rule no longer exists in 2.x (see 'Hard-coded references' in the migration guide)",
+    "fct_hard_coded_references": "the rule is not a check in 2.x any more: hard-coded references are reported by `dbt lint` (rule DBT05), see the migration guide",
     "fct_documentation_coverage": "coverage rules are project-wide metrics and never supported exceptions; use the documentation_coverage_target var",
     "fct_test_coverage": "coverage rules are project-wide metrics and never supported exceptions; use the test_coverage_target var",
 }
@@ -422,10 +425,6 @@ def check_dbt_project(path, findings):
             name = m.group(1)
             if name in REMOVED_VARS:
                 findings.append(Finding(f"{rel}:{i + 1}", f"var `{name}` no longer exists", "Delete it"))
-            elif name == "exclude_packages":
-                if any(item.lower() == "all" for item in scalar_items(lines, i)):
-                    findings.append(Finding(f"{rel}:{i + 1}", "`exclude_packages` contains 'all', which is not supported in 2.x",
-                                            "List the packages to exclude by name"))
             elif name == "exclude_paths_from_project":
                 items = scalar_items(lines, i)
                 regexy = [item for item in items if REGEXY.search(item)]
@@ -476,7 +475,7 @@ def check_project(project_dir):
     patterns = [
         (re.compile(r"print_dbt_project_evaluator_issues"), "calls the 1.x on-run-end printer", "Remove it: `dbt check`/`dbt build` print the violations"),
         (re.compile(r"DBT_PROJECT_EVALUATOR_SEVERITY"), "uses the DBT_PROJECT_EVALUATOR_SEVERITY env var", "Set the severity with `checks: {dbt_project_evaluator: {+severity: error}}`"),
-        (re.compile(r"package:dbt_project_evaluator"), "selects or excludes the package's models", "Use `dbt check` (and `--select state:modified --state <dir>`); drop the package from selectors/excludes"),
+        (re.compile(r"package:dbt_project_evaluator"), "selects or excludes the package's models", "Use `dbt check` (and `--select state:modified`, with `--state <dir>` outside the dbt platform); drop the package from selectors/excludes"),
         (re.compile(r"^\s*(?:-\s*)?value:\s*['\"]?dbt_project_evaluator['\"]?\s*(?:#.*)?$"), "selector on the package's models (`method: package`)", "Drop it from selectors.yml: 2.x has no models to select or exclude"),
         (re.compile(r"dbt_project_evaluator_exceptions"), "references the exceptions seed", "Remove it after converting the seed into the exceptions mapping"),
     ]
@@ -488,14 +487,14 @@ def check_project(project_dir):
                 continue
             for regex, what, fix in patterns:
                 if regex.search(line):
-                    findings.append(Finding(f"{path.relative_to(project_dir)}:{i}", what, fix))
+                    findings.append(Finding(f"{path.relative_to(project_dir).as_posix()}:{i}", what, fix))
 
     ref_regex = re.compile(r"""(?:ref)\(\s*['"](?:dbt_project_evaluator['"]\s*,\s*['"])?(%s)['"]""" % "|".join(map(re.escape, V1_MODELS)))
     for path in iter_files(project_dir, lambda p: p.suffix == ".sql"):
         for i, line in enumerate(read_text(path).splitlines(), start=1):
             m = ref_regex.search(line)
             if m:
-                findings.append(Finding(f"{path.relative_to(project_dir)}:{i}", f"refs `{m.group(1)}`, a 1.x model that no longer exists",
+                findings.append(Finding(f"{path.relative_to(project_dir).as_posix()}:{i}", f"refs `{m.group(1)}`, a 1.x model that no longer exists",
                                         "Query the information schema instead (`{{ info_schema('edges') }}`...), see the 'Querying the DAG' page"))
     return findings
 
@@ -521,6 +520,12 @@ def main(argv=None):
     parser.add_argument("--check-only", action="store_true", help="only print the checklist of 1.x leftovers")
     args = parser.parse_args(argv)
 
+    # the messages and the generated files contain non-ASCII characters: never fail on a console
+    # (Windows code pages) or a pipe that is not UTF-8
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
     project_dir = Path(args.project_dir).resolve()
     status = 0
 
@@ -542,7 +547,7 @@ def main(argv=None):
                 rows = list(csv.DictReader(handle))
             translated, review, na = convert_rows(rows)
             try:
-                source_name = str(csv_path.resolve().relative_to(project_dir))
+                source_name = csv_path.resolve().relative_to(project_dir).as_posix()
             except ValueError:
                 source_name = csv_path.name
             render = render_macro if args.format == "macro" else render_var
@@ -558,7 +563,8 @@ def main(argv=None):
                     print(f"{target} already exists (use --force to overwrite)", file=sys.stderr)
                     return 2
                 target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_text(text, encoding="utf-8")
+                with target.open("w", encoding="utf-8", newline="\n") as handle:
+                    handle.write(text)
                 log = sys.stdout
                 print(f"Wrote {target}", file=log)
             print(f"Exceptions: {count} translated, {len(review)} to review by hand, {len(na)} not applicable ({csv_path.name}, {len(rows)} rows)", file=log)

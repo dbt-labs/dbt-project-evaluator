@@ -12,9 +12,9 @@ Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) tha
 
 will be flagged by this check.
 
-!!! note "Constraints are not counted in v2"
+!!! note "Current limitation: constraints are not counted"
 
-    1.x also accepted a `not_null` *constraint* combined with a `unique` test. Constraints aren't available to checks in the information schema, so in v2 a model that relies on a `not_null` constraint is flagged until it also has a `not_null` test.
+    1.x also accepted a `not_null` *constraint* combined with a `unique` test. Constraints are not available to checks yet ([dbt-labs/dbt#16553](https://github.com/dbt-labs/dbt/issues/16553)), so for now a model that relies on a `not_null` constraint is flagged until it also has a `not_null` test. This is expected to go away once dbt exposes constraints to checks.
 
 **Reason to Flag**
 

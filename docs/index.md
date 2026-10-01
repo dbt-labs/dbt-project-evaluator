@@ -34,12 +34,6 @@ The package has no dependency on other packages and doesn't need any additional 
 
 Each rule is a SQL file in the [`checks` folder](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks) of the package. A check returns one row per violation (no row means the check passes) and is run in DuckDB against the information schema of your project: `models`, `sources`, `edges`, `data_tests`, `exposures`... The query results are the same whatever adapter you use.
 
-To avoid repeating the same filters and joins, the checks are built on top of three shared relations defined in [`macros/checks`](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/checks):
-
-- `evaluator_models()`: the models in scope (not disabled, not excluded), typed with the [naming convention variables](customization/overriding-variables.md#naming-convention-variables)
-- `evaluator_sources()`: the sources in scope
-- `evaluator_edges()`: the direct dependencies between the resources in scope (tests are not included), with the name, type, materialization and access of both ends
-
 Once the package is installed:
 
 - the checks run automatically before every `dbt build`
@@ -49,10 +43,11 @@ Once the package is installed:
 dbt check                                  # every check
 dbt check fct_root_models                  # a single check
 dbt check --select staging                 # only report violations on the selected resources
+dbt check --select state:modified --state path/to/main/target   # only what the pull request changes
 dbt ls --resource-type check --select tag:modeling
 ```
 
-All the checks are **advisory by default** (`severity: warn`). Each check returns the resource to fix as `unique_id`, so `--select` restricts the rows reported by a check to the selected resources. The two coverage checks, `fct_documentation_coverage` and `fct_test_coverage`, are project-wide metrics and always evaluate the whole project (they are configured with `selection_filter_on: none`).
+All the checks are **advisory by default** (`severity: warn`). Each check returns the resource to fix as `unique_id`, so `--select` restricts the rows reported by a check to the selected resources. The two coverage checks, `fct_documentation_coverage` and `fct_test_coverage`, are project-wide metrics and always evaluate the whole project (they are configured with `selection_filter_on: none`). `--state` is not needed in a dbt platform CI job, see [running as a CI check](ci-check.md).
 
 Each warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
 
@@ -78,15 +73,28 @@ See [running as a CI check](ci-check.md) and [disabling checks](customization/cu
 
 ### Differences from 1.x
 
-- `fct_hard_coded_references` has been removed, because it needs the SQL code of the models and this isn't available to checks. The `dbt lint` rule [`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) (`dbt.hard_coded_reference`) partly covers it, see [hard coded references](rules/modeling.md#hard-coded-references).
-- The `dbt_project_evaluator_exceptions` seed is replaced by the variable (or macro) `dbt_project_evaluator_exceptions`, because checks can't read seeds. See [configuring exceptions](customization/exceptions.md) and [migrating to version 2](migrating-to-v2.md). Patterns are matched per check, either with the resource a row points at or with the columns of that check (to accept a given parent or pair), and are case-sensitive. A column that holds a list matches when any of its elements does and accepts the whole row. The two coverage checks ignore exceptions.
-- `fct_missing_primary_key_tests` doesn't count `not_null` column constraints as `not_null` tests, because constraints aren't available in the information schema at check time.
-- The warehouse models are gone, including `int_all_dag_relationships`. To query your DAG, use the information schema directly, see [querying the DAG](querying-the-dag.md).
-- The `print_dbt_project_evaluator_issues` `on-run-end` macro is gone. `dbt check` and `dbt build` report the violations themselves.
-- `exclude_paths_from_project` is now a case-sensitive substring match rather than a regular expression, and `exclude_packages: ["all"]` isn't supported anymore, see [excluding packages and paths](customization/excluding-packages-and-paths.md).
+Moving from version 1? See [migrating to version 2](migrating-to-v2.md).
+
+#### Major changes
+
+- **dbt >= 2.0.0 only.** dbt Core users stay on 1.x.
+- **Nothing is built in the warehouse.** The checks run locally on the metadata of your project, so they work with every adapter, don't materialize anything and don't need `dbt_utils`. The 1.x `models:`, `seeds:` and `dispatch:` configuration of the package is deleted.
+- **You can check selected resources only.** `dbt check --select …`, including `state:modified`, only reports the violations on the selected resources, see [running as a CI check](ci-check.md). In 1.x the whole project was always evaluated. The two coverage checks stay project-wide.
+- **Severity is set with `checks:`** in `dbt_project.yml` (per category or per check) instead of the tests severity and the `DBT_PROJECT_EVALUATOR_SEVERITY` environment variable. The checks run before `dbt build`, or on demand with `dbt check`, and report the violations themselves: the `print_dbt_project_evaluator_issues` `on-run-end` macro is gone.
+- **Exceptions are a var or a macro.** The `dbt_project_evaluator_exceptions` seed is replaced by the variable (or macro) of the same name, because checks can't read seeds. It can also filter on a column of the check, to accept a given parent or pair. See [configuring exceptions](customization/exceptions.md); the [migration script](migrating-to-v2.md) converts the seed.
+- **Hard-coded references** are reported by `dbt lint`: turn on the rule [`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules), see [hard coded references](rules/modeling.md#hard-coded-references).
+- **The DAG tables are gone**, including `int_all_dag_relationships`. To query your DAG, use the information schema directly, see [querying the DAG](querying-the-dag.md).
+
+#### Minor changes
+
+These don't change what is reported.
+
+- `fct_missing_primary_key_tests` doesn't count `not_null` column constraints as `not_null` tests yet. This is a short-term limitation: constraints aren't available to checks ([dbt-labs/dbt#16553](https://github.com/dbt-labs/dbt/issues/16553)).
+- `exclude_paths_from_project` is now a case-sensitive substring match rather than a regular expression, and applies to the resources of all packages. `exclude_packages` works as in 1.x, including `["all"]`, and never excludes your own project, see [excluding packages and paths](customization/excluding-packages-and-paths.md).
 - Disabled resources (models, sources, seeds, snapshots and tests) are ignored by all the checks.
 - Sources are identified by their `unique_id`. Two sources with the same name in two different packages are therefore two different resources, while 1.x grouped them together.
-- `fct_undocumented_sources` reports one row per source.
 - `fct_direct_join_to_source`, `fct_multiple_sources_joined`, `fct_model_fanout` and `fct_source_fanout` return the names of the parents or children in a list column, not their number.
+- `fct_undocumented_sources` and `fct_duplicate_sources` report one row per source.
+- `fct_documentation_coverage` and `fct_test_coverage` only return a row when the coverage is below the target, and ignore exceptions.
 - `fct_test_directories` compares the directory of the YAML file where the tests of a model are defined with the directory of the model. The location of each individual test isn't available when the project is parsed.
 - The variables `insert_batch_size`, `max_depth_dag`, `comment_chars`, `token_costs` and `use_native_agate_printing` have been removed.

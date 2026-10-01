@@ -1,6 +1,6 @@
 # Running this package as a CI check
 
-Once you have addressed all current misalignments in your project (either by fixing them or [excluding them](customization/exceptions.md)), you can use this package as a CI check to ensure code changes don't introduce new misalignments.
+Once you have addressed all current misalignments in your project (either by fixing them or [accepting them as exceptions](customization/exceptions.md)), you can use this package as a CI check to ensure code changes don't introduce new misalignments.
 
 Since the rules are native dbt checks, there is nothing to build in your warehouse: the checks run when the project is parsed, and a check configured with `severity: error` makes the command fail when it finds violations.
 
@@ -44,11 +44,14 @@ The command exits with a non-zero code when a check configured with `severity: e
 
 ### Only reporting the violations on the modified resources
 
-Each check returns the resource to fix in the column `unique_id`, which allows `--select` to restrict the violations reported to the selected resources. Combined with `state:modified` and a manifest from your main branch, this reports the violations introduced by the pull request and ignores the existing ones:
+Each check returns the resource to fix in the column `unique_id`, which allows `--select` to restrict the violations reported to the selected resources. Combined with `state:modified`, which compares your project with the artifacts of your main branch, this reports the violations introduced by the pull request and ignores the existing ones:
 
 ```bash
-dbt check --select state:modified --state path/to/main/target
+dbt check --select state:modified --state path/to/main/target   # GitHub Actions, local...
+dbt check --select state:modified                               # dbt platform CI job
 ```
+
+`--state` is the folder with the artifacts of your main branch. In a CI job on the dbt platform, the state of the production environment is provided to the job through [deferral](https://docs.getdbt.com/docs/deploy/continuous-integration), so you don't pass `--state`. Anywhere else, you have to produce the artifacts of your main branch and pass their location, as in the example below.
 
 For example, after modifying the model `stg_orders`, the checks that look at individual resources (`fct_undocumented_models`, `fct_missing_primary_key_tests`...) only report `stg_orders`.
 
@@ -100,4 +103,4 @@ jobs:
 
 !!! note
 
-    The `dbt parse` and `dbt check` commands need a valid profile for your project. If your CI is orchestrated by dbt Cloud, make sure the CI job is [set up with deferral](https://docs.getdbt.com/docs/deploy/continuous-integration) so that `state:modified` has a state to compare to.
+    The `dbt parse` and `dbt check` commands need a valid profile for your project. On the dbt platform, none of the "base branch" steps of this example are needed: run `dbt check --select state:modified` in a CI job [set up with deferral](https://docs.getdbt.com/docs/deploy/continuous-integration) and the state comes from the job's environment.

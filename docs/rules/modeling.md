@@ -147,13 +147,11 @@ Combine the duplicate source nodes so that each source database location only ha
 
 ## Hard Coded References
 
-!!! warning "Not part of v2"
+!!! info "Reported by `dbt lint` in version 2"
 
-    `fct_hard_coded_references` only exists in 1.x. It needs each model's SQL text, which the information schema available to checks doesn't expose (there is no `raw_code`).
-    The closest replacement is the `dbt lint` rule [`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) (`dbt.hard_coded_reference`), which you turn on in your own `.sqlfluff` with `rules = DBT05`.
-    It does not flag a table name held in a `var()`. See the [README](https://github.com/dbt-labs/dbt-project-evaluator#caveat-hard-coded-references-are-no-longer-covered-by-this-package) for the full comparison.
+    Hard coded references are reported by the [`dbt lint`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) rule `DBT05` (`dbt.hard_coded_reference`), which you turn on in your `.sqlfluff` with `rules = DBT05`. It is not a `dbt check`.
 
-In 1.x, `fct_hard_coded_references` showed each instance where a model contains hard coded reference(s).
+`dbt lint` shows each instance where a model contains hard coded reference(s).
 
 **Example**
 
@@ -176,7 +174,7 @@ left join customers on
 
 **Reason to Flag**
 
-Always use the `ref` function when selecting from another model and the `source` function when selecting from raw data, rather than using the direct relation reference (e.g. `my_schema.my_table`). In 1.x, direct relation references were detected with a regex.
+Always use the `ref` function when selecting from another model and the `source` function when selecting from raw data, rather than using the direct relation reference (e.g. `my_schema.my_table`).
 
 The `ref` and `source` functions are part of what makes dbt so powerful! Using these functions allows dbt to infer dependencies (and check that you haven't created any circular dependencies), properly generate your DAG, and ensure that models are built in the correct order. This also ensures that your current model selects from upstream tables and views in the same environment that you're working in.
 

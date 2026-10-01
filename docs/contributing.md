@@ -4,9 +4,9 @@ If you'd like to add checks to flag new areas, please update this documentation 
 
 ## Adding a check
 
-1. Add a SQL file named after the check (`fct_<what_is_checked>.sql`) in the folder of its category under `checks/` (`modeling`, `testing`, `documentation`, `structure`, `performance` or `governance`). The query returns one row per violation, with the resource to fix in the column `unique_id`, and no row when the check passes. Build it on the shared relations `evaluator_models()`, `evaluator_sources()` and `evaluator_edges()` from `macros/checks/` so that the exclusions (`exclude_packages`, `exclude_paths_from_project`) and the disabled resources are handled.
+1. Add a SQL file named after the check (`fct_<what_is_checked>.sql`) in the folder of its category under `checks/` (`modeling`, `testing`, `documentation`, `structure`, `performance` or `governance`). The query returns one row per violation, with the resource to fix in the column `unique_id`, and no row when the check passes. Build it on the shared relations `evaluator_models()`, `evaluator_sources()` and `evaluator_edges()` from `macros/checks/`, so that the exclusions (`exclude_packages`, `exclude_paths_from_project`) and the disabled resources are handled, and wrap the query in `{% set violations %}…{% endset %}` followed by `{{ evaluator_exceptions('<check name>', violations) }}` so that [exceptions](customization/exceptions.md) apply (see any existing check, and add its name to `evaluator_check_names()`).
 2. Describe it in the YAML file of the folder (`_<category>__checks.yml`). Add `selection_filter_on: none` to its `config` if it measures the whole project rather than individual resources.
-3. Add the case it should flag to the project in `integration_tests_checks/` and the number of violations expected in `integration_tests_checks/expected_violations.csv`.
+3. Add the case it should flag to the project `integration_tests_checks/violations/` and the number of violations expected in its `expected_violations.csv`.
 4. Document the rule in the page of its category under `docs/rules/` and in the [list of rules](rules.md).
 
 ## Running the integration tests
@@ -17,7 +17,7 @@ The checks run locally and don't need a warehouse. You need dbt `>=2.0.0` and th
 ./integration_tests_checks/run_checks.sh
 ```
 
-The script installs the package in the project `integration_tests_checks`, runs `dbt check` and compares the number of violations of each check with `expected_violations.csv`.
+The script installs the package in each project of `integration_tests_checks/` (`violations` and the `parity_1x*` projects ported from the 1.x integration tests), runs `dbt check` and compares the number of violations of each check with the `expected_violations.csv` of the project. `test_exceptions.sh` then tests the exceptions.
 
 ## Running docs locally
 
