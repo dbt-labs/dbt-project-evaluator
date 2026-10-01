@@ -10,7 +10,7 @@ Each row a check returns points, in its `unique_id` column, at the resource to f
 ## 1. Baseline
 
 ```shell
-dbt --version            # 2.0.0 or later; dbt Core 1.x runs version 1 of the package, which this skill does not cover
+dbt --version            # 2.0.0 or later; dbt v1 (1.x) runs version 1 of the package, which this skill does not cover
 dbt check                # every check, whole project
 ```
 

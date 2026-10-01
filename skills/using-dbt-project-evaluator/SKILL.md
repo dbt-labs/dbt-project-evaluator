@@ -9,7 +9,7 @@ Every rule of the package is a native dbt check that runs on the project metadat
 
 ## 1. Confirm the setup
 
-- Run `dbt --version`: version 2 needs dbt 2.0.0 or later. On dbt Core 1.x the package is version 1 and this skill does not apply.
+- Run `dbt --version`: version 2 needs dbt 2.0.0 or later. On dbt v1 (1.x) the package is version 1 and this skill does not apply.
 - Check `packages.yml` for `dbt-labs/dbt_project_evaluator` with a `2.x` version, then run `dbt deps` if `dbt_packages/dbt_project_evaluator` is missing.
 
 ## 2. Run the checks

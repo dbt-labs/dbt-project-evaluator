@@ -1,6 +1,10 @@
 # Running this package as a CI check
 
-Once you have addressed all current misalignments in your project (either by fixing them or [accepting them as exceptions](customization/exceptions.md)), you can use this package as a CI check to ensure code changes don't introduce new misalignments.
+!!! tip "Much better than in version 1: check only what a pull request changes"
+
+    In version 1 the whole project was evaluated on every run, so a CI check was only usable once every existing violation was fixed or accepted. With version 2 you can run the checks on **the modified resources only** (`dbt check --select state:modified`): a pull request only sees the violations it introduces, and the existing ones don't block anyone (the checks on sources can't be scoped yet, see the warning below). You can adopt the package in CI today and fix the backlog at your own pace. See [only reporting the violations on the modified resources](#only-reporting-the-violations-on-the-modified-resources).
+
+You can use this package as a CI check to ensure code changes don't introduce new misalignments. To fail on any violation of the whole project, first address the current misalignments (either by fixing them or [accepting them as exceptions](customization/exceptions.md)); to fail only on the violations a change introduces, select the modified resources.
 
 Since the rules are native dbt checks, there is nothing to build in your warehouse: the checks run when the project is parsed, and a check configured with `severity: error` makes the command fail when it finds violations.
 

@@ -11,7 +11,7 @@ Work in small steps, show the user what changed after each one, and never drop a
 
 ## 0. Check it applies
 
-- `dbt --version` must be 2.0.0 or later. On dbt Core 1.x, stop: pin `version: [">=1.0.0", "<2.0.0"]` and tell the user.
+- `dbt --version` must be 2.0.0 or later. On dbt v1 (1.x), stop: pin `version: [">=1.0.0", "<2.0.0"]` and tell the user.
 - Find the package: `packages.yml` / `dependencies.yml` with `dbt-labs/dbt_project_evaluator`, and note the current version.
 - Read the root `dbt_project.yml` (vars, `models:`, `seeds:`, `tests:`, `dispatch:`, `on-run-end`), any `seeds/**/dbt_project_evaluator_exceptions.csv`, `selectors.yml`, and the CI files (`.github`, `.gitlab-ci.yml`, `Makefile`, job definitions) before changing anything.
 

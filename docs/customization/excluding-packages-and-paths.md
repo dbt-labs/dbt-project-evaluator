@@ -3,7 +3,7 @@
 !!! note
 
     This section is describing how to entirely exclude models/sources and packages to be evaluated.
-    If you want to ignore results for a specific run, see the section [on exceptions](exceptions.md)
+    If you want to ignore results for a specific run, select the resources to check with `--select` and `--exclude` (see [ignoring resources in a given run](exceptions.md#ignoring-resources-in-a-given-run)). To accept violations for good, see the section [on exceptions](exceptions.md)
     and if you want to deactivate entire checks you can follow instructions from [this page](customization.md)
 
 There might be cases where you want to exclude models/sources from being checked:

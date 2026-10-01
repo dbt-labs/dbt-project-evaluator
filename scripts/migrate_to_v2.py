@@ -470,7 +470,7 @@ def check_project(project_dir):
                 window = " ".join(lines[i: i + 3])
                 if not re.search(r">=\s*2\.", window):
                     findings.append(Finding(f"{name}:{i + 1}", "dbt_project_evaluator is not pinned to 2.x",
-                                            'Use `version: [">=2.0.0", "<3.0.0"]` (dbt >= 2.0.0 only; dbt Core projects stay on `[">=1.0.0", "<2.0.0"]`)'))
+                                            'Use `version: [">=2.0.0", "<3.0.0"]` (dbt >= 2.0.0 only; dbt v1 projects stay on `[">=1.0.0", "<2.0.0"]`)'))
 
     patterns = [
         (re.compile(r"print_dbt_project_evaluator_issues"), "calls the 1.x on-run-end printer", "Remove it: `dbt check`/`dbt build` print the violations"),

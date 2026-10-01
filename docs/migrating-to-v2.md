@@ -4,7 +4,7 @@ Version 2 is a rewrite: the rules are native [dbt checks](https://docs.getdbt.co
 
 !!! info "Who this is for"
 
-    Version 2 needs **dbt 2.0.0 or later**. On dbt Core 1.x, stay on version 1 and pin it:
+    Version 2 needs **dbt 2.0.0 or later**. On dbt v1 (1.x), stay on version 1 of the package and pin it:
 
     ```yaml title="packages.yml"
     packages:

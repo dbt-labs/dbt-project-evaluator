@@ -12,7 +12,7 @@ Specifically, it checks:
 
 Version 2 implements these rules as native [dbt checks](https://docs.getdbt.com/docs/build/checks):
 SQL queries over the dbt Information Schema that run locally at parse time. There are no warehouse
-models to build, and every adapter supported by dbt v2 works. dbt Core users should stay on
+models to build, and every adapter supported by dbt v2 works. users of dbt v1 should stay on
 [1.x](https://github.com/dbt-labs/dbt-project-evaluator/tree/v1.4.0).
 
 Each check is a DuckDB SQL query over the Information Schema (`{{ info_schema('models') }}`,
@@ -158,7 +158,7 @@ rules = DBT05
 
 ### Major changes
 
-- **dbt >= 2.0.0 only.** dbt Core users stay on 1.x.
+- **dbt >= 2.0.0 only.** dbt v1 users stay on version 1.x of the package.
 - **Nothing is built in the warehouse.** The checks run locally on the metadata of your project, so
   they work with every adapter, don't materialize anything and don't need `dbt_utils`. The 1.x
   `models:`, `seeds:` and `dispatch:` configuration of the package is deleted.

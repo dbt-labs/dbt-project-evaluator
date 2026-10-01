@@ -12,9 +12,9 @@ Specifically, this package checks:
 
 Version 2 implements each rule as a native [dbt check](https://docs.getdbt.com/docs/build/checks): a SQL query over the dbt information schema that runs locally, at parse time. Nothing is built in your warehouse, so the package works with every adapter supported by dbt v2.
 
-!!! note "Using dbt Core?"
+!!! note "Using dbt v1?"
 
-    Version 2 requires dbt `>=2.0.0`. If you are on dbt Core, stay on version 1.x of the package, which is implemented as models in your warehouse. The documentation for 1.x is available in the version selector of this site, and the code is on the [`v1.4.0` tag](https://github.com/dbt-labs/dbt-project-evaluator/tree/v1.4.0).
+    Version 2 requires dbt `>=2.0.0`. If you are on dbt v1 (1.x), stay on version 1.x of the package, which is implemented as models in your warehouse. The documentation for 1.x is available in the version selector of this site, and the code is on the [`v1.4.0` tag](https://github.com/dbt-labs/dbt-project-evaluator/tree/v1.4.0).
 
 ## Why version 2?
 
@@ -86,7 +86,7 @@ Moving from version 1? See [migrating to version 2](migrating-to-v2.md).
 
 #### Major changes
 
-- **dbt >= 2.0.0 only.** dbt Core users stay on 1.x.
+- **dbt >= 2.0.0 only.** dbt v1 users stay on version 1.x of the package.
 - **Nothing is built in the warehouse.** The checks run locally on the metadata of your project, so they work with every adapter, don't materialize anything and don't need `dbt_utils`. The 1.x `models:`, `seeds:` and `dispatch:` configuration of the package is deleted.
 - **You can check selected resources only.** `dbt check --select …`, including `state:modified`, only reports the violations on the selected resources, see [running as a CI check](ci-check.md). In 1.x the whole project was always evaluated. The two coverage checks stay project-wide.
 - **Severity is set with `checks:`** in `dbt_project.yml` (per category or per check) instead of the tests severity and the `DBT_PROJECT_EVALUATOR_SEVERITY` environment variable. The checks run before `dbt build`, or on demand with `dbt check`, and report the violations themselves: the `print_dbt_project_evaluator_issues` `on-run-end` macro is gone.
