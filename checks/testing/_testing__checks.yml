@@ -6,6 +6,6 @@ checks:
   - name: fct_sources_without_freshness
     description: "Source tables with neither a warn_after nor an error_after freshness threshold."
   - name: fct_test_coverage
-    description: "Project-wide: the share of models with at least one test is below `test_coverage_target`. Always evaluates the whole project."
+    description: "Project-wide: the share of models with at least one test is below `test_coverage_target`. A test covers the node it is declared on. Always evaluates the whole project."
     config:
       selection_filter_on: none

@@ -10,4 +10,4 @@ checks:
   - name: fct_undocumented_source_tables
     description: "Source tables without a description."
   - name: fct_undocumented_sources
-    description: "Sources (the top-level `sources:` entry) without a description. One row per table of the source."
+    description: "Sources (the top-level `sources:` entry) without a description. One row per source (`unique_id` is one of its tables)."
