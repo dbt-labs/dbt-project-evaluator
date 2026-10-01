@@ -1,10 +1,12 @@
 # Governance
 
-This set of rules provides checks on your project against dbt Labs' recommended best proactices for adding model governance features in dbt versions 1.5 and above.
+Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) that returns one row per violation. Run it with `dbt check <rule_name>`, for example `dbt check fct_public_models_without_contract`.
+
+This set of rules provides checks on your project against dbt Labs' recommended best proactices for adding model governance features.
 
 ## Public models without contracts
 
-`fct_public_models_without_contract` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_public_models_without_contract.sql)) shows each model with `access` configured as public, but is not a contracted model.
+`fct_public_models_without_contract` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/governance/fct_public_models_without_contract.sql)) shows each model with `access` configured as public, but is not a contracted model.
 
 **Example**
 
@@ -42,7 +44,7 @@ models:
 
 ## Undocumented public models
 
-`fct_undocumented_public_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_undocumented_public_models.sql)) shows each model with `access` configured as public that is not fully documented. This check is similar to `fct_undocumented_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/documentation/fct_undocumented_models.sql)), but is a stricter check that will highlight any public model that does not have a model-level description as well descriptions on each of its columns.
+`fct_undocumented_public_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/governance/fct_undocumented_public_models.sql)) shows each model with `access` configured as public that is not fully documented. This check is similar to `fct_undocumented_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/documentation/fct_undocumented_models.sql)), but is a stricter check that will highlight any public model that does not have a model-level description as well descriptions on each of its columns.
 
 **Example**
 
@@ -78,13 +80,25 @@ models:
 
 ## Exposures dependent on private models
 
-`fct_exposures_dependent_on_private_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_exposures_dependent_on_private_models.sql)) shows each relationship between a resource and an exposure where the parent resource is not a model with `access` configured as public.
+`fct_exposures_dependent_on_private_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/governance/fct_exposures_dependent_on_private_models.sql)) shows each relationship between a resource and an exposure where the parent resource is not a model with `access` configured as public.
 
 **Example**
 
 Here's a sample DAG that shows direct exposure relationships.
 
-![An example exposure with a two parents (fct_model_6 and dim_model_7)](https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef marts fill:#2b3f8f,stroke:#1c2a66,color:#fff
+    classDef exposure fill:#ff694b,stroke:#c9482d,color:#fff
+    classDef flagged stroke:#d9272e,stroke-width:4px
+    dim_model_7["dim_model_7"]:::marts
+    exposure_1["exposure_1"]:::exposure
+    fct_model_6["fct_model_6"]:::marts
+    dim_model_7 --> exposure_1
+    fct_model_6 --> exposure_1
+    class dim_model_7 flagged
+    linkStyle 0 stroke:#d9272e,stroke-width:3px
+```
 
 If this were the yml for these two parent models, `dim_model_7` would be flagged by this check, as it is not a public model.
 

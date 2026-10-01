@@ -1,73 +1,91 @@
 # dbt_project_evaluator
 
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
-Specifically, this package tests for:
+Specifically, this package checks:
 
-1. __[Modeling](rules/modeling)__ - your dbt DAG for modeling best practices
-2. __[Testing](rules/testing)__ - your models for testing best practices
-3. __[Documentation](rules/documentation)__ - your models for documentation best practices
-4. __[Structure](rules/structure)__ - your dbt project for file structure and naming best practices
-5. __[Performance](rules/performance)__ - your model materializations for performance best practices
-6. __[Governance](rules/governance)__ - your model governance feature best practices
+1. __[Modeling](rules/modeling.md)__ - your dbt DAG for modeling best practices
+2. __[Testing](rules/testing.md)__ - your models for testing best practices
+3. __[Documentation](rules/documentation.md)__ - your models for documentation best practices
+4. __[Structure](rules/structure.md)__ - your dbt project for file structure and naming best practices
+5. __[Performance](rules/performance.md)__ - your model materializations for performance best practices
+6. __[Governance](rules/governance.md)__ - your model governance feature best practices
 
+Version 2 implements each rule as a native [dbt check](https://docs.getdbt.com/docs/build/checks): a SQL query over the dbt information schema that runs locally, at parse time. Nothing is built in your warehouse, so the package works with every adapter supported by dbt v2.
 
-In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
+!!! note "Using dbt Core?"
 
-Currently, the following adapters are supported:
-
-- BigQuery
-- Databricks/Spark
-- PostgreSQL
-- Redshift
-- Snowflake
-- DuckDB
-- Trino (tested with Iceberg connector)
-- AWS Athena (tested manually)
-- Greenplum (tested manually)
-- ClickHouse (tested manually)
-- Microsoft Fabric Data Warehouse (tested manually)
-- Microsoft Fabric Spark (tested manually)
+    Version 2 requires dbt `>=2.0.0`. If you are on dbt Core, stay on version 1.x of the package, which is implemented as models in your warehouse. The documentation for 1.x is available in the version selector of this site, and the code is on the [`v1.4.0` tag](https://github.com/dbt-labs/dbt-project-evaluator/tree/v1.4.0).
 
 ## Using This Package
 
 ### Cloning via dbt Package Hub
-  
+
 Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
 
-### Additional setup for Databricks/Spark/DuckDB/Redshift/Fabric/SQL Server/Synapse
-
-In your `dbt_project.yml`, add the following config:
-
-```yaml title="dbt_project.yml"
-dispatch:
-  - macro_namespace: dbt
-    search_order: ['dbt_project_evaluator', 'dbt']
+```yaml title="packages.yml"
+packages:
+  - package: dbt-labs/dbt_project_evaluator
+    version: [">=2.0.0", "<3.0.0"]
 ```
 
-This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the [cross_db_shim directory](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/cross_db_shim/).
-  
+The package has no dependency on other packages and doesn't need any additional setup in your project: the `info_schema` configuration required by checks is declared by the package itself.
+
 ### How It Works
 
-This package will:
+Each rule is a SQL file in the [`checks` folder](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks) of the package. A check returns one row per violation (no row means the check passes) and is run in DuckDB against the information schema of your project: `models`, `sources`, `edges`, `data_tests`, `exposures`... The query results are the same whatever adapter you use.
 
-1. Parse your [graph](https://docs.getdbt.com/reference/dbt-jinja-functions/graph) object and write it into your warehouse as a series of models (see [models/marts/core](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core))
-2. Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)
-3. Test those models to alert you to the presence of the misalignment
+To avoid repeating the same filters and joins, the checks are built on top of three shared relations defined in [`macros/checks`](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/checks):
 
-Once you've installed the package, all you have to do is run a `dbt build --select package:dbt_project_evaluator`
+- `evaluator_models()`: the models in scope (not disabled, not excluded), typed with the [naming convention variables](customization/overriding-variables.md#naming-convention-variables)
+- `evaluator_sources()`: the sources in scope
+- `evaluator_edges()`: the direct dependencies between the resources in scope (tests are not included), with the name, type, materialization and access of both ends
 
-Each test warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
+Once the package is installed:
 
-1. Locate the related documentation
-2. Query the associated model to find the specific instances of the issue within your project or set up an [`on-run-end` hook](https://docs.getdbt.com/reference/project-configs/on-run-start-on-run-end) to display the rules violations in the dbt logs (see [displaying violations in the logs](customization/issues-in-log.md))
+- the checks run automatically before every `dbt build`
+- you can run them on demand with `dbt check`
+
+```shell
+dbt check                                  # every check
+dbt check fct_root_models                  # a single check
+dbt check --select staging                 # only report violations on the selected resources
+dbt ls --resource-type check --select tag:modeling
+```
+
+All the checks are **advisory by default** (`severity: warn`). Each check returns the resource to fix as `unique_id`, so `--select` restricts the rows reported by a check to the selected resources. The two coverage checks, `fct_documentation_coverage` and `fct_test_coverage`, are project-wide metrics and always evaluate the whole project (they are configured with `selection_filter_on: none`).
+
+Each warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
+
+1. Locate the related documentation in the [list of rules](rules.md)
+2. Read the `dbt check` output, which lists the first resources that violate the rule (see [reading the output of `dbt check`](customization/issues-in-log.md))
 3. Either fix the issue(s) or [customize](customization/exceptions.md) the package to exclude them
 
-----
+### Configuration
 
-## Limitations
+Every check is tagged with `dbt_project_evaluator` and with its category (`modeling`, `testing`, `documentation`, `structure`, `performance` or `governance`), and its configuration can be overridden from the `checks:` section of your `dbt_project.yml`, for a whole category or for a single check:
 
-### BigQuery, Databricks, and Microsoft Fabric Data Warehouse
+```yaml title="dbt_project.yml"
+checks:
+  dbt_project_evaluator:
+    structure:                  # a whole category
+      +severity: error          # block `dbt build` when a rule is violated
+    documentation:
+      fct_undocumented_models:
+        +enabled: false         # a single rule
+```
 
-BigQuery has limited support for recursive CTEs, while Databricks SQL and Microsoft Fabric Data Warehouse do not support them.
+See [running as a CI check](ci-check.md) and [disabling checks](customization/customization.md) for more details. Thresholds and naming conventions are configured with [variables](customization/overriding-variables.md), and resources can be [excluded](customization/excluding-packages-and-paths.md) based on their package or path.
 
-For those Data Warehouses, the model `int_all_dag_relationships` needs to be created by looping CTEs instead. The number of loops is configured with `max_depth_dag` and defaulted to 9. This means that dependencies between models of more than 9 levels of separation won't show in the model `int_all_dag_relationships` but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.
+### Differences from 1.x
+
+- `fct_hard_coded_references` has been removed, because it needs the SQL code of the models and this isn't available to checks. The `dbt lint` rule [`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) (`dbt.hard_coded_reference`) partly covers it, see [hard coded references](rules/modeling.md#hard-coded-references).
+- The `dbt_project_evaluator_exceptions` seed isn't supported, because checks can't read seeds. See [other ways to exclude results](customization/exceptions.md).
+- `fct_missing_primary_key_tests` doesn't count `not_null` column constraints as `not_null` tests, because constraints aren't available in the information schema at check time.
+- The warehouse models are gone, including `int_all_dag_relationships`. To query your DAG, use the information schema directly, see [querying the DAG](querying-the-dag.md).
+- The `print_dbt_project_evaluator_issues` `on-run-end` macro is gone. `dbt check` and `dbt build` report the violations themselves.
+- `exclude_paths_from_project` is now a case-sensitive substring match rather than a regular expression, and `exclude_packages: ["all"]` isn't supported anymore, see [excluding packages and paths](customization/excluding-packages-and-paths.md).
+- Disabled resources (models, sources, seeds, snapshots and tests) are ignored by all the checks.
+- Sources are identified by their `unique_id`. Two sources with the same name in two different packages are therefore two different resources, while 1.x grouped them together.
+- `fct_undocumented_sources` reports one row per source.
+- `fct_test_directories` compares the directory of the YAML file where the tests of a model are defined with the directory of the model. The location of each individual test isn't available when the project is parsed.
+- The variables `insert_batch_size`, `max_depth_dag`, `comment_chars`, `token_costs` and `use_native_agate_printing` have been removed.

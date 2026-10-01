@@ -1,4 +1,6 @@
 
+
+Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) that returns one row per violation. Run it with `dbt check <rule_name>`, for example `dbt check fct_undocumented_models`.
 # Documentation
 
 ## Documentation Coverage
@@ -6,13 +8,13 @@
 ??? example "`fct_documentation_coverage`"
 
     ```sql
-    --8<-- "models/marts/documentation/fct_documentation_coverage.sql"
+    --8<-- "checks/documentation/fct_documentation_coverage.sql"
     ```
 
-`fct_documentation_coverage` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_documentation_coverage.sql)) calculates the percent of enabled models in the project that have
+`fct_documentation_coverage` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/documentation/fct_documentation_coverage.sql)) calculates the percent of enabled models in the project that have
 a configured description.
 
-This model will raise a `warn` error on a `dbt build` or `dbt test` if the `documentation_coverage_pct` is less than 100%.
+This check returns a single row, and so warns on `dbt check` and `dbt build` (by default), only when `documentation_coverage_pct` is below `documentation_coverage_target` (default 100%). It always looks at the whole project, even when you use `--select`.
 You can set your own threshold by overriding the `documentation_coverage_target` variable. [See overriding variables section.](../customization/overriding-variables.md)
 
 **Reason to Flag**
@@ -31,7 +33,7 @@ function in the model's `.yml` entry.
 
 ## Undocumented Models
 
-`fct_undocumented_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_models.sql)) lists every model with no description configured.
+`fct_undocumented_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/documentation/fct_undocumented_models.sql)) lists every model with no description configured.
 
 **Reason to Flag**
 
@@ -49,7 +51,7 @@ function in the model's `.yml` entry.
 
 ## Undocumented Source Tables
 
-`fct_undocumented_source_tables` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_source_tables.sql)) lists every source table with no description configured.
+`fct_undocumented_source_tables` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/documentation/fct_undocumented_source_tables.sql)) lists every source table with no description configured.
 
 **Reason to Flag**
 
@@ -69,7 +71,7 @@ sources:
 
 ## Undocumented Sources
 
-`fct_undocumented_sources` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/documentation/fct_undocumented_sources.sql)) lists every source with no description configured.
+`fct_undocumented_sources` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/documentation/fct_undocumented_sources.sql)) lists every source with no description configured.
 
 **Reason to Flag**
 

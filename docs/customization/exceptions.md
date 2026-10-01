@@ -1,48 +1,53 @@
 # Configuring exceptions to the rules
 
-While the rules defined in this package are considered best practices, we realize that there might be exceptions to those rules and people might want to exclude given results to get passing tests despite not following all the recommendations.
+While the rules defined in this package are considered best practices, we realize that there might be exceptions to those rules and people might want to exclude given results to get passing checks despite not following all the recommendations.
 
-An example would be excluding all models with names matching with `stg_..._unioned` from `fct_multiple_sources_joined` as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the test to fail for those models.
+An example would be excluding all models with names matching with `stg_..._unioned` from `fct_multiple_sources_joined` as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the check to report those models.
 
-The package offers the ability to define a seed called `dbt_project_evaluator_exceptions.csv` to list those exceptions we don't want to be reported. This seed must contain the following columns:
+!!! warning "The exceptions seed has been removed"
 
-- `fct_name`: the name of the fact table for which we want to define exceptions (Please note that it is not possible to exclude specific models for all the `coverage` tests, but there are variables available to configure those to the particular users' needs)
-- `column_name`: the column name from `fct_name` we will be looking at to define exceptions
-- `id_to_exclude`: the values (or `like` pattern) we want to exclude for `column_name`
-- `comment`: a field where people can document why a given exception is legitimate
+    Version 1 of the package offered the seed `dbt_project_evaluator_exceptions.csv` to list the results to ignore for a given rule. Checks run when the project is parsed and can't read seeds, so this seed doesn't exist in version 2. The options below replace it, with different granularity.
 
-The following section describes the steps to follow to configure exceptions.
+## Choosing the right option
 
-## 1. Create a new seed
+| You want to... | Use |
+| -------------- | --- |
+| stop evaluating a rule entirely | [disable the check](customization.md) |
+| keep a rule but not block the build when it is violated | keep its severity at `warn` (the default), see [running as a CI check](../ci-check.md) |
+| ignore a package, a folder or some models/sources for **all** the rules | [`exclude_packages` and `exclude_paths_from_project`](excluding-packages-and-paths.md) |
+| ignore some resources for a given run or job | `--exclude` or `--selector` |
 
-With our previous example, the seed `dbt_project_evaluator_exceptions.csv` would look like:
+There is currently no way to ignore a resource for a **single** rule only while still evaluating it for the others.
 
-```csv
-fct_name,column_name,id_to_exclude,comment
-fct_multiple_sources_joined,child,stg_%_unioned,Models called _unioned can union multiple sources
-```
+## Ignoring resources in a given run
 
-which looks like the following when loaded in the warehouse
-
-|fct_name                   |column_name|id_to_exclude   |comment                                           |
-|---------------------------|-----------|----------------|--------------------------------------------------|
-|fct_multiple_sources_joined|child      |stg\_%\_unioned |Models called \_unioned can union multiple sources|
-
-## 2. Deactivate the seed from the original package
-
-Only a single seed can exist with a given name. When using a custom one, we need to deactivate the blank one from the package by adding the following to our `dbt_project.yml`
-
-```yaml title="dbt_project.yml"
-seeds:
-  dbt_project_evaluator:
-    dbt_project_evaluator_exceptions:
-      +enabled: false
-```
-
-## 3. Run the seed and the package
-
-We then run both the seed and the package by executing the following command:
+The rows reported by a check are restricted to the resources selected by `--select` and `--exclude`, because each check returns the resource to fix in the column `unique_id`:
 
 ```bash
-dbt build --select package:dbt_project_evaluator dbt_project_evaluator_exceptions
+# all the checks, except for the models in the legacy folder
+dbt check --exclude path:models/legacy
+
+# a single check, without the models called stg_<...>_unioned
+dbt check fct_multiple_sources_joined --exclude "stg_*_unioned"
 ```
+
+To make it permanent, define the selection in a YAML [selector](https://docs.getdbt.com/reference/node-selection/yaml-selectors) and use it with `--selector`:
+
+```yaml title="selectors.yml"
+selectors:
+  - name: evaluated_resources
+    definition:
+      method: fqn
+      value: "*"
+      exclude:
+        - method: path
+          value: models/legacy
+```
+
+```bash
+dbt check --selector evaluated_resources
+```
+
+!!! note
+
+    `fct_documentation_coverage` and `fct_test_coverage` always evaluate the whole project (`selection_filter_on: none`). To exclude resources from those two checks, use `exclude_packages` or `exclude_paths_from_project`.

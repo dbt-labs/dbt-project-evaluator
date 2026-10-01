@@ -1,9 +1,11 @@
 
+
+Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) that returns one row per violation. Run it with `dbt check <rule_name>`, for example `dbt check fct_model_naming_conventions`.
 # Structure
 
 ## Model Naming Conventions
 
-`fct_model_naming_conventions` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix.
+`fct_model_naming_conventions` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/structure/fct_model_naming_conventions.sql)) shows all cases where a model does NOT have the appropriate prefix.
 
 **Example**
 
@@ -36,7 +38,7 @@ For each model flagged, ensure the model type is defined and the model name is p
 
 ## Model Directories
 
-`fct_model_directories` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_model_directories.sql)) shows all cases where a model is NOT in the appropriate subdirectory:
+`fct_model_directories` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/structure/fct_model_directories.sql)) shows all cases where a model is NOT in the appropriate subdirectory:
 
 - For staging models: The files should be nested in the staging folder of a subfolder that matches their source parent's name.
 - For non-staging models: The files should be nested closest to the folder name that matches their model type.  
@@ -45,7 +47,14 @@ For each model flagged, ensure the model type is defined and the model name is p
 
 Consider `stg_model_3` which is a staging model for `source_2.table_3`:
 
-![A DAG showing source_2.table_3 as a parent of stg_model_3](https://user-images.githubusercontent.com/53586774/161316077-31d6f2a9-2c4a-4dd8-bd18-affe8b3a7367.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#5eb92f,stroke:#3d8a1c,color:#fff
+    classDef staging fill:#1a9bc4,stroke:#0e6f8f,color:#fff
+    source_2_table_3["source_2.table_3"]:::source
+    stg_model_3["stg_model_3"]:::staging
+    source_2_table_3 --> stg_model_3
+```
 
 But, `stg_model_3.sql` is inappropriately nested in the subdirectory `source_1`:
 
@@ -146,7 +155,7 @@ For each resource flagged, move the file from the `current_file_path` to `change
 
 ## Source Directories
 
-`fct_source_directories` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_source_directories.sql)) shows all cases where a source definition is NOT in the appropriate subdirectory:
+`fct_source_directories` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/structure/fct_source_directories.sql)) shows all cases where a source definition is NOT in the appropriate subdirectory:
 
 **Example**
 
@@ -200,7 +209,7 @@ For each source flagged, move the file from the `current_file_path` to `change_f
 
 ## Test Directories
 
-`fct_test_directories` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/structure/fct_test_directories.sql)) shows all cases where model tests are NOT in the same subdirectory as the corresponding model.
+`fct_test_directories` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/structure/fct_test_directories.sql)) flags tested models whose properties YAML file (the file where their tests are defined) is NOT in the same subdirectory as the model.
 
 **Example**
 
@@ -233,4 +242,4 @@ Each subdirectory in `models/` should contain one .yml file that includes the te
 
 **How to Remediate**
 
-Move flagged tests from the yml file under `current_test_directory` to the yml file under `change_test_directory_to` (create a new yml file if one does not exist).
+Move the tests of each flagged model from the yml file in `current_properties_yml_file_path` to a yml file in the directory `change_properties_yml_directory_to` (create a new yml file if one does not exist).

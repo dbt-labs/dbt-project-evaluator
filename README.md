@@ -124,7 +124,15 @@ Also note that `dbt lint` exits 0 when it finds violations.
   report violations themselves.
 - `fct_test_directories` compares a tested model's properties YAML directory with the model's
   directory. The per-test YAML path isn't populated at parse time.
+- `exclude_paths_from_project` is a case-sensitive substring match (SQL `LIKE '%…%'`) rather than a
+  regular expression, it applies to the resources of all packages, and `exclude_packages: ['all']`
+  isn't supported.
+- Disabled resources (models, sources, seeds, snapshots and tests) are ignored by all the checks.
+- Sources are identified by their `unique_id`: two sources with the same name in different packages
+  are two resources.
+- The variables `insert_batch_size`, `max_depth_dag`, `comment_chars`, `token_costs` and
+  `use_native_agate_printing` are gone.
 
 ## Documentation
 
-The full rule descriptions are on [the documentation site](https://dbt-labs.github.io/dbt-project-evaluator/).
+The full rule descriptions, the configuration options and how to run the checks in CI are on [the documentation site](https://dbt-labs.github.io/dbt-project-evaluator/).
