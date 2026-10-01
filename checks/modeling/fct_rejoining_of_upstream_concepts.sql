@@ -1,3 +1,4 @@
+{% set violations %}
 -- A -> B -> C where C also selects from A directly and B is only used by C.
 -- unique_id is B, which can usually be folded into C as a CTE.
 with edges as (
@@ -14,3 +15,6 @@ from edges a_b
 join edges b on b.parent_unique_id = a_b.child_unique_id
 join edges a_c on a_c.parent_unique_id = a_b.parent_unique_id and a_c.child_unique_id = b.child_unique_id
 where b.parent_unique_id in (select parent_unique_id from edges group by all having count(*) = 1)
+{% endset %}
+
+{{ evaluator_exceptions('fct_rejoining_of_upstream_concepts', violations) }}

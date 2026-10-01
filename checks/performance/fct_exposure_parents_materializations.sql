@@ -1,3 +1,4 @@
+{% set violations %}
 -- exposures fed directly by a source, or by a view/ephemeral model, instead of a table
 select child_unique_id as unique_id,
        child_name as exposure_name,
@@ -8,3 +9,6 @@ from {{ evaluator_edges() }}
 where child_resource_type = 'exposure'
   and (parent_resource_type = 'source'
        or (parent_resource_type = 'model' and parent_materialized in ('view', 'ephemeral')))
+{% endset %}
+
+{{ evaluator_exceptions('fct_exposure_parents_materializations', violations) }}

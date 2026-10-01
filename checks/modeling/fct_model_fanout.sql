@@ -1,3 +1,4 @@
+{% set violations %}
 -- models with at least `models_fanout_threshold` direct leaf children
 -- (a leaf is a model with no children of its own, ignoring tests and the exposures, metrics and
 -- saved queries that consume it)
@@ -11,3 +12,6 @@ where parent_resource_type = 'model'
                             where child_resource_type not in ('exposure', 'metric', 'saved_query'))
 group by all
 having leaf_children >= {{ var('models_fanout_threshold') }}
+{% endset %}
+
+{{ evaluator_exceptions('fct_model_fanout', violations) }}

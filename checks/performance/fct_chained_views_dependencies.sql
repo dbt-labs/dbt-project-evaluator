@@ -1,3 +1,4 @@
+{% set violations %}
 -- models at the end of a chain of more than `chained_views_threshold` views/ephemeral models.
 -- unique_id is the model at the end of the chain; `parent` is where the chain of views starts.
 with recursive
@@ -24,3 +25,6 @@ from chains
 where resource_type = 'model'
   and distance > {{ var('chained_views_threshold') }}
 group by all
+{% endset %}
+
+{{ evaluator_exceptions('fct_chained_views_dependencies', violations) }}

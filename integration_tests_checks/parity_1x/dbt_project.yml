@@ -45,3 +45,8 @@ vars:
   new_model_type_prefixes: 'nwmdl_'
   too_many_joins_threshold: 3
   chained_views_threshold: 2
+
+  # exceptions are read from this var by default (a macro can be used instead, see violations/)
+  dbt_project_evaluator_exceptions:
+    fct_undocumented_models:
+      - stg_model_4

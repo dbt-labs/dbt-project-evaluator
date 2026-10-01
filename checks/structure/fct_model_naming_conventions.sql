@@ -1,3 +1,4 @@
+{% set violations %}
 -- models whose name matches none of the prefixes configured for any model type
 select unique_id,
        name,
@@ -11,3 +12,6 @@ select unique_id,
 from {{ evaluator_models() }}
 where prefix_model_type is null
   and not is_time_spine
+{% endset %}
+
+{{ evaluator_exceptions('fct_model_naming_conventions', violations) }}

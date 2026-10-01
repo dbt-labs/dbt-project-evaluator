@@ -1,3 +1,4 @@
+{% set violations %}
 -- public models missing a description, or with undocumented (or no) columns
 select model.unique_id,
        model.name,
@@ -11,3 +12,6 @@ group by all
 having not is_described_model
     or total_defined_columns = 0
     or total_described_columns < total_defined_columns
+{% endset %}
+
+{{ evaluator_exceptions('fct_undocumented_public_models', violations) }}

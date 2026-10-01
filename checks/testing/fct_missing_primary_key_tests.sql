@@ -1,3 +1,4 @@
+{% set violations %}
 -- resources (of `enforced_primary_key_node_types`) where no column (or, for model-level tests,
 -- the resource itself) carries every test of one of the `primary_key_test_macros` sets
 with resources as (
@@ -29,3 +30,6 @@ where {{ evaluator_check_in_scope('resources') }}
           {%- if not loop.last %} or{% endif %}
           {%- endfor %}
   )
+{% endset %}
+
+{{ evaluator_exceptions('fct_missing_primary_key_tests', violations) }}

@@ -1,3 +1,4 @@
+{% set violations %}
 -- models outside the directory their model type calls for:
 --   * staging models must sit in a directory named after each source they (transitively) read from
 --   * a model whose prefix says one type but whose deepest configured folder says another
@@ -36,3 +37,6 @@ select unique_id, name, model_type,
            || '/.../' || file_name
 from models
 where model_type != folder_model_type
+{% endset %}
+
+{{ evaluator_exceptions('fct_model_directories', violations) }}

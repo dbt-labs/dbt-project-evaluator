@@ -1,3 +1,4 @@
+{% set violations %}
 -- tested models whose properties YAML (where their tests are defined) lives outside the model directory
 select unique_id,
        name as model_name,
@@ -6,3 +7,6 @@ select unique_id,
 from {{ evaluator_models() }}
 where unique_id in (select node_unique_id from {{ evaluator_data_tests() }})
   and {{ evaluator_directory('properties_yml_file_path') }} != directory_path
+{% endset %}
+
+{{ evaluator_exceptions('fct_test_directories', violations) }}

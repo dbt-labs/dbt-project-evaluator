@@ -1,3 +1,4 @@
+{% set violations %}
 -- exposures whose direct parents are anything other than public models
 select child_unique_id as unique_id,
        child_name as exposure_name,
@@ -8,3 +9,6 @@ select child_unique_id as unique_id,
 from {{ evaluator_edges() }}
 where child_resource_type = 'exposure'
   and not (parent_resource_type = 'model' and parent_access = 'public')
+{% endset %}
+
+{{ evaluator_exceptions('fct_exposures_dependent_on_private_models', violations) }}
