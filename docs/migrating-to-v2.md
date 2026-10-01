@@ -61,7 +61,7 @@ All the other variables (`models_fanout_threshold`, `documentation_coverage_targ
 
 ## 3. Convert the exceptions
 
-The seed `dbt_project_evaluator_exceptions.csv` cannot be used any more, because checks cannot read seeds. Exceptions are now a mapping from the name of a check to a list of patterns, see [configuring exceptions](customization/exceptions.md).
+The seed `dbt_project_evaluator_exceptions.csv` cannot be used any more, because checks cannot read seeds. Exceptions are now a mapping from the name of a check to a list of entries, see [configuring exceptions](customization/exceptions.md). An entry is either a pattern for the resource the violation points at, or a mapping `{column: pattern}` on a column that the check returns.
 
 The script converts your seed into a macro (or into a `vars:` snippet with `--format var`):
 
@@ -73,19 +73,50 @@ python3 scripts/migrate_to_v2.py --exceptions-csv path/to/file.csv --output macr
 
 The seed is found automatically in `seeds/**/dbt_project_evaluator_exceptions.csv`. The script refuses to overwrite an existing file unless you pass `--force`. Once the generated macro is in place, delete the seed file and the `seeds: dbt_project_evaluator:` configuration.
 
-In version 1, `column_name` was any column of the `fct_` model. In version 2, a pattern is compared with the **name (or `unique_id`) of the resource the violation points at**, and nothing else. So an exception is only translated automatically when its column is that resource, and the script never drops one silently:
+In version 1, a row of the seed excluded the rows of the `fct_` model whose `column_name` matched `id_to_exclude`. The same row is now one entry of the check. For example, these rows:
 
-| Version 1 row | Result |
-| ------------- | ------ |
-| `column_name` is the resource the 2.x violation points at (for example `resource_name`, `child`, `exposure_name`, `model_name`; `parent` for `fct_model_fanout`, `fct_source_fanout` and `fct_unused_sources`; `parent_and_child` for `fct_rejoining_of_upstream_concepts`) | Translated, with the `comment` kept as a YAML comment. |
-| `fct_undocumented_sources` / `source_name` | Translated with `.%` appended: the check now reports one row per source, carrying one of its tables. |
-| Any other column (`parent` of `fct_direct_join_to_source`, `model_type`, a path...) | Written as a `# NEEDS REVIEW` comment with the reason and, when there is one, what to list instead. |
-| `fct_duplicate_sources` | `# NEEDS REVIEW`: each source of a group is now its own row, list the sources individually. |
+```text
+fct_name,column_name,id_to_exclude,comment
+fct_undocumented_models,resource_name,stg_legacy_%,renamed in Q3
+fct_staging_dependent_on_staging,parent,stg_base_%,the base models are shared
+fct_direct_join_to_source,parent,raw_shop.orders,
+```
+
+become:
+
+```yaml
+fct_undocumented_models:
+  - 'stg_legacy_%'   # renamed in Q3
+fct_staging_dependent_on_staging:
+  - {parent: 'stg_base_%'}   # the base models are shared
+fct_direct_join_to_source:
+  - {source_parents: 'raw_shop.orders'}
+  - {model_parents: 'raw_shop.orders'}
+```
+
+The column is translated as follows. Nothing is dropped silently: whatever cannot be translated is written as a `# NEEDS REVIEW` comment with the reason and the columns that the 2.x check returns.
+
+| Version 1 `column_name` | Version 2 entry |
+| ----------------------- | --------------- |
+| The resource that the 2.x violation points at: `resource_name` (most checks), `child` (`fct_chained_views_dependencies`, `fct_direct_join_to_source`, `fct_multiple_sources_joined`, `fct_root_models`, `fct_staging_dependent_on_*`, `fct_marts_or_intermediate_dependent_on_source`), `parent` (`fct_model_fanout`, `fct_source_fanout`, `fct_unused_sources`), `exposure_name`, `model_name`, `parent_and_child` (`fct_rejoining_of_upstream_concepts`) | A pattern: `'stg_legacy_%'`. |
+| A column that also exists in 2.x, sometimes under another name: `parent` and `child` of `fct_staging_dependent_on_*`, `fct_chained_views_dependencies` and `fct_rejoining_of_upstream_concepts`; `parent_resource_name`, `parent_resource_type`, `parent_model_materialization` and `parent_access` of the exposure checks; `model_type`, `current_file_path` and `change_file_path_to` of `fct_model_directories`; `child_model_type` of `fct_marts_or_intermediate_dependent_on_source` (`model_type`); `is_contract_enforced` (`contract_enforced`); `is_described` (`is_described_model`) | `{column: 'pattern'}` with the 2.x name of the column. |
+| `parent` of `fct_direct_join_to_source` | Two entries, `{source_parents: ...}` and `{model_parents: ...}`. |
+| `parent` of `fct_marts_or_intermediate_dependent_on_source` | `{source_name: ...}`. |
+| `source_parents`, `leaf_children`, `model_children` | `{column: ...}`, see the note on lists below. |
+| `source_name` of `fct_undocumented_sources` | `{source_name: ...}`: the check reports one row per source. |
+| `source_names` of `fct_duplicate_sources` | `{source_name: ...}`, with a note: see below. |
+| A column that no longer exists (`distance`, `path`, `prefix`, `is_loop_independent`, `file_path`, `join_count`, `test_name`, `current_test_directory`, `source_db_location`, `is_public`, the `*_resource_type` and `*_model_type` columns that are now always the same, and so on) | `# NEEDS REVIEW`, with the reason. |
 | `fct_hard_coded_references` | `# NOT APPLICABLE`: the rule no longer exists. |
 | `fct_documentation_coverage`, `fct_test_coverage` | `# NOT APPLICABLE`: coverage checks never supported exceptions. Use `documentation_coverage_target` and `test_coverage_target`. |
-| A name that is not a version 2 check, an empty pattern, a pattern containing Jinja delimiters | `# NEEDS REVIEW`. |
+| A name that is not a version 2 check, a column that is not a column of this model, an empty pattern, a pattern containing Jinja delimiters or a line break | `# NEEDS REVIEW`. |
 
-Patterns keep their `LIKE` syntax (`%`, `_`). Two details differ: the match is case-sensitive, and an entry for a check that does not exist is now a compile error instead of being ignored.
+Things that behave differently from version 1:
+
+- **Lists.** In version 1, `source_parents`, `leaf_children` and `model_children` were strings such as `a, b`, and the pattern was compared with the whole string. They are now lists of names and the pattern is compared with **each element**: the violation is accepted when any element matches. A pattern that relied on the separator (`a, b`) no longer matches.
+- **One row per child.** `fct_direct_join_to_source` had one row per parent. It now has one row per child, so accepting a parent accepts the whole violation of the child, even when it has other parents. To accept a single pair, combine two columns in the same entry: `{name: int_model_4, source_parents: raw_shop.orders}`.
+- **Duplicate sources.** `fct_duplicate_sources` had one row per group of sources pointing at the same table, and `source_names` was the list of the group. It has now one row per source: an exception on `source_name` only accepts the sources it matches, so a group disappears only when all its sources match. `source_db_location` is not translated, because the column is now `source_relation` (lower case, unquoted).
+- **Paths.** `fct_test_directories` returns the path of the properties YAML file (`current_properties_yml_file_path`) where version 1 returned its directory, so a pattern on `current_test_directory` has to be rewritten.
+- **Case.** The match is case-sensitive, and an entry for a check that does not exist is a compile error instead of being ignored. Patterns keep their `LIKE` syntax (`%`, `_`).
 
 !!! tip
 

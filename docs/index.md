@@ -79,7 +79,7 @@ See [running as a CI check](ci-check.md) and [disabling checks](customization/cu
 ### Differences from 1.x
 
 - `fct_hard_coded_references` has been removed, because it needs the SQL code of the models and this isn't available to checks. The `dbt lint` rule [`DBT05`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) (`dbt.hard_coded_reference`) partly covers it, see [hard coded references](rules/modeling.md#hard-coded-references).
-- The `dbt_project_evaluator_exceptions` seed is replaced by the variable (or macro) `dbt_project_evaluator_exceptions`, because checks can't read seeds. See [configuring exceptions](customization/exceptions.md) and [migrating to version 2](migrating-to-v2.md). Patterns are compared with the name (or `unique_id`) of the resource a row points at, not with any other column of the result, and the two coverage checks ignore them.
+- The `dbt_project_evaluator_exceptions` seed is replaced by the variable (or macro) `dbt_project_evaluator_exceptions`, because checks can't read seeds. See [configuring exceptions](customization/exceptions.md) and [migrating to version 2](migrating-to-v2.md). Patterns are matched per check, either with the resource a row points at or with the columns of that check (to accept a given parent or pair), and are case-sensitive. A column that holds a list matches when any of its elements does and accepts the whole row. The two coverage checks ignore exceptions.
 - `fct_missing_primary_key_tests` doesn't count `not_null` column constraints as `not_null` tests, because constraints aren't available in the information schema at check time.
 - The warehouse models are gone, including `int_all_dag_relationships`. To query your DAG, use the information schema directly, see [querying the DAG](querying-the-dag.md).
 - The `print_dbt_project_evaluator_issues` `on-run-end` macro is gone. `dbt check` and `dbt build` report the violations themselves.
@@ -87,5 +87,6 @@ See [running as a CI check](ci-check.md) and [disabling checks](customization/cu
 - Disabled resources (models, sources, seeds, snapshots and tests) are ignored by all the checks.
 - Sources are identified by their `unique_id`. Two sources with the same name in two different packages are therefore two different resources, while 1.x grouped them together.
 - `fct_undocumented_sources` reports one row per source.
+- `fct_direct_join_to_source`, `fct_multiple_sources_joined`, `fct_model_fanout` and `fct_source_fanout` return the names of the parents or children in a list column, not their number.
 - `fct_test_directories` compares the directory of the YAML file where the tests of a model are defined with the directory of the model. The location of each individual test isn't available when the project is parsed.
 - The variables `insert_batch_size`, `max_depth_dag`, `comment_chars`, `token_costs` and `use_native_agate_printing` have been removed.

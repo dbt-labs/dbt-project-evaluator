@@ -20,91 +20,161 @@ import sys
 from pathlib import Path
 
 # ---------------------------------------------------------------------------------------------
-# Exceptions: which 1.x column identifies the resource a 2.x violation points at.
+# Exceptions: how a 1.x row (fct model, column, pattern) is written in 2.x.
 #
-# A 2.x exception is a pattern matched against the name (or unique_id) of the resource that the
-# `unique_id` column of the violation points at. A 1.x exception on another column of the fct_
-# model cannot be expressed, so it is never translated automatically.
+# A 2.x entry is either a string, matched against the name or unique_id of the resource the
+# violation points at (the `unique_id` column of the check), or a mapping {column: pattern} on a
+# column returned by the check. The columns of the 1.x fct_ models are mapped one by one:
+#   S             -> a string entry (the 1.x column is the resource the 2.x violation points at)
+#   C(col)        -> an entry {col: pattern} (the column exists in 2.x, possibly under another name)
+#   R(reason)     -> cannot be translated: written as a NEEDS REVIEW comment
 # ---------------------------------------------------------------------------------------------
-RESOURCE_COLUMN = {
-    "fct_chained_views_dependencies": "child",
-    "fct_direct_join_to_source": "child",
-    "fct_duplicate_sources": None,
-    "fct_exposure_parents_materializations": "exposure_name",
-    "fct_exposures_dependent_on_private_models": "exposure_name",
-    "fct_marts_or_intermediate_dependent_on_source": "child",
-    "fct_missing_primary_key_tests": "resource_name",
-    "fct_model_directories": "resource_name",
-    "fct_model_fanout": "parent",
-    "fct_model_naming_conventions": "resource_name",
-    "fct_multiple_sources_joined": "child",
-    "fct_public_models_without_contract": "resource_name",
-    "fct_rejoining_of_upstream_concepts": "parent_and_child",
-    "fct_root_models": "child",
-    "fct_source_directories": "resource_name",
-    "fct_source_fanout": "parent",
-    "fct_sources_without_freshness": "resource_name",
-    "fct_staging_dependent_on_marts_or_intermediate": "child",
-    "fct_staging_dependent_on_staging": "child",
-    "fct_test_directories": "model_name",
-    "fct_too_many_joins": "resource_name",
-    "fct_undocumented_models": "resource_name",
-    "fct_undocumented_public_models": "resource_name",
-    "fct_undocumented_source_tables": "resource_name",
-    "fct_undocumented_sources": "source_name",
-    "fct_unused_sources": "parent",
+S = ("string",)
+
+
+def C(column, note="", also=()):
+    return ("column", column, note, tuple(also))
+
+
+def R(reason):
+    return ("review", reason)
+
+
+LIST_NOTE = "a list in 2.x: matches when any element matches"
+
+
+def gone(what="the 2.x check no longer returns it"):
+    return R(what)
+
+
+TRANSLATION = {
+    "fct_chained_views_dependencies": {
+        "child": S, "parent": C("parent"), "distance": C("distance"),
+        "path": gone("the path is not returned in 2.x: use the `child` and `parent` columns"),
+    },
+    "fct_direct_join_to_source": {
+        "child": S,
+        # 1.x had one row per parent (source or model); 2.x has one row per child with the lists
+        "parent": C("source_parents", "drops the violation of a child as soon as one of its parents matches", also=("model_parents",)),
+        "parent_resource_type": gone("2.x lists the source parents and the model parents in separate columns"),
+        "child_resource_type": gone("always a model in 2.x"),
+        "distance": gone("always 1: direct parents only"),
+    },
+    "fct_duplicate_sources": {
+        "source_names": C("source_name", "1.x had one row per group: each source of the group is its own row in 2.x, so every source of the group needs to match"),
+        "source_db_location": gone("2.x has `source_relation` (lower case, not quoted, database.schema.identifier): rewrite the pattern on that column"),
+    },
+    "fct_exposure_parents_materializations": {
+        "exposure_name": S, "parent_resource_name": C("parent_resource_name"),
+        "parent_resource_type": C("parent_resource_type"), "parent_model_materialization": C("parent_model_materialization"),
+    },
+    "fct_exposures_dependent_on_private_models": {
+        "exposure_name": S, "parent_resource_name": C("parent_resource_name"),
+        "parent_resource_type": C("parent_resource_type"), "parent_access": C("parent_access"),
+    },
+    "fct_marts_or_intermediate_dependent_on_source": {
+        "child": S, "parent": C("source_name"), "child_model_type": C("model_type"),
+        "parent_resource_type": gone("always a source in 2.x"),
+    },
+    "fct_missing_primary_key_tests": {
+        "resource_name": S, "resource_type": C("resource_type"),
+        "model_type": gone(), "is_primary_key_tested": gone("always false for a violation"),
+        "number_of_tests_on_model": gone(), "number_of_constraints_on_model": gone("constraints are not counted in 2.x"),
+    },
+    "fct_model_directories": {
+        "resource_name": S, "model_type": C("model_type"), "current_file_path": C("current_file_path"),
+        "change_file_path_to": C("change_file_path_to"), "resource_type": gone("always a model in 2.x"),
+    },
+    "fct_model_fanout": {
+        "parent": S, "leaf_children": C("leaf_children", LIST_NOTE), "parent_model_type": gone(),
+    },
+    "fct_model_naming_conventions": {
+        "resource_name": S, "model_type": C("model_type"), "appropriate_prefixes": C("appropriate_prefixes"),
+        "prefix": gone("2.x reports the prefixes the model should have, not the one it has"),
+    },
+    "fct_multiple_sources_joined": {
+        "child": S, "source_parents": C("source_parents", LIST_NOTE),
+    },
+    "fct_public_models_without_contract": {
+        "resource_name": S, "is_contract_enforced": C("contract_enforced"),
+        "is_public": gone("2.x returns `access`, which is always public here"),
+    },
+    "fct_rejoining_of_upstream_concepts": {
+        "parent_and_child": S, "parent": C("parent"), "child": C("child"),
+        "is_loop_independent": gone(),
+    },
+    "fct_root_models": {"child": S},
+    "fct_source_directories": {
+        "resource_name": S, "current_file_path": C("current_file_path"), "change_file_path_to": C("change_file_path_to"),
+        "resource_type": gone("always a source in 2.x"),
+    },
+    "fct_source_fanout": {
+        "parent": S, "model_children": C("model_children", LIST_NOTE),
+    },
+    "fct_sources_without_freshness": {"resource_name": S},
+    "fct_staging_dependent_on_marts_or_intermediate": {
+        "child": S, "parent": C("parent"), "parent_model_type": C("parent_model_type"),
+        "child_model_type": gone("always staging in 2.x"),
+    },
+    "fct_staging_dependent_on_staging": {
+        "child": S, "parent": C("parent"),
+        "child_model_type": gone("always staging in 2.x"), "parent_model_type": gone("always staging in 2.x"),
+    },
+    "fct_test_directories": {
+        "model_name": S, "change_test_directory_to": C("change_properties_yml_directory_to"),
+        "current_test_directory": gone("2.x returns the path of the properties YAML file (`current_properties_yml_file_path`), not its directory: rewrite the pattern"),
+        "test_name": gone("2.x reports one row per model, not per test"),
+    },
+    "fct_too_many_joins": {
+        "resource_name": S,
+        "join_count": gone("2.x counts the direct parents (`parent_count`), not the joins of the SQL: not the same measure"),
+        "file_path": gone(),
+    },
+    "fct_undocumented_models": {"resource_name": S, "model_type": gone()},
+    "fct_undocumented_public_models": {
+        "resource_name": S, "is_described": C("is_described_model"),
+        "total_defined_columns": C("total_defined_columns"), "total_described_columns": C("total_described_columns"),
+        "access": gone("always public in 2.x"),
+    },
+    "fct_undocumented_source_tables": {"resource_name": S},
+    "fct_undocumented_sources": {"source_name": C("source_name")},
+    "fct_unused_sources": {"parent": S},
 }
 
-# 1.x columns of the fct_ models (to tell "wrong column" from "not a column of this model")
-V1_COLUMNS = {
-    "fct_chained_views_dependencies": {"child", "distance", "parent", "path"},
-    "fct_direct_join_to_source": {"child", "child_resource_type", "distance", "parent", "parent_resource_type"},
-    "fct_duplicate_sources": {"source_db_location", "source_names"},
-    "fct_exposure_parents_materializations": {"exposure_name", "parent_model_materialization", "parent_resource_name", "parent_resource_type"},
-    "fct_exposures_dependent_on_private_models": {"exposure_name", "parent_resource_name", "parent_access", "parent_resource_type"},
-    "fct_marts_or_intermediate_dependent_on_source": {"parent", "parent_resource_type", "child", "child_model_type"},
-    "fct_missing_primary_key_tests": {"resource_name", "resource_type", "model_type", "is_primary_key_tested", "number_of_tests_on_model", "number_of_constraints_on_model"},
-    "fct_model_directories": {"resource_name", "resource_type", "model_type", "current_file_path", "change_file_path_to"},
-    "fct_model_fanout": {"parent", "parent_model_type", "leaf_children"},
-    "fct_model_naming_conventions": {"resource_name", "model_type", "prefix", "appropriate_prefixes"},
-    "fct_multiple_sources_joined": {"child", "source_parents"},
-    "fct_public_models_without_contract": {"resource_name", "is_public", "is_contract_enforced"},
-    "fct_rejoining_of_upstream_concepts": {"parent", "child", "parent_and_child", "is_loop_independent"},
-    "fct_root_models": {"child"},
-    "fct_source_directories": {"resource_name", "resource_type", "current_file_path", "change_file_path_to"},
-    "fct_source_fanout": {"parent", "model_children"},
-    "fct_sources_without_freshness": {"resource_name"},
-    "fct_staging_dependent_on_marts_or_intermediate": {"child", "child_model_type", "parent", "parent_model_type"},
-    "fct_staging_dependent_on_staging": {"child", "child_model_type", "parent", "parent_model_type"},
-    "fct_test_directories": {"test_name", "model_name", "current_test_directory", "change_test_directory_to"},
-    "fct_too_many_joins": {"resource_name", "file_path", "join_count"},
-    "fct_undocumented_models": {"resource_name", "model_type"},
-    "fct_undocumented_public_models": {"resource_name", "access", "is_described", "total_defined_columns", "total_described_columns"},
-    "fct_undocumented_source_tables": {"resource_name"},
-    "fct_undocumented_sources": {"source_name"},
-    "fct_unused_sources": {"parent"},
+# columns returned by the 2.x checks (for the message when a column does not exist any more)
+V2_COLUMNS = {
+    "fct_chained_views_dependencies": "child, parent, distance",
+    "fct_direct_join_to_source": "name, source_parents, model_parents",
+    "fct_duplicate_sources": "source_name, source_relation",
+    "fct_exposure_parents_materializations": "exposure_name, parent_resource_type, parent_resource_name, parent_model_materialization",
+    "fct_exposures_dependent_on_private_models": "exposure_name, parent_unique_id, parent_resource_name, parent_resource_type, parent_access",
+    "fct_marts_or_intermediate_dependent_on_source": "name, model_type, source_name",
+    "fct_missing_primary_key_tests": "name, resource_type",
+    "fct_model_directories": "name, model_type, current_file_path, change_file_path_to",
+    "fct_model_fanout": "name, leaf_children",
+    "fct_model_naming_conventions": "name, model_type, appropriate_prefixes, original_file_path",
+    "fct_multiple_sources_joined": "name, source_parents",
+    "fct_public_models_without_contract": "name, access, contract_enforced",
+    "fct_rejoining_of_upstream_concepts": "parent, parent_and_child, child",
+    "fct_root_models": "name, original_file_path",
+    "fct_source_directories": "source_name, current_file_path, change_file_path_to",
+    "fct_source_fanout": "source_name, model_children",
+    "fct_sources_without_freshness": "source_name",
+    "fct_staging_dependent_on_marts_or_intermediate": "name, parent, parent_model_type",
+    "fct_staging_dependent_on_staging": "name, parent",
+    "fct_test_directories": "model_name, current_properties_yml_file_path, change_properties_yml_directory_to",
+    "fct_too_many_joins": "name, parent_count",
+    "fct_undocumented_models": "name, original_file_path",
+    "fct_undocumented_public_models": "name, is_described_model, total_defined_columns, total_described_columns",
+    "fct_undocumented_source_tables": "source_name, original_file_path",
+    "fct_undocumented_sources": "source_name, original_file_path",
+    "fct_unused_sources": "source_name, original_file_path",
 }
 
 NOT_APPLICABLE = {
     "fct_hard_coded_references": "the rule no longer exists in 2.x (see 'Hard-coded references' in the migration guide)",
     "fct_documentation_coverage": "coverage rules are project-wide metrics and never supported exceptions; use the documentation_coverage_target var",
     "fct_test_coverage": "coverage rules are project-wide metrics and never supported exceptions; use the test_coverage_target var",
-}
-
-COLUMN_HINTS = {
-    ("fct_direct_join_to_source", "parent"): "the 2.x violation points at the child model: list the child (`child`) instead",
-    ("fct_staging_dependent_on_staging", "parent"): "the 2.x violation points at the child model: list the child (`child`) instead",
-    ("fct_staging_dependent_on_marts_or_intermediate", "parent"): "the 2.x violation points at the child model: list the child (`child`) instead",
-    ("fct_chained_views_dependencies", "parent"): "the 2.x violation points at the child model: list the child (`child`) instead",
-    ("fct_rejoining_of_upstream_concepts", "parent"): "the 2.x violation points at `parent_and_child` (the in-between model): list that one instead",
-    ("fct_rejoining_of_upstream_concepts", "child"): "the 2.x violation points at `parent_and_child` (the in-between model): list that one instead",
-    ("fct_model_fanout", "leaf_children"): "list the parent (`parent`) instead",
-    ("fct_multiple_sources_joined", "source_parents"): "list the model (`child`) instead",
-    ("fct_source_fanout", "model_children"): "list the source (`parent`) instead",
-}
-
-CHECK_HINT_NO_RESOURCE = {
-    "fct_duplicate_sources": "each source of a group is its own row in 2.x: list the sources individually (`source_name.table`)",
 }
 
 JINJA_OPENERS = ("{{", "{%", "{#")
@@ -140,7 +210,10 @@ def find_seed(project_dir):
 
 
 def convert_rows(rows):
-    """Returns (translated {fct: [(pattern, comment, note)]}, review [(row_no, line, reason)], na [(row_no, line, reason)])."""
+    """Returns (translated {fct: [(entry, comment, note)]}, review [(row_no, line, reason)], na [(row_no, line, reason)]).
+
+    An entry is ("string", pattern) or ("column", column, pattern).
+    """
     translated, review, na = {}, [], []
     for number, row in enumerate(rows, start=2):  # row 1 is the header
         row = {(k or "").strip().lower(): v for k, v in row.items()}
@@ -152,7 +225,7 @@ def convert_rows(rows):
         if fct in NOT_APPLICABLE:
             na.append((number, original, NOT_APPLICABLE[fct]))
             continue
-        if fct not in RESOURCE_COLUMN:
+        if fct not in TRANSLATION:
             review.append((number, original, f"'{fct}' is not a rule of dbt_project_evaluator 2.x (typo, or a rule that was removed)"))
             continue
         if not pattern:
@@ -161,26 +234,26 @@ def convert_rows(rows):
         if any(token in pattern for token in JINJA_OPENERS) or "\n" in pattern:
             review.append((number, original, "the pattern contains Jinja delimiters or a line break and cannot be written safely in a macro"))
             continue
-        resource_column = RESOURCE_COLUMN[fct]
-        if resource_column is None:
-            review.append((number, original, CHECK_HINT_NO_RESOURCE[fct]))
+        columns = TRANSLATION[fct]
+        if column not in columns:
+            review.append((number, original, f"'{column}' is not a column of {fct} in 1.x"))
             continue
-        if column != resource_column:
-            if column in V1_COLUMNS[fct]:
-                reason = COLUMN_HINTS.get((fct, column)) or (
-                    f"2.x only matches the resource the violation points at (`{resource_column}` in 1.x); "
-                    f"`{column}` has no equivalent"
-                )
-            else:
-                reason = f"'{column}' is not a column of {fct} in 1.x"
-            review.append((number, original, reason))
-            continue
-        note = ""
-        if fct == "fct_undocumented_sources":
-            # 2.x reports one row per source, carrying the unique_id of one of its tables: match any table
-            pattern, note = pattern + ".%", "was a source name; matches any table of the source"
-        translated.setdefault(fct, []).append((pattern, comment, note))
+        rule = columns[column]
+        if rule[0] == "review":
+            review.append((number, original, f"{rule[1]} (2.x returns: {V2_COLUMNS[fct]})"))
+        elif rule[0] == "string":
+            translated.setdefault(fct, []).append((("string", pattern), comment, ""))
+        else:
+            _, v2_column, note, also = rule
+            for n, target in enumerate((v2_column,) + also):
+                translated.setdefault(fct, []).append((("column", target, pattern), comment if n == 0 else "", note if n == 0 else ""))
     return translated, review, na
+
+
+def render_entry(entry):
+    if entry[0] == "string":
+        return yaml_quote(entry[1])
+    return "{" + entry[1] + ": " + yaml_quote(entry[2]) + "}"
 
 
 def render_mapping(translated, review, na, indent, source_name):
@@ -190,18 +263,18 @@ def render_mapping(translated, review, na, indent, source_name):
     for fct in sorted(translated):
         lines.append(f"{pad}{fct}:")
         seen = set()
-        for pattern, comment, note in translated[fct]:
-            if pattern in seen:
+        for entry, comment, note in translated[fct]:
+            if entry in seen:
                 continue
-            seen.add(pattern)
-            trailing = " ".join(part for part in (comment, f"[{note}]" if note else "") if part)
-            lines.append(f"{pad}  - {yaml_quote(pattern)}" + (f"   # {trailing}" if trailing else ""))
+            seen.add(entry)
+            trailing = " ".join(part for part in (comment, f"[{safe_text(note)}]" if note else "") if part)
+            lines.append(f"{pad}  - {render_entry(entry)}" + (f"   # {trailing}" if trailing else ""))
     if review:
         lines += ["", f"{pad}# NEEDS REVIEW: 1.x exceptions that could not be translated automatically.",
-                  f"{pad}# 2.x matches a pattern against the name or unique_id of the resource a violation points at."]
+                  f"{pad}# 2.x entries are a pattern on the resource a violation points at, or a mapping (column: pattern) on a column of the check."]
         for number, original, reason in review:
             lines.append(f"{pad}# {source_name}:{number}: {original}")
-            lines.append(f"{pad}#     -> {reason}")
+            lines.append(f"{pad}#     -> {safe_text(reason)}")
     if na:
         lines += ["", f"{pad}# NOT APPLICABLE in 2.x (dropped on purpose):"]
         for number, original, reason in na:
@@ -243,7 +316,7 @@ V1_MODELS = [
     "stg_columns", "stg_exposure_relationships", "stg_exposures", "stg_metric_relationships", "stg_metrics", "stg_naming_convention_folders",
     "stg_naming_convention_prefixes", "stg_node_relationships", "stg_nodes", "stg_sources",
     "dbt_project_evaluator_exceptions",
-] + sorted(set(RESOURCE_COLUMN) | {"fct_hard_coded_references", "fct_documentation_coverage", "fct_test_coverage"})
+] + sorted(set(TRANSLATION) | {"fct_hard_coded_references", "fct_documentation_coverage", "fct_test_coverage"})
 SKIP_DIRS = {"dbt_packages", "dbt_internal_packages", "target", "logs", ".git", "node_modules", "site", "venv", ".venv", "dbt_modules"}
 CI_SUFFIXES = {".yml", ".yaml", ".sh", ".toml", ".cfg", ".ini"}
 CI_NAMES = {"Makefile", "Dockerfile", ".env", "tox.ini"}
@@ -475,7 +548,7 @@ def main(argv=None):
             render = render_macro if args.format == "macro" else render_var
             text = render(translated, review, na, source_name)
             output = args.output or (str(project_dir / "macros" / "dbt_project_evaluator_exceptions.sql") if args.format == "macro" else "-")
-            count = sum(len({p for p, _, _ in v}) for v in translated.values())
+            count = sum(1 for row in rows if any((value or '').strip() for value in row.values())) - len(review) - len(na)
             if output == "-":
                 sys.stdout.write(text + "\n")
                 log = sys.stderr

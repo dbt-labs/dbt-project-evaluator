@@ -55,9 +55,11 @@ Thresholds and conventions use the same vars as 1.x: `models_fanout_threshold`,
 ## Exceptions
 
 To accept some violations of a check without disabling it, map the name of the check to a list of
-patterns in the var `dbt_project_evaluator_exceptions`. Each pattern is a SQL `LIKE` pattern compared
+entries in the var `dbt_project_evaluator_exceptions`. An entry is either a SQL `LIKE` pattern, compared
 with the name (`stg_legacy_x`, `source_name.table_name`, `name.v2`) or the `unique_id` of the resource
-that a row of the check points at:
+that a row of the check points at, or a mapping from columns of the check to patterns, for example to
+accept a given parent or a given pair. All the keys of a mapping must match, and a column that holds a
+list matches when any of its elements does:
 
 ```yaml
 vars:
@@ -66,6 +68,10 @@ vars:
       - stg_%_unioned
     fct_unused_sources:
       - raw_shop.unused_table
+    fct_staging_dependent_on_staging:
+      - {name: stg_model_4, parent: stg_model_2}   # this pair only
+    fct_direct_join_to_source:
+      - source_parents: raw_shop.orders            # any model that reads from this source
 ```
 
 For long lists, define `default__dbt_project_evaluator_exceptions()` in your own macros and return
@@ -143,8 +149,11 @@ Also note that `dbt lint` exits 0 when it finds violations.
 - `fct_hard_coded_references` has been removed; the `dbt lint` rule `DBT05` partly covers it (see the caveat above).
 - The `dbt_project_evaluator_exceptions` seed is replaced by the var (or macro) of the same name,
   because checks can't read seeds, see [Exceptions](#exceptions) and `docs/migrating-to-v2.md`.
-  Patterns are compared with the name (or `unique_id`) of the resource a row points at, not with
-  any other column of the result, and the two coverage checks ignore them.
+  Patterns are matched per check, on the columns of that check, and are case-sensitive. A column that
+  holds a list (`source_parents`, `model_parents`, `leaf_children`, `model_children`) matches when any
+  element does and accepts the whole row. The two coverage checks ignore exceptions.
+- `fct_direct_join_to_source`, `fct_multiple_sources_joined`, `fct_model_fanout` and `fct_source_fanout`
+  return the names of the parents or children in a list column, not their number.
 - `fct_missing_primary_key_tests` doesn't count column `not_null` constraints, because constraints
   aren't in the check-time information schema.
 - The warehouse models are gone, including `int_all_dag_relationships`. To query your DAG, use the

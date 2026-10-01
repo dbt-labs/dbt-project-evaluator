@@ -115,13 +115,15 @@ See [excluding packages and paths](excluding-packages-and-paths.md) for the deta
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `dbt_project_evaluator_exceptions` | the violations to accept, as a mapping from the name of a check to a list of `LIKE` patterns | none |
+| `dbt_project_evaluator_exceptions` | the violations to accept, as a mapping from the name of a check to a list of entries: `LIKE` patterns for the resource, or mappings from a column of the check to patterns | none |
 
 ```yaml title="dbt_project.yml"
 vars:
   dbt_project_evaluator_exceptions:
     fct_multiple_sources_joined:
       - stg_%_unioned
+    fct_staging_dependent_on_staging:
+      - {name: stg_model_4, parent: stg_model_2}   # a pair
 ```
 
 This variable is the default implementation of the macro `dbt_project_evaluator_exceptions`, which can also be overridden in your project. See [configuring exceptions to the rules](exceptions.md) for the details.
