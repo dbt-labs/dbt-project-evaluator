@@ -11,7 +11,7 @@
 
 ## Where the `parity_*` expectations come from
 
-In 1.x each rule was compared, row by row, with an expected-output seed. When these projects were ported, the resources flagged by each check were compared with those seeds, with the differences below. `dbt check` only prints the first five rows of a check, so what is committed and re-checked on every run is the number of violations.
+In 1.x each rule was compared, row by row, with an expected-output seed. When `parity_1x` and `parity_1x_semantic_layer` were ported, the resources flagged by each check were compared with those seeds, with the differences below. Two checks have no seed (`fct_marts_or_intermediate_dependent_on_source`, `fct_staging_dependent_on_marts_or_intermediate`) and `parity_1x_no_exposures` has none at all: their expected counts are the recorded v2 output, not checked against an oracle. `dbt check` only prints the first five rows of a check, so what is committed and re-checked on every run is the number of violations.
 
 | Check | Expected here | Why it differs from the 1.x seed |
 |---|---|---|

@@ -56,6 +56,10 @@ For example, after modifying the model `stg_orders`, the checks that look at ind
 
     `fct_documentation_coverage` and `fct_test_coverage` measure the whole project and not individual resources. They are configured with `selection_filter_on: none` and are therefore always evaluated on the entire project, whatever `--select` is set to.
 
+!!! warning
+
+    With dbt 2.0.6, `--select` cannot select sources, and `state:modified` does not detect a changed source. The checks that report sources (`fct_unused_sources`, `fct_sources_without_freshness`, `fct_undocumented_source_tables`, `fct_undocumented_sources`, `fct_duplicate_sources`, `fct_source_directories`, `fct_source_fanout`) therefore report nothing when a selector is set. Run them without `--select` (for example in a separate, non-blocking step) to catch source violations.
+
 ### Example with GitHub Actions
 
 The following workflow parses the base branch of the pull request to get a manifest to compare to, then runs the checks on the modified resources:

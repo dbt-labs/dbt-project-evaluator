@@ -65,6 +65,12 @@ Each check returns the resource to fix as `unique_id`, so `--select` scopes its 
 `fct_documentation_coverage` and `fct_test_coverage` are project-wide metrics
 (`selection_filter_on: none`) and always evaluate the whole project.
 
+Limitation (dbt 2.0.6): `--select` cannot select sources, so the checks that report sources
+(`fct_unused_sources`, `fct_sources_without_freshness`, `fct_undocumented_source_tables`,
+`fct_undocumented_sources`, `fct_duplicate_sources`, `fct_source_directories`, `fct_source_fanout`)
+report nothing when you pass a selector, and `state:modified` does not pick up a changed source.
+Run them without `--select` to see source violations.
+
 ## Rules
 
 | Folder / tag | Checks |
