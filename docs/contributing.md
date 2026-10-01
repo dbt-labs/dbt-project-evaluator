@@ -21,7 +21,7 @@ The script installs the package in the project `integration_tests_checks`, runs 
 
 ## Running docs locally
 
-Docs are generated using [Zensical](https://zensical.org/), which reads its settings from `mkdocs.yml`. To test them locally, run the following command:
+Docs are generated using [Zensical](https://zensical.org/), configured in `zensical.toml`. To test them locally, run the following command:
 
 ```bash
 uvx zensical serve
