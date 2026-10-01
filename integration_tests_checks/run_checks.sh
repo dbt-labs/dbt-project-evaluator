@@ -52,6 +52,8 @@ for project in violations parity_1x parity_1x_no_exposures parity_1x_semantic_la
     popd > /dev/null
 done
 
+./test_exceptions.sh || status=1
+
 if [ $status -eq 0 ]; then
     echo "All native checks returned the expected violations."
 fi

@@ -49,4 +49,15 @@ vars:
   # exceptions are read from this var by default (a macro can be used instead, see violations/)
   dbt_project_evaluator_exceptions:
     fct_undocumented_models:
-      - stg_model_4
+      - stg_model_4                  # a model name
+    fct_root_models:
+      - int_model_5.v1               # one version of a versioned model; v3 and model_8 stay
+    fct_unused_sources:
+      - source_1.table_4             # source.table; raw_table_5 stays
+    fct_source_fanout: source_1.table_1   # a single pattern instead of a list
+    fct_exposure_parents_materializations:
+      - exposure_1                   # an exposure
+    fct_undocumented_source_tables:
+      - "o'brien_%"                  # a quote must not break the query; matches nothing
+    fct_too_many_joins: []           # an empty list does nothing
+    fct_model_fanout:                # neither does an empty value

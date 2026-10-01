@@ -38,3 +38,8 @@ models:
 vars:
   chained_views_threshold: 2
   primary_key_test_macros:  [["my_package.test_my_test", "dbt.test_not_null"]]
+
+# errors make `dbt check` exit with a failure; test_exceptions.sh relies on it
+checks:
+  dbt_project_evaluator:
+    +severity: error
