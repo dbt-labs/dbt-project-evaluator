@@ -22,7 +22,7 @@ permissions:
 jobs:
     core-tests:
         # TODO: switch back to a tagged release once dbt-labs/dbt-package-testing#51 is merged and tagged
-        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox.yml@a1ff7cc9cbba3ceaf945b5ad9b31745ad1bd2688
+        uses: dbt-labs/dbt-package-testing/.github/workflows/run_tox.yml@8c31a9c4b7ec88f190f3004f4c1b8f30f03ada03
         with:
             # Adapters are read from supported_adapters.env if not specified here
             adapters: "snowflake,bigquery,redshift,databricks"
@@ -55,7 +55,7 @@ jobs:
         secrets:
             SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
             DBT_ENV_SECRET_SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
-            DBT_ENV_SECRET_SNOWFLAKE_PKEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PKEY_PASSPHRASE }}
+            DBT_ENV_SECRET_SNOWFLAKE_PRIVATE_KEY_PASSPHRASE: ${{ secrets.SNOWFLAKE_PKEY_PASSPHRASE }}
             BIGQUERY_KEYFILE_JSON: ${{ secrets.BIGQUERY_KEYFILE_JSON }}
             DBT_ENV_SECRET_REDSHIFT_PASS: ${{ secrets.REDSHIFT_PASS }}
             DBT_ENV_SECRET_DATABRICKS_TOKEN: ${{ secrets.DBT_ENV_SECRET_DATABRICKS_TOKEN }}
