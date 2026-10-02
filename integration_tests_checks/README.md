@@ -4,7 +4,7 @@
 
 | Project | What it covers |
 |---|---|
-| `violations/` | One small project that breaks every rule on purpose, plus regression cases for things that must be ignored or counted correctly: a disabled model, source table and test, a singular test, sources whose only consumers are tests, a snapshot joining two sources. |
+| `violations/` | One small project that breaks every rule on purpose, plus regression cases for things that must be ignored or counted correctly: a disabled model, source table and test, a singular test, sources whose only consumers are tests, a snapshot joining two sources. It also gives exceptions with a macro (`dbt_project_evaluator_exceptions`) and with the `meta` of a folder, a model, a source and snapshots (`dbt_project_evaluator_exception_sql`); `test_exceptions.sh` covers the other behaviours of that hook. |
 | `parity_1x/` | The 1.x `integration_tests` project: its DAG, `exclude_package`, exclusion vars, thresholds and a custom `new_model_type`, versioned models, exposures, metrics and custom generic tests. |
 | `parity_1x_no_exposures/` | The 1.x `integration_tests_2` project: no exposures, no metrics, a custom `primary_key_test_macros`. Every check must still run. |
 | `parity_1x_semantic_layer/` | The 1.x `integration_tests_sl` project: same DAG with the new semantic layer YAML. |

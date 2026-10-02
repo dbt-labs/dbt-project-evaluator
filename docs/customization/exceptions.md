@@ -4,7 +4,7 @@ While the rules defined in this package are considered best practices, we realiz
 
 An example would be excluding all models with names matching with `stg_..._unioned` from `fct_multiple_sources_joined` as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the check to report those models.
 
-This is what the variable `dbt_project_evaluator_exceptions` is for. It replaces the seed `dbt_project_evaluator_exceptions.csv` of version 1.
+This is what the variable `dbt_project_evaluator_exceptions` is for. It replaces the seed `dbt_project_evaluator_exceptions.csv` of version 1. Exceptions can also be declared in macros, or in the config of the resources: see [where to declare the exceptions](#where-to-declare-the-exceptions) to choose.
 
 !!! info "Coming from version 1?"
 
@@ -106,7 +106,23 @@ fct_rejoining_of_upstream_concepts:
 
 Columns that hold a path, like `original_file_path`, can be used to accept a whole folder: `original_file_path: models/utils/%`.
 
-There are two ways to provide the exceptions.
+## Where to declare the exceptions
+
+The package reads the exceptions through three levels, from the simplest to the most flexible. They add up: a violation is accepted as soon as one of them accepts it.
+
+| Level | What you write | Use it when |
+| ----- | -------------- | ----------- |
+| [The variable](#in-a-variable) `dbt_project_evaluator_exceptions` | A mapping in `dbt_project.yml` | You have a few exceptions, and patterns on names or columns are enough. This is where to start. It is also the only one you can change for a single run with `--vars` |
+| [The macro](#in-a-macro) `default__dbt_project_evaluator_exceptions` | The same mapping, built in a macro | The list is long, you want a YAML comment with the reason of every exception, or you build the list from several places (files, targets, other variables) |
+| [The macro](#in-the-config-of-the-resources) `default__dbt_project_evaluator_exception_sql` | A SQL condition | The reason for the exception is a property of the resource that you have already declared in your project, like its `meta`, and you would rather declare the exception next to the resource, or for a whole folder, than in a central list |
+
+Recommendations:
+
+- **Start with the variable.** Move to the macro when the list outgrows `dbt_project.yml` or when you want to explain the exceptions. The two use the same entries, so it is a copy and paste.
+- **Keep the pairs and the columns in the variable or the macro.** `{name: stg_a, parent: stg_b}` is shorter and checked at compile time there; a SQL condition would repeat the same logic by hand.
+- **Use the SQL condition for rules, not for lists.** "Every model of the legacy folder is exempt from `fct_model_directories`" is one line of `meta` on a folder. The same rule as patterns is a list that has to be kept up to date. A rule can also be maintained by the owners of the models instead of the people who run the package.
+- **Prefer the first two when both would do.** An unknown check name in the variable or in the first macro is a compile error. In the SQL condition, and in the `meta` that it reads, a typo is not detected: it just accepts nothing.
+- Defining the macro `default__dbt_project_evaluator_exceptions` stops the variable from being read, unless your macro reads it. The SQL condition is independent of both.
 
 ### In a variable
 
@@ -174,6 +190,70 @@ fct_unused_sources:
 {% endmacro %}
 ```
 
+### In the config of the resources
+
+Patterns match names and columns. When the reason for an exception is something you already declare on the resources, like a `meta` entry, define the macro `default__dbt_project_evaluator_exception_sql` instead. The package calls it once per check, with the name of the check, and adds the SQL condition that it returns to the exceptions above: the violations for which the condition is true are accepted.
+
+In the condition:
+
+- the columns of the check are available as `violation.<column>` (the `unique_id` column is the resource to fix, see the [columns below](#columns-returned-by-the-checks)),
+- the [information schema](../querying-the-dag.md) is available with `info_schema('models')`, `info_schema('sources')`...,
+- a condition that is `NULL` accepts nothing,
+- the macro can return a list of conditions instead of a string: the violation is accepted when any of them is true. Returning nothing, or an empty string, adds no exception.
+
+For example, to accept the violations of the resources that list the check in their `meta`:
+
+```sql title="macros/dbt_project_evaluator_exception_sql.sql"
+{% macro default__dbt_project_evaluator_exception_sql(check_name) %}
+violation.unique_id in (
+    {% for relation in ['models', 'sources', 'snapshots'] %}
+    select unique_id
+    from {{ info_schema(relation) }}
+    where list_contains(
+        coalesce(from_json(json_extract(meta, '$.dbt_project_evaluator.exceptions'), '["VARCHAR"]'), []),
+        '{{ check_name }}'
+    )
+    {% if not loop.last %}union all{% endif %}
+    {% endfor %}
+)
+{% endmacro %}
+```
+
+The exceptions are then declared where the resources are configured, for a whole folder in `dbt_project.yml`, or for a single resource in its YAML file. Resources inherit the `meta` of their folder and, for a source, of the source itself:
+
+```yaml title="dbt_project.yml"
+models:
+  my_project:
+    legacy:
+      +meta:
+        dbt_project_evaluator:
+          exceptions: [fct_model_directories, fct_root_models]   # for the whole folder
+```
+
+```yaml title="models/marts/_marts__models.yml"
+models:
+  - name: dim_calendar
+    config:
+      meta:
+        dbt_project_evaluator:
+          exceptions: [fct_root_models]   # a root model on purpose
+
+sources:
+  - name: raw_crm
+    config:
+      meta:
+        dbt_project_evaluator:
+          exceptions: [fct_sources_without_freshness]   # for all the tables of the source
+```
+
+Things to know about this recipe:
+
+- **The `meta` has to be on the resource that the violation points at**, the one in the `unique_id` column. Declaring it on a parent doesn't accept the violations of its children.
+- **It accepts every violation of that resource for that check**, as the entries of the variable do. To accept one pair or one column only, use the variable or the macro.
+- **Exposures can't be used yet**: the information schema doesn't give the `meta` of exposures to checks ([dbt-labs/dbt#16584](https://github.com/dbt-labs/dbt/issues/16584)). The two checks whose `unique_id` is an exposure, `fct_exposure_parents_materializations` and `fct_exposures_dependent_on_private_models`, need the variable or the macro. Seeds weren't tested.
+- **Nothing validates the names** in the `meta`. If a violation is still reported, check the spelling of the check name and where the `meta` is declared (`dbt ls --select <resource> --output json --output-keys meta` shows the `meta` that a resource ends up with).
+- The condition is SQL that runs in DuckDB on every check. A mistake in it fails the check with a DuckDB error, as a wrong column name in an entry does.
+
 ### Exceptions are validated
 
 The exceptions are checked every time the project is parsed. An entry that isn't the name of a check of the package, because of a typo for example, is a compile error that lists the names that exist:
@@ -198,6 +278,7 @@ Exceptions apply to a single check. The other options below apply to more:
 | You want to... | Use |
 | -------------- | --- |
 | accept some violations of a given rule | the [exceptions](#accepting-violations-of-a-check) above |
+| accept the violations of resources that declare it in their config (for example in their `meta`) | [the SQL condition](#in-the-config-of-the-resources) |
 | stop evaluating a rule entirely | [disable the check](customization.md) |
 | keep a rule but not block the build when it is violated | keep its severity at `warn` (the default), see [running as a CI check](../ci-check.md) |
 | ignore a package, a folder or some models/sources for **all** the rules | [`exclude_packages` and `exclude_paths_from_project`](excluding-packages-and-paths.md) |

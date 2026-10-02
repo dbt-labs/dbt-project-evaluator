@@ -17,6 +17,9 @@ models:
     columns:
       - name: customer_id
         description: Primary key.
+  - name: dim_hardcoded
+    config:
+      meta: {dbt_project_evaluator: {exceptions: [fct_root_models]}}  # accepted: a root model on purpose
 exposures:
   - name: orders_dashboard
     type: dashboard

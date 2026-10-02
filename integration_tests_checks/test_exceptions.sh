@@ -63,6 +63,39 @@ for case in \
 done
 popd > /dev/null
 
+# 3c. the dispatched SQL hook: conditions in SQL added to the exceptions of the var
+pushd parity_1x > /dev/null || exit 1
+mkdir -p macros
+hook() { printf '{%% macro default__dbt_project_evaluator_exception_sql(check_name) %%}%s{%% endmacro %%}\n' "$1" > macros/hook.sql; }
+check_count() { dbt check fct_undocumented_models fct_missing_primary_key_tests --profiles-dir . 2>&1 | sed -En "s/.*check '$1' (found|failed) with ([0-9]+) violation.*/\2/p"; }
+[ "$(check_count fct_undocumented_models)" = "13" ] || fail "parity_1x: 13 undocumented models are expected before adding a hook"
+
+hook "{{ return('true') }}"
+[ -z "$(check_count fct_undocumented_models)" ] || fail "parity_1x: a hook returning true should accept every violation"
+hook "{{ return(['false', 'false']) }}"
+[ "$(check_count fct_undocumented_models)" = "13" ] || fail "parity_1x: a hook returning only false conditions should change nothing"
+hook "{{ return(['false', 'true']) }}"
+[ -z "$(check_count fct_undocumented_models)" ] || fail "parity_1x: any true condition of the list should accept the violation"
+hook "   "
+[ "$(check_count fct_undocumented_models)" = "13" ] || fail "parity_1x: an empty hook should change nothing"
+hook "violation.unique_id in (select cast(null as varchar))"
+[ "$(check_count fct_undocumented_models)" = "13" ] || fail "parity_1x: a condition that is NULL must not drop the violations"
+hook "{{ 'true' if check_name == 'fct_undocumented_models' else 'false' }}"
+[ -z "$(check_count fct_undocumented_models)" ] || fail "parity_1x: the hook should accept the violations of the check it names"
+[ "$(check_count fct_missing_primary_key_tests)" = "13" ] || fail "parity_1x: the hook named another check, fct_missing_primary_key_tests should be unchanged"
+hook "violation.name like 'stg_%'"
+[ "$(check_count fct_undocumented_models)" -lt 13 ] || fail "parity_1x: a condition on a column of the check should accept some violations"
+
+for case in \
+    "{{ return({'a': 'b'}) }}|expected a SQL condition or a list" \
+    "{{ return([1]) }}|expected a SQL condition (a string)"; do
+    hook "${case%%|*}"
+    output=$(dbt check fct_root_models --profiles-dir . 2>&1)
+    echo "$output" | grep -qF "${case##*|}" || fail "parity_1x: the hook ${case%%|*} should fail with '${case##*|}'"
+done
+rm -rf macros
+popd > /dev/null
+
 # 4. --select still applies to what is left: int_chain_1 is excepted, stg_orders is not
 pushd violations > /dev/null || exit 1
 output=$(dbt check fct_undocumented_models --select stg_orders int_chain_1 --profiles-dir . 2>&1)

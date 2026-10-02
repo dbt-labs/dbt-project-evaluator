@@ -56,6 +56,31 @@ fct_unused_sources:
 {% endmacro %}
 ```
 
+## Exceptions declared on the resources (SQL condition)
+
+When the reason is something the project already declares on the resources (`meta`, for a folder in `dbt_project.yml` or a single resource in its YAML), define the second dispatched macro, `default__dbt_project_evaluator_exception_sql(check_name)`. It returns a SQL condition (or a list of them) that is true for the violations to accept, added to the entries above. Use `violation.<column>` for the columns of the check and `info_schema('models')`, `info_schema('sources')`... for the rest; a `NULL` condition accepts nothing.
+
+```sql
+{% macro default__dbt_project_evaluator_exception_sql(check_name) %}
+violation.unique_id in (
+    {% for relation in ['models', 'sources', 'snapshots'] %}
+    select unique_id from {{ info_schema(relation) }}
+    where list_contains(coalesce(from_json(json_extract(meta, '$.dbt_project_evaluator.exceptions'), '["VARCHAR"]'), []), '{{ check_name }}')
+    {% if not loop.last %}union all{% endif %}
+    {% endfor %}
+)
+{% endmacro %}
+```
+
+```yaml
+models:
+  my_project:
+    legacy:
+      +meta: {dbt_project_evaluator: {exceptions: [fct_model_directories]}}   # folder; or `config: meta:` on one model
+```
+
+Which level to propose: the var first; the macro for long lists with comments; the SQL condition only for rules (a folder, an owner) the user wants to keep with the resources. Pairs and columns stay in the var or the macro. The `meta` must be on the resource in the `unique_id` column; exposures have no `meta` for checks yet (dbt-labs/dbt#16584), so `fct_exposure_parents_materializations` and `fct_exposures_dependent_on_private_models` need the var or the macro; a misspelled check name in `meta` is not detected (it accepts nothing), so verify the count drops.
+
 ## Verify
 
 Run the check before and after: `dbt check <check>`. The count in `found with N violation(s)` must drop by exactly the number of resources you meant to accept. If it did not move, the pattern did not match (check the name, the version suffix, the case, the column); if it dropped too much, the pattern is too broad.

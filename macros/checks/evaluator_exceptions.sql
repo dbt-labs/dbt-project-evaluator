@@ -16,6 +16,13 @@
     The mapping comes from `dbt_project_evaluator_exceptions()`, which is dispatched so that a project
     can override it by defining `default__dbt_project_evaluator_exceptions()` in its own macros. The
     default reads the var `dbt_project_evaluator_exceptions`.
+
+    `dbt_project_evaluator_exception_sql(check_name)` is dispatched in the same way and is for the
+    exceptions that patterns can't express, e.g. the ones declared in the `meta` of the resources. A
+    project overrides it with `default__dbt_project_evaluator_exception_sql(check_name)`, which returns
+    a SQL condition (or a list of them) that is true for the violations to accept: it can use the
+    columns of the check as `violation.<column>` and the information schema. It is added to the
+    entries above: a violation is dropped when any of them matches. The default returns nothing.
 #}
 
 {% macro dbt_project_evaluator_exceptions() -%}
@@ -24,6 +31,15 @@
 
 {% macro default__dbt_project_evaluator_exceptions() -%}
     {{ return(var('dbt_project_evaluator_exceptions', {})) }}
+{%- endmacro %}
+
+
+{% macro dbt_project_evaluator_exception_sql(check_name) -%}
+    {{ return(adapter.dispatch('dbt_project_evaluator_exception_sql', 'dbt_project_evaluator')(check_name)) }}
+{%- endmacro %}
+
+{% macro default__dbt_project_evaluator_exception_sql(check_name) -%}
+    {{ return(none) }}
 {%- endmacro %}
 
 
@@ -118,6 +134,22 @@
             {%- do conditions.append(evaluator_resource_matches(evaluator_sql_literal(entry))) -%}
         {%- endif -%}
     {%- endfor -%}
+    {#- conditions in SQL from the project: a NULL (e.g. `in` over a subquery with NULLs) must not drop the row -#}
+    {%- set sql_conditions = dbt_project_evaluator_exception_sql(check_name) -%}
+    {%- if sql_conditions is not none -%}
+        {%- if sql_conditions is string %}{% set sql_conditions = [sql_conditions] %}{% endif -%}
+        {%- if sql_conditions is mapping or sql_conditions is not iterable -%}
+            {{ exceptions.raise_compiler_error("dbt_project_evaluator_exception_sql: expected a SQL condition or a list of them for '" ~ check_name ~ "', got " ~ sql_conditions) }}
+        {%- endif -%}
+        {%- for sql_condition in sql_conditions -%}
+            {%- if sql_condition is not string -%}
+                {{ exceptions.raise_compiler_error("dbt_project_evaluator_exception_sql: expected a SQL condition (a string) for '" ~ check_name ~ "', got " ~ sql_condition) }}
+            {%- endif -%}
+            {%- if (sql_condition | trim) | length > 0 -%}
+                {%- do conditions.append('coalesce((' ~ (sql_condition | trim) ~ '), false)') -%}
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endif -%}
     {%- if conditions | length == 0 -%}
         {{ query }}
     {%- else -%}
