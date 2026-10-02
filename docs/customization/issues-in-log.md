@@ -36,6 +36,7 @@ The options it does not know, such as `--vars`, `--target` or `--profiles-dir`, 
 |---|---|
 | `--format <format>` | `table` (the default), `markdown`, `csv` or `json`. `csv` and `json` are meant for other tools |
 | `--where "<condition>"` | Keep only some of the violations, with a SQL condition on the columns of the check, for example `--where "original_file_path like 'models/staging/%'"` |
+| `--full-parse` | Parse the whole project again. By default the script reuses the previous parse of the project (`--partial-parse --partial-load`, dbt re-parses what changed), which makes it about 3 times faster from the second run on a large project. These dbt flags are not documented; if your version of dbt rejects them, the script parses everything |
 | `--no-run` | Write the SQL to `target/check_violations/<check>.sql` without running it. You can then run it yourself, with `duckdb -box < target/check_violations/<check>.sql`, or open it in the DuckDB UI |
 
 `dbt check` applies `--select` (and `state:modified`) to the rows of a check, not to its query. The script therefore shows the violations of the whole project, even if you pass it `--select`. Use `--where` to keep the ones you want.

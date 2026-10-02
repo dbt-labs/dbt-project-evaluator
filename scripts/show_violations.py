@@ -14,6 +14,12 @@ and exceptions as in your own run.
 so the script shows the violations of the whole project. To keep some of them, use `--where` with
 a condition on the columns of the check, e.g. `--where "unique_id like '%staging%'"`.
 
+The run of `dbt check` is what takes the time (parsing the project: about 12 s for 1,900 models), not the
+query of the check. The script reuses the previous parse of the project (`--partial-parse --partial-load`,
+dbt re-parses what changed, including the variables), which makes it about 3 times faster from the
+second run. These dbt flags are hidden (not documented) in dbt 2.0.6: if a version of dbt rejects them,
+the script parses everything. Use `--full-parse` to parse everything again.
+
 How it works: dbt logs every statement of a check run in `query_log.sql`: the views over the
 metadata of the project, then the query of the check, already rendered with the variables and the
 exceptions of the project. The script runs `dbt check <check>`, keeps those statements and replays
@@ -40,6 +46,7 @@ from pathlib import Path
 # dbt's own views over the project metadata use the `x -> ...` lambda syntax, which DuckDB warns about
 # (on stdout, which would end up in the csv and json output)
 SETUP = "SET lambda_syntax='ENABLE_SINGLE_ARROW';"
+PARTIAL_PARSE_OPTIONS = ["--partial-parse", "--partial-load"]
 SELECTION_OPTIONS = ("-s", "--select", "--exclude", "--selector")
 CLI_FORMATS = {"table": "-box", "csv": "-csv", "json": "-json", "markdown": "-markdown"}
 
@@ -118,6 +125,7 @@ def main():
     parser.add_argument("--where", help="SQL condition on the columns of the check, to keep only some of the violations")
     parser.add_argument("--format", choices=list(CLI_FORMATS), default="table", help="output format (default: table)")
     parser.add_argument("--sql-file", help="where to write the statements (default: <project-dir>/target/check_violations/<check>.sql)")
+    parser.add_argument("--full-parse", action="store_true", help="parse the whole project again instead of reusing the previous parse (slower)")
     parser.add_argument("--no-run", action="store_true", help="write the SQL file but do not run it")
     args, dbt_args = parser.parse_known_args()
     if any(a.split("=")[0] in SELECTION_OPTIONS for a in dbt_args):
@@ -132,8 +140,13 @@ def main():
     log_dir = Path(tempfile.mkdtemp(prefix="show_violations_"))
     try:
         # the project's own logs/ folder is left alone: the log of this run only has this check
-        command = [dbt, "check", args.check, "--project-dir", str(project_dir), "--log-path", str(log_dir)] + dbt_args
-        result = subprocess.run(command, stdin=subprocess.DEVNULL, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        command = [dbt, "check", args.check, "--project-dir", str(project_dir), "--log-path", str(log_dir)]
+        result = None
+        # these flags are hidden in dbt 2.0.6 (not documented): if a version rejects them, parse everything
+        for parse_options in ([] if args.full_parse else PARTIAL_PARSE_OPTIONS, []):
+            result = subprocess.run(command + parse_options + dbt_args, stdin=subprocess.DEVNULL, capture_output=True, text=True, encoding="utf-8", errors="replace")
+            if not parse_options or "unexpected argument" not in result.stdout + result.stderr:
+                break
         query_log = log_dir / "query_log.sql"
         statements = read_statements(query_log) if query_log.exists() else []
         if not statements or not is_query(statements[-1]):
