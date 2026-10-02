@@ -23,7 +23,7 @@ dbt ls --resource-type check --select tag:modeling   # list checks by category t
 
 - `dbt build` runs the checks first. A check with `severity: error` that finds violations stops the build; the default severity is `warn`.
 - Read the output: `check 'x' found with N violation(s)` (`warn`) or `failed with N violation(s)` (`error`), followed by a table.
-- Only the **first 5 rows** of each check are printed. To see all of them, narrow the run with `--select` (a folder, a path, a model) until each check shows fewer than 5, or work through the folders one at a time.
+- Only the **first 5 rows** of each check are printed. To see all the rows of one check, run `python dbt_packages/dbt_project_evaluator/scripts/show_violations.py <check> --format csv` (needs the `duckdb` command line or Python package; `--where "<sql condition>"` keeps some rows; options it does not know, like `--vars`, go to `dbt check`). It shows the whole project even with `--select`.
 - `dbt check` exits with a failure only if a check at severity `error` has violations (or a check could not run).
 
 ## 3. Check only what changed

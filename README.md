@@ -104,6 +104,15 @@ Each check returns the resource to fix as `unique_id`, so `--select` scopes its 
 `fct_documentation_coverage` and `fct_test_coverage` are project-wide metrics
 (`selection_filter_on: none`) and always evaluate the whole project.
 
+`dbt check` prints the first 5 rows of each check. To list every violation of a check, run the script that comes with the package (it needs the `duckdb` command line or the `duckdb` Python package):
+
+```shell
+python dbt_packages/dbt_project_evaluator/scripts/show_violations.py fct_undocumented_models
+python dbt_packages/dbt_project_evaluator/scripts/show_violations.py fct_undocumented_models --format csv --where "original_file_path like 'models/staging/%'"
+```
+
+Options it does not know (`--vars`, `--target`...) are passed to `dbt check`; `--select` is not applied to its output, use `--where` instead. See [reading the violations](https://dbt-labs.github.io/dbt-project-evaluator/latest/customization/issues-in-log/). This is a workaround for [dbt-labs/dbt#16583](https://github.com/dbt-labs/dbt/issues/16583).
+
 `--state` points to the artifacts of your main branch. It is not needed in a dbt platform CI job:
 the state of the production environment is provided to the job through deferral.
 

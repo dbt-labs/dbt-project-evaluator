@@ -17,7 +17,28 @@ For each check that finds violations, dbt prints the number of violations follow
 
 - the message starts with `CheckWarned` for the checks configured with `severity: warn` and with `CheckFailed` for the ones configured with `severity: error`
 - the first column, `unique_id`, is the resource to fix. The other columns depend on the check and give more context (the parent, the expected path, the number of children...)
-- only the first rows are displayed. To see the other ones, restrict the check to a part of your project with `--select`, for example `dbt check fct_undocumented_models --select staging`
+- only the first 5 rows are displayed. To see all of them, use [the `show_violations.py` script](#seeing-every-violation-of-a-check)
+
+## Seeing every violation of a check
+
+When a check finds more than 5 violations, run the script that comes with the package for that check. It prints every row, not only the first 5:
+
+```shell
+dbt check                                    # 1. find the checks with more than 5 violations
+python dbt_packages/dbt_project_evaluator/scripts/show_violations.py fct_undocumented_models   # 2. list all of them
+```
+
+The script runs `dbt check` for the check you name, then runs the query of the check in DuckDB. It needs the `duckdb` command line or the `duckdb` Python package (`uv run --with duckdb dbt_packages/dbt_project_evaluator/scripts/show_violations.py ...` installs it on the fly). Use `python3` instead of `python` on macOS and Linux if `python` is not found, or `py` on Windows.
+
+The options it does not know, such as `--vars`, `--target` or `--profiles-dir`, are passed to `dbt check`, so the check sees the same variables and [exceptions](exceptions.md) as in your own run.
+
+| Option | |
+|---|---|
+| `--format <format>` | `table` (the default), `markdown`, `csv` or `json`. `csv` and `json` are meant for other tools |
+| `--where "<condition>"` | Keep only some of the violations, with a SQL condition on the columns of the check, for example `--where "original_file_path like 'models/staging/%'"` |
+| `--no-run` | Write the SQL to `target/check_violations/<check>.sql` without running it. You can then run it yourself, with `duckdb -box < target/check_violations/<check>.sql`, or open it in the DuckDB UI |
+
+`dbt check` applies `--select` (and `state:modified`) to the rows of a check, not to its query. The script therefore shows the violations of the whole project, even if you pass it `--select`. Use `--where` to keep the ones you want.
 
 ## Getting the results in JSON
 
@@ -35,7 +56,7 @@ This is particularly useful for:
 - **Custom dashboards**: ingest the number of violations over time into a monitoring tool
 - **LLM-powered automation**: feed the results to an LLM to analyze the violations and suggest fixes
 
-The `msg` field also contains the table with the first rows of each check. The complete list of resources returned by a check can be retrieved by narrowing down the selection, as explained above.
+The `msg` field also contains the table with the first 5 rows of each check. To get all the rows of a check, use [the `show_violations.py` script](#seeing-every-violation-of-a-check) with `--format json`.
 
 ## Logging your custom rules
 

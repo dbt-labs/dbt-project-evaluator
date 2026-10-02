@@ -47,6 +47,18 @@ for project in violations parity_1x parity_1x_no_exposures parity_1x_semantic_la
         # exceptions for a name that is not a check are rejected
         rejected=$(dbt check --vars '{dbt_project_evaluator_exceptions: {fct_not_a_check: [x]}}' --profiles-dir . 2>&1)
         echo "$rejected" | grep -q "'fct_not_a_check' is not a check of dbt_project_evaluator" || { echo "an unknown check name in the exceptions was not rejected"; status=1; }
+
+        # scripts/show_violations.py lists every row of the checks that have more than the 5 rows `dbt check` prints
+        if command -v duckdb > /dev/null || python3 -c "import duckdb" 2> /dev/null; then
+            while IFS=, read -r check count; do
+                [ "$count" -gt 5 ] || continue
+                rows=$(python3 ../../scripts/show_violations.py "$check" --profiles-dir . --format csv 2> /dev/null < /dev/null | tail -n +2 | wc -l | tr -d ' ')
+                echo "show_violations.py $check: $rows rows (expected $count)"
+                [ "$rows" = "$count" ] || { echo "show_violations.py returned $rows rows for $check, expected $count"; status=1; }
+            done < <(tail -n +2 expected_violations.csv)
+        else
+            echo "skipping the show_violations.py test: needs the duckdb command line or the duckdb Python package"
+        fi
     fi
 
     popd > /dev/null

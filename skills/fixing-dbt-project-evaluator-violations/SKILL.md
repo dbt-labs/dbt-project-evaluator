@@ -19,7 +19,7 @@ Summarize for the user: violations per category and per check, from the lines `c
 ## 2. Choose a scope
 
 - One check: `dbt check fct_undocumented_models`. One folder or resource: `--select staging`, `--select path:models/marts`, `--select stg_orders`.
-- Only the **first 5 rows** of a check are printed. To see them all, narrow with `--select` (folder by folder) until fewer than 5 rows show, or read the count and fix 5 at a time, re-running between rounds.
+- Only the **first 5 rows** of a check are printed. To list them all, run `python dbt_packages/dbt_project_evaluator/scripts/show_violations.py <check> --format csv` (needs the `duckdb` command line or Python package; `--where "<sql condition>"` keeps some rows; options it does not know go to `dbt check`). It shows the whole project even with `--select`, so confirm a fix with `dbt check <check> --select <resource>`.
 - The checks that report **sources** (`fct_unused_sources`, `fct_sources_without_freshness`, `fct_undocumented_source_tables`, `fct_undocumented_sources`, `fct_duplicate_sources`, `fct_source_directories`, `fct_source_fanout`) cannot be scoped by `--select` (dbt-labs/dbt#16554): run them without a selector.
 - `fct_documentation_coverage` and `fct_test_coverage` are project-wide: they ignore `--select` and drop out when the target is reached; fix the per-resource checks to raise them.
 

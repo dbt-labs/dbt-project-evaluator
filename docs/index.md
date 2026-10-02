@@ -61,7 +61,7 @@ All the checks are **advisory by default** (`severity: warn`). Each check return
 Each warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:
 
 1. Locate the related documentation in the [list of rules](rules.md)
-2. Read the `dbt check` output, which lists the first resources that violate the rule (see [reading the output of `dbt check`](customization/issues-in-log.md))
+2. Read the `dbt check` output, which lists the first 5 resources that violate the rule (see [reading the output of `dbt check`](customization/issues-in-log.md), which also shows how to list all of them)
 3. Either fix the issue(s) or [accept them as exceptions](customization/exceptions.md)
 
 ### Configuration

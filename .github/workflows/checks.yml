@@ -30,8 +30,8 @@ jobs:
               with:
                   python-version: "3.11"
 
-            - name: Install dbt v2
-              run: pip install "dbt>=2.0.0,<3.0.0"
+            - name: Install dbt v2 and DuckDB (for scripts/show_violations.py)
+              run: pip install "dbt>=2.0.0,<3.0.0" duckdb
 
             - name: Run checks against the fixture
               run: ./integration_tests_checks/run_checks.sh
