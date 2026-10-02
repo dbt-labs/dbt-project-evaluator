@@ -1,0 +1,9 @@
+models:
+  - name: int_customers_prepped  # its only primary-key tests are disabled, so it is still missing one
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique:
+              config: {enabled: false}
+          - not_null:
+              config: {enabled: false}

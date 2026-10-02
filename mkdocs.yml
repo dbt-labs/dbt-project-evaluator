@@ -57,7 +57,11 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.details # allow collapsible blocks
   - admonition # allow call outs
 
@@ -67,6 +71,8 @@ edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
+  - Migrating from version 1: migrating-to-v2.md
+  - Agent skills: skills.md
   - Rules: 
     - List of rules: rules.md
     - Modeling: rules/modeling.md
@@ -80,8 +86,7 @@ nav:
     - Disabling checks: customization/customization.md
     - Configuring exceptions to the rules: customization/exceptions.md
     - Excluding packages and models/sources based on path: customization/excluding-packages-and-paths.md
-    - Display issues in the logs: customization/issues-in-log.md
-    - Querying columns names and descriptions: customization/querying-columns-names-and-descriptions.md
+    - Reading the violations in the logs: customization/issues-in-log.md
   - Run in CI Check: ci-check.md
   - Querying the DAG: querying-the-dag.md
   - Contributing: contributing.md

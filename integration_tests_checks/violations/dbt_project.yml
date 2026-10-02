@@ -1,0 +1,15 @@
+name: dbt_project_evaluator_checks_tests
+version: 1.0.0
+config-version: 2
+profile: dbt_project_evaluator_checks_tests
+model-paths: ["models", "tests_yaml"]
+
+# exceptions declared in the config of the resources, read by macros/dbt_project_evaluator_exception_sql.sql
+models:
+  dbt_project_evaluator_checks_tests:
+    staging:
+      raw_crm:
+        +meta: {dbt_project_evaluator: {exceptions: [fct_model_directories]}}
+snapshots:
+  dbt_project_evaluator_checks_tests:
+    +meta: {dbt_project_evaluator: {exceptions: [fct_multiple_sources_joined]}}

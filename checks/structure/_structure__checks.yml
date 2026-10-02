@@ -1,0 +1,11 @@
+version: 2
+
+checks:
+  - name: fct_model_directories
+    description: "Models outside the directory their model type calls for; staging models must sit in a directory named after their source."
+  - name: fct_model_naming_conventions
+    description: "Models whose name does not start with any prefix configured for their model type (`<model_type>_prefixes`)."
+  - name: fct_source_directories
+    description: "Source YAML that is not in a directory named after the source."
+  - name: fct_test_directories
+    description: "Tested models whose properties YAML (where their tests are defined) lives outside the model directory."

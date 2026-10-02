@@ -1,96 +1,64 @@
-# Displaying violations in the logs
+# Reading the violations in the logs
 
-This package provides a macro that can be executed via an `on-run-end` hook to display the package results in the logs in addition to storing those in the Data Warehouse.
+In version 1, the violations had to be displayed in the logs with an `on-run-end` hook. In version 2, `dbt check` and `dbt build` report the violations themselves, and the macro `print_dbt_project_evaluator_issues` (as well as the variable `use_native_agate_printing`) doesn't exist anymore.
 
-To use it, you can add the following line in your `dbt_project.yml`:
+## Output of `dbt check`
 
-```yaml
-on-run-end: "{{ dbt_project_evaluator.print_dbt_project_evaluator_issues() }}"
+For each check that finds violations, dbt prints the number of violations followed by a table with the first rows returned by the check:
+
+```text
+[warning] [CheckWarned (dbt1651)]: check 'fct_root_models' found with 1 violation(s)
+┌────────────────────────────────────────────────────────┬───────────────┬────────────────────────────────┐
+│ unique_id                                              ┆ name          ┆ original_file_path             │
+╞════════════════════════════════════════════════════════╪═══════════════╪════════════════════════════════╡
+│ model.my_project.dim_hardcoded                         ┆ dim_hardcoded ┆ models/marts/dim_hardcoded.sql │
+└────────────────────────────────────────────────────────┴───────────────┴────────────────────────────────┘
 ```
 
-The macro accepts two parameters:
+- the message starts with `CheckWarned` for the checks configured with `severity: warn` and with `CheckFailed` for the ones configured with `severity: error`
+- the first column, `unique_id`, is the resource to fix. The other columns depend on the check and give more context (the parent, the expected path, the number of children...)
+- only the first 5 rows are displayed. To see all of them, use [the `show_violations.py` script](#seeing-every-violation-of-a-check)
 
-- to pick between 3 types of formatting, set `format='table'` (default), `format='csv'`, or `format='json'`
-- to add quotes to the database and schema (default = no quote), set ``quote='`'`` or `quote='"'`
+## Seeing every violation of a check
 
-## Using with dbt Cloud CLI, dbt Cloud IDE, or dbt Fusion
+When a check finds more than 5 violations, run the script that comes with the package for that check. It prints every row, not only the first 5:
 
-The default implementation uses agate's `print_table()` and `print_csv()` functions. However, these don't work in all environments:
-
-| Environment | `format='table'` | `format='csv'` | `format='json'` |
-| ----------- | ---------------- | -------------- | --------------- |
-| dbt Core | native | native | Jinja |
-| dbt Fusion | native | **Jinja required** | Jinja |
-| dbt Cloud CLI | Jinja required | Jinja required | Jinja |
-| dbt Cloud IDE | Jinja required | Jinja required | Jinja |
-
-If you're using dbt Cloud CLI or dbt Cloud IDE, or if you want to use `format='csv'` with dbt Fusion, set the following variable in your `dbt_project.yml`:
-
-```yaml
-vars:
-  use_native_agate_printing: false
+```shell
+dbt check                                    # 1. find the checks with more than 5 violations
+python dbt_packages/dbt_project_evaluator/scripts/show_violations.py fct_undocumented_models   # 2. list all of them
 ```
 
-This will use a pure Jinja implementation that works across all environments.
+The script runs `dbt check` for the check you name, then runs the query of the check in DuckDB. It needs the `duckdb` command line or the `duckdb` Python package (`uv run --with duckdb dbt_packages/dbt_project_evaluator/scripts/show_violations.py ...` installs it on the fly). Use `python3` instead of `python` on macOS and Linux if `python` is not found, or `py` on Windows.
 
-## JSON output for automation
+The options it does not know, such as `--vars`, `--target` or `--profiles-dir`, are passed to `dbt check`, so the check sees the same variables and [exceptions](exceptions.md) as in your own run.
 
-The `format='json'` option outputs results as a single JSON array, making it easy to pipe to tools like `jq` or consume programmatically.
+| Option | |
+|---|---|
+| `--format <format>` | `table` (the default), `markdown`, `csv` or `json`. `csv` and `json` are meant for other tools |
+| `--where "<condition>"` | Keep only some of the violations, with a SQL condition on the columns of the check, for example `--where "original_file_path like 'models/staging/%'"` |
+| `--full-parse` | Parse the whole project again. By default the script reuses the previous parse of the project (`--partial-parse --partial-load`, dbt re-parses what changed), which makes it about 3 times faster from the second run on a large project. These dbt flags are not documented; if your version of dbt rejects them, the script parses everything |
+| `--no-run` | Write the SQL to `target/check_violations/<check>.sql` without running it. You can then run it yourself, with `duckdb -box < target/check_violations/<check>.sql`, or open it in the DuckDB UI |
 
-**Example output:**
+`dbt check` applies `--select` (and `state:modified`) to the rows of a check, not to its query. The script therefore shows the violations of the whole project, even if you pass it `--select`. Use `--where` to keep the ones you want.
 
-```json
-[
-  {
-    "test_name": "dbt_project_evaluator.marts.dag.is_empty_fct_model_fanout_",
-    "results": [
-      {"resource_name": "my_model", "num_dependents": 5}
-    ]
-  },
-  {
-    "test_name": "dbt_project_evaluator.marts.tests.is_empty_fct_missing_primary_key_tests_",
-    "results": [
-      {"resource_name": "stg_orders", "resource_type": "model"}
-    ]
-  }
-]
-```
+## Getting the results in JSON
 
-### Getting clean JSON output
-
-To get valid JSON that can be piped to other tools, combine `format='json'` with dbt's `--quiet` (or `-q`) flag. This suppresses dbt's usual log output:
+With `--log-format json`, every log line is a JSON document, which makes it easy to consume the results programmatically, for example with `jq`:
 
 ```bash
-dbt build --select package:dbt_project_evaluator -q | jq '.'
+# one line per check with violations: name and number of violations
+dbt check --log-format json 2>/dev/null \
+  | jq -r 'select(.info.name == "CheckWarned" or .info.name == "CheckFailed") | .info.msg | split("\n")[0]'
 ```
 
 This is particularly useful for:
 
-- **CI/CD pipelines**: Parse results programmatically and fail builds based on specific violations
-- **LLM-powered automation**: Feed the JSON output to an LLM to analyze violations and suggest fixes automatically
-- **Custom dashboards**: Ingest results into monitoring tools or databases
-- **Filtering with jq**: Extract specific tests or results
+- **CI/CD pipelines**: parse the results and fail builds based on specific violations
+- **Custom dashboards**: ingest the number of violations over time into a monitoring tool
+- **LLM-powered automation**: feed the results to an LLM to analyze the violations and suggest fixes
 
-```bash
-# Get all test names
-dbt build --select package:dbt_project_evaluator -q | jq '.[].test_name'
-
-# Get results for a specific test
-dbt build --select package:dbt_project_evaluator -q | jq '.[] | select(.test_name | contains("fanout"))'
-
-# Count total violations
-dbt build --select package:dbt_project_evaluator -q | jq '[.[].results | length] | add'
-```
+The `msg` field also contains the table with the first 5 rows of each check. To get all the rows of a check, use [the `show_violations.py` script](#seeing-every-violation-of-a-check) with `--format json`.
 
 ## Logging your custom rules
 
-You can also log the results of your custom rules by applying `dbt_project_evaluator.is_empty` to
-the custom models.
-
-```yaml
-models:
-  - name: my_custom_rule_model
-    description: This is my custom project evaluator check 
-    data_tests:
-      - dbt_project_evaluator.is_empty
-```
+The checks you define in your own project (see [defining additional checks](../querying-the-dag.md#defining-additional-checks-that-match-your-exact-requirements)) are reported in the same way as the ones from this package.

@@ -1,0 +1,72 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'dbt_project_evaluator_integration_tests'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'integration_tests'
+
+# These configurations specify where dbt should look for different types of files.
+# The `source-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+flags:
+  require_nested_cumulative_type_params: True
+  require_yaml_configuration_for_mf_time_spines: True
+  require_generic_test_arguments_property: True
+  require_ref_prefers_node_package_to_root: True
+  validate_macro_args: True
+
+models:
+  dbt_project_evaluator_integration_tests:
+    # keep the fake models from executing
+    +materialized: ephemeral
+
+vars:
+  # ensure integration tests run successfully when there are 0 of a given model type (extra)
+  exclude_packages: ['exclude_package']
+  exclude_paths_from_project: ["/to_exclude/","source_3.table_6"]
+  model_types: ['base','staging', 'intermediate', 'marts', 'other', 'extra', 'new_model_type']
+  new_model_type_folder_name: 'my_new_models'
+  new_model_type_prefixes: 'nwmdl_'
+  too_many_joins_threshold: 3
+  chained_views_threshold: 2
+
+  # exceptions are read from this var by default (a macro can be used instead, see violations/)
+  dbt_project_evaluator_exceptions:
+    fct_undocumented_models:
+      - stg_model_4                  # a model name
+    fct_root_models:
+      - int_model_5.v1               # one version of a versioned model; v3 and model_8 stay
+    fct_unused_sources:
+      - source_1.table_4             # source.table; raw_table_5 stays
+    fct_source_fanout: source_1.table_1   # a single pattern instead of a list
+    fct_exposure_parents_materializations:
+      - exposure_1                   # an exposure
+    fct_undocumented_source_tables:
+      - "o'brien_%"                  # a quote must not break the query; matches nothing
+    fct_marts_or_intermediate_dependent_on_source:
+      - {name: fct_model_9, source_name: source_1.table_5}   # all the keys must match: this pair only
+      - {name: int_model_4, source_name: source_1.table_9}   # this one matches nothing: int_model_4 stays
+    fct_multiple_sources_joined:
+      - source_parents: source_1.table_2   # a list column: any of its elements
+    fct_rejoining_of_upstream_concepts:
+      - child: int_model_5.v2              # a column of the check, not the resource it points at
+    fct_direct_join_to_source:
+      - model_parents: [no_such_%, stg_model_1]   # several patterns for a column: any of them
+    fct_too_many_joins: []           # an empty list does nothing
+    fct_model_fanout:                # neither does an empty value

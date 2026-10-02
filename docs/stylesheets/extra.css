@@ -7,3 +7,24 @@
 --md-typeset-a-color:             #ff694a;
 --md-accent-fg-color:             #047377;
 }
+/* Mermaid diagrams: node fills are dark in both color schemes, so keep the labels white */
+.mermaid {
+  --md-mermaid-label-fg-color: #fff;
+  --md-mermaid-node-fg-color: #fff;
+}
+
+/* Labels of the migration steps: what can be done by hand, with the checklist or with the script */
+.pill {
+  display: inline-block;
+  padding: 0 0.6em;
+  margin: 0 0.15em 0.15em 0;
+  border-radius: 1em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1.8;
+  white-space: nowrap;
+  color: #fff;
+}
+.pill-manual { background: #6b7280; }
+.pill-checklist { background: #047377; }
+.pill-script { background: #c2410c; }

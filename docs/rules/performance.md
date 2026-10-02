@@ -1,17 +1,33 @@
 # Performance
 
+Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) that returns one row per violation. Run it with `dbt check <rule_name>`, for example `dbt check fct_chained_views_dependencies`.
+
 ## Chained View Dependencies
 
-`fct_chained_views_dependencies` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental.
+`fct_chained_views_dependencies` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/performance/fct_chained_views_dependencies.sql)) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental.
 
-This model will raise a `warn` error on a `dbt build` or `dbt test` if the `distance` between a given `parent` and `child` is greater than or equal to 4.
+This check warns (by default) on `dbt check` and `dbt build` if the `distance` between a given `parent` and `child` is greater than `chained_views_threshold` (default 5).
 You can set your own threshold for chained views by overriding the `chained_views_threshold` variable. [See overriding variables section.](../customization/overriding-variables.md)
 
 **Example**
 
-`table_1` depends on a chain of 4 views (`view_1`, `view_2`, `view_3`, and `view_4`).
+`table_1` depends on a chain of 4 views (`view_1`, `view_2`, `view_3`, and `view_4`). The chain is flagged here because `chained_views_threshold` is lowered to 3 for this example.
 
-![dag of chain of 4 views, then a table](https://user-images.githubusercontent.com/53586774/176299679-39028eb1-f9e3-492a-bdb7-b72d9d7958b7.png){ width=700 }
+```mermaid
+flowchart LR
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    view_1["view_1"]:::model
+    view_2["view_2"]:::model
+    view_3["view_3"]:::model
+    view_4["view_4"]:::model
+    table_1["table_1"]:::model
+    view_1 --> view_2
+    view_2 --> view_3
+    view_3 --> view_4
+    view_4 --> table_1
+    class table_1 flagged
+```
 
 **Reason to Flag**
 
@@ -28,16 +44,28 @@ The best practice to determine top candidates for changing materialization from 
 
 ## Exposure Parents Materializations
 
-`fct_exposure_parents_materializations` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/performance/fct_exposure_parents_materializations.sql)) highlights instances where the resources referenced by exposures are either:
+`fct_exposure_parents_materializations` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/performance/fct_exposure_parents_materializations.sql)) highlights instances where the resources referenced by exposures are either:
 
 1. a `source`
 2. a `model` that does not use the `table` or `incremental` materialization
 
 **Example**
 
-![An example exposure with a table parent (fct_model_6) and an ephemeral parent (dim_model_7)](https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef exposure fill:#c2410c,stroke:#8f2f08,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    dim_model_7["dim_model_7"]:::marts
+    exposure_1["exposure_1"]:::exposure
+    fct_model_6["fct_model_6"]:::marts
+    dim_model_7 --> exposure_1
+    fct_model_6 --> exposure_1
+    class dim_model_7 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+```
 
-In this case, the parents of `exposure_1` are not both materialized as tables -- `dim_model_7` is ephemeral, while `fct_model_6` is a table. This model would return a record for the `dim_model_7 --> exposure_1` relationship.
+In this case, the parents of `exposure_1` are not both materialized as tables -- `dim_model_7` is ephemeral, while `fct_model_6` is a table. This check would return a row for the `dim_model_7 --> exposure_1` relationship.
 
 **Reason to Flag**
 
@@ -47,4 +75,4 @@ Exposures should depend on the business logic you encoded into your dbt project 
 
 If you have a source parent of an exposure, you should incorporate that raw data into your project in some way, then update the exposure to point to that model.
 
-If necessary, update the `materialized` configuration on the models returned in `fct_exposure_parents_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!
+If necessary, update the `materialized` configuration on the models returned by `fct_exposure_parents_materializations` to either `table` or `incremental`. This can be done in individual model files using a config block, or for groups of models in your `dbt_project.yml` file. See the docs on [model configurations](https://docs.getdbt.com/reference/model-configs) for more info!

@@ -1,0 +1,27 @@
+sources:
+  - name: raw_shop
+    description: Raw shop data.
+    schema: raw_shop
+    config:
+      freshness:
+        warn_after: {count: 24, period: hour}
+      loaded_at_field: _loaded_at
+    tables:
+      - name: orders
+        description: Raw orders.
+      - name: customers
+        description: Raw customers.
+      - name: unused_table
+        description: Nothing selects from this.  # fct_unused_sources
+      - name: tested_only
+        description: Only tests select from this.  # fct_unused_sources
+        columns:
+          - name: id
+            data_tests: [unique, not_null]  # a source PK: its tests have no node_unique_id
+      - name: tested_only_too
+        description: Same, so the disabled table below cannot mask a miscount.  # fct_unused_sources
+        columns:
+          - name: id
+            data_tests: [unique]
+      - name: disabled_table  # disabled: undocumented and unused, but ignored
+        config: {enabled: false}

@@ -1,0 +1,12 @@
+sources:
+  - name: raw_crm  # undocumented source, no freshness, yaml not in a raw_crm directory
+    schema: raw_crm
+    config:
+      meta: {dbt_project_evaluator: {exceptions: [fct_sources_without_freshness]}}  # accepted for both tables, only for this check
+    tables:
+      - name: contacts  # undocumented source table
+      - name: accounts
+  - name: raw_shop_copy  # duplicates raw_shop.orders
+    schema: raw_shop
+    tables:
+      - name: orders

@@ -1,0 +1,9 @@
+version: 2
+
+checks:
+  - name: fct_exposures_dependent_on_private_models
+    description: "Exposures whose direct parents are anything other than public models."
+  - name: fct_public_models_without_contract
+    description: "Public models without an enforced contract."
+  - name: fct_undocumented_public_models
+    description: "Public models missing a description, or with undocumented (or no) columns."
