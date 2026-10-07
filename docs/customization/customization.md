@@ -23,31 +23,16 @@ models:
           +enabled: false
 ```
 
-If you use the `fct_rule_findings_summary` model (for example, for the
-dashboard in `integrations/dbt_charts`, which is disabled by default and
-opted into via `rule_findings_summary_enabled: true`), also add every
-disabled rule's model name to the `rule_findings_summary_exclude` var, so
-that model doesn't try to reference a disabled model and fail to compile.
-Note that disabling a whole folder (as in the `marts.tests` example above)
-disables every `fct_` model in it, not just one - list each one:
+## Dashboard prerequisite
 
-``` yaml title="dbt_project.yml"
-vars:
-  rule_findings_summary_enabled: true
-  rule_findings_summary_exclude:
-    - 'fct_model_fanout'
-    - 'fct_missing_primary_key_tests'
-    - 'fct_sources_without_freshness'
-    - 'fct_test_coverage'
-```
-
-That var only protects `fct_rule_findings_summary` and the dashboard's
-Overview tab. The dashboard's per-rule category tabs each query their own
-rule's `fct_` model directly by name - there's no var that can make one of
-those skip a disabled rule - so a disabled rule's own table on its category
-tab will show a query error (contained to that one chart; the rest of the
-dashboard still renders). `fct_test_coverage` and `fct_documentation_coverage`
-are the same case: they're not rules in `fct_rule_findings_summary`, but the
-dashboard's coverage KPIs/chart query them directly, so disabling either one
-errors those specific charts the same way. See
+The dashboard in `integrations/dbt_charts` (powered by `fct_rule_findings_summary`,
+disabled by default and opted into via `rule_findings_summary_enabled: true`)
+assumes **every rule in this package is enabled**. Both `fct_rule_findings_summary`
+and the dashboard's own per-rule tabs reference every rule's `fct_` model -
+and `fct_test_coverage`/`fct_documentation_coverage` - directly and
+unconditionally. If you've disabled any of those via `+enabled: false`
+(including a whole folder, like the `marts.tests` example above, which
+disables every `fct_` model in it), don't enable the dashboard until you
+re-enable that rule - a disabled model's `ref()` fails compilation outright,
+rather than just leaving one chart empty. See
 `integrations/dbt_charts/README.md` for details.

@@ -11,16 +11,14 @@
 # Reads exclusively from this package's own output via ref(): the Overview
 # tab's charts read fct_rule_findings_summary/fct_test_coverage/
 # fct_documentation_coverage directly; the per-category tabs each read one
-# specific rule's fct_ model directly, by name - the same ones
-# fct_rule_findings_summary counts rows from, but NOT through that model
-# (there's no var that can skip one of these). Findings reflect exceptions
+# specific rule's fct_ model directly, by name. Findings reflect exceptions
 # already applied. An empty table on a category tab means that rule found
 # nothing - it's passing, not missing.
 #
-# If you've disabled a rule via `+enabled: false`, its own detail-tab query
-# here will error (ref() to a disabled model) - excluding it via
-# rule_findings_summary_exclude only protects the Overview tab's model, not
-# this per-rule table. See README.md.
+# Prerequisite: every rule must be enabled. Every query here refs its fct_
+# model directly and unconditionally, with no way to skip a disabled one -
+# if you've disabled a rule via `+enabled: false`, don't use this board
+# until you re-enable it. See README.md.
 #
 # The coverage-by-layer chart assumes the default `model_types` var
 # (base/staging/intermediate/marts/other) covers your project - if you

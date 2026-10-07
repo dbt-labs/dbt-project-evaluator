@@ -1,14 +1,19 @@
 -- this model summarizes finding counts across all evaluator rules, for use by
 -- reporting/dashboarding tools (see integrations/dbt_charts). disabled by
--- default (see dbt_project.yml) since it refs every enabled rule; opt in
--- with `rule_findings_summary_enabled: true`.
+-- default (see dbt_project.yml) since it refs every rule unconditionally;
+-- opt in with `rule_findings_summary_enabled: true`.
+--
+-- prerequisite: every evaluator rule must be enabled. this model (and the
+-- dashboard's per-rule tabs, which ref() each fct_ model directly too) assume
+-- none of the 27 fct_ models below have been disabled via `+enabled: false`.
+-- if you've disabled a rule, don't turn this on until you re-enable it -
+-- a disabled rule's ref() here fails compilation outright, not just that
+-- rule's row. See docs/customization/customization.md.
 --
 -- the rule list below has to be static: dbt's dependency graph isn't
 -- available yet while a model's own dependencies are being inferred, so a
 -- ref() keyed off `graph.nodes` introspection can't be statically resolved
--- and fails to compile. if you disable a rule via `+enabled: false`, add its
--- model name to the `rule_findings_summary_exclude` var (see
--- docs/customization/customization.md) so this model skips it too.
+-- and fails to compile.
 
 {% set rule_categories = {
     'fct_undocumented_models': 'documentation',
@@ -45,23 +50,14 @@
     'fct_sources_without_freshness': 'testing'
 } %}
 
-{% set excluded_rules = var('rule_findings_summary_exclude', []) %}
-{% set included_rules = rule_categories.keys() | reject('in', excluded_rules) | list %}
-
-{% if included_rules | length == 0 %}
-    {{ exceptions.raise_compiler_error(
-        "fct_rule_findings_summary: rule_findings_summary_exclude excludes every rule (" ~ rule_categories.keys() | join(', ') ~ "). Exclude fewer rules, or disable this model via rule_findings_summary_enabled: false."
-    ) }}
-{% endif %}
-
 with
 
-{% for rule_name in included_rules %}
+{% for rule_name, category in rule_categories.items() %}
 {{ rule_name }} as (
 
     select
         '{{ rule_name }}' as rule_name,
-        '{{ rule_categories[rule_name] }}' as category,
+        '{{ category }}' as category,
         count(*) as finding_count
 
     from {{ ref(rule_name) }}
@@ -70,7 +66,7 @@ with
 {% endfor %}
 
 unioned as (
-    {% for rule_name in included_rules %}
+    {% for rule_name in rule_categories.keys() %}
     select * from {{ rule_name }}
     {% if not loop.last %}union all{% endif %}
     {% endfor %}
