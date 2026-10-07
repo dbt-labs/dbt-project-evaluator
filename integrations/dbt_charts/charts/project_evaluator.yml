@@ -1,0 +1,746 @@
+# A single dashboard with two levels of granularity, as tabs:
+#   - "Overview": high-level - total findings, rules passing vs. failing,
+#     findings ranked by rule, test/documentation coverage by model layer,
+#     and a full rule scorecard. Start here to see where to look.
+#   - One tab per rule category (Documentation, Governance, Modeling,
+#     Performance, Structure, Testing): one table per rule, showing the
+#     actual offending models/sources/tests for every rule that has
+#     findings. Use these once the overview has told you which rules to dig
+#     into - they show exactly what to fix, not just how much.
+#
+# Reads exclusively from this package's own output via ref(): the Overview
+# tab's charts read fct_rule_findings_summary/fct_test_coverage/
+# fct_documentation_coverage directly; the per-category tabs read the
+# individual rule fct_ models that fct_rule_findings_summary counts rows
+# from. Findings reflect exceptions already applied. An empty table on a
+# category tab means that rule found nothing - it's passing, not missing.
+#
+# The coverage-by-layer chart assumes the default `model_types` var
+# (base/staging/intermediate/marts/other) - if your project customizes that
+# var, the column names it reads will not match and that chart will fail to
+# render.
+
+title: "Dashboard: dbt Project Evaluator"
+notes: "Rule findings and coverage from this package's own output, with a per-rule drill-down."
+source: project_evaluator
+
+# The default theme title-cases every heading, KPI label, and table column
+# header regardless of authored casing; each slot below overrides that to
+# sentence case (which only capitalizes the first character of a string,
+# leaving the rest as authored - so "dbt" stays lowercase mid-title).
+style:
+  font:
+    case: sentence
+  title:
+    font:
+      case: sentence
+  charts:
+    kpi:
+      label:
+        font:
+          case: sentence
+    table:
+      header:
+        font:
+          case: sentence
+      # NOTE: dbt-charts 0.8.0's table renderer only reads
+      # empty_state.font.size for the "No data" text on an empty table - it
+      # ignores weight/color/case entirely (hardcoded in
+      # core/render/chart/table.py). There is currently no way to bold that
+      # text via config. Left unset rather than configuring something that
+      # silently does nothing; revisit if a future dbt-charts version honors
+      # more of empty_state.font.
+
+text: |
+  The Overview tab is built from this package's own output:
+  `fct_rule_findings_summary`, `fct_test_coverage`, and
+  `fct_documentation_coverage`. The category tabs read one rule's `fct_`
+  model directly per table. Finding counts reflect exceptions already
+  applied; an empty table means that rule found nothing, not that it
+  doesn't exist.
+
+   
+
+queries:
+  # ---- Overview: KPI row ----------------------------------------------
+  rule_totals: |
+    SELECT
+      COUNT(*) AS total_rules,
+      SUM(CASE WHEN finding_count = 0 THEN 1 ELSE 0 END) AS rules_passing,
+      SUM(finding_count) AS total_findings
+    FROM {{ ref('fct_rule_findings_summary') }}
+
+  test_coverage: |
+    SELECT test_coverage_pct FROM {{ ref('fct_test_coverage') }}
+
+  doc_coverage: |
+    SELECT documentation_coverage_pct FROM {{ ref('fct_documentation_coverage') }}
+
+  # ---- Overview: rule ranking, tail folded -----------------------------
+  # Grain is one row per rule. NULLS are not possible here (finding_count is
+  # always a non-negative count), so no NULLS LAST handling is needed.
+  rule_ranking: |
+    WITH ranked AS (
+      SELECT
+        rule_name,
+        category,
+        finding_count,
+        ROW_NUMBER() OVER (ORDER BY finding_count DESC, rule_name) AS rn
+      FROM {{ ref('fct_rule_findings_summary') }}
+    )
+    SELECT rule_name AS item, category, finding_count AS value
+    FROM ranked WHERE rn <= 10
+    UNION ALL
+    SELECT 'Remaining rules' AS item, 'various' AS category, SUM(finding_count) AS value
+    FROM ranked WHERE rn > 10
+    HAVING COUNT(*) > 0
+    ORDER BY value DESC
+
+  # ---- Overview: test & doc coverage by model layer --------------------
+  # Unpivoted via UNION ALL rather than a window/pivot function, so this
+  # stays portable across every adapter the package supports. The *_pct
+  # columns are 0-100 (see fct_test_coverage/fct_documentation_coverage);
+  # divided by 100.0 here since this chart's `percent` format expects a
+  # 0-1 fraction.
+  coverage_by_layer: |
+    SELECT 'base' AS layer, 'Test coverage' AS metric, base_test_coverage_pct / 100.0 AS value FROM {{ ref('fct_test_coverage') }}
+    UNION ALL
+    SELECT 'staging' AS layer, 'Test coverage' AS metric, staging_test_coverage_pct / 100.0 AS value FROM {{ ref('fct_test_coverage') }}
+    UNION ALL
+    SELECT 'intermediate' AS layer, 'Test coverage' AS metric, intermediate_test_coverage_pct / 100.0 AS value FROM {{ ref('fct_test_coverage') }}
+    UNION ALL
+    SELECT 'marts' AS layer, 'Test coverage' AS metric, marts_test_coverage_pct / 100.0 AS value FROM {{ ref('fct_test_coverage') }}
+    UNION ALL
+    SELECT 'other' AS layer, 'Test coverage' AS metric, other_test_coverage_pct / 100.0 AS value FROM {{ ref('fct_test_coverage') }}
+    UNION ALL
+    SELECT 'base' AS layer, 'Documentation coverage' AS metric, base_documentation_coverage_pct / 100.0 AS value FROM {{ ref('fct_documentation_coverage') }}
+    UNION ALL
+    SELECT 'staging' AS layer, 'Documentation coverage' AS metric, staging_documentation_coverage_pct / 100.0 AS value FROM {{ ref('fct_documentation_coverage') }}
+    UNION ALL
+    SELECT 'intermediate' AS layer, 'Documentation coverage' AS metric, intermediate_documentation_coverage_pct / 100.0 AS value FROM {{ ref('fct_documentation_coverage') }}
+    UNION ALL
+    SELECT 'marts' AS layer, 'Documentation coverage' AS metric, marts_documentation_coverage_pct / 100.0 AS value FROM {{ ref('fct_documentation_coverage') }}
+    UNION ALL
+    SELECT 'other' AS layer, 'Documentation coverage' AS metric, other_documentation_coverage_pct / 100.0 AS value FROM {{ ref('fct_documentation_coverage') }}
+    ORDER BY layer, metric
+
+  # ---- Overview: full rule scorecard -----------------------------------
+  rule_scorecard: |
+    SELECT
+      category,
+      rule_name,
+      finding_count,
+      CASE WHEN finding_count = 0 THEN 'Pass' ELSE 'Fail' END AS status
+    FROM {{ ref('fct_rule_findings_summary') }}
+    ORDER BY category, rule_name
+
+  # ---- Documentation ---------------------------------------------------
+  undocumented_models: |
+    SELECT resource_name AS model, model_type
+    FROM {{ ref('fct_undocumented_models') }}
+    ORDER BY model_type, model
+
+  undocumented_source_tables: |
+    SELECT resource_name AS source_table
+    FROM {{ ref('fct_undocumented_source_tables') }}
+    ORDER BY source_table
+
+  undocumented_sources: |
+    SELECT source_name AS source
+    FROM {{ ref('fct_undocumented_sources') }}
+    ORDER BY source
+
+  # ---- Governance ---------------------------------------------------
+  exposures_dependent_on_private_models: |
+    SELECT
+      exposure_name,
+      parent_resource_name AS depends_on,
+      parent_resource_type AS depends_on_type,
+      parent_access AS depends_on_access
+    FROM {{ ref('fct_exposures_dependent_on_private_models') }}
+    ORDER BY exposure_name
+
+  public_models_without_contract: |
+    SELECT resource_name AS model
+    FROM {{ ref('fct_public_models_without_contract') }}
+    ORDER BY model
+
+  undocumented_public_models: |
+    SELECT
+      resource_name AS model,
+      access,
+      CASE WHEN is_described THEN 'Yes' ELSE 'No' END AS has_model_description,
+      total_described_columns,
+      total_defined_columns
+    FROM {{ ref('fct_undocumented_public_models') }}
+    ORDER BY model
+
+  # ---- Modeling ---------------------------------------------------
+  direct_join_to_source: |
+    SELECT
+      child AS model,
+      parent,
+      parent_resource_type AS parent_type
+    FROM {{ ref('fct_direct_join_to_source') }}
+    ORDER BY model, parent
+
+  duplicate_sources: |
+    SELECT
+      source_db_location AS database_location,
+      source_names
+    FROM {{ ref('fct_duplicate_sources') }}
+    ORDER BY database_location
+
+  hard_coded_references: |
+    SELECT
+      model,
+      hard_coded_references
+    FROM {{ ref('fct_hard_coded_references') }}
+    ORDER BY model
+
+  marts_or_intermediate_dependent_on_source: |
+    SELECT
+      child AS model,
+      child_model_type AS model_layer,
+      parent AS source
+    FROM {{ ref('fct_marts_or_intermediate_dependent_on_source') }}
+    ORDER BY model
+
+  model_fanout: |
+    SELECT
+      parent AS model,
+      parent_model_type AS model_layer,
+      leaf_children AS direct_children
+    FROM {{ ref('fct_model_fanout') }}
+    ORDER BY model
+
+  multiple_sources_joined: |
+    SELECT
+      child AS model,
+      source_parents AS sources_joined
+    FROM {{ ref('fct_multiple_sources_joined') }}
+    ORDER BY model
+
+  rejoining_of_upstream_concepts: |
+    SELECT
+      parent,
+      child,
+      parent_and_child AS rejoined_through
+    FROM {{ ref('fct_rejoining_of_upstream_concepts') }}
+    ORDER BY parent, child
+
+  root_models: |
+    SELECT child AS model
+    FROM {{ ref('fct_root_models') }}
+    ORDER BY model
+
+  source_fanout: |
+    SELECT
+      parent AS source,
+      model_children AS direct_children
+    FROM {{ ref('fct_source_fanout') }}
+    ORDER BY source
+
+  staging_dependent_on_marts_or_intermediate: |
+    SELECT
+      child AS staging_model,
+      parent,
+      parent_model_type AS parent_layer
+    FROM {{ ref('fct_staging_dependent_on_marts_or_intermediate') }}
+    ORDER BY staging_model
+
+  staging_dependent_on_staging: |
+    SELECT
+      child AS staging_model,
+      parent AS depends_on_staging_model
+    FROM {{ ref('fct_staging_dependent_on_staging') }}
+    ORDER BY staging_model
+
+  too_many_joins: |
+    SELECT
+      resource_name AS model,
+      file_path,
+      join_count
+    FROM {{ ref('fct_too_many_joins') }}
+    ORDER BY join_count DESC, model
+
+  unused_sources: |
+    SELECT parent AS source
+    FROM {{ ref('fct_unused_sources') }}
+    ORDER BY source
+
+  # ---- Performance ---------------------------------------------------
+  chained_views_dependencies: |
+    SELECT
+      parent,
+      child AS model,
+      distance AS chain_length,
+      path
+    FROM {{ ref('fct_chained_views_dependencies') }}
+    ORDER BY chain_length DESC, model
+
+  exposure_parents_materializations: |
+    SELECT
+      exposure_name,
+      parent_resource_name AS parent,
+      parent_resource_type AS parent_type,
+      parent_model_materialization AS parent_materialization
+    FROM {{ ref('fct_exposure_parents_materializations') }}
+    ORDER BY exposure_name
+
+  # ---- Structure ---------------------------------------------------
+  model_directories: |
+    SELECT
+      resource_name AS model,
+      model_type AS model_layer,
+      current_file_path,
+      change_file_path_to AS suggested_file_path
+    FROM {{ ref('fct_model_directories') }}
+    ORDER BY model
+
+  model_naming_conventions: |
+    SELECT
+      resource_name AS model,
+      model_type AS model_layer,
+      prefix AS current_prefix,
+      appropriate_prefixes AS suggested_prefixes
+    FROM {{ ref('fct_model_naming_conventions') }}
+    ORDER BY model
+
+  source_directories: |
+    SELECT
+      resource_name AS source,
+      current_file_path,
+      change_file_path_to AS suggested_file_path
+    FROM {{ ref('fct_source_directories') }}
+    ORDER BY source
+
+  test_directories: |
+    SELECT
+      model_name AS model,
+      test_name,
+      current_test_directory,
+      change_test_directory_to AS suggested_test_directory
+    FROM {{ ref('fct_test_directories') }}
+    ORDER BY model, test_name
+
+  # ---- Testing ---------------------------------------------------
+  missing_primary_key_tests: |
+    SELECT
+      resource_name AS model,
+      model_type AS model_layer,
+      number_of_tests_on_model,
+      number_of_constraints_on_model
+    FROM {{ ref('fct_missing_primary_key_tests') }}
+    ORDER BY model
+
+  sources_without_freshness: |
+    SELECT resource_name AS source
+    FROM {{ ref('fct_sources_without_freshness') }}
+    ORDER BY source
+
+charts:
+  # ---- Overview ---------------------------------------------------------
+  total_findings_kpi:
+    label: "Total findings"
+    query: rule_totals
+    type: kpi
+    value: total_findings
+    style:
+      value:
+        format: integer
+
+  rules_passing_kpi:
+    label: "Rules passing"
+    query: rule_totals
+    type: kpi
+    value: rules_passing
+    style:
+      value:
+        format: integer
+    support:
+      value: total_rules
+
+  test_coverage_kpi:
+    label: "Test coverage"
+    query: test_coverage
+    type: kpi
+    value: test_coverage_pct
+    style:
+      value:
+        # test_coverage_pct is already 0-100, not a 0-1 fraction
+        format: percent_number
+
+  doc_coverage_kpi:
+    label: "Documentation coverage"
+    query: doc_coverage
+    type: kpi
+    value: documentation_coverage_pct
+    style:
+      value:
+        # documentation_coverage_pct is already 0-100, not a 0-1 fraction
+        format: percent_number
+
+  rule_ranking_bar:
+    title: "Findings by rule"
+    type: bar
+    query: rule_ranking
+    x: item
+    y: value
+    color: category
+    sort:
+      by: value
+      order: desc
+    style:
+      orientation: horizontal
+      number_format: integer
+      endpoint_labels:
+        visible: true
+
+  coverage_by_layer_bar:
+    title: "Test & documentation coverage by model layer"
+    type: bar
+    query: coverage_by_layer
+    x: layer
+    y: value
+    color: metric
+    style:
+      stack: none
+      number_format: percent
+
+  rule_scorecard_table:
+    title: "Rule scorecard"
+    type: table
+    query: rule_scorecard
+    style:
+      pagination:
+        enabled: false
+      columns:
+        category:
+          label: Category
+        rule_name:
+          label: Rule
+        finding_count:
+          label: Findings
+          format: integer
+          scale:
+            background:
+              palette: dbt-seq-blue
+        status:
+          label: Status
+
+  # ---- Documentation ---------------------------------------------------
+  undocumented_models_table:
+    title: "Undocumented models"
+    type: table
+    query: undocumented_models
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  undocumented_source_tables_table:
+    title: "Undocumented source tables"
+    type: table
+    query: undocumented_source_tables
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  undocumented_sources_table:
+    title: "Sources with no source-level description"
+    type: table
+    query: undocumented_sources
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  # ---- Governance ---------------------------------------------------
+  exposures_dependent_on_private_models_table:
+    title: "Exposures depending on a private model"
+    type: table
+    query: exposures_dependent_on_private_models
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  public_models_without_contract_table:
+    title: "Public models without an enforced contract"
+    type: table
+    query: public_models_without_contract
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  undocumented_public_models_table:
+    title: "Public models missing documentation"
+    type: table
+    query: undocumented_public_models
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  # ---- Modeling ---------------------------------------------------
+  direct_join_to_source_table:
+    title: "Models joining both a model and a source directly"
+    type: table
+    query: direct_join_to_source
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  duplicate_sources_table:
+    title: "Duplicate source definitions (same underlying table)"
+    type: table
+    query: duplicate_sources
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  hard_coded_references_table:
+    title: "Hard-coded database references"
+    type: table
+    query: hard_coded_references
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  marts_or_intermediate_dependent_on_source_table:
+    title: "Marts/intermediate models reading a source directly"
+    type: table
+    query: marts_or_intermediate_dependent_on_source
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  model_fanout_table:
+    title: "Models with too many direct downstream children"
+    type: table
+    query: model_fanout
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  multiple_sources_joined_table:
+    title: "Models joining more than one source directly"
+    type: table
+    query: multiple_sources_joined
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  rejoining_of_upstream_concepts_table:
+    title: "Rejoining of upstream concepts"
+    type: table
+    query: rejoining_of_upstream_concepts
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  root_models_table:
+    title: "Root models (no parents in the DAG)"
+    type: table
+    query: root_models
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  source_fanout_table:
+    title: "Sources with too many direct model children"
+    type: table
+    query: source_fanout
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  staging_dependent_on_marts_or_intermediate_table:
+    title: "Staging models depending on marts/intermediate"
+    type: table
+    query: staging_dependent_on_marts_or_intermediate
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  staging_dependent_on_staging_table:
+    title: "Staging models depending on other staging models"
+    type: table
+    query: staging_dependent_on_staging
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  too_many_joins_table:
+    title: "Models joining too many parents"
+    type: table
+    query: too_many_joins
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  unused_sources_table:
+    title: "Unused sources (no children in the DAG)"
+    type: table
+    query: unused_sources
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  # ---- Performance ---------------------------------------------------
+  chained_views_dependencies_table:
+    title: "Long chains of dependent views"
+    type: table
+    query: chained_views_dependencies
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  exposure_parents_materializations_table:
+    title: "Exposures with a poorly-materialized parent"
+    type: table
+    query: exposure_parents_materializations
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  # ---- Structure ---------------------------------------------------
+  model_directories_table:
+    title: "Models in the wrong directory"
+    type: table
+    query: model_directories
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  model_naming_conventions_table:
+    title: "Models with an incorrect naming prefix"
+    type: table
+    query: model_naming_conventions
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  source_directories_table:
+    title: "Sources defined in the wrong directory"
+    type: table
+    query: source_directories
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  test_directories_table:
+    title: "Tests defined in the wrong directory"
+    type: table
+    query: test_directories
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  # ---- Testing ---------------------------------------------------
+  missing_primary_key_tests_table:
+    title: "Models/sources missing a primary key test"
+    type: table
+    query: missing_primary_key_tests
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+  sources_without_freshness_table:
+    title: "Sources with no freshness check"
+    type: table
+    query: sources_without_freshness
+    style:
+      pagination:
+        enabled: true
+        page_rows: 25
+
+tabs:
+  default: "Overview"
+  items:
+    - title: "Overview"
+      rows:
+        - title: "Headline"
+          grid:
+            columns: 24
+            items:
+              - item: total_findings_kpi
+                col_span: 6
+              - item: rules_passing_kpi
+                col_span: 6
+              - item: test_coverage_kpi
+                col_span: 6
+              - item: doc_coverage_kpi
+                col_span: 6
+
+        - cols: [rule_ranking_bar]
+        - cols: [coverage_by_layer_bar]
+        - cols: [rule_scorecard_table]
+
+    - title: "Documentation"
+      rows:
+        - cols: [undocumented_models_table]
+        - cols: [undocumented_source_tables_table]
+        - cols: [undocumented_sources_table]
+
+    - title: "Governance"
+      rows:
+        - cols: [exposures_dependent_on_private_models_table]
+        - cols: [public_models_without_contract_table]
+        - cols: [undocumented_public_models_table]
+
+    - title: "Modeling"
+      rows:
+        - cols: [direct_join_to_source_table]
+        - cols: [duplicate_sources_table]
+        - cols: [hard_coded_references_table]
+        - cols: [marts_or_intermediate_dependent_on_source_table]
+        - cols: [model_fanout_table]
+        - cols: [multiple_sources_joined_table]
+        - cols: [rejoining_of_upstream_concepts_table]
+        - cols: [root_models_table]
+        - cols: [source_fanout_table]
+        - cols: [staging_dependent_on_marts_or_intermediate_table]
+        - cols: [staging_dependent_on_staging_table]
+        - cols: [too_many_joins_table]
+        - cols: [unused_sources_table]
+
+    - title: "Performance"
+      rows:
+        - cols: [chained_views_dependencies_table]
+        - cols: [exposure_parents_materializations_table]
+
+    - title: "Structure"
+      rows:
+        - cols: [model_directories_table]
+        - cols: [model_naming_conventions_table]
+        - cols: [source_directories_table]
+        - cols: [test_directories_table]
+
+    - title: "Testing"
+      rows:
+        - cols: [missing_primary_key_tests_table]
+        - cols: [sources_without_freshness_table]

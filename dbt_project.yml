@@ -37,6 +37,13 @@ models:
         int_all_dag_relationships:
           # required for BigQuery, Redshift, Databricks, Clickhouse, Fabric, SQL Server, and Synapse for performance/memory reasons
           +materialized: "{{ 'table' if target.type in ['bigquery', 'redshift', 'databricks', 'clickhouse', 'fabric', 'sqlserver', 'synapse'] else 'view' }}"
+        fct_rule_findings_summary:
+          # disabled by default: it refs all enabled rules, so building it
+          # unconditionally would break any project that has disabled a rule
+          # and not yet set `rule_findings_summary_exclude`. opt in with
+          # `rule_findings_summary_enabled: true` (see integrations/dbt_charts).
+          +enabled: "{{ var('rule_findings_summary_enabled', false) }}"
+          +materialized: table
       dag:
         +materialized: table
     staging:
@@ -59,6 +66,14 @@ vars:
   test_coverage_target: 100
 
   primary_key_test_macros: [["dbt.test_unique", "dbt.test_not_null"], ["dbt_utils.test_unique_combination_of_columns"]]
+
+  # -- Rule findings summary variables --
+  # fct_rule_findings_summary is disabled by default; set this to true to
+  # build it (see integrations/dbt_charts).
+  rule_findings_summary_enabled: false
+  # if you disable a rule's fct_ model via `+enabled: false`, add its model
+  # name here so fct_rule_findings_summary skips it too.
+  rule_findings_summary_exclude: []
 
   # -- Graph variables --
   # node types to test for primary key coverage. acceptable node types: model, source, snapshot, seed

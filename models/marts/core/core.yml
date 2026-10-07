@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: fct_rule_findings_summary
+    description: >
+      One row per evaluator rule that is enabled in this build, with its category
+      and the number of findings (rows) it produced. A rule disabled via
+      `+enabled: false` does not appear here. Used by the dbt-charts dashboard in
+      `integrations/dbt_charts`.
+    columns:
+      - name: rule_name
+        description: "The name of the fct_ model backing this rule."
+        data_tests:
+          - unique
+          - not_null
+      - name: category
+        description: "One of: documentation, governance, modeling, performance, structure, testing."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['documentation', 'governance', 'modeling', 'performance', 'structure', 'testing']
+      - name: finding_count
+        description: "Number of rows (findings) in this rule's fct_ model, after exceptions are applied."
+        data_tests:
+          - not_null

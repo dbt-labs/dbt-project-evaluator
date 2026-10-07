@@ -1,0 +1,10 @@
+# See integrations/dbt_charts/README.md for details
+dbt_project_dir: ../../../..
+
+server:
+  port: 8501
+
+sources:
+  project_evaluator:
+    type: dbt_profile
+    profile: "{{ env_var('DBT_PROJECT_EVAL_PROFILE') }}"
