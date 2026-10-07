@@ -10,15 +10,23 @@
 #
 # Reads exclusively from this package's own output via ref(): the Overview
 # tab's charts read fct_rule_findings_summary/fct_test_coverage/
-# fct_documentation_coverage directly; the per-category tabs read the
-# individual rule fct_ models that fct_rule_findings_summary counts rows
-# from. Findings reflect exceptions already applied. An empty table on a
-# category tab means that rule found nothing - it's passing, not missing.
+# fct_documentation_coverage directly; the per-category tabs each read one
+# specific rule's fct_ model directly, by name - the same ones
+# fct_rule_findings_summary counts rows from, but NOT through that model
+# (there's no var that can skip one of these). Findings reflect exceptions
+# already applied. An empty table on a category tab means that rule found
+# nothing - it's passing, not missing.
+#
+# If you've disabled a rule via `+enabled: false`, its own detail-tab query
+# here will error (ref() to a disabled model) - excluding it via
+# rule_findings_summary_exclude only protects the Overview tab's model, not
+# this per-rule table. See README.md.
 #
 # The coverage-by-layer chart assumes the default `model_types` var
-# (base/staging/intermediate/marts/other) - if your project customizes that
-# var, the column names it reads will not match and that chart will fail to
-# render.
+# (base/staging/intermediate/marts/other) covers your project - if you
+# remove or rename one of those five, the columns this chart expects won't
+# exist and it will fail to render. Adding extra model types alongside the
+# defaults is fine; they're just not shown here.
 
 title: "Dashboard: dbt Project Evaluator"
 notes: "Rule findings and coverage from this package's own output, with a per-rule drill-down."
@@ -328,6 +336,7 @@ queries:
   missing_primary_key_tests: |
     SELECT
       resource_name AS model,
+      resource_type,
       model_type AS model_layer,
       number_of_tests_on_model,
       number_of_constraints_on_model

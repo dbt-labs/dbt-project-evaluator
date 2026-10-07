@@ -48,6 +48,12 @@
 {% set excluded_rules = var('rule_findings_summary_exclude', []) %}
 {% set included_rules = rule_categories.keys() | reject('in', excluded_rules) | list %}
 
+{% if included_rules | length == 0 %}
+    {{ exceptions.raise_compiler_error(
+        "fct_rule_findings_summary: rule_findings_summary_exclude excludes every rule (" ~ rule_categories.keys() | join(', ') ~ "). Exclude fewer rules, or disable this model via rule_findings_summary_enabled: false."
+    ) }}
+{% endif %}
+
 with
 
 {% for rule_name in included_rules %}

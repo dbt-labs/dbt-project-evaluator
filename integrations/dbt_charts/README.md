@@ -23,14 +23,26 @@ compilation for any project that has disabled a rule without updating
    [Disabling checks from the package](../../docs/customization/customization.md)),
    also add its model name to `rule_findings_summary_exclude` - otherwise
    `fct_rule_findings_summary` will fail to compile.
-3. Disabling `fct_test_coverage` or `fct_documentation_coverage` breaks the
-   coverage KPIs and chart directly, since the board queries them by name;
-   don't disable those two if you're using this board.
+3. **That var only protects the Overview tab.** Each category tab's table
+   reads its own rule's `fct_` model directly by name, with no var-driven
+   way to skip it - there's no dynamic lookup possible here (dbt-charts'
+   `ref()` resolution in board queries is literal-string substitution, not
+   a real macro, so it can't be made conditional). So if you've disabled a
+   rule, that rule's own table will show a query error on its category
+   tab. In practice this is contained to that one chart (the rest of the
+   board still renders), but `dct validate` will report it as a failure.
+   `fct_test_coverage` and `fct_documentation_coverage` are the same case:
+   disabling either one errors the Overview tab's coverage KPIs/chart
+   directly, since those are queried by name too.
 
 ## Setup
 
 1. Install dbt-charts with the extra for your adapter (requires Python
-   <3.14; `dbt-charts>=0.8.0`)
+   <3.14; `dbt-charts>=0.8.0`). dbt-charts currently ships extras for
+   Athena, BigQuery, ClickHouse, Databricks, PostgreSQL, Redshift,
+   Snowflake, Spark, and Trino (plus DuckDB, built in) - Fabric, SQL
+   Server, and Synapse, which this package otherwise supports, aren't
+   covered, so this board won't run against those.
 
    ```bash
    pip install "dbt-charts[snowflake]>=0.8.0"
@@ -42,11 +54,16 @@ compilation for any project that has disabled a rule without updating
    uv tool install "dbt-charts[snowflake]>=0.8.0" --python 3.13
    ```
 
-2. Build this package's models, from your project root:
+2. Set `rule_findings_summary_enabled: true` in your `vars:` block (see
+   above), then build this package's models, from your project root:
 
    ```bash
-   dbt build --select package:dbt_project_evaluator --vars '{rule_findings_summary_enabled: true}'
+   dbt build --select package:dbt_project_evaluator
    ```
+
+   (`--vars '{rule_findings_summary_enabled: true}'` works too for a
+   one-off build, but won't persist to the next `dbt build` you run
+   without it - set the var in `dbt_project.yml` so it stays on.)
 
 3. Set your dbt profile name as an environment variable, once, in your
    shell profile or CI env (the same profile you already use for `dbt build`):
@@ -69,8 +86,8 @@ compilation for any project that has disabled a rule without updating
    ```
 
    `dct serve` prints the URL it's bound to (defaults to
-   `http://localhost:8501/project_evaluator/`). 
-   To render a static snapshot instead of serving live:
+   `http://localhost:8501/project_evaluator/`). To render a static
+   snapshot instead of serving live:
 
    ```bash
    dct render charts/project_evaluator.yml --format html --output /path/to/output.html

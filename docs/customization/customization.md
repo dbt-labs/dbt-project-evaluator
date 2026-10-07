@@ -41,8 +41,13 @@ vars:
     - 'fct_test_coverage'
 ```
 
-`fct_test_coverage` and `fct_documentation_coverage` are a special case:
-they're not rules in `fct_rule_findings_summary`, but the dashboard's
-coverage KPIs and chart query them directly by name. Disabling either one
-breaks those specific charts even after excluding it above - the board
-just won't have anything to show there.
+That var only protects `fct_rule_findings_summary` and the dashboard's
+Overview tab. The dashboard's per-rule category tabs each query their own
+rule's `fct_` model directly by name - there's no var that can make one of
+those skip a disabled rule - so a disabled rule's own table on its category
+tab will show a query error (contained to that one chart; the rest of the
+dashboard still renders). `fct_test_coverage` and `fct_documentation_coverage`
+are the same case: they're not rules in `fct_rule_findings_summary`, but the
+dashboard's coverage KPIs/chart query them directly, so disabling either one
+errors those specific charts the same way. See
+`integrations/dbt_charts/README.md` for details.
