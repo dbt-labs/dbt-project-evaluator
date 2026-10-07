@@ -683,8 +683,7 @@ tabs:
   items:
     - title: "Overview"
       rows:
-        - title: "Headline"
-          grid:
+        - grid:
             columns: 24
             items:
               - item: total_findings_kpi
