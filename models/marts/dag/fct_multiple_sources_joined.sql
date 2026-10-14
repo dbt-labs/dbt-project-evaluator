@@ -2,7 +2,9 @@
 with direct_source_relationships as (
     select distinct
         child,
-        parent
+        parent,
+        child_id,
+        parent_id
     from {{ ref('int_all_dag_relationships') }}
     where distance = 1
     and parent_resource_type = 'source'
@@ -23,7 +25,7 @@ multiple_sources_joined as (
             order_by_clause='order by parent' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver','synapse'])
         }} as source_parents
     from direct_source_relationships
-    group by child
+    group by child_id, child
     having count(*) > 1
 )
 

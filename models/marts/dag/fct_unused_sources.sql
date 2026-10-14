@@ -13,7 +13,7 @@ final as (
     select
         parent
     from source_relationships
-    group by parent
+    group by parent_id, parent
     having max(distance) = 0
 )
 

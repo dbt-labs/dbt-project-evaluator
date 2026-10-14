@@ -8,7 +8,8 @@ select 1 as id
 
 -- depends on {{ ref('stg_model_3') }} 
 
-{#
+{# the references below are never rendered, but must be found in the raw code #}
+{% if false %}
   from {{ ref('stg_model_3') }}   
   union all 
   select
@@ -100,5 +101,6 @@ select 1 as id
   select 
       5 as id
   from a.b
+{% endif %}
 
-#}
+{# a Jinja comment is not SQL, so this is not a hard coded reference: from jinja_comment_schema.jinja_comment_table #}

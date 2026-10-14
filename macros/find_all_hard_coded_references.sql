@@ -14,10 +14,11 @@
         {%- set model_raw_sql = '' -%}
         {%- endif -%}
 
-        {# we remove the comments that start with -- , or other characters configured #}
+        {# we remove the Jinja comments, then the comments that start with -- , or other characters configured #}
         {%- set re = modules.re -%}
+        {%- set model_raw_sql_no_jinja_comments = re.sub('(?s)\{#.*?#\}', '', model_raw_sql) -%}
         {%- set comment_chars_match = "(" ~ var('comment_chars') | join("|") ~ ").*" -%}
-        {%- set model_raw_sql_no_comments = re.sub(comment_chars_match, '', model_raw_sql) -%}
+        {%- set model_raw_sql_no_comments = re.sub(comment_chars_match, '', model_raw_sql_no_jinja_comments) -%}
 
         {#-
             REGEX Explanations

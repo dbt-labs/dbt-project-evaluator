@@ -12,7 +12,7 @@ with direct_model_relationships as (
 
 model_and_source_joined as (
     select
-        child,
+        child_id,
         case
             when (
                 sum(case when parent_resource_type = 'model' then 1 else 0 end) > 0
@@ -22,7 +22,7 @@ model_and_source_joined as (
             else cast(0 as {{ dbt.type_boolean() }})
         end as keep_row 
     from direct_model_relationships
-    group by child
+    group by child_id
 ),
 
 final as (
@@ -34,7 +34,7 @@ final as (
         direct_model_relationships.distance
     from direct_model_relationships
     inner join model_and_source_joined
-        on direct_model_relationships.child = model_and_source_joined.child
+        on direct_model_relationships.child_id = model_and_source_joined.child_id
     where model_and_source_joined.keep_row = cast(1 as {{ dbt.type_boolean() }})
 )
 
