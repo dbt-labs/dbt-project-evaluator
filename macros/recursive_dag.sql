@@ -136,7 +136,123 @@ all_relationships (
 
 {% macro bigquery__recursive_dag() %}
 
--- as of Feb 2022 BigQuery doesn't support with recursive in the same way as other DWs
+{#- BigQuery supports WITH RECURSIVE (with a limit of 500 iterations), which is much faster than the unrolled version on large DAGs.
+    The recursion only carries the columns needed to walk the DAG and joins the resource details at the end. -#}
+{% set max_depth = var('max_depth_dag') | int %}
+{% if max_depth < 2 or max_depth < var('chained_views_threshold') | int %}
+    {% do exceptions.raise_compiler_error(
+        'Variable max_depth_dag must be at least 2 and must be greater or equal to than chained_views_threshold.'
+        ) %}
+{% endif %}
+
+with recursive direct_relationships as (
+    select
+        *
+    from {{ ref('int_direct_relationships') }}
+    where resource_type <> 'test'
+)
+
+-- must do distinct prior to creating array because BigQuery doesn't support distinct on array type
+, get_distinct as (
+    select distinct
+        resource_id as parent_id,
+        resource_id as child_id,
+        resource_name,
+        materialized as child_materialized,
+        is_public as child_is_public,
+        access as child_access,
+        is_excluded as child_is_excluded
+
+    from direct_relationships
+)
+
+, all_relationships_unioned as (
+    -- anchor
+    select
+        parent_id,
+        child_id,
+        child_materialized,
+        child_is_public,
+        child_access,
+        child_is_excluded,
+        0 as distance,
+        {{ dbt.array_construct(['resource_name']) }} as path,
+        cast(null as {{ dbt.type_boolean() }}) as is_dependent_on_chain_of_views
+    from get_distinct
+
+    union all
+
+    -- recursive clause
+    select
+        all_relationships_unioned.parent_id as parent_id,
+        direct_relationships.resource_id as child_id,
+        direct_relationships.materialized as child_materialized,
+        direct_relationships.is_public as child_is_public,
+        direct_relationships.access as child_access,
+        direct_relationships.is_excluded as child_is_excluded,
+        all_relationships_unioned.distance+1 as distance,
+        {{ dbt.array_append('all_relationships_unioned.path', 'direct_relationships.resource_name') }} as path,
+        case
+            when
+                all_relationships_unioned.child_materialized in ('view', 'ephemeral')
+                and coalesce(all_relationships_unioned.is_dependent_on_chain_of_views, true)
+                then true
+            else false
+        end as is_dependent_on_chain_of_views
+
+    from direct_relationships
+    inner join all_relationships_unioned
+        on all_relationships_unioned.child_id = direct_relationships.direct_parent_id
+    where all_relationships_unioned.distance < {{ max_depth - 1 }}
+)
+
+, resource_info as (
+    select * from {{ ref('int_all_graph_resources') }}
+)
+
+, all_relationships as (
+    select
+        parent.resource_id as parent_id,
+        parent.resource_name as parent,
+        parent.resource_type as parent_resource_type,
+        parent.model_type as parent_model_type,
+        parent.materialized as parent_materialized,
+        parent.is_public as parent_is_public,
+        parent.access as parent_access,
+        parent.source_name as parent_source_name,
+        parent.file_path as parent_file_path,
+        parent.directory_path as parent_directory_path,
+        parent.file_name as parent_file_name,
+        parent.is_excluded as parent_is_excluded,
+        child.resource_id as child_id,
+        child.resource_name as child,
+        child.resource_type as child_resource_type,
+        child.model_type as child_model_type,
+        child.materialized as child_materialized,
+        child.is_public as child_is_public,
+        child.access as child_access,
+        child.source_name as child_source_name,
+        child.file_path as child_file_path,
+        child.directory_path as child_directory_path,
+        child.file_name as child_file_name,
+        child.is_excluded as child_is_excluded,
+        cast(all_relationships_unioned.distance as {{ dbt.type_int() }}) as distance,
+        all_relationships_unioned.path,
+        all_relationships_unioned.is_dependent_on_chain_of_views
+
+    from all_relationships_unioned
+    left join resource_info as parent
+        on all_relationships_unioned.parent_id = parent.resource_id
+    left join resource_info as child
+        on all_relationships_unioned.child_id = child.resource_id
+)
+
+{% endmacro %}
+
+
+{# fixed-depth version, with one CTE per level: for the adapters that don't support WITH RECURSIVE (or not well enough) #}
+{% macro unrolled_recursive_dag() %}
+
 {% set max_depth = var('max_depth_dag') | int %}
 {% if max_depth < 2 or max_depth < var('chained_views_threshold') | int %}
     {% do exceptions.raise_compiler_error(
@@ -381,21 +497,21 @@ with direct_relationships as (
 {% endmacro %}
 
 {% macro clickhouse__recursive_dag() %}
-    {{ return(bigquery__recursive_dag()) }}
+    {{ return(dbt_project_evaluator.unrolled_recursive_dag()) }}
 {% endmacro %}
 
 {% macro spark__recursive_dag() %}
 -- as of June 2022 databricks SQL doesn't support "with recursive" in the same way as other DWs
-    {{ return(bigquery__recursive_dag()) }}
+    {{ return(dbt_project_evaluator.unrolled_recursive_dag()) }}
 {% endmacro %}
 
 
 {% macro trino__recursive_dag() %}
 {#-- Although Trino supports a recursive WITH-queries,
 -- it is less performant than creating CTEs with loops and union them --#}
-    {{ return(bigquery__recursive_dag()) }}
+    {{ return(dbt_project_evaluator.unrolled_recursive_dag()) }}
 {% endmacro %}
 
 {% macro athena__recursive_dag() %}
-    {{ return(bigquery__recursive_dag()) }}
+    {{ return(dbt_project_evaluator.unrolled_recursive_dag()) }}
 {% endmacro %}
