@@ -27,7 +27,7 @@ final as (
     select
         child
     from model_relationships
-    group by child
+    group by child_id, child
     having max(distance) = 0
 )
 

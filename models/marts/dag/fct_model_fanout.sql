@@ -9,10 +9,10 @@ with all_dag_relationships as (
 -- find all models without children
 models_without_children as (
     select
-        parent
+        parent_id
     from all_dag_relationships
     where parent_resource_type = 'model'
-    group by parent
+    group by parent_id
     having max(distance) = 0
 ),
 
@@ -22,12 +22,14 @@ model_fanout as (
     select 
         all_dag_relationships.parent,
         all_dag_relationships.parent_model_type,
-        all_dag_relationships.child
+        all_dag_relationships.child,
+        all_dag_relationships.parent_id,
+        all_dag_relationships.child_id
     from all_dag_relationships
     inner join models_without_children
-        on all_dag_relationships.child = models_without_children.parent
+        on all_dag_relationships.child_id = models_without_children.parent_id
     where all_dag_relationships.distance = 1 and all_dag_relationships.child_resource_type = 'model'
-    group by all_dag_relationships.parent, all_dag_relationships.parent_model_type, all_dag_relationships.child
+    group by all_dag_relationships.parent, all_dag_relationships.parent_model_type, all_dag_relationships.child, all_dag_relationships.parent_id, all_dag_relationships.child_id
     {% if target.type not in ['fabric', 'sqlserver', 'synapse'] %}
     -- we order the CTE so that listagg returns values correctly sorted for some warehouses
     order by 1, 2, 3
@@ -44,7 +46,7 @@ model_fanout_agg as (
             order_by_clause = 'order by child' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver','synapse'])
         }} as leaf_children
     from model_fanout
-    group by parent, parent_model_type
+    group by parent_id, parent, parent_model_type
     having count(*) >= {{ var('models_fanout_threshold') }}
 )
 

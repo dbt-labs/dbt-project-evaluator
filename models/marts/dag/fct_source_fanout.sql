@@ -23,7 +23,7 @@ source_fanout as (
             order_by_clause='order by child' if target.type in ['snowflake','redshift','duckdb','trino','fabric','sqlserver','synapse'])
         }} as model_children
     from direct_source_relationships
-    group by parent
+    group by parent_id, parent
     having count(*) > 1
 )
 

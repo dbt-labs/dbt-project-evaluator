@@ -10,11 +10,11 @@ final as (
     select
         child as resource_name,
         child_file_path as file_path,
-        cast(count(distinct parent) as {{ dbt.type_int() }}) as join_count
+        cast(count(distinct parent_id) as {{ dbt.type_int() }}) as join_count
     from all_dag_relationships
     where distance = 1
-    group by child, child_file_path
-    having count(distinct parent) >= {{ var('too_many_joins_threshold') }}
+    group by child_id, child, child_file_path
+    having count(distinct parent_id) >= {{ var('too_many_joins_threshold') }}
 )
 
 select * from final
