@@ -1,0 +1,1590 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../customization/">
+      
+      
+        <link rel="next" href="../excluding-packages-and-paths/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Configuring exceptions to the rules - dbt_project_evaluator</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuring-exceptions-to-the-rules" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  Using dbt v1? This documentation is for version 2, which requires dbt 2.0 or later.
+  Pick version 1.x in the version selector, or see the
+  <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
+
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="dbt_project_evaluator" class="md-header__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+      
+  <img src="../../assets/dbt-logo.svg" alt="dbt_project_evaluator">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            dbt_project_evaluator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuring exceptions to the rules
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/dbt-labs/dbt-project-evaluator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbt-labs/dbt-project-evaluator
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="dbt_project_evaluator" class="md-nav__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+      
+  <img src="../../assets/dbt-logo.svg" alt="dbt_project_evaluator">
+
+    </a>
+    dbt_project_evaluator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dbt-labs/dbt-project-evaluator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbt-labs/dbt-project-evaluator
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migrating-to-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Migrating from version 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Agent skills
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Rules
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Rules
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  List of rules
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Modeling
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Testing
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Structure
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Governance
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Customization
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Customization
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overriding-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overriding variables
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Disabling checks
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Configuring exceptions to the rules
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Configuring exceptions to the rules
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#accepting-violations-of-a-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Accepting violations of a check
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Accepting violations of a check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#patterns-on-the-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Patterns on the resource
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patterns-on-a-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Patterns on a column
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#columns-returned-by-the-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Columns returned by the checks
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-declare-the-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Where to declare the exceptions
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where to declare the exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-a-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        In a variable
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-a-macro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        In a macro
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-the-config-of-the-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        In the config of the resources
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions-are-validated" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Exceptions are validated
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-exceptions-cant-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What exceptions can't do
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-ways-to-ignore-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Other ways to ignore results
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ignoring-resources-in-a-given-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ignoring resources in a given run
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../excluding-packages-and-paths/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Excluding packages and models/sources based on path
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issues-in-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reading the violations in the logs
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ci-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Run in CI Check
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../querying-the-dag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Querying the DAG
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Contributing
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/customization/exceptions.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="configuring-exceptions-to-the-rules">Configuring exceptions to the rules<a class="headerlink" href="#configuring-exceptions-to-the-rules" title="Permanent link">#</a></h1>
+<p>While the rules defined in this package are considered best practices, we realize that there might be exceptions to those rules and people might want to exclude given results to get passing checks despite not following all the recommendations.</p>
+<p>An example would be excluding all models with names matching with <code>stg_..._unioned</code> from <code>fct_multiple_sources_joined</code> as we might want to union 2 different tables representing the same data in some of our staging models and we don't want the check to report those models.</p>
+<p>This is what the variable <code>dbt_project_evaluator_exceptions</code> is for. It replaces the seed <code>dbt_project_evaluator_exceptions.csv</code> of version 1. Exceptions can also be declared in macros, or in the config of the resources: see <a href="#where-to-declare-the-exceptions">where to declare the exceptions</a> to choose.</p>
+<div class="admonition info">
+<p class="admonition-title">Coming from version 1?</p>
+<p>If you used the seed, you don't have to rewrite it by hand: run <code>python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py</code> from the root of your project. It reads the seed and writes the equivalent macro in <code>macros/dbt_project_evaluator_exceptions.sql</code> (or a <code>vars:</code> snippet with <code>--format var</code>). The rows it cannot translate are never dropped: they are written as <code># NEEDS REVIEW</code> comments with the reason. The script is optional; see <a href="../../migrating-to-v2/#3-convert-the-exceptions">migrating to version 2</a> for where to get it and how to run it.</p>
+</div>
+<h2 id="accepting-violations-of-a-check">Accepting violations of a check<a class="headerlink" href="#accepting-violations-of-a-check" title="Permanent link">#</a></h2>
+<p>The exceptions are a mapping from the <strong>name of a check</strong> to a <strong>list of entries</strong>. An entry is either a pattern, or a mapping from columns of the check to patterns:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">fct_root_models</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dim_calendar</span><span class="w">                              </span><span class="c1"># a pattern: the resource that the violation points at</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">fct_staging_dependent_on_staging</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stg_%_unioned</span><span class="w">                             </span><span class="c1"># the model to fix</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stg_base_%</span><span class="w">                        </span><span class="c1"># a column of the check</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">stg_model_4</span><span class="p p-Indicator">,</span><span class="nt"> parent</span><span class="p">:</span><span class="w"> </span><span class="nv">stg_model_2</span><span class="p p-Indicator">}</span><span class="w">  </span><span class="c1"># several columns: this pair only</span>
+</span></code></pre></div>
+<p>A violation is accepted, and dropped from the result of the check, as soon as <strong>one</strong> entry of its check matches. Patterns use the SQL <a href="https://duckdb.org/docs/sql/functions/pattern_matching#like"><code>LIKE</code></a> syntax (<code>%</code> matches any sequence of characters, <code>_</code> any single character) and are case-sensitive.</p>
+<h3 id="patterns-on-the-resource">Patterns on the resource<a class="headerlink" href="#patterns-on-the-resource" title="Permanent link">#</a></h3>
+<p>A pattern on its own is compared with the resource that the row points at, in its column <code>unique_id</code>: with its name, and with its whole <code>unique_id</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Name to match</th>
+<th>Example pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>model, seed, snapshot, exposure</td>
+<td><code>name</code></td>
+<td><code>stg_legacy_%</code></td>
+</tr>
+<tr>
+<td>versioned model</td>
+<td><code>name.vVERSION</code>, the bare name doesn't match</td>
+<td><code>int_model_5.v1</code></td>
+</tr>
+<tr>
+<td>source table</td>
+<td><code>source_name.table_name</code></td>
+<td><code>raw_shop.orders</code></td>
+</tr>
+<tr>
+<td>anything</td>
+<td>the <code>unique_id</code></td>
+<td><code>model.my_project.stg_legacy_orders</code> or <code>model.%.stg_legacy_%</code></td>
+</tr>
+</tbody>
+</table>
+<p>To find the name to use, run the check (<code>dbt check fct_root_models</code>): the <code>unique_id</code> column of the output is the resource that is matched.</p>
+<h3 id="patterns-on-a-column">Patterns on a column<a class="headerlink" href="#patterns-on-a-column" title="Permanent link">#</a></h3>
+<p>Some checks report a relationship between two resources, like a model and one of its parents. To accept a given parent, or a given pair, use a mapping from the <strong>columns that the check returns</strong> to patterns (the columns are the headers of the result of <code>dbt check &lt;name&gt;</code>, and are listed <a href="#columns-returned-by-the-checks">below</a>):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">fct_staging_dependent_on_staging</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">parent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stg_base_%</span><span class="w">                        </span><span class="c1"># any model reading from a model matching stg_base_%</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">stg_model_4</span><span class="p p-Indicator">,</span><span class="nt"> parent</span><span class="p">:</span><span class="w"> </span><span class="nv">stg_model_2</span><span class="p p-Indicator">}</span><span class="w">  </span><span class="c1"># only stg_model_4 reading from stg_model_2</span>
+</span></code></pre></div>
+<ul>
+<li><strong>All the keys of a mapping must match</strong> for the entry to apply. <code>{name: stg_model_4, parent: stg_model_2}</code> accepts exactly this pair, not <code>stg_model_4</code> reading from another model.</li>
+<li><strong>Separate entries are alternatives.</strong> A violation is accepted if any entry matches.</li>
+<li><strong>Several patterns for the same column are alternatives too</strong>: <code>parent: [stg_base_%, stg_legacy_%]</code>.</li>
+<li><strong>A column that holds a list matches when any of its elements does.</strong> This is the case of <code>source_parents</code> in <code>fct_direct_join_to_source</code> and <code>fct_multiple_sources_joined</code>, <code>model_parents</code> in <code>fct_direct_join_to_source</code>, <code>leaf_children</code> in <code>fct_model_fanout</code> and <code>model_children</code> in <code>fct_source_fanout</code>. <code>source_parents: raw_shop.orders</code> accepts every row that has <code>raw_shop.orders</code> among its sources. The whole row is accepted: the other sources of the row are not reported either.</li>
+<li>The patterns of a column must not be empty, and a mapping can't be empty: those are compile errors.</li>
+<li>A column that the check doesn't return fails the check with a DuckDB error naming it (<code>Values list "violation" does not have a column named "nope"</code>): compare with the <a href="#columns-returned-by-the-checks">columns below</a>.</li>
+</ul>
+<h4 id="accepting-a-relationship-between-two-resources">Accepting a relationship between two resources<a class="headerlink" href="#accepting-a-relationship-between-two-resources" title="Permanent link">#</a></h4>
+<p>To accept that <code>int_model_4</code> reads from the source <code>source_1.table_2</code> even though it also reads from a model:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">fct_direct_join_to_source</span><span class="p">:</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">int_model_4</span><span class="p p-Indicator">,</span><span class="nt"> source_parents</span><span class="p">:</span><span class="w"> </span><span class="nv">source_1.table_2</span><span class="p p-Indicator">}</span>
+</span></code></pre></div>
+<p>To accept the loop between <code>stg_model_1</code> and <code>int_model_5.v2</code> only:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">fct_rejoining_of_upstream_concepts</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">parent</span><span class="p">:</span><span class="w"> </span><span class="nv">stg_model_1</span><span class="p p-Indicator">,</span><span class="nt"> child</span><span class="p">:</span><span class="w"> </span><span class="nv">int_model_5.v2</span><span class="p p-Indicator">}</span>
+</span></code></pre></div>
+<h3 id="columns-returned-by-the-checks">Columns returned by the checks<a class="headerlink" href="#columns-returned-by-the-checks" title="Permanent link">#</a></h3>
+<p><code>fct_documentation_coverage</code> and <code>fct_test_coverage</code> don't use the exceptions. Every other check returns <code>unique_id</code>, the resource to fix, and the columns below.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Columns</th>
+<th>To accept...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fct_chained_views_dependencies</code></td>
+<td><code>child</code>, <code>parent</code>, <code>distance</code></td>
+<td><code>child</code> is the model at the end of the chain, <code>parent</code> the first view of the chain</td>
+</tr>
+<tr>
+<td><code>fct_direct_join_to_source</code></td>
+<td><code>name</code>, <code>source_parents</code>, <code>model_parents</code></td>
+<td><code>name</code> is the model that reads from both; the parents are lists of names</td>
+</tr>
+<tr>
+<td><code>fct_duplicate_sources</code></td>
+<td><code>source_name</code>, <code>source_relation</code></td>
+<td><code>source_relation</code> is the table that several sources point at</td>
+</tr>
+<tr>
+<td><code>fct_exposure_parents_materializations</code></td>
+<td><code>exposure_name</code>, <code>parent_resource_type</code>, <code>parent_resource_name</code>, <code>parent_model_materialization</code></td>
+<td><code>exposure_name</code> and <code>parent_resource_name</code> are the two ends</td>
+</tr>
+<tr>
+<td><code>fct_exposures_dependent_on_private_models</code></td>
+<td><code>exposure_name</code>, <code>parent_unique_id</code>, <code>parent_resource_name</code>, <code>parent_resource_type</code>, <code>parent_access</code></td>
+<td><code>exposure_name</code> and <code>parent_resource_name</code> are the two ends</td>
+</tr>
+<tr>
+<td><code>fct_marts_or_intermediate_dependent_on_source</code></td>
+<td><code>name</code>, <code>model_type</code>, <code>source_name</code></td>
+<td><code>name</code> is the model, <code>source_name</code> the source it reads from</td>
+</tr>
+<tr>
+<td><code>fct_missing_primary_key_tests</code></td>
+<td><code>name</code>, <code>resource_type</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_model_directories</code></td>
+<td><code>name</code>, <code>model_type</code>, <code>current_file_path</code>, <code>change_file_path_to</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_model_fanout</code></td>
+<td><code>name</code>, <code>leaf_children</code></td>
+<td><code>name</code> is the model with the fanout, <code>leaf_children</code> a list of names</td>
+</tr>
+<tr>
+<td><code>fct_model_naming_conventions</code></td>
+<td><code>name</code>, <code>model_type</code>, <code>appropriate_prefixes</code>, <code>original_file_path</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_multiple_sources_joined</code></td>
+<td><code>name</code>, <code>source_parents</code></td>
+<td><code>name</code> is the model, <code>source_parents</code> a list of source names</td>
+</tr>
+<tr>
+<td><code>fct_public_models_without_contract</code></td>
+<td><code>name</code>, <code>access</code>, <code>contract_enforced</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_rejoining_of_upstream_concepts</code></td>
+<td><code>parent</code>, <code>parent_and_child</code>, <code>child</code></td>
+<td><code>parent</code> is the model with two paths to <code>child</code>, <code>parent_and_child</code> the model in between</td>
+</tr>
+<tr>
+<td><code>fct_root_models</code></td>
+<td><code>name</code>, <code>original_file_path</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_source_directories</code></td>
+<td><code>source_name</code>, <code>current_file_path</code>, <code>change_file_path_to</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_source_fanout</code></td>
+<td><code>source_name</code>, <code>model_children</code></td>
+<td><code>source_name</code> is the source, <code>model_children</code> a list of names</td>
+</tr>
+<tr>
+<td><code>fct_sources_without_freshness</code></td>
+<td><code>source_name</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_staging_dependent_on_marts_or_intermediate</code></td>
+<td><code>name</code>, <code>parent</code>, <code>parent_model_type</code></td>
+<td><code>name</code> is the staging model, <code>parent</code> the model it reads from</td>
+</tr>
+<tr>
+<td><code>fct_staging_dependent_on_staging</code></td>
+<td><code>name</code>, <code>parent</code></td>
+<td><code>name</code> is the staging model, <code>parent</code> the staging model it reads from</td>
+</tr>
+<tr>
+<td><code>fct_test_directories</code></td>
+<td><code>model_name</code>, <code>current_properties_yml_file_path</code>, <code>change_properties_yml_directory_to</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_too_many_joins</code></td>
+<td><code>name</code>, <code>parent_count</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_undocumented_models</code></td>
+<td><code>name</code>, <code>original_file_path</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_undocumented_public_models</code></td>
+<td><code>name</code>, <code>is_described_model</code>, <code>total_defined_columns</code>, <code>total_described_columns</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_undocumented_source_tables</code></td>
+<td><code>source_name</code>, <code>original_file_path</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_undocumented_sources</code></td>
+<td><code>source_name</code>, <code>original_file_path</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>fct_unused_sources</code></td>
+<td><code>source_name</code>, <code>original_file_path</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Columns that hold a path, like <code>original_file_path</code>, can be used to accept a whole folder: <code>original_file_path: models/utils/%</code>.</p>
+<h2 id="where-to-declare-the-exceptions">Where to declare the exceptions<a class="headerlink" href="#where-to-declare-the-exceptions" title="Permanent link">#</a></h2>
+<p>The package reads the exceptions through three levels, from the simplest to the most flexible. They add up: a violation is accepted as soon as one of them accepts it.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What you write</th>
+<th>Use it when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#in-a-variable">The variable</a> <code>dbt_project_evaluator_exceptions</code></td>
+<td>A mapping in <code>dbt_project.yml</code></td>
+<td>You have a few exceptions, and patterns on names or columns are enough. This is where to start. It is also the only one you can change for a single run with <code>--vars</code></td>
+</tr>
+<tr>
+<td><a href="#in-a-macro">The macro</a> <code>default__dbt_project_evaluator_exceptions</code></td>
+<td>The same mapping, built in a macro</td>
+<td>The list is long, you want a YAML comment with the reason of every exception, or you build the list from several places (files, targets, other variables)</td>
+</tr>
+<tr>
+<td><a href="#in-the-config-of-the-resources">The macro</a> <code>default__dbt_project_evaluator_exception_sql</code></td>
+<td>A SQL condition</td>
+<td>The reason for the exception is a property of the resource that you have already declared in your project, like its <code>meta</code>, and you would rather declare the exception next to the resource, or for a whole folder, than in a central list</td>
+</tr>
+</tbody>
+</table>
+<p>Recommendations:</p>
+<ul>
+<li><strong>Start with the variable.</strong> Move to the macro when the list outgrows <code>dbt_project.yml</code> or when you want to explain the exceptions. The two use the same entries, so it is a copy and paste.</li>
+<li><strong>Keep the pairs and the columns in the variable or the macro.</strong> <code>{name: stg_a, parent: stg_b}</code> is shorter and checked at compile time there; a SQL condition would repeat the same logic by hand.</li>
+<li><strong>Use the SQL condition for rules, not for lists.</strong> "Every model of the legacy folder is exempt from <code>fct_model_directories</code>" is one line of <code>meta</code> on a folder. The same rule as patterns is a list that has to be kept up to date. A rule can also be maintained by the owners of the models instead of the people who run the package.</li>
+<li><strong>Prefer the first two when both would do.</strong> An unknown check name in the variable or in the first macro is a compile error. In the SQL condition, and in the <code>meta</code> that it reads, a typo is not detected: it just accepts nothing.</li>
+<li>Defining the macro <code>default__dbt_project_evaluator_exceptions</code> stops the variable from being read, unless your macro reads it. The SQL condition is independent of both.</li>
+</ul>
+<h3 id="in-a-variable">In a variable<a class="headerlink" href="#in-a-variable" title="Permanent link">#</a></h3>
+<p>This is the simplest option. Define the variable in your <code>dbt_project.yml</code>, either at the top level of <code>vars</code> or under the name of the package:</p>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">vars</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator_exceptions</span><span class="p">:</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">fct_multiple_sources_joined</span><span class="p">:</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stg_%_unioned</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">fct_unused_sources</span><span class="p">:</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw_shop.unused_table</span>
+</span></code></pre></div>
+<h3 id="in-a-macro">In a macro<a class="headerlink" href="#in-a-macro" title="Permanent link">#</a></h3>
+<p>If the list gets long, or if you want to document every exception, define the macro <code>default__dbt_project_evaluator_exceptions</code> in your project. The package calls the macro <code>dbt_project_evaluator_exceptions</code> with <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch"><code>adapter.dispatch</code></a>, which looks for an implementation in your project first. The variable above is only the default implementation: once you define the macro, it is not read anymore, unless your macro does.</p>
+<p>Write the exceptions as YAML in a string and parse them with <code>fromyaml</code>, so that you can use YAML comments:</p>
+<div class="language-sql highlight"><span class="filename">macros/dbt_project_evaluator_exceptions.sql</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">macro</span><span class="w"> </span><span class="n">default__dbt_project_evaluator_exceptions</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">exceptions</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="o">#</span><span class="w"> </span><span class="n">stg_</span><span class="p">...</span><span class="n">_unioned</span><span class="w"> </span><span class="n">models</span><span class="w"> </span><span class="k">union</span><span class="w"> </span><span class="n">identical</span><span class="w"> </span><span class="n">sources</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">purpose</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">fct_multiple_sources_joined</span><span class="p">:</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">stg_</span><span class="o">%</span><span class="n">_unioned</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="o">#</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">sources</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">legacy</span><span class="w"> </span><span class="n">CRM</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">kept</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">audit</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="n">yet</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">fct_unused_sources</span><span class="p">:</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">raw_shop</span><span class="p">.</span><span class="n">unused_table</span><span class="w">         </span><span class="o">#</span><span class="w"> </span><span class="n">source_name</span><span class="p">.</span><span class="k">table_name</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">legacy_crm</span><span class="p">.</span><span class="o">%</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="o">#</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">pattern</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">also</span><span class="w"> </span><span class="n">compared</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">whole</span><span class="w"> </span><span class="n">unique_id</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="n">fct_model_naming_conventions</span><span class="p">:</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">model</span><span class="p">.</span><span class="o">%</span><span class="p">.</span><span class="n">orders_summary</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endset</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="err">{{</span><span class="w"> </span><span class="k">return</span><span class="p">(</span><span class="n">fromyaml</span><span class="p">(</span><span class="n">exceptions</span><span class="p">))</span><span class="w"> </span><span class="err">}}</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endmacro</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span></code></pre></div>
+<p>The macro can return anything that builds the same mapping. For example, to complete the variable with a list written in YAML instead of replacing it:</p>
+<div class="language-sql highlight"><span class="filename">macros/dbt_project_evaluator_exceptions.sql</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">macro</span><span class="w"> </span><span class="n">default__dbt_project_evaluator_exceptions</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">exceptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="s1">'dbt_project_evaluator_exceptions'</span><span class="p">,</span><span class="w"> </span><span class="err">{}</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">check_name</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">fromyaml</span><span class="p">(</span><span class="n">more_exceptions</span><span class="p">()).</span><span class="n">items</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">exceptions</span><span class="p">.</span><span class="k">update</span><span class="p">(</span><span class="err">{</span><span class="n">check_name</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">exceptions</span><span class="p">.</span><span class="k">get</span><span class="p">(</span><span class="n">check_name</span><span class="p">)</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="p">[])</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">patterns</span><span class="err">}</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="err">{{</span><span class="w"> </span><span class="k">return</span><span class="p">(</span><span class="n">exceptions</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endmacro</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">macro</span><span class="w"> </span><span class="n">more_exceptions</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="n">fct_unused_sources</span><span class="p">:</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="o">-</span><span class="w"> </span><span class="n">raw_shop</span><span class="p">.</span><span class="n">unused_table</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endmacro</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span></code></pre></div>
+<h3 id="in-the-config-of-the-resources">In the config of the resources<a class="headerlink" href="#in-the-config-of-the-resources" title="Permanent link">#</a></h3>
+<p>Patterns match names and columns. When the reason for an exception is something you already declare on the resources, like a <code>meta</code> entry, define the macro <code>default__dbt_project_evaluator_exception_sql</code> instead. The package calls it once per check, with the name of the check, and adds the SQL condition that it returns to the exceptions above: the violations for which the condition is true are accepted.</p>
+<p>In the condition:</p>
+<ul>
+<li>the columns of the check are available as <code>violation.&lt;column&gt;</code> (the <code>unique_id</code> column is the resource to fix, see the <a href="#columns-returned-by-the-checks">columns below</a>),</li>
+<li>the <a href="../../querying-the-dag/">information schema</a> is available with <code>info_schema('models')</code>, <code>info_schema('sources')</code>...,</li>
+<li>a condition that is <code>NULL</code> accepts nothing,</li>
+<li>the macro can return a list of conditions instead of a string: the violation is accepted when any of them is true. Returning nothing, or an empty string, adds no exception.</li>
+</ul>
+<p>For example, to accept the violations of the resources that list the check in their <code>meta</code>:</p>
+<div class="language-sql highlight"><span class="filename">macros/dbt_project_evaluator_exception_sql.sql</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">macro</span><span class="w"> </span><span class="n">default__dbt_project_evaluator_exception_sql</span><span class="p">(</span><span class="n">check_name</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">violation</span><span class="p">.</span><span class="n">unique_id</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">relation</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">[</span><span class="s1">'models'</span><span class="p">,</span><span class="w"> </span><span class="s1">'sources'</span><span class="p">,</span><span class="w"> </span><span class="s1">'snapshots'</span><span class="p">]</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="k">select</span><span class="w"> </span><span class="n">unique_id</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="k">from</span><span class="w"> </span><span class="err">{{</span><span class="w"> </span><span class="n">info_schema</span><span class="p">(</span><span class="n">relation</span><span class="p">)</span><span class="w"> </span><span class="err">}}</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="k">where</span><span class="w"> </span><span class="n">list_contains</span><span class="p">(</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">        </span><span class="k">coalesce</span><span class="p">(</span><span class="n">from_json</span><span class="p">(</span><span class="n">json_extract</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span><span class="w"> </span><span class="s1">'$.dbt_project_evaluator.exceptions'</span><span class="p">),</span><span class="w"> </span><span class="s1">'["VARCHAR"]'</span><span class="p">),</span><span class="w"> </span><span class="p">[]),</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">        </span><span class="s1">'{{ check_name }}'</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="p">)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">loop</span><span class="p">.</span><span class="k">last</span><span class="w"> </span><span class="o">%</span><span class="err">}</span><span class="k">union</span><span class="w"> </span><span class="k">all</span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endif</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endfor</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">)</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="err">{</span><span class="o">%</span><span class="w"> </span><span class="n">endmacro</span><span class="w"> </span><span class="o">%</span><span class="err">}</span>
+</span></code></pre></div>
+<p>The exceptions are then declared where the resources are configured, for a whole folder in <code>dbt_project.yml</code>, or for a single resource in its YAML file. Resources inherit the <code>meta</code> of their folder and, for a source, of the source itself:</p>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">models</span><span class="p">:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">my_project</span><span class="p">:</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">legacy</span><span class="p">:</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="nt">+meta</span><span class="p">:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">        </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">          </span><span class="nt">exceptions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">fct_model_directories</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">fct_root_models</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># for the whole folder</span>
+</span></code></pre></div>
+<div class="language-yaml highlight"><span class="filename">models/marts/_marts__models.yml</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">models</span><span class="p">:</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dim_calendar</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">      </span><span class="nt">meta</span><span class="p">:</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">        </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">          </span><span class="nt">exceptions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">fct_root_models</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># a root model on purpose</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nt">sources</span><span class="p">:</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw_crm</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">      </span><span class="nt">meta</span><span class="p">:</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">          </span><span class="nt">exceptions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">fct_sources_without_freshness</span><span class="p p-Indicator">]</span><span class="w">   </span><span class="c1"># for all the tables of the source</span>
+</span></code></pre></div>
+<p>Things to know about this recipe:</p>
+<ul>
+<li><strong>The <code>meta</code> has to be on the resource that the violation points at</strong>, the one in the <code>unique_id</code> column. Declaring it on a parent doesn't accept the violations of its children.</li>
+<li><strong>It accepts every violation of that resource for that check</strong>, as the entries of the variable do. To accept one pair or one column only, use the variable or the macro.</li>
+<li><strong>Exposures can't be used yet</strong>: the information schema doesn't give the <code>meta</code> of exposures to checks (<a href="https://github.com/dbt-labs/dbt/issues/16584">dbt-labs/dbt#16584</a>). The two checks whose <code>unique_id</code> is an exposure, <code>fct_exposure_parents_materializations</code> and <code>fct_exposures_dependent_on_private_models</code>, need the variable or the macro. Seeds weren't tested.</li>
+<li><strong>Nothing validates the names</strong> in the <code>meta</code>. If a violation is still reported, check the spelling of the check name and where the <code>meta</code> is declared (<code>dbt ls --select &lt;resource&gt; --output json --output-keys meta</code> shows the <code>meta</code> that a resource ends up with).</li>
+<li>The condition is SQL that runs in DuckDB on every check. A mistake in it fails the check with a DuckDB error, as a wrong column name in an entry does.</li>
+</ul>
+<h3 id="exceptions-are-validated">Exceptions are validated<a class="headerlink" href="#exceptions-are-validated" title="Permanent link">#</a></h3>
+<p>The exceptions are checked every time the project is parsed. An entry that isn't the name of a check of the package, because of a typo for example, is a compile error that lists the names that exist:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dbt_project_evaluator_exceptions: 'fct_modl_fanout' is not a check of dbt_project_evaluator. Known checks: fct_chained_views_dependencies, fct_direct_join_to_source, ...
+</span></code></pre></div>
+<p>An invalid column name, a mapping without any key and a column without a pattern are compile errors as well.</p>
+<h3 id="what-exceptions-cant-do">What exceptions can't do<a class="headerlink" href="#what-exceptions-cant-do" title="Permanent link">#</a></h3>
+<ul>
+<li>An exception drops a whole <strong>row</strong>. When a row lists several resources in a column (<code>source_parents</code>, <code>model_parents</code>, <code>leaf_children</code>, <code>model_children</code>), accepting one of them accepts the row, even if the other elements would still be a violation by themselves.</li>
+<li>Patterns are matched per check, on the columns of that check only, and are case-sensitive.</li>
+<li><code>fct_documentation_coverage</code> and <code>fct_test_coverage</code> are measures of the whole project, not lists of resources, so they ignore the exceptions. To remove resources from them, use <code>exclude_packages</code> or <code>exclude_paths_from_project</code>.</li>
+<li>Hard coded references are reported by <code>dbt lint</code>, not by a check, so there is nothing to configure here.</li>
+</ul>
+<h2 id="other-ways-to-ignore-results">Other ways to ignore results<a class="headerlink" href="#other-ways-to-ignore-results" title="Permanent link">#</a></h2>
+<p>Exceptions apply to a single check. The other options below apply to more:</p>
+<table>
+<thead>
+<tr>
+<th>You want to...</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>accept some violations of a given rule</td>
+<td>the <a href="#accepting-violations-of-a-check">exceptions</a> above</td>
+</tr>
+<tr>
+<td>accept the violations of resources that declare it in their config (for example in their <code>meta</code>)</td>
+<td><a href="#in-the-config-of-the-resources">the SQL condition</a></td>
+</tr>
+<tr>
+<td>stop evaluating a rule entirely</td>
+<td><a href="../customization/">disable the check</a></td>
+</tr>
+<tr>
+<td>keep a rule but not block the build when it is violated</td>
+<td>keep its severity at <code>warn</code> (the default), see <a href="../../ci-check/">running as a CI check</a></td>
+</tr>
+<tr>
+<td>ignore a package, a folder or some models/sources for <strong>all</strong> the rules</td>
+<td><a href="../excluding-packages-and-paths/"><code>exclude_packages</code> and <code>exclude_paths_from_project</code></a></td>
+</tr>
+<tr>
+<td>ignore some resources for a given run or job</td>
+<td><code>--exclude</code> or <code>--selector</code>, see below</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ignoring-resources-in-a-given-run">Ignoring resources in a given run<a class="headerlink" href="#ignoring-resources-in-a-given-run" title="Permanent link">#</a></h2>
+<p>The rows reported by a check are restricted to the resources selected by <code>--select</code> and <code>--exclude</code>, because each check returns the resource to fix in the column <code>unique_id</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># all the checks, except for the models in the legacy folder</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>dbt<span class="w"> </span>check<span class="w"> </span>--exclude<span class="w"> </span>path:models/legacy
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># a single check, without the models called stg_&lt;...&gt;_unioned</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>dbt<span class="w"> </span>check<span class="w"> </span>fct_multiple_sources_joined<span class="w"> </span>--exclude<span class="w"> </span><span class="s2">"stg_*_unioned"</span>
+</span></code></pre></div>
+<p>To make it permanent, define the selection in a YAML <a href="https://docs.getdbt.com/reference/node-selection/yaml-selectors">selector</a> and use it with <code>--selector</code>:</p>
+<div class="language-yaml highlight"><span class="filename">selectors.yml</span><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nt">selectors</span><span class="p">:</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evaluated_resources</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="nt">definition</span><span class="p">:</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">      </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fqn</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">"*"</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">      </span><span class="nt">exclude</span><span class="p">:</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">path</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">models/legacy</span>
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>dbt<span class="w"> </span>check<span class="w"> </span>--selector<span class="w"> </span>evaluated_resources
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>fct_documentation_coverage</code> and <code>fct_test_coverage</code> always evaluate the whole project (<code>selection_filter_on: none</code>). To exclude resources from those two checks, use <code>exclude_packages</code> or <code>exclude_paths_from_project</code>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../customization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Disabling checks">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Disabling checks
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../excluding-packages-and-paths/" class="md-footer__link md-footer__link--next" aria-label="Next: Excluding packages and models&#x2f;sources based on path">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Excluding packages and models/sources based on path
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["navigation.footer","navigation.instant","navigation.tracking","content.action.edit","toc.integrate"],"redirect":null,"search":"../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+    
+  </body>
+</html>
