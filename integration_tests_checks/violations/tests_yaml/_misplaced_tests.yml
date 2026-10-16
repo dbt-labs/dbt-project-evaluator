@@ -1,0 +1,5 @@
+models:
+  - name: orders_summary  # its tests live away from the model's directory
+    columns:
+      - name: order_id
+        data_tests: [not_null]

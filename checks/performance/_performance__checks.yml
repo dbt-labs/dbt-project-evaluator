@@ -1,0 +1,7 @@
+version: 2
+
+checks:
+  - name: fct_chained_views_dependencies
+    description: "Models at the end of a chain of more than `chained_views_threshold` views or ephemeral models. Materialize something in the chain as a table."
+  - name: fct_exposure_parents_materializations
+    description: "Exposures fed directly by a source, or by a view or ephemeral model, instead of a table."
