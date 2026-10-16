@@ -1,5 +1,16 @@
 # dbt_project_evaluator
 
+> [!IMPORTANT]
+> **Using dbt v1?** This README is for version 2 of the package, which requires dbt 2.0 or later.
+> For dbt v1, use version 1.x: read the [README of the `1.x` branch](https://github.com/dbt-labs/dbt-project-evaluator/blob/1.x/README.md),
+> and keep the package on 1.x in your `packages.yml` so that it does not upgrade to version 2:
+>
+> ```yaml
+> packages:
+>   - package: dbt-labs/dbt_project_evaluator
+>     version: [">=1.0.0", "<2.0.0"]
+> ```
+
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
 Specifically, it checks:
 

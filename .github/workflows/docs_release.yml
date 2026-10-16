@@ -1,4 +1,4 @@
-name: Publish MkDocs on Release
+name: Publish docs on Release
 
 on:
   release:
@@ -19,12 +19,12 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c  # actions/setup-python@v4
       with:
-        python-version: 3.8
+        python-version: "3.12"
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install mkdocs-material mike
+        pip install zensical==0.0.67 git+https://github.com/squidfunk/mike.git
 
     - name: Extract Major and Minor Version
       run: |
