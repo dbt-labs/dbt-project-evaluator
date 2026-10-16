@@ -1,0 +1,20 @@
+version: 2
+
+exposures:
+  - name: exposure_1
+    description: real_dashboard with fun chars '\!@#
+    type: dashboard
+    url: dave.com/metrics
+    maturity: low
+    owner:
+      name: dave's davey
+      email: proserv@dbt.com
+    config:
+      tags: ['proserv']
+    
+    depends_on:
+      - ref('fct_model_6')
+      - ref('fct_model_9')
+      - ref('dim_model_7')
+      - ref('dim_model_7')
+      - source('source_1', 'table_1')
