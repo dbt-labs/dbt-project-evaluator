@@ -83,6 +83,18 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  Using dbt v1? This documentation is for version 2, which requires dbt 2.0 or later.
+  Pick version 1.x in the version selector, or see the
+  <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -286,6 +298,60 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migrating-to-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from version 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -299,10 +365,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -320,8 +386,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -618,10 +684,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -639,8 +705,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -776,35 +842,7 @@
   <span class="md-ellipsis">
     
   
-    Display issues in the logs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../customization/querying-columns-names-and-descriptions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Querying columns names and descriptions
+    Reading the violations in the logs
   
 
     
@@ -932,13 +970,26 @@
 
 
 <h1 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">#</a></h1>
+<p>Each rule is a native <a href="https://docs.getdbt.com/docs/build/checks">dbt check</a> that returns one row per violation. Run it with <code>dbt check &lt;rule_name&gt;</code>, for example <code>dbt check fct_chained_views_dependencies</code>.</p>
 <h2 id="chained-view-dependencies">Chained View Dependencies<a class="headerlink" href="#chained-view-dependencies" title="Permanent link">#</a></h2>
-<p><code>fct_chained_views_dependencies</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/performance/fct_chained_views_dependencies.sql">source</a>) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental.</p>
-<p>This model will raise a <code>warn</code> error on a <code>dbt build</code> or <code>dbt test</code> if the <code>distance</code> between a given <code>parent</code> and <code>child</code> is greater than or equal to 4.
+<p><code>fct_chained_views_dependencies</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/performance/fct_chained_views_dependencies.sql">source</a>) contains models that are dependent on chains of "non-physically-materialized" models (views and ephemerals), highlighting potential cases for improving performance by switching the materialization of model(s) within the chain to table or incremental.</p>
+<p>This check warns (by default) on <code>dbt check</code> and <code>dbt build</code> if the <code>distance</code> between a given <code>parent</code> and <code>child</code> is greater than <code>chained_views_threshold</code> (default 5).
 You can set your own threshold for chained views by overriding the <code>chained_views_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
-<p><code>table_1</code> depends on a chain of 4 views (<code>view_1</code>, <code>view_2</code>, <code>view_3</code>, and <code>view_4</code>).</p>
-<p><img alt="dag of chain of 4 views, then a table" src="https://user-images.githubusercontent.com/53586774/176299679-39028eb1-f9e3-492a-bdb7-b72d9d7958b7.png" width="700" /></p>
+<p><code>table_1</code> depends on a chain of 4 views (<code>view_1</code>, <code>view_2</code>, <code>view_3</code>, and <code>view_4</code>). The chain is flagged here because <code>chained_views_threshold</code> is lowered to 3 for this example.</p>
+<pre class="mermaid"><code>flowchart LR
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    view_1["view_1"]:::model
+    view_2["view_2"]:::model
+    view_3["view_3"]:::model
+    view_4["view_4"]:::model
+    table_1["table_1"]:::model
+    view_1 --&gt; view_2
+    view_2 --&gt; view_3
+    view_3 --&gt; view_4
+    view_4 --&gt; table_1
+    class table_1 flagged</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>You may experience a long runtime for a model when it is build on top of a long chain of "non-physically-materialized" models (views and ephemerals). In the example above, nothing is really computed until you get to <code>table_1</code>. At which point, it is going to run the query within <code>view_4</code>, which will then have to run the query within <code>view_3</code>, which will then have the run the query within <code>view_2</code>, which will then have to run the query within <code>view_1</code>. These will all be running at the same time, which creates a long runtime for <code>table_1</code>.</p>
 <p><strong>How to Remediate</strong></p>
@@ -949,19 +1000,29 @@ You can set your own threshold for chained views by overriding the <code>chained
 <li>if a view has more complex calculations (window functions, joins between <em>many</em> tables, etc.), change materialization to table</li>
 </ul>
 <h2 id="exposure-parents-materializations">Exposure Parents Materializations<a class="headerlink" href="#exposure-parents-materializations" title="Permanent link">#</a></h2>
-<p><code>fct_exposure_parents_materializations</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/performance/fct_exposure_parents_materializations.sql">source</a>) highlights instances where the resources referenced by exposures are either:</p>
+<p><code>fct_exposure_parents_materializations</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/performance/fct_exposure_parents_materializations.sql">source</a>) highlights instances where the resources referenced by exposures are either:</p>
 <ol>
 <li>a <code>source</code></li>
 <li>a <code>model</code> that does not use the <code>table</code> or <code>incremental</code> materialization</li>
 </ol>
 <p><strong>Example</strong></p>
-<p><img alt="An example exposure with a table parent (fct_model_6) and an ephemeral parent (dim_model_7)" src="https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png" width="500" /></p>
-<p>In this case, the parents of <code>exposure_1</code> are not both materialized as tables -- <code>dim_model_7</code> is ephemeral, while <code>fct_model_6</code> is a table. This model would return a record for the <code>dim_model_7 --&gt; exposure_1</code> relationship.</p>
+<pre class="mermaid"><code>flowchart LR
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef exposure fill:#c2410c,stroke:#8f2f08,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    dim_model_7["dim_model_7"]:::marts
+    exposure_1["exposure_1"]:::exposure
+    fct_model_6["fct_model_6"]:::marts
+    dim_model_7 --&gt; exposure_1
+    fct_model_6 --&gt; exposure_1
+    class dim_model_7 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px</code></pre>
+<p>In this case, the parents of <code>exposure_1</code> are not both materialized as tables -- <code>dim_model_7</code> is ephemeral, while <code>fct_model_6</code> is a table. This check would return a row for the <code>dim_model_7 --&gt; exposure_1</code> relationship.</p>
 <p><strong>Reason to Flag</strong></p>
 <p>Exposures should depend on the business logic you encoded into your dbt project (e.g. models or metrics) rather than raw untransformed sources. Additionally, models that are referenced by an exposure are likely to be used heavily in downstream systems, and therefore need to be performant when queried.</p>
 <p><strong>How to Remediate</strong></p>
 <p>If you have a source parent of an exposure, you should incorporate that raw data into your project in some way, then update the exposure to point to that model.</p>
-<p>If necessary, update the <code>materialized</code> configuration on the models returned in <code>fct_exposure_parents_materializations</code> to either <code>table</code> or <code>incremental</code>. This can be done in individual model files using a config block, or for groups of models in your <code>dbt_project.yml</code> file. See the docs on <a href="https://docs.getdbt.com/reference/model-configs">model configurations</a> for more info!</p>
+<p>If necessary, update the <code>materialized</code> configuration on the models returned by <code>fct_exposure_parents_materializations</code> to either <code>table</code> or <code>incremental</code>. This can be done in individual model files using a config block, or for groups of models in your <code>dbt_project.yml</code> file. See the docs on <a href="https://docs.getdbt.com/reference/model-configs">model configurations</a> for more info!</p>
 
 
 

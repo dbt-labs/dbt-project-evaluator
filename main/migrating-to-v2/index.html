@@ -1,0 +1,1471 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../skills/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Migrating from version 1 - dbt_project_evaluator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#migrating-from-version-1-to-version-2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  Using dbt v1? This documentation is for version 2, which requires dbt 2.0 or later.
+  Pick version 1.x in the version selector, or see the
+  <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
+
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="dbt_project_evaluator" class="md-header__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+      
+  <img src="../assets/dbt-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            dbt_project_evaluator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Migrating from version 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dbt-labs/dbt-project-evaluator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbt-labs/dbt-project-evaluator
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="dbt_project_evaluator" class="md-nav__button md-logo" aria-label="dbt_project_evaluator" data-md-component="logo">
+      
+  <img src="../assets/dbt-logo.svg" alt="logo">
+
+    </a>
+    dbt_project_evaluator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dbt-labs/dbt-project-evaluator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dbt-labs/dbt-project-evaluator
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from version 1
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from version 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-migrate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to migrate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to migrate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-the-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-update-the-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Update the package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-remove-the-version-1-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Remove the version 1 configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-convert-the-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Convert the exceptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-hard-coded-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Hard-coded references
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-update-your-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Update your CI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-replace-the-queries-on-the-packages-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Replace the queries on the package's tables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-check-the-exclusions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Check the exclusions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    List of rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/modeling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modeling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/governance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Customization
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Customization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization/overriding-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overriding variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization/customization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disabling checks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization/exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuring exceptions to the rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization/excluding-packages-and-paths/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Excluding packages and models/sources based on path
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customization/issues-in-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reading the violations in the logs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci-check/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run in CI Check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../querying-the-dag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Querying the DAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/dbt-labs/dbt-project-evaluator/edit/main/docs/migrating-to-v2.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="migrating-from-version-1-to-version-2">Migrating from version 1 to version 2<a class="headerlink" href="#migrating-from-version-1-to-version-2" title="Permanent link">#</a></h1>
+<p>Version 2 is a rewrite: the rules are native <a href="https://docs.getdbt.com/docs/build/checks">dbt checks</a> that run on the information schema of your project, and the package no longer builds anything in your warehouse. Most of the work is deleting configuration that only existed for version 1.</p>
+<div class="admonition info">
+<p class="admonition-title">Who this is for</p>
+<p>Version 2 needs <strong>dbt 2.0.0 or later</strong>. On dbt v1 (1.x), stay on version 1 of the package and pin it:</p>
+<div class="language-yaml highlight"><span class="filename">packages.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">packages</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dbt-labs/dbt_project_evaluator</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&gt;=1.0.0&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;&lt;2.0.0&quot;</span><span class="p p-Indicator">]</span>
+</span></code></pre></div>
+</div>
+<h2 id="how-to-migrate">How to migrate<a class="headerlink" href="#how-to-migrate" title="Permanent link">#</a></h2>
+<p>Migrating is a handful of steps, most of them deleting configuration that only existed for version 1. A helper script, <code>migrate_to_v2.py</code>, is <strong>optional</strong>: everything it does can be done by hand with the steps below. It comes with the package, and it does two separate things:</p>
+<ul>
+<li><span class="pill pill-checklist">Checklist</span> <strong>A checklist</strong> (<code>--check-only</code>): it reads your project and lists what has to change, with file and line numbers. It only reads files and never needs your project to parse, so you can run it as soon as the package is installed.</li>
+<li><span class="pill pill-script">Script converts</span> <strong>The conversion of the exceptions seed</strong>: it writes the equivalent of your <code>dbt_project_evaluator_exceptions.csv</code> for version 2. You only need this if you used the seed.</li>
+</ul>
+<p>Every step below is labelled with what can be done for it:</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="pill pill-manual">Manual</span></td>
+<td>You do it by hand.</td>
+</tr>
+<tr>
+<td><span class="pill pill-checklist">Checklist</span></td>
+<td>The checklist finds it for you, with the file and the line. You still make the change.</td>
+</tr>
+<tr>
+<td><span class="pill pill-script">Script converts</span></td>
+<td>The script does the work for you.</td>
+</tr>
+</tbody>
+</table>
+<p>If you work with a coding agent, the package ships a skill that follows these steps for you: <a href="../skills/"><code>migrating-dbt-project-evaluator-to-v2</code></a>. Install the package, run <code>dbt deps</code> with an <code>ai_provider</code> set, and ask the agent to migrate the project.</p>
+<p>The recommended order:</p>
+<ol>
+<li>Update the package and run <code>dbt deps</code> (<a href="#1-update-the-package">step 1</a>). The script is now in <code>dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py</code>.</li>
+<li>Run the checklist to see the size of the migration.</li>
+<li>Apply the manual steps 2 and 4 to 7. The checklist says where.</li>
+<li>Only if you used the seed, convert the exceptions (<a href="#3-convert-the-exceptions">step 3</a>).</li>
+<li>Run <code>dbt check</code> and compare it with what you expect.</li>
+<li>Run the checklist again until it reports nothing.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What can be done</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#1-update-the-package">1. Update the package</a></td>
+<td><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span></td>
+</tr>
+<tr>
+<td><a href="#2-remove-the-version-1-configuration">2. Remove the version 1 configuration</a></td>
+<td><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span></td>
+</tr>
+<tr>
+<td><a href="#3-convert-the-exceptions">3. Convert the exceptions</a></td>
+<td><span class="pill pill-script">Script converts</span> <span class="pill pill-manual">Manual</span></td>
+</tr>
+<tr>
+<td><a href="#4-hard-coded-references">4. Hard-coded references</a></td>
+<td><span class="pill pill-manual">Manual</span></td>
+</tr>
+<tr>
+<td><a href="#5-update-your-ci">5. Update your CI</a></td>
+<td><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span></td>
+</tr>
+<tr>
+<td><a href="#6-replace-the-queries-on-the-packages-tables">6. Replace the queries on the package's tables</a></td>
+<td><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span></td>
+</tr>
+<tr>
+<td><a href="#7-check-the-exclusions">7. Check the exclusions</a></td>
+<td><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="running-the-script">Running the script<a class="headerlink" href="#running-the-script" title="Permanent link">#</a></h3>
+<p>After <code>dbt deps</code>, run it from the root of your project (or pass <code>--project-dir</code>):</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># the checklist, writes nothing</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python<span class="w"> </span>dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py<span class="w"> </span>--check-only
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># the checklist, and the conversion of the exceptions seed into a macro</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>python<span class="w"> </span>dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py
+</span></code></pre></div>
+<p>It is a single Python 3 file with no dependency. If <code>python</code> is not found, use <code>python3</code> (macOS, Linux) or <code>py</code> (Windows), or run it with <a href="https://docs.astral.sh/uv/">uv</a> on any system: <code>uv run dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py</code>. If you changed <code>packages-install-path</code>, use that folder instead of <code>dbt_packages</code>.</p>
+<h2 id="1-update-the-package">1. Update the package<a class="headerlink" href="#1-update-the-package" title="Permanent link">#</a></h2>
+<p><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist flags a package that is not pinned to 2.x.</p>
+<div class="language-yaml highlight"><span class="filename">packages.yml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">packages</span><span class="p">:</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dbt-labs/dbt_project_evaluator</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&gt;=2.0.0&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;&lt;3.0.0&quot;</span><span class="p p-Indicator">]</span>
+</span></code></pre></div>
+<p>The package has no dependency any more: if <code>dbt_utils</code> is only in your <code>packages.yml</code> for this package, you can remove it. Then run <code>dbt deps</code>.</p>
+<h2 id="2-remove-the-version-1-configuration">2. Remove the version 1 configuration<a class="headerlink" href="#2-remove-the-version-1-configuration" title="Permanent link">#</a></h2>
+<p><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> Each item is reported with its line number.</p>
+<p>Delete the following from your <code>dbt_project.yml</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Version 1</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>models: dbt_project_evaluator:</code> (materializations, <code>+enabled</code>...)</td>
+<td>Delete. There are no models any more.</td>
+</tr>
+<tr>
+<td><code>seeds: dbt_project_evaluator:</code> (for example disabling <code>dbt_project_evaluator_exceptions</code>)</td>
+<td>Delete. See <a href="#3-convert-the-exceptions">exceptions</a>.</td>
+</tr>
+<tr>
+<td><code>dispatch:</code> entries mentioning <code>dbt_project_evaluator</code></td>
+<td>Delete. The cross-database macros are gone.</td>
+</tr>
+<tr>
+<td><code>on-run-end:</code> calling <code>print_dbt_project_evaluator_issues</code></td>
+<td>Delete. <code>dbt check</code> and <code>dbt build</code> print the violations.</td>
+</tr>
+<tr>
+<td><code>tests:</code> / <code>data_tests: dbt_project_evaluator:</code> (severity)</td>
+<td>Replace with the <code>checks:</code> configuration below.</td>
+</tr>
+<tr>
+<td><code>DBT_PROJECT_EVALUATOR_SEVERITY</code> environment variable</td>
+<td>Replace with the <code>checks:</code> configuration below.</td>
+</tr>
+<tr>
+<td>Variables <code>insert_batch_size</code>, <code>max_depth_dag</code>, <code>comment_chars</code>, <code>token_costs</code>, <code>use_native_agate_printing</code></td>
+<td>Delete.</td>
+</tr>
+</tbody>
+</table>
+<p>Severity is configured per category or per check, and checks only warn by default:</p>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">checks</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">structure</span><span class="p">:</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">+severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span><span class="w">          </span><span class="c1"># a whole category: modeling, documentation, governance, performance, structure, testing</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">documentation</span><span class="p">:</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">fct_undocumented_models</span><span class="p">:</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="nt">+severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span><span class="w">        </span><span class="c1"># a single check</span>
+</span></code></pre></div>
+<p>All the other variables (<code>models_fanout_threshold</code>, <code>documentation_coverage_target</code>, <code>model_types</code>, the prefixes and folder names...) keep working, see <a href="../customization/overriding-variables/">overriding variables</a>.</p>
+<h2 id="3-convert-the-exceptions">3. Convert the exceptions<a class="headerlink" href="#3-convert-the-exceptions" title="Permanent link">#</a></h2>
+<p><span class="pill pill-script">Script converts</span> <span class="pill pill-manual">Manual</span> Skip this step if you never used the seed.</p>
+<p>The seed <code>dbt_project_evaluator_exceptions.csv</code> cannot be used any more, because checks cannot read seeds. Exceptions are now a mapping from the name of a check to a list of entries, see <a href="../customization/exceptions/">configuring exceptions</a>. An entry is either a pattern for the resource the violation points at, or a mapping <code>{column: pattern}</code> on a column that the check returns.</p>
+<p>The script converts your seed into a macro (or into a <code>vars:</code> snippet with <code>--format var</code>):</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py<span class="w">                                   </span><span class="c1"># writes macros/dbt_project_evaluator_exceptions.sql</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py<span class="w"> </span>--format<span class="w"> </span>var<span class="w">                      </span><span class="c1"># prints the snippet to add under `vars:`</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>python<span class="w"> </span>dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py<span class="w"> </span>--exceptions-csv<span class="w"> </span>path/to/file.csv<span class="w"> </span>--output<span class="w"> </span>macros/my_exceptions.sql
+</span></code></pre></div>
+<p>The seed is found automatically in <code>seeds/**/dbt_project_evaluator_exceptions.csv</code>. The script refuses to overwrite an existing file unless you pass <code>--force</code>. Once the generated macro is in place, delete the seed file and the <code>seeds: dbt_project_evaluator:</code> configuration.</p>
+<p>In version 1, a row of the seed excluded the rows of the <code>fct_</code> model whose <code>column_name</code> matched <code>id_to_exclude</code>. The same row is now one entry of the check. For example, these rows:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fct_name,column_name,id_to_exclude,comment
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fct_undocumented_models,resource_name,stg_legacy_%,renamed in Q3
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>fct_staging_dependent_on_staging,parent,stg_base_%,the base models are shared
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>fct_direct_join_to_source,parent,raw_shop.orders,
+</span></code></pre></div>
+<p>become:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">fct_undocumented_models</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;stg_legacy_%&#39;</span><span class="w">   </span><span class="c1"># renamed in Q3</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">fct_staging_dependent_on_staging</span><span class="p">:</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">parent</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;stg_base_%&#39;</span><span class="p p-Indicator">}</span><span class="w">   </span><span class="c1"># the base models are shared</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">fct_direct_join_to_source</span><span class="p">:</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">source_parents</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;raw_shop.orders&#39;</span><span class="p p-Indicator">}</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">model_parents</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;raw_shop.orders&#39;</span><span class="p p-Indicator">}</span>
+</span></code></pre></div>
+<p>The column is translated as follows. Nothing is dropped silently: whatever cannot be translated is written as a <code># NEEDS REVIEW</code> comment with the reason and the columns that the 2.x check returns.</p>
+<table>
+<thead>
+<tr>
+<th>Version 1 <code>column_name</code></th>
+<th>Version 2 entry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The resource that the 2.x violation points at: <code>resource_name</code> (most checks), <code>child</code> (<code>fct_chained_views_dependencies</code>, <code>fct_direct_join_to_source</code>, <code>fct_multiple_sources_joined</code>, <code>fct_root_models</code>, <code>fct_staging_dependent_on_*</code>, <code>fct_marts_or_intermediate_dependent_on_source</code>), <code>parent</code> (<code>fct_model_fanout</code>, <code>fct_source_fanout</code>, <code>fct_unused_sources</code>), <code>exposure_name</code>, <code>model_name</code>, <code>parent_and_child</code> (<code>fct_rejoining_of_upstream_concepts</code>)</td>
+<td>A pattern: <code>'stg_legacy_%'</code>.</td>
+</tr>
+<tr>
+<td>A column that also exists in 2.x, sometimes under another name: <code>parent</code> and <code>child</code> of <code>fct_staging_dependent_on_*</code>, <code>fct_chained_views_dependencies</code> and <code>fct_rejoining_of_upstream_concepts</code>; <code>parent_resource_name</code>, <code>parent_resource_type</code>, <code>parent_model_materialization</code> and <code>parent_access</code> of the exposure checks; <code>model_type</code>, <code>current_file_path</code> and <code>change_file_path_to</code> of <code>fct_model_directories</code>; <code>child_model_type</code> of <code>fct_marts_or_intermediate_dependent_on_source</code> (<code>model_type</code>); <code>is_contract_enforced</code> (<code>contract_enforced</code>); <code>is_described</code> (<code>is_described_model</code>)</td>
+<td><code>{column: 'pattern'}</code> with the 2.x name of the column.</td>
+</tr>
+<tr>
+<td><code>parent</code> of <code>fct_direct_join_to_source</code></td>
+<td>Two entries, <code>{source_parents: ...}</code> and <code>{model_parents: ...}</code>.</td>
+</tr>
+<tr>
+<td><code>parent</code> of <code>fct_marts_or_intermediate_dependent_on_source</code></td>
+<td><code>{source_name: ...}</code>.</td>
+</tr>
+<tr>
+<td><code>source_parents</code>, <code>leaf_children</code>, <code>model_children</code></td>
+<td><code>{column: ...}</code>, see the note on lists below.</td>
+</tr>
+<tr>
+<td><code>source_name</code> of <code>fct_undocumented_sources</code></td>
+<td><code>{source_name: ...}</code>: the check reports one row per source.</td>
+</tr>
+<tr>
+<td><code>source_names</code> of <code>fct_duplicate_sources</code></td>
+<td><code>{source_name: ...}</code>, with a note: see below.</td>
+</tr>
+<tr>
+<td>A column that no longer exists (<code>distance</code>, <code>path</code>, <code>prefix</code>, <code>is_loop_independent</code>, <code>file_path</code>, <code>join_count</code>, <code>test_name</code>, <code>current_test_directory</code>, <code>source_db_location</code>, <code>is_public</code>, the <code>*_resource_type</code> and <code>*_model_type</code> columns that are now always the same, and so on)</td>
+<td><code># NEEDS REVIEW</code>, with the reason.</td>
+</tr>
+<tr>
+<td><code>fct_hard_coded_references</code></td>
+<td><code># NOT APPLICABLE</code>: it is not a check any more, <code>dbt lint</code> reports hard-coded references (step 4).</td>
+</tr>
+<tr>
+<td><code>fct_documentation_coverage</code>, <code>fct_test_coverage</code></td>
+<td><code># NOT APPLICABLE</code>: coverage checks never supported exceptions. Use <code>documentation_coverage_target</code> and <code>test_coverage_target</code>.</td>
+</tr>
+<tr>
+<td>A name that is not a version 2 check, a column that is not a column of this model, an empty pattern, a pattern containing Jinja delimiters or a line break</td>
+<td><code># NEEDS REVIEW</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Things that behave differently from version 1:</p>
+<ul>
+<li><strong>Lists.</strong> In version 1, <code>source_parents</code>, <code>leaf_children</code> and <code>model_children</code> were strings such as <code>a, b</code>, and the pattern was compared with the whole string. They are now lists of names and the pattern is compared with <strong>each element</strong>: the violation is accepted when any element matches. A pattern that relied on the separator (<code>a, b</code>) no longer matches.</li>
+<li><strong>One row per child.</strong> <code>fct_direct_join_to_source</code> had one row per parent. It now has one row per child, so accepting a parent accepts the whole violation of the child, even when it has other parents. To accept a single pair, combine two columns in the same entry: <code>{name: int_model_4, source_parents: raw_shop.orders}</code>.</li>
+<li><strong>Duplicate sources.</strong> <code>fct_duplicate_sources</code> had one row per group of sources pointing at the same table, and <code>source_names</code> was the list of the group. It has now one row per source: an exception on <code>source_name</code> only accepts the sources it matches, so a group disappears only when all its sources match. <code>source_db_location</code> is not translated, because the column is now <code>source_relation</code> (lower case, unquoted).</li>
+<li><strong>Paths.</strong> <code>fct_test_directories</code> returns the path of the properties YAML file (<code>current_properties_yml_file_path</code>) where version 1 returned its directory, so a pattern on <code>current_test_directory</code> has to be rewritten.</li>
+<li><strong>Case.</strong> The match is case-sensitive, and an entry for a check that does not exist is a compile error instead of being ignored. Patterns keep their <code>LIKE</code> syntax (<code>%</code>, <code>_</code>).</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Run <code>dbt check</code> before and after: the violations you accepted must disappear, and no other one should. A line left under <code>NEEDS REVIEW</code> means a violation will be reported again until you handle it.</p>
+</div>
+<h2 id="4-hard-coded-references">4. Hard-coded references<a class="headerlink" href="#4-hard-coded-references" title="Permanent link">#</a></h2>
+<p><span class="pill pill-manual">Manual</span></p>
+<p><code>fct_hard_coded_references</code> is not a check in version 2: hard-coded references are reported by <code>dbt lint</code>. Turn on the rule <a href="https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules"><code>DBT05</code></a> in your <code>.sqlfluff</code> with <code>rules = DBT05</code>, and delete the exceptions you had for <code>fct_hard_coded_references</code>.</p>
+<h2 id="5-update-your-ci">5. Update your CI<a class="headerlink" href="#5-update-your-ci" title="Permanent link">#</a></h2>
+<p><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist flags the files that select or exclude the package.</p>
+<table>
+<thead>
+<tr>
+<th>Version 1</th>
+<th>Version 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dbt build --select package:dbt_project_evaluator</code></td>
+<td><code>dbt check</code> (checks also run first in <code>dbt build</code>)</td>
+</tr>
+<tr>
+<td><code>--exclude package:dbt_project_evaluator</code> in selectors and jobs</td>
+<td>Delete: there is nothing to exclude.</td>
+</tr>
+<tr>
+<td>Only keeping the results of the changed models</td>
+<td><code>dbt check --select state:modified --state &lt;path&gt;</code> (<code>--state</code> isn't needed in a dbt platform CI job)</td>
+</tr>
+<tr>
+<td>Failing the job with <code>DBT_PROJECT_EVALUATOR_SEVERITY=error</code></td>
+<td><code>+severity: error</code> in the <code>checks:</code> configuration</td>
+</tr>
+</tbody>
+</table>
+<p><code>--select</code> and <code>state:modified</code> cannot select the sources reported by the source checks yet (<a href="https://github.com/dbt-labs/dbt/issues/16554">dbt-labs/dbt#16554</a>): run those checks without a selector. See <a href="../ci-check/">running in CI</a> for a complete example, including what to do on the dbt platform.</p>
+<h2 id="6-replace-the-queries-on-the-packages-tables">6. Replace the queries on the package's tables<a class="headerlink" href="#6-replace-the-queries-on-the-packages-tables" title="Permanent link">#</a></h2>
+<p><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist lists the models that reference a removed table.</p>
+<p>The tables of version 1 (<code>int_all_dag_relationships</code>, <code>int_all_graph_resources</code>, <code>int_direct_relationships</code>, <code>stg_nodes</code>, the <code>fct_</code> models...) do not exist any more. Models of yours that <code>ref()</code> them must query the information schema instead: <code>{{ info_schema('edges') }}</code>, <code>{{ info_schema('models') }}</code>... See <a href="../querying-the-dag/">querying the DAG</a>. The script lists the models that reference a removed table.</p>
+<h2 id="7-check-the-exclusions">7. Check the exclusions<a class="headerlink" href="#7-check-the-exclusions" title="Permanent link">#</a></h2>
+<p><span class="pill pill-manual">Manual</span> <span class="pill pill-checklist">Checklist</span> The checklist flags entries that look like regular expressions.</p>
+<p><code>exclude_packages</code> works as in version 1, including <code>['all']</code> and the rule that your own project is never excluded. <code>exclude_paths_from_project</code> has changed:</p>
+<ul>
+<li>entries are <strong>literal text</strong>, matched with <code>LIKE '%…%'</code> against the file path and the <code>unique_id</code>. They are no longer case-insensitive regular expressions, so <code>^models/legacy/.*</code> has to become <code>models/legacy/</code>. They apply to resources of all packages.</li>
+</ul>
+<p>See <a href="../customization/excluding-packages-and-paths/">excluding packages and paths</a>.</p>
+<h2 id="known-limitations">Known limitations<a class="headerlink" href="#known-limitations" title="Permanent link">#</a></h2>
+<ul>
+<li><code>fct_missing_primary_key_tests</code> doesn't count <code>not_null</code> column constraints yet, because constraints aren't available to checks (<a href="https://github.com/dbt-labs/dbt/issues/16553">dbt-labs/dbt#16553</a>). A model that relies on a <code>not_null</code> constraint plus a <code>unique</code> test is flagged until it also has a <code>not_null</code> test. This is a short-term limitation.</li>
+<li><code>dbt check --select</code> cannot select the sources reported by the source checks yet (<a href="https://github.com/dbt-labs/dbt/issues/16554">dbt-labs/dbt#16554</a>).</li>
+</ul>
+<h2 id="checklist">Checklist<a class="headerlink" href="#checklist" title="Permanent link">#</a></h2>
+<ul>
+<li>[ ] <code>packages.yml</code> pins <code>["&gt;=2.0.0", "&lt;3.0.0"]</code> and <code>dbt deps</code> passes</li>
+<li>[ ] (optional) <code>python dbt_packages/dbt_project_evaluator/scripts/migrate_to_v2.py --check-only</code> reports nothing left to change</li>
+<li>[ ] the exceptions macro (or var) is in place, its <code>NEEDS REVIEW</code> lines are handled, and the seed is deleted</li>
+<li>[ ] <code>dbt check</code> runs and reports the violations you expect</li>
+<li>[ ] CI uses <code>dbt check</code> and severity comes from the <code>checks:</code> configuration</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../skills/" class="md-footer__link md-footer__link--next" aria-label="Next: Agent skills">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Agent skills
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.footer", "navigation.instant", "navigation.tracking", "content.action.edit", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

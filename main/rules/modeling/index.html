@@ -83,6 +83,18 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  Using dbt v1? This documentation is for version 2, which requires dbt 2.0 or later.
+  Pick version 1.x in the version selector, or see the
+  <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -286,6 +298,60 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migrating-to-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from version 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -299,10 +365,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -320,8 +386,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -739,10 +805,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -760,8 +826,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -897,35 +963,7 @@
   <span class="md-ellipsis">
     
   
-    Display issues in the logs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../customization/querying-columns-names-and-descriptions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Querying columns names and descriptions
+    Reading the violations in the logs
   
 
     
@@ -1053,12 +1091,23 @@
 
 
 <h1 id="modeling">Modeling<a class="headerlink" href="#modeling" title="Permanent link">#</a></h1>
+<p>Each rule is a native <a href="https://docs.getdbt.com/docs/build/checks">dbt check</a> that returns one row per violation. Run it with <code>dbt check &lt;rule_name&gt;</code>, for example <code>dbt check fct_root_models</code>.</p>
 <h2 id="direct-join-to-source">Direct Join to Source<a class="headerlink" href="#direct-join-to-source" title="Permanent link">#</a></h2>
-<p><code>fct_direct_join_to_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/dag/fct_direct_join_to_source.sql" target="_blank">source</a>) shows each parent/child relationship where a model has a reference to
-both a model and a source.</p>
+<p><code>fct_direct_join_to_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_direct_join_to_source.sql">source</a>) flags each model that selects from both another model and a source.</p>
 <p><strong>Example</strong></p>
 <p><code>int_model_4</code> is pulling in both a model and a source.</p>
-<p><img alt="DAG showing a model and a source joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_1["stg_model_1"]:::staging
+    int_model_4["int_model_4"]:::intermediate
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_1 --&gt; int_model_4
+    source_1_table_2 --&gt; int_model_4
+    class int_model_4 flagged
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>We highly recommend having a one-to-one relationship between sources and their corresponding <code>staging</code> model, and not having any other model reading from the source. Those <code>staging</code> models are then the ones read from by the other downstream models.</p>
 <p>This allows renaming your columns and doing minor transformation on your source data only once and being consistent
@@ -1070,14 +1119,29 @@ across all the models that will consume the source data.</p>
 <li>and join this <code>staging</code> model to other ones to create our downstream transformation instead of using the source</li>
 </ol>
 <p>After refactoring your downstream model to select from the staging layer, your DAG should look like this:</p>
-<p><img alt="DAG showing two staging models joining into a new model" src="https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    stg_model_1["stg_model_1"]:::staging
+    int_model_4["int_model_4"]:::intermediate
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_1 --&gt; int_model_4
+    stg_model_2 --&gt; int_model_4</code></pre>
 <hr />
 <h2 id="downstream-models-dependent-on-source">Downstream Models Dependent on Source<a class="headerlink" href="#downstream-models-dependent-on-source" title="Permanent link">#</a></h2>
-<p><code>fct_marts_or_intermediate_dependent_on_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql">source</a>) shows each downstream model (<code>marts</code> or <code>intermediate</code>)
+<p><code>fct_marts_or_intermediate_dependent_on_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_marts_or_intermediate_dependent_on_source.sql">source</a>) shows each downstream model (<code>marts</code> or <code>intermediate</code>)
 that depends directly on a source node.</p>
 <p><strong>Example</strong></p>
 <p><code>fct_model_9</code>, a marts model, builds from <code>source_1.table_5</code> a source.</p>
-<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_5["source_1.table_5"]:::source
+    fct_model_9["fct_model_9"]:::marts
+    source_1_table_5 --&gt; fct_model_9
+    class fct_model_9 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>We very strongly believe that a staging model is the atomic unit of data modeling. Each staging
 model bears a one-to-one relationship with the source data table it represents. It has the same
@@ -1088,13 +1152,27 @@ node, there likely is a missing model that needs to be added.</p>
 <p>Add the reference to the appropriate <code>staging</code> model to maintain an abstraction layer between your raw data
 and your downstream data artifacts.</p>
 <p>After refactoring your downstream model to select from the staging layer, your DAG should look like this:</p>
-<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png" width="700" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    source_1_table_5["source_1.table_5"]:::source
+    stg_model_5["stg_model_5"]:::staging
+    fct_model_9["fct_model_9"]:::marts
+    source_1_table_5 --&gt; stg_model_5
+    stg_model_5 --&gt; fct_model_9</code></pre>
 <hr />
 <h2 id="duplicate-sources">Duplicate Sources<a class="headerlink" href="#duplicate-sources" title="Permanent link">#</a></h2>
-<p><code>fct_duplicate_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_duplicate_sources.sql">source</a>) shows each database object that corresponds to more than one source node.</p>
+<p><code>fct_duplicate_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_duplicate_sources.sql">source</a>) returns one row per source node that points at a database object also used by another source node.</p>
 <p><strong>Example</strong></p>
 <p>Imagine you have two separate source nodes - <code>source_1.table_5</code> and <code>source_1.raw_table_5</code>.</p>
-<p><img alt="two source nodes in DAG" src="https://user-images.githubusercontent.com/53586774/226765218-2302deab-8c98-49ce-968a-007ee8ba571a.png" width="400" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_5["source_1.table_5"]:::source
+    source_1_raw_table_5["source_1.raw_table_5"]:::source
+    class source_1_table_5 flagged
+    class source_1_raw_table_5 flagged</code></pre>
 <p>But both source definitions point to the exact same location in your database - <code>real_database</code>.<code>real_schema</code>.<code>table_5</code>.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">sources</span><span class="p">:</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_1</span>
@@ -1111,7 +1189,11 @@ and your downstream data artifacts.</p>
 <p>Combine the duplicate source nodes so that each source database location only has a single source definition in your dbt project.</p>
 <hr />
 <h2 id="hard-coded-references">Hard Coded References<a class="headerlink" href="#hard-coded-references" title="Permanent link">#</a></h2>
-<p><code>fct_hard_coded_references</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_hard_coded_references.sql">source</a>) shows each instance where a model contains hard coded reference(s).</p>
+<div class="admonition info">
+<p class="admonition-title">Reported by <code>dbt lint</code> in version 2</p>
+<p>Hard coded references are reported by the <a href="https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules"><code>dbt lint</code></a> rule <code>DBT05</code> (<code>dbt.hard_coded_reference</code>), which you turn on in your <code>.sqlfluff</code> with <code>rules = DBT05</code>. It is not a <code>dbt check</code>.</p>
+</div>
+<p><code>dbt lint</code> shows each instance where a model contains hard coded reference(s).</p>
 <p><strong>Example</strong></p>
 <p><code>fct_orders</code> uses hard coded direct relation references (<code>my_db.my_schema.orders</code> and <code>my_schema.customers</code>).</p>
 <div class="language-sql highlight"><span class="filename">fct_orders.sql</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">with</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span>
@@ -1128,7 +1210,7 @@ and your downstream data artifacts.</p>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="n">orders</span><span class="p">.</span><span class="n">customer_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">customers</span><span class="p">.</span><span class="n">id</span>
 </span></code></pre></div>
 <p><strong>Reason to Flag</strong></p>
-<p>Always use the <code>ref</code> function when selecting from another model and the <code>source</code> function when selecting from raw data, rather than using the direct relation reference (e.g. <code>my_schema.my_table</code>). Direct relation references are determined via regex mapping <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/find_all_hard_coded_references.sql">here</a>.</p>
+<p>Always use the <code>ref</code> function when selecting from another model and the <code>source</code> function when selecting from raw data, rather than using the direct relation reference (e.g. <code>my_schema.my_table</code>).</p>
 <p>The <code>ref</code> and <code>source</code> functions are part of what makes dbt so powerful! Using these functions allows dbt to infer dependencies (and check that you haven't created any circular dependencies), properly generate your DAG, and ensure that models are built in the correct order. This also ensures that your current model selects from upstream tables and views in the same environment that you're working in.</p>
 <p><strong>How to Remediate</strong></p>
 <p>For each hard coded reference:</p>
@@ -1152,11 +1234,22 @@ and your downstream data artifacts.</p>
 </span></code></pre></div>
 <hr />
 <h2 id="model-fanout">Model Fanout<a class="headerlink" href="#model-fanout" title="Permanent link">#</a></h2>
-<p><code>fct_model_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_model_fanout.sql">source</a>) shows all parents with more than 3 direct leaf children.
+<p><code>fct_model_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_model_fanout.sql">source</a>) flags every model with at least <code>models_fanout_threshold</code> (default 3) direct leaf children. A leaf is a model with no children of its own; tests, exposures, metrics and saved queries don't count as children.
 You can set your own threshold for model fanout by overriding the <code>models_fanout_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
 <p><code>fct_model</code> has three direct leaf children.</p>
-<p><img alt="A DAG showing three models branching out of a fct model" src="https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    fct_model["fct_model"]:::marts
+    model_1["model_1"]:::model
+    model_2["model_2"]:::model
+    model_3["model_3"]:::model
+    fct_model --&gt; model_1
+    fct_model --&gt; model_2
+    fct_model --&gt; model_3
+    class fct_model flagged</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>This might indicate some transformations should move to the BI layer, or a common business transformations
 should be moved upstream.</p>
@@ -1165,7 +1258,11 @@ should be moved upstream.</p>
 end your DAG after marts (i.e. fcts &amp; dims) and join those artifacts together (with a little know how
 and setup time) to make your reports. For others, like Tableau, model fanouts might be more
 beneficial, as this tool prefers big tables over joins, so predefining some reports is usually more performant.</p>
-<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p>To accept specific cases, list them under <code>fct_model_fanout</code> in <a href="../../customization/exceptions/"><code>dbt_project_evaluator_exceptions</code></a>, either by name or by one of the leaf children (<code>leaf_children</code> is a list):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">fct_model_fanout</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fct_model_6</span><span class="w">                  </span><span class="c1"># the model with the fanout</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">leaf_children</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">report_%</span><span class="w">      </span><span class="c1"># any model that has a leaf child matching report_%</span>
+</span></code></pre></div>
 <p><strong>How to Remediate</strong></p>
 <p>Queries and transformations can move around between dbt and the BI tool, so how do we try to stay
 effortful in what we decide to put where?</p>
@@ -1179,10 +1276,21 @@ TODO: edit this line in 6 months after more progress is made on the metrics serv
 predefine every query or quandary your team might have. So decide as a team where that line is and maintain it.</p>
 <hr />
 <h2 id="multiple-sources-joined">Multiple Sources Joined<a class="headerlink" href="#multiple-sources-joined" title="Permanent link">#</a></h2>
-<p><code>fct_multiple_sources_joined</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_multiple_sources_joined.sql">source</a>) shows each instance where a model references more than one source.</p>
+<p><code>fct_multiple_sources_joined</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_multiple_sources_joined.sql">source</a>) flags each model or snapshot that references more than one source.</p>
 <p><strong>Example</strong></p>
-<p><code>model_1</code> references two source tables.</p>
-<p><img alt="A DAG showing two sources feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png" width="500" /></p>
+<p><code>stg_model_2</code> references two source tables.</p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    source_1_table_1 --&gt; stg_model_2
+    source_1_table_2 --&gt; stg_model_2
+    class stg_model_2 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>We very strongly believe that a staging model is the atomic unit of data modeling. Each staging
 model bears a one-to-one relationship with the source data table it represents. It has the same
@@ -1192,7 +1300,12 @@ not being composable enough and there are individual building blocks which could
 their respective models.</p>
 <p><strong>Exceptions</strong></p>
 <p>Sometimes companies have a bunch of <a href="https://discourse.getdbt.com/t/unioning-identically-structured-data-sources/921">identical sources across systems</a>. When these identical sources will only ever be used collectively, you should union them once and create a staging layer on the combined result.</p>
-<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p>To accept specific cases, list them under <code>fct_multiple_sources_joined</code> in <a href="../../customization/exceptions/"><code>dbt_project_evaluator_exceptions</code></a>, either by model name or by source (<code>source_parents</code> is a list):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">fct_multiple_sources_joined</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stg_%_unioned</span><span class="w">                                           </span><span class="c1"># the model</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_parents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_1.table_1</span><span class="w">                        </span><span class="c1"># any model that reads from this source</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">stg_model_2</span><span class="p p-Indicator">,</span><span class="nt"> source_parents</span><span class="p">:</span><span class="w"> </span><span class="nv">source_1.table_2</span><span class="p p-Indicator">}</span><span class="w">   </span><span class="c1"># this model and this source</span>
+</span></code></pre></div>
 <p><strong>How to Remediate</strong></p>
 <p>In this example specifically, those raw sources, <code>source_1.table_1</code> and <code>source_1.table_2</code> should each
 have their own staging model (<code>stg_model_1</code> and <code>stg_model_2</code>), as transitional steps, which will
@@ -1208,17 +1321,51 @@ to move that logic back to the new staging models instead. This will help coloca
 transformations and avoid duplicate code, so that all downstream models can leverage the same
 set of transformations.</p>
 <p>Post-refactor, your DAG should look like this:</p>
-<p><img alt="A refactored DAG showing two staging models feeding into an intermediate model" src="https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    int_model_2["int_model_2"]:::intermediate
+    source_1_table_1 --&gt; stg_model_1
+    source_1_table_2 --&gt; stg_model_2
+    stg_model_1 --&gt; int_model_2
+    stg_model_2 --&gt; int_model_2</code></pre>
 <p>or if you want to use base_ models and keep stg_model_2 as is:</p>
-<p><img alt="A refactored DAG showing two base models feeding into a staging model" src="https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    base__model_1["base__model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    base__model_2["base__model_2"]:::staging
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_1 --&gt; base__model_1
+    source_1_table_2 --&gt; base__model_2
+    base__model_1 --&gt; stg_model_2
+    base__model_2 --&gt; stg_model_2</code></pre>
 <hr />
 <h2 id="rejoining-of-upstream-concepts">Rejoining of Upstream Concepts<a class="headerlink" href="#rejoining-of-upstream-concepts" title="Permanent link">#</a></h2>
-<p><code>fct_rejoining_of_upstream_concepts</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_rejoining_of_upstream_concepts.sql">source</a>) contains all cases where one of the parent's direct children
+<p><code>fct_rejoining_of_upstream_concepts</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_rejoining_of_upstream_concepts.sql">source</a>) contains all cases where one of the parent's direct children
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
 where the model "in between" the parent and child has NO other downstream dependencies.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_1</code>, <code>int_model_4</code>, and <code>int_model_5</code> create a "loop" in the DAG. <code>int_model_4</code> has no other downstream dependencies other than <code>int_model_5</code>.</p>
-<p><img width="500" alt="A DAG showing three resources. A staging model is referenced by both an int model (<code>int_model_4</code>) and a second int model (<code>int_model_5</code>). <code>int_model_4</code> is also being referenced by <code>int_model_5</code>. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png"></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_1["stg_model_1"]:::staging
+    int_model_4["int_model_4"]:::intermediate
+    int_model_5["int_model_5"]:::intermediate
+    stg_model_1 --&gt; int_model_4
+    stg_model_1 --&gt; int_model_5
+    int_model_4 --&gt; int_model_5
+    class int_model_4 flagged
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>This could happen for a variety of reasons: Accidentally duplicating some business concepts in multiple
 data flows, hesitance to touch (and break) someone else’s model, or perhaps trying to snowflake out
@@ -1235,72 +1382,163 @@ simplify the DAG, potentially at the expense of more rows of SQL within the mode
 as an argument input. If the shape of the data in the output of <code>stg_model_1</code> is not the same as what you
 need for the input to the function within <code>int_model_5</code>, then you will indeed need <code>int_model_4</code> to create
 that relation, in which case, leave it.</p>
-<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p>To accept specific cases, list them under <code>fct_rejoining_of_upstream_concepts</code> in <a href="../../customization/exceptions/"><code>dbt_project_evaluator_exceptions</code></a>. The check returns the columns <code>parent</code>, <code>parent_and_child</code> and <code>child</code>, so that a given loop can be accepted:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">fct_rejoining_of_upstream_concepts</span><span class="p">:</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">parent</span><span class="p">:</span><span class="w"> </span><span class="nv">stg_model_1</span><span class="p p-Indicator">,</span><span class="nt"> child</span><span class="p">:</span><span class="w"> </span><span class="nv">int_model_5.v2</span><span class="p p-Indicator">}</span>
+</span></code></pre></div>
 <p><strong>How to Remediate</strong></p>
 <p>Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from <code>int_model_4</code> into a CTE within <code>int_model_5</code>, and swap all <code>{{ ref('int_model_4') }}</code> references to the new CTE(s).</p>
 <p>Post-refactor, your DAG should look like this:</p>
-<p><img alt="A refactored DAG removing the 'loop', by folding int_model_4 into int_model_5." src="https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    stg_model_1["stg_model_1"]:::staging
+    int_model_5["int_model_5"]:::intermediate
+    stg_model_1 --&gt; int_model_5</code></pre>
 <hr />
 <h2 id="root-models">Root Models<a class="headerlink" href="#root-models" title="Permanent link">#</a></h2>
-<p><code>fct_root_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_root_models.sql">source</a>) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.</p>
+<p><code>fct_root_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_root_models.sql">source</a>) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.</p>
 <p><strong>Example</strong></p>
 <p><code>model_4</code> has no direct parents</p>
-<p><img alt="A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models" src="https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png" width="500" /></p>
-<p><strong>Reason to Flag</strong></b></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_table_1["source.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    model_1["model_1"]:::model
+    source_table_2["source.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    model_2["model_2"]:::model
+    source_table_3["source.table_3"]:::source
+    stg_model_3["stg_model_3"]:::staging
+    model_3["model_3"]:::model
+    model_4["model_4"]:::model
+    source_table_1 --&gt; stg_model_1
+    stg_model_1 --&gt; model_1
+    source_table_2 --&gt; stg_model_2
+    stg_model_2 --&gt; model_2
+    source_table_3 --&gt; stg_model_3
+    stg_model_3 --&gt; model_3
+    class model_4 flagged</code></pre>
+<p><strong>Reason to Flag</strong></p>
 <p>This likely means that the model (<code>model_4</code>  below) contains raw table references, either to a raw data source, or another model in the project without using the <code>{{ source() }}</code> or <code>{{ ref() }}</code> functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies.</p>
 <p><strong>Exceptions</strong></p>
 <p>This behavior may be observed in the case of a manually defined reference table that does not have any dependencies. A good example of this is a <code>dim_calendar</code> table that is generated by the <code>{{ dbt_utils.date_spine() }}</code> macro — this SQL logic is completely self contained, and does not require any external data sources to execute.</p>
-<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p>To accept specific cases, list them under <code>fct_root_models</code> in <a href="../../customization/exceptions/"><code>dbt_project_evaluator_exceptions</code></a>, by name or by folder:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">fct_root_models</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dim_calendar</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">original_file_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">models/utils/%</span>
+</span></code></pre></div>
 <p><strong>How to Remediate</strong></p>
 <p>Start by mapping any table references in the <code>FROM</code> clause of the model definition to the models or raw tables that they draw from, and replace those references with the <code>{{ ref() }}</code> if the dependency is another dbt model, or the <code>{{ source() }}</code> function if the table is a raw data source (this may require the declaration of a new source table). Then, visualize this model in the DAG, and refactor as appropriate according to best practices.</p>
 <hr />
 <h2 id="source-fanout">Source Fanout<a class="headerlink" href="#source-fanout" title="Permanent link">#</a></h2>
-<p><code>fct_source_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_source_fanout.sql">source</a>) shows each instance where a source is the direct parent of multiple resources in the DAG.</p>
+<p><code>fct_source_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_source_fanout.sql">source</a>) shows each instance where a source is the direct parent of multiple resources in the DAG.</p>
 <p><strong>Example</strong></p>
-<p><code>source.table_1</code> has more than one direct child model.</p>
-<p><img alt="image" src="https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png" width="500" /></p>
+<p><code>source_1.table_1</code> has more than one direct child model.</p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_1 --&gt; stg_model_1
+    source_1_table_1 --&gt; stg_model_2
+    class source_1_table_1 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>Each source node should be referenced by a single model that performs basic operations, such as renaming, recasting, and other light transformations to maintain consistency through out the project. The role of this staging model is to mirror the raw data but align it with project conventions. The staging model should act as a source of truth and a buffer- any model which depends on the data from a given source should reference the cleaned data in the staging model as opposed to referencing the source directly. This approach keeps the code DRY (any light transformations that need to be done on the raw data are performed only once). Minimizing references to the raw data will also make it easier to update the project should the format of the raw data change.</p>
 <p><strong>Exceptions</strong></p>
 <p>NoSQL databases or heavily nested data sources often have so much info json packed into a table
 that you need to break one raw data source into multiple base models.</p>
-<p>To exclude specific cases, check out the instructions in <a href="../../customization/exceptions/">Configuring exceptions to the rules</a>.</p>
+<p>To accept specific cases, list them under <code>fct_source_fanout</code> in <a href="../../customization/exceptions/"><code>dbt_project_evaluator_exceptions</code></a>, either by source or by one of its models (<code>model_children</code> is a list):</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">fct_source_fanout</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_1.table_1</span><span class="w">            </span><span class="c1"># the source</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">model_children</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base_%</span><span class="w">      </span><span class="c1"># any source that has a model matching base_%</span>
+</span></code></pre></div>
 <p><strong>How to Remediate</strong></p>
 <p>Create a staging model which references the source and cleans the raw data (e.g. renaming, recasting). Any models referencing the source directly should be refactored to point towards the staging model instead.</p>
 <p>After refactoring the above example, the DAG would look something like this:</p>
-<p><img alt="image" src="https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model["stg_model"]:::staging
+    model_1["model_1"]:::model
+    model_2["model_2"]:::model
+    source_1_table_1 --&gt; stg_model
+    stg_model --&gt; model_1
+    stg_model --&gt; model_2</code></pre>
 <hr />
 <h2 id="staging-models-dependent-on-downstream-models">Staging Models Dependent on Downstream Models<a class="headerlink" href="#staging-models-dependent-on-downstream-models" title="Permanent link">#</a></h2>
-<p><code>fct_staging_dependent_on_marts_or_intermediate</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql">source</a>) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.</p>
+<p><code>fct_staging_dependent_on_marts_or_intermediate</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_staging_dependent_on_marts_or_intermediate.sql">source</a>) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_5</code>, a staging model, builds from <code>fct_model_9</code> a marts model.</p>
-<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    fct_model_9["fct_model_9"]:::marts
+    stg_model_5["stg_model_5"]:::staging
+    fct_model_9 --&gt; stg_model_5
+    class stg_model_5 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>This likely represents a misnamed file. According to dbt best practices, staging models should only
 select from source nodes. Dependence on downstream models indicates that this model may need to be either
 renamed, or reconfigured to only select from source nodes.</p>
 <p><strong>How to Remediate</strong></p>
-<p>Rename the file in the <code>child</code> column to use to appropriate prefix, or change the models lineage
+<p>Rename the file of the model in the <code>name</code> column to use the appropriate prefix, or change the models lineage
 by pointing the staging model to the appropriate <code>{{ source() }}</code>.</p>
 <p>After updating the model to use the appropriate <code>{{ source() }}</code> function, your graph should look like this:</p>
-<p><img alt="image" src="https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    source_1_table_5["source_1.table_5"]:::source
+    stg_model_5["stg_model_5"]:::staging
+    source_1_table_5 --&gt; stg_model_5</code></pre>
 <h2 id="staging-models-dependent-on-other-staging-models">Staging Models Dependent on Other Staging Models<a class="headerlink" href="#staging-models-dependent-on-other-staging-models" title="Permanent link">#</a></h2>
-<p><code>fct_staging_dependent_on_staging</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_staging.sql">source</a>) shows each parent/child relationship where models in the staging layer are
-dependent on each other.</p>
+<p><code>fct_staging_dependent_on_staging</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_staging_dependent_on_staging.sql">source</a>) flags each staging model (<code>name</code>) that depends on another staging model (<code>parent</code>).</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_2</code> is a parent of <code>stg_model_4</code>.</p>
-<p><img alt="A DAG showing stg_model_2 as a parent of stg_model_4." src="https://user-images.githubusercontent.com/53586774/164788355-4c6e58b5-21e0-45c6-bfde-af82952bb495.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_4["stg_model_4"]:::staging
+    stg_model_2 --&gt; stg_model_4
+    class stg_model_4 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>This may indicate a change in naming is necessary, or that the child model should instead reference a source.</p>
 <p><strong>How to Remediate</strong></p>
-<p>You should either change the model type of the <code>child</code> (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate <code>{{ source() }}</code>.</p>
+<p>You should either change the model type of the flagged model (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate <code>{{ source() }}</code>.</p>
 <p>In our example, we might realize that <code>stg_model_4</code> is <em>actually</em> an intermediate model. We should move this file to the appropriate intermediate directory and update the file name to <code>int_model_4</code>.</p>
 <hr />
 <h2 id="unused-sources">Unused Sources<a class="headerlink" href="#unused-sources" title="Permanent link">#</a></h2>
-<p><code>fct_unused_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_unused_sources.sql">source</a>) shows each source with 0 children.</p>
+<p><code>fct_unused_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_unused_sources.sql">source</a>) flags each source with no children (tests don't count as children).</p>
 <p><strong>Example</strong></p>
-<p><code>source.table_4</code> isn't being referenced.</p>
-<p><img alt="A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all" src="https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png" width="500" /></p>
+<p><code>source_1.table_4</code> isn't being referenced.</p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_3["source_1.table_3"]:::source
+    stg_model_3["stg_model_3"]:::staging
+    source_1_table_4["source_1.table_4"]:::source
+    source_1_table_1 --&gt; stg_model_1
+    source_1_table_2 --&gt; stg_model_2
+    source_1_table_3 --&gt; stg_model_3
+    class source_1_table_4 flagged</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>This represents either a source that you have defined in YML but never brought into a model or a
 model that was deprecated and the corresponding rows in the source block of the YML file were
@@ -1310,28 +1548,79 @@ doesn’t need to be there.</p>
 <p>Navigate to the <code>sources.yml</code> file (or whatever your company has called the file) that corresponds
 to the unused source. Within the YML file, remove the unused table name, along with descriptions
 or any other nested information.</p>
-<div class="language-yaml highlight"><span class="filename">sources.yml</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">sources</span><span class="p">:</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">some_source</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">tables</span><span class="p">:</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_1</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_2</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_3</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_4</span><span class="w">  </span><span class="c1"># &lt;-- remove this line</span>
+<div class="language-yaml highlight"><span class="filename">sources.yml</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">sources</span><span class="p">:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">some_source</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">raw</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">tables</span><span class="p">:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_1</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_2</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_3</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_4</span><span class="w">  </span><span class="c1"># &lt;-- remove this line</span>
 </span></code></pre></div>
-<p><img alt="A refactored DAG showing three sources which are each being referenced by an accompanying staging model" src="https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_3["source_1.table_3"]:::source
+    stg_model_3["stg_model_3"]:::staging
+    source_1_table_1 --&gt; stg_model_1
+    source_1_table_2 --&gt; stg_model_2
+    source_1_table_3 --&gt; stg_model_3</code></pre>
 <hr />
 <h2 id="models-with-too-many-joins">Models with Too Many Joins<a class="headerlink" href="#models-with-too-many-joins" title="Permanent link">#</a></h2>
-<p><code>fct_too_many_joins</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_too_many_joins.sql">source</a>) shows models with a reference to too many other models or sources.</p>
-<p>The number of different references to start raising errors is set to 7 by default, but you can set your own threshold by overriding the <code>too_many_joins_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
+<p><code>fct_too_many_joins</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_too_many_joins.sql">source</a>) flags models with at least <code>too_many_joins_threshold</code> direct parents (models or sources). The threshold is 7 by default and you can set your own by overriding the <code>too_many_joins_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
 <p><code>fct_model_1</code> directly references seven (7) staging models upstream.</p>
-<p><img alt="A DAG showing a model that directly references seven staging models upstream." src="https://github.com/BradCr/dbt-project-evaluator/assets/151274228/46ea1f78-1bd7-436b-b15b-f63c726601a1" width="600" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_1["stg_model_1"]:::staging
+    fct_model_1["fct_model_1"]:::marts
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_3["stg_model_3"]:::staging
+    stg_model_4["stg_model_4"]:::staging
+    stg_model_5["stg_model_5"]:::staging
+    stg_model_6["stg_model_6"]:::staging
+    stg_model_7["stg_model_7"]:::staging
+    stg_model_1 --&gt; fct_model_1
+    stg_model_2 --&gt; fct_model_1
+    stg_model_3 --&gt; fct_model_1
+    stg_model_4 --&gt; fct_model_1
+    stg_model_5 --&gt; fct_model_1
+    stg_model_6 --&gt; fct_model_1
+    stg_model_7 --&gt; fct_model_1
+    class fct_model_1 flagged</code></pre>
 <p><strong>Reason to Flag</strong></p>
 <p>This likely represents a model in which too much is being done. Having a model that too many upstream models introduces a lot of code complexity, which can be challenging to understand and maintain.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart. Rather than having too many joins, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.</p>
-<p><img alt="A DAG showing a model that directly references only two intermediate models. The intermediate models reference three and four staging models upstream." src="https://github.com/BradCr/dbt-project-evaluator/assets/151274228/4b630e3c-f13a-443c-94e5-2d93c713c8f2" width="700" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    stg_model_1["stg_model_1"]:::staging
+    int_model_1["int_model_1"]:::intermediate
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_3["stg_model_3"]:::staging
+    stg_model_4["stg_model_4"]:::staging
+    stg_model_5["stg_model_5"]:::staging
+    int_model_2["int_model_2"]:::intermediate
+    stg_model_6["stg_model_6"]:::staging
+    stg_model_7["stg_model_7"]:::staging
+    fct_model_1["fct_model_1"]:::marts
+    stg_model_1 --&gt; int_model_1
+    stg_model_2 --&gt; int_model_1
+    stg_model_3 --&gt; int_model_1
+    stg_model_4 --&gt; int_model_1
+    stg_model_5 --&gt; int_model_2
+    stg_model_6 --&gt; int_model_2
+    stg_model_7 --&gt; int_model_2
+    int_model_1 --&gt; fct_model_1
+    int_model_2 --&gt; fct_model_1</code></pre>
 
 
 

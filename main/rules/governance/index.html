@@ -83,6 +83,18 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  Using dbt v1? This documentation is for version 2, which requires dbt 2.0 or later.
+  Pick version 1.x in the version selector, or see the
+  <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -286,6 +298,60 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migrating-to-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from version 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -299,10 +365,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -320,8 +386,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -629,10 +695,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -650,8 +716,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -787,35 +853,7 @@
   <span class="md-ellipsis">
     
   
-    Display issues in the logs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../customization/querying-columns-names-and-descriptions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Querying columns names and descriptions
+    Reading the violations in the logs
   
 
     
@@ -943,9 +981,10 @@
 
 
 <h1 id="governance">Governance<a class="headerlink" href="#governance" title="Permanent link">#</a></h1>
-<p>This set of rules provides checks on your project against dbt Labs' recommended best proactices for adding model governance features in dbt versions 1.5 and above.</p>
+<p>Each rule is a native <a href="https://docs.getdbt.com/docs/build/checks">dbt check</a> that returns one row per violation. Run it with <code>dbt check &lt;rule_name&gt;</code>, for example <code>dbt check fct_public_models_without_contract</code>.</p>
+<p>This set of rules provides checks on your project against dbt Labs' recommended best proactices for adding model governance features.</p>
 <h2 id="public-models-without-contracts">Public models without contracts<a class="headerlink" href="#public-models-without-contracts" title="Permanent link">#</a></h2>
-<p><code>fct_public_models_without_contract</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_public_models_without_contract.sql">source</a>) shows each model with <code>access</code> configured as public, but is not a contracted model.</p>
+<p><code>fct_public_models_without_contract</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/governance/fct_public_models_without_contract.sql">source</a>) shows each model with <code>access</code> configured as public, but is not a contracted model.</p>
 <p><strong>Example</strong></p>
 <p><code>report_1</code> is defined as a public model, but does not have the <code>contract</code> configuration to enforce its datatypes.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># public model without a contract
@@ -970,7 +1009,7 @@
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        data_type: integer
 </span></code></pre></div>
 <h2 id="undocumented-public-models">Undocumented public models<a class="headerlink" href="#undocumented-public-models" title="Permanent link">#</a></h2>
-<p><code>fct_undocumented_public_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_undocumented_public_models.sql">source</a>) shows each model with <code>access</code> configured as public that is not fully documented. This check is similar to <code>fct_undocumented_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/documentation/fct_undocumented_models.sql">source</a>), but is a stricter check that will highlight any public model that does not have a model-level description as well descriptions on each of its columns.</p>
+<p><code>fct_undocumented_public_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/governance/fct_undocumented_public_models.sql">source</a>) shows each model with <code>access</code> configured as public that is not fully documented. This check is similar to <code>fct_undocumented_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/documentation/fct_undocumented_models.sql">source</a>), but is a stricter check that will highlight any public model that does not have a model-level description as well descriptions on each of its columns.</p>
 <p><strong>Example</strong></p>
 <p><code>report_1</code> is defined as a public model, but does not descriptions on the model and each column.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># public model without documentation
@@ -993,10 +1032,20 @@
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        description: the primary key of my OKR model
 </span></code></pre></div>
 <h2 id="exposures-dependent-on-private-models">Exposures dependent on private models<a class="headerlink" href="#exposures-dependent-on-private-models" title="Permanent link">#</a></h2>
-<p><code>fct_exposures_dependent_on_private_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/governance/fct_exposures_dependent_on_private_models.sql">source</a>) shows each relationship between a resource and an exposure where the parent resource is not a model with <code>access</code> configured as public.</p>
+<p><code>fct_exposures_dependent_on_private_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/governance/fct_exposures_dependent_on_private_models.sql">source</a>) shows each relationship between a resource and an exposure where the parent resource is not a model with <code>access</code> configured as public.</p>
 <p><strong>Example</strong></p>
 <p>Here's a sample DAG that shows direct exposure relationships.</p>
-<p><img alt="An example exposure with a two parents (fct_model_6 and dim_model_7)" src="https://user-images.githubusercontent.com/73915542/178068955-742e2c87-4385-48f9-b9fb-94a1cbc8079a.png" width="500" /></p>
+<pre class="mermaid"><code>flowchart LR
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef exposure fill:#c2410c,stroke:#8f2f08,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    dim_model_7["dim_model_7"]:::marts
+    exposure_1["exposure_1"]:::exposure
+    fct_model_6["fct_model_6"]:::marts
+    dim_model_7 --&gt; exposure_1
+    fct_model_6 --&gt; exposure_1
+    class dim_model_7 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px</code></pre>
 <p>If this were the yml for these two parent models, <code>dim_model_7</code> would be flagged by this check, as it is not a public model.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>models:
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  - name: fct_model_6

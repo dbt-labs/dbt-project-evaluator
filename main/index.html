@@ -10,7 +10,7 @@
       
       
       
-        <link rel="next" href="rules/">
+        <link rel="next" href="migrating-to-v2/">
       
       
         
@@ -80,6 +80,18 @@
       
     </div>
     <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  Using dbt v1? This documentation is for version 2, which requires dbt 2.0 or later.
+  Pick version 1.x in the version selector, or see the
+  <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
+
+          </div>
+          
+        </aside>
       
     </div>
     
@@ -320,6 +332,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#why-version-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why version 2?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#using-this-package" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -343,17 +366,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#additional-setup-for-databrickssparkduckdbredshiftfabricsql-serversynapse" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Additional setup for Databricks/Spark/DuckDB/Redshift/Fabric/SQL Server/Synapse
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -364,28 +376,22 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#limitations" class="md-nav__link">
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Limitations
+        Configuration
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Limitations">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
-  <a href="#bigquery-databricks-and-microsoft-fabric-data-warehouse" class="md-nav__link">
+  <a href="#differences-from-1x" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BigQuery, Databricks, and Microsoft Fabric Data Warehouse
+        Differences from 1.x
       
     </span>
   </a>
@@ -411,6 +417,60 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="migrating-to-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from version 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -420,10 +480,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -441,8 +501,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -670,10 +730,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -691,8 +751,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -828,35 +888,7 @@
   <span class="md-ellipsis">
     
   
-    Display issues in the logs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="customization/querying-columns-names-and-descriptions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Querying columns names and descriptions
+    Reading the violations in the logs
   
 
     
@@ -985,60 +1017,93 @@
 
 <h1 id="dbt_project_evaluator">dbt_project_evaluator<a class="headerlink" href="#dbt_project_evaluator" title="Permanent link">#</a></h1>
 <p>This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
-Specifically, this package tests for:</p>
+Specifically, this package checks:</p>
 <ol>
-<li><strong><a href="rules/modeling">Modeling</a></strong> - your dbt DAG for modeling best practices</li>
-<li><strong><a href="rules/testing">Testing</a></strong> - your models for testing best practices</li>
-<li><strong><a href="rules/documentation">Documentation</a></strong> - your models for documentation best practices</li>
-<li><strong><a href="rules/structure">Structure</a></strong> - your dbt project for file structure and naming best practices</li>
-<li><strong><a href="rules/performance">Performance</a></strong> - your model materializations for performance best practices</li>
-<li><strong><a href="rules/governance">Governance</a></strong> - your model governance feature best practices</li>
+<li><strong><a href="rules/modeling/">Modeling</a></strong> - your dbt DAG for modeling best practices</li>
+<li><strong><a href="rules/testing/">Testing</a></strong> - your models for testing best practices</li>
+<li><strong><a href="rules/documentation/">Documentation</a></strong> - your models for documentation best practices</li>
+<li><strong><a href="rules/structure/">Structure</a></strong> - your dbt project for file structure and naming best practices</li>
+<li><strong><a href="rules/performance/">Performance</a></strong> - your model materializations for performance best practices</li>
+<li><strong><a href="rules/governance/">Governance</a></strong> - your model governance feature best practices</li>
 </ol>
-<p>In addition to tests, this package creates the model <code>int_all_dag_relationships</code> which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.</p>
-<p>Currently, the following adapters are supported:</p>
+<p>Version 2 implements each rule as a native <a href="https://docs.getdbt.com/docs/build/checks">dbt check</a>: a SQL query over the dbt information schema that runs locally, at parse time. Nothing is built in your warehouse, so the package works with every adapter supported by dbt v2.</p>
+<div class="admonition note">
+<p class="admonition-title">Using dbt v1?</p>
+<p>Version 2 requires dbt <code>&gt;=2.0.0</code>. If you are on dbt v1 (1.x), stay on version 1.x of the package, which is implemented as models in your warehouse. The documentation for 1.x is available in the version selector of this site, and the code is on the <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x"><code>1.x</code> branch</a>.</p>
+</div>
+<h2 id="why-version-2">Why version 2?<a class="headerlink" href="#why-version-2" title="Permanent link">#</a></h2>
 <ul>
-<li>BigQuery</li>
-<li>Databricks/Spark</li>
-<li>PostgreSQL</li>
-<li>Redshift</li>
-<li>Snowflake</li>
-<li>DuckDB</li>
-<li>Trino (tested with Iceberg connector)</li>
-<li>AWS Athena (tested manually)</li>
-<li>Greenplum (tested manually)</li>
-<li>ClickHouse (tested manually)</li>
-<li>Microsoft Fabric Data Warehouse (tested manually)</li>
-<li>Microsoft Fabric Spark (tested manually)</li>
+<li><strong>Native.</strong> The rules are dbt checks, not models: you run them with <code>dbt check</code>, list them with <code>dbt ls --resource-type check</code>, and configure their severity, tags or whether they run in <code>dbt_project.yml</code>, as for any other resource.</li>
+<li><strong>Checked before every build.</strong> Checks run before anything compiles on <code>dbt build</code>, so a rule set to <code>severity: error</code> stops a build that breaks it, instead of reporting after the fact.</li>
+<li><strong>Fast.</strong> Nothing is built and nothing is read in your warehouse. On a project of about 1,900 models, all the checks take about 15 seconds, parsing included, against about 2 minutes for the version 1 <code>dbt build</code> on Snowflake.</li>
+<li><strong>Selectable.</strong> <code>dbt check --select</code> and <code>state:modified</code> only report the violations on the resources you changed, which is what a pull request needs. Version 1 always evaluated the whole project.</li>
+<li><strong>No warehouse needed.</strong> No credentials, no compute cost, the same result for every adapter, and CI that doesn't need secrets.</li>
+<li><strong>Smaller and easier to extend.</strong> There is no dependency and no per-adapter code. A check is a short SQL query (6 lines for the median) over the same information schema that you can query yourself, so you can <a href="querying-the-dag/">write your own</a> next to the package's.</li>
 </ul>
 <h2 id="using-this-package">Using This Package<a class="headerlink" href="#using-this-package" title="Permanent link">#</a></h2>
 <h3 id="cloning-via-dbt-package-hub">Cloning via dbt Package Hub<a class="headerlink" href="#cloning-via-dbt-package-hub" title="Permanent link">#</a></h3>
 <p>Check <a href="https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/">dbt Hub</a> for the latest installation instructions, or <a href="https://docs.getdbt.com/docs/package-management">read the docs</a> for more information on installing packages.</p>
-<h3 id="additional-setup-for-databrickssparkduckdbredshiftfabricsql-serversynapse">Additional setup for Databricks/Spark/DuckDB/Redshift/Fabric/SQL Server/Synapse<a class="headerlink" href="#additional-setup-for-databrickssparkduckdbredshiftfabricsql-serversynapse" title="Permanent link">#</a></h3>
-<p>In your <code>dbt_project.yml</code>, add the following config:</p>
-<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">dispatch</span><span class="p">:</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">macro_namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dbt</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">search_order</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;dbt_project_evaluator&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;dbt&#39;</span><span class="p p-Indicator">]</span>
+<div class="language-yaml highlight"><span class="filename">packages.yml</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">packages</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">package</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dbt-labs/dbt_project_evaluator</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&gt;=2.0.0&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;&lt;3.0.0&quot;</span><span class="p p-Indicator">]</span>
 </span></code></pre></div>
-<p>This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/cross_db_shim/">cross_db_shim directory</a>.</p>
+<p>The package has no dependency on other packages and doesn't need any additional setup in your project: the <code>info_schema</code> configuration required by checks is declared by the package itself.</p>
 <h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">#</a></h3>
-<p>This package will:</p>
+<p>Each rule is a SQL file in the <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks"><code>checks</code> folder</a> of the package. A check returns one row per violation (no row means the check passes) and is run in DuckDB against the information schema of your project: <code>models</code>, <code>sources</code>, <code>edges</code>, <code>data_tests</code>, <code>exposures</code>... The query results are the same whatever adapter you use.</p>
+<p>Once the package is installed:</p>
+<ul>
+<li>the checks run automatically before every <code>dbt build</code></li>
+<li>you can run them on demand with <code>dbt check</code></li>
+</ul>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dbt<span class="w"> </span>check<span class="w">                                  </span><span class="c1"># every check</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dbt<span class="w"> </span>check<span class="w"> </span>fct_root_models<span class="w">                  </span><span class="c1"># a single check</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>dbt<span class="w"> </span>check<span class="w"> </span>--select<span class="w"> </span>staging<span class="w">                 </span><span class="c1"># only report violations on the selected resources</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>dbt<span class="w"> </span>check<span class="w"> </span>--select<span class="w"> </span>state:modified<span class="w"> </span>--state<span class="w"> </span>path/to/main/target<span class="w">   </span><span class="c1"># only what the pull request changes</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>dbt<span class="w"> </span>ls<span class="w"> </span>--resource-type<span class="w"> </span>check<span class="w"> </span>--select<span class="w"> </span>tag:modeling
+</span></code></pre></div>
+<p>All the checks are <strong>advisory by default</strong> (<code>severity: warn</code>). Each check returns the resource to fix as <code>unique_id</code>, so <code>--select</code> restricts the rows reported by a check to the selected resources. The two coverage checks, <code>fct_documentation_coverage</code> and <code>fct_test_coverage</code>, are project-wide metrics and always evaluate the whole project (they are configured with <code>selection_filter_on: none</code>). <code>--state</code> is not needed in a dbt platform CI job, see <a href="ci-check/">running as a CI check</a>.</p>
+<p>Each warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:</p>
 <ol>
-<li>Parse your <a href="https://docs.getdbt.com/reference/dbt-jinja-functions/graph">graph</a> object and write it into your warehouse as a series of models (see <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/core">models/marts/core</a>)</li>
-<li>Create another series of models that each represent one type of misalignment in your project (below you can find a full list of each misalignment and its accompanying model)</li>
-<li>Test those models to alert you to the presence of the misalignment</li>
+<li>Locate the related documentation in the <a href="rules/">list of rules</a></li>
+<li>Read the <code>dbt check</code> output, which lists the first 5 resources that violate the rule (see <a href="customization/issues-in-log/">reading the output of <code>dbt check</code></a>, which also shows how to list all of them)</li>
+<li>Either fix the issue(s) or <a href="customization/exceptions/">accept them as exceptions</a></li>
 </ol>
-<p>Once you've installed the package, all you have to do is run a <code>dbt build --select package:dbt_project_evaluator</code></p>
-<p>Each test warning indicates the presence of a type of misalignment. To troubleshoot a misalignment:</p>
-<ol>
-<li>Locate the related documentation</li>
-<li>Query the associated model to find the specific instances of the issue within your project or set up an <a href="https://docs.getdbt.com/reference/project-configs/on-run-start-on-run-end"><code>on-run-end</code> hook</a> to display the rules violations in the dbt logs (see <a href="customization/issues-in-log/">displaying violations in the logs</a>)</li>
-<li>Either fix the issue(s) or <a href="customization/exceptions/">customize</a> the package to exclude them</li>
-</ol>
-<hr />
-<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">#</a></h2>
-<h3 id="bigquery-databricks-and-microsoft-fabric-data-warehouse">BigQuery, Databricks, and Microsoft Fabric Data Warehouse<a class="headerlink" href="#bigquery-databricks-and-microsoft-fabric-data-warehouse" title="Permanent link">#</a></h3>
-<p>BigQuery has limited support for recursive CTEs, while Databricks SQL and Microsoft Fabric Data Warehouse do not support them.</p>
-<p>For those Data Warehouses, the model <code>int_all_dag_relationships</code> needs to be created by looping CTEs instead. The number of loops is configured with <code>max_depth_dag</code> and defaulted to 9. This means that dependencies between models of more than 9 levels of separation won't show in the model <code>int_all_dag_relationships</code> but tests on the DAG will still be correct. With a number of loops higher than 9 BigQuery sometimes raises an error saying the query is too complex.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">#</a></h3>
+<p>Every check is tagged with <code>dbt_project_evaluator</code> and with its category (<code>modeling</code>, <code>testing</code>, <code>documentation</code>, <code>structure</code>, <code>performance</code> or <code>governance</code>), and its configuration can be overridden from the <code>checks:</code> section of your <code>dbt_project.yml</code>, for a whole category or for a single check:</p>
+<div class="language-yaml highlight"><span class="filename">dbt_project.yml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">checks</span><span class="p">:</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">dbt_project_evaluator</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">structure</span><span class="p">:</span><span class="w">                  </span><span class="c1"># a whole category</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span><span class="nt">+severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span><span class="w">          </span><span class="c1"># block `dbt build` when a rule is violated</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">documentation</span><span class="p">:</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">fct_undocumented_models</span><span class="p">:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="nt">+enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">         </span><span class="c1"># a single rule</span>
+</span></code></pre></div>
+<p>See <a href="ci-check/">running as a CI check</a> and <a href="customization/customization/">disabling checks</a> for more details. Thresholds and naming conventions are configured with <a href="customization/overriding-variables/">variables</a>, and resources can be <a href="customization/excluding-packages-and-paths/">excluded</a> based on their package or path.</p>
+<h3 id="differences-from-1x">Differences from 1.x<a class="headerlink" href="#differences-from-1x" title="Permanent link">#</a></h3>
+<p>Moving from version 1? See <a href="migrating-to-v2/">migrating to version 2</a>.</p>
+<h4 id="major-changes">Major changes<a class="headerlink" href="#major-changes" title="Permanent link">#</a></h4>
+<ul>
+<li><strong>dbt &gt;= 2.0.0 only.</strong> dbt v1 users stay on version 1.x of the package.</li>
+<li><strong>Nothing is built in the warehouse.</strong> The checks run locally on the metadata of your project, so they work with every adapter, don't materialize anything and don't need <code>dbt_utils</code>. The 1.x <code>models:</code>, <code>seeds:</code> and <code>dispatch:</code> configuration of the package is deleted.</li>
+<li><strong>You can check selected resources only.</strong> <code>dbt check --select …</code>, including <code>state:modified</code>, only reports the violations on the selected resources, see <a href="ci-check/">running as a CI check</a>. In 1.x the whole project was always evaluated. The two coverage checks stay project-wide.</li>
+<li><strong>Severity is set with <code>checks:</code></strong> in <code>dbt_project.yml</code> (per category or per check) instead of the tests severity and the <code>DBT_PROJECT_EVALUATOR_SEVERITY</code> environment variable. The checks run before <code>dbt build</code>, or on demand with <code>dbt check</code>, and report the violations themselves: the <code>print_dbt_project_evaluator_issues</code> <code>on-run-end</code> macro is gone.</li>
+<li><strong>Exceptions are a var or a macro.</strong> The <code>dbt_project_evaluator_exceptions</code> seed is replaced by the variable (or macro) of the same name, because checks can't read seeds. It can also filter on a column of the check, to accept a given parent or pair. See <a href="customization/exceptions/">configuring exceptions</a>; the <a href="migrating-to-v2/">migration script</a> converts the seed.</li>
+<li><strong>Hard-coded references</strong> are reported by <code>dbt lint</code>: turn on the rule <a href="https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules"><code>DBT05</code></a>, see <a href="rules/modeling/#hard-coded-references">hard coded references</a>.</li>
+<li><strong>The DAG tables are gone</strong>, including <code>int_all_dag_relationships</code>. To query your DAG, use the information schema directly, see <a href="querying-the-dag/">querying the DAG</a>.</li>
+</ul>
+<h4 id="minor-changes">Minor changes<a class="headerlink" href="#minor-changes" title="Permanent link">#</a></h4>
+<p>These don't change what is reported.</p>
+<ul>
+<li><code>fct_missing_primary_key_tests</code> doesn't count <code>not_null</code> column constraints as <code>not_null</code> tests yet. This is a short-term limitation: constraints aren't available to checks (<a href="https://github.com/dbt-labs/dbt/issues/16553">dbt-labs/dbt#16553</a>).</li>
+<li><code>exclude_paths_from_project</code> is now a case-sensitive substring match rather than a regular expression, and applies to the resources of all packages. <code>exclude_packages</code> works as in 1.x, including <code>["all"]</code>, and never excludes your own project, see <a href="customization/excluding-packages-and-paths/">excluding packages and paths</a>.</li>
+<li>Disabled resources (models, sources, seeds, snapshots and tests) are ignored by all the checks.</li>
+<li>Sources are identified by their <code>unique_id</code>. Two sources with the same name in two different packages are therefore two different resources, while 1.x grouped them together.</li>
+<li><code>fct_direct_join_to_source</code>, <code>fct_multiple_sources_joined</code>, <code>fct_model_fanout</code> and <code>fct_source_fanout</code> return the names of the parents or children in a list column, not their number.</li>
+<li><code>fct_undocumented_sources</code> and <code>fct_duplicate_sources</code> report one row per source.</li>
+<li><code>fct_documentation_coverage</code> and <code>fct_test_coverage</code> only return a row when the coverage is below the target, and ignore exceptions.</li>
+<li><code>fct_test_directories</code> compares the directory of the YAML file where the tests of a model are defined with the directory of the model. The location of each individual test isn't available when the project is parsed.</li>
+<li>The variables <code>insert_batch_size</code>, <code>max_depth_dag</code>, <code>comment_chars</code>, <code>token_costs</code> and <code>use_native_agate_printing</code> have been removed.</li>
+</ul>
 
 
 
@@ -1069,13 +1134,13 @@ Specifically, this package tests for:</p>
         
         
           
-          <a href="rules/" class="md-footer__link md-footer__link--next" aria-label="Next: List of rules">
+          <a href="migrating-to-v2/" class="md-footer__link md-footer__link--next" aria-label="Next: Migrating from version 1">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                List of rules
+                Migrating from version 1
               </div>
             </div>
             <div class="md-footer__button md-icon">

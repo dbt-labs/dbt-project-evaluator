@@ -81,6 +81,18 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  Using dbt v1? This documentation is for version 2, which requires dbt 2.0 or later.
+  Pick version 1.x in the version selector, or see the
+  <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
+
+          </div>
+          
+        </aside>
+      
     </div>
     
       <div data-md-color-scheme="default" data-md-component="outdated" hidden>
@@ -286,6 +298,60 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../migrating-to-v2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating from version 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../skills/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent skills
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -295,10 +361,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -316,8 +382,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -545,10 +611,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -566,8 +632,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -703,35 +769,7 @@
   <span class="md-ellipsis">
     
   
-    Display issues in the logs
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../customization/querying-columns-names-and-descriptions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Querying columns names and descriptions
+    Reading the violations in the logs
   
 
     
@@ -873,6 +911,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#adding-a-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the integration tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#running-docs-locally" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -928,14 +988,26 @@
 
 
 <h1 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">#</a></h1>
-<p>If you'd like to add models to flag new areas, please update this documentation and add an integration test
-(<a href="https://github.com/dbt-labs/pro-serv-dag-auditing/tree/main/integration_tests#adding-an-integration-test">more details here</a>)</p>
+<p>If you'd like to add checks to flag new areas, please update this documentation and add an integration test.</p>
+<h2 id="adding-a-check">Adding a check<a class="headerlink" href="#adding-a-check" title="Permanent link">#</a></h2>
+<ol>
+<li>Add a SQL file named after the check (<code>fct_&lt;what_is_checked&gt;.sql</code>) in the folder of its category under <code>checks/</code> (<code>modeling</code>, <code>testing</code>, <code>documentation</code>, <code>structure</code>, <code>performance</code> or <code>governance</code>). The query returns one row per violation, with the resource to fix in the column <code>unique_id</code>, and no row when the check passes. Build it on the shared relations <code>evaluator_models()</code>, <code>evaluator_sources()</code> and <code>evaluator_edges()</code> from <code>macros/checks/</code>, so that the exclusions (<code>exclude_packages</code>, <code>exclude_paths_from_project</code>) and the disabled resources are handled, and wrap the query in <code>{% set violations %}…{% endset %}</code> followed by <code>{{ evaluator_exceptions('&lt;check name&gt;', violations) }}</code> so that <a href="../customization/exceptions/">exceptions</a> apply (see any existing check, and add its name to <code>evaluator_check_names()</code>).</li>
+<li>Describe it in the YAML file of the folder (<code>_&lt;category&gt;__checks.yml</code>). Add <code>selection_filter_on: none</code> to its <code>config</code> if it measures the whole project rather than individual resources.</li>
+<li>Add the case it should flag to the project <code>integration_tests_checks/violations/</code> and the number of violations expected in its <code>expected_violations.csv</code>.</li>
+<li>Document the rule in the page of its category under <code>docs/rules/</code> and in the <a href="../rules/">list of rules</a>.</li>
+</ol>
+<h2 id="running-the-integration-tests">Running the integration tests<a class="headerlink" href="#running-the-integration-tests" title="Permanent link">#</a></h2>
+<p>The checks run locally and don't need a warehouse. You need dbt <code>&gt;=2.0.0</code> and then run</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./integration_tests_checks/run_checks.sh
+</span></code></pre></div>
+<p>The script installs the package in each project of <code>integration_tests_checks/</code> (<code>violations</code> and the <code>parity_1x*</code> projects ported from the 1.x integration tests), runs <code>dbt check</code> and compares the number of violations of each check with the <code>expected_violations.csv</code> of the project. <code>test_exceptions.sh</code> then tests the exceptions.</p>
 <h2 id="running-docs-locally">Running docs locally<a class="headerlink" href="#running-docs-locally" title="Permanent link">#</a></h2>
 <p>Docs are generated using <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a>. To test them locally, run the following commands (use a Python virtual environment):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>mkdocs-material
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mkdocs<span class="w"> </span>serve
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>mkdocs-material
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mkdocs<span class="w"> </span>serve
 </span></code></pre></div>
 <p>Docs are then automatically pushed to the website as part of our CI/CD process. We use <a href="https://github.com/jimporter/mike">mike</a> as part of the process to publish different versions of the docs.</p>
+<p>Diagrams can be written as <a href="https://mermaid.js.org/">Mermaid</a> charts in code blocks with the language <code>mermaid</code>, and are rendered by the site.</p>
 <h2 id="recommended-vscode-extensions-to-help-with-writing-docs">Recommended VSCode extensions to help with writing docs<a class="headerlink" href="#recommended-vscode-extensions-to-help-with-writing-docs" title="Permanent link">#</a></h2>
 <ul>
 <li>
@@ -944,11 +1016,11 @@
 <li>Highlight issues with the Markdown code</li>
 <li>
 <p>The config used in <code>.vscode/settings.json</code> is the following:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&quot;markdownlint.config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">&quot;ul-indent&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;indent&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">},</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&quot;MD036&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">&quot;MD046&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&quot;markdownlint.config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&quot;ul-indent&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;indent&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">},</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&quot;MD036&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">&quot;MD046&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
 </span></code></pre></div>
 </li>
 </ul>
