@@ -17,7 +17,7 @@ sources:
         description: Only tests select from this.  # fct_unused_sources
         columns:
           - name: id
-            data_tests: [unique, not_null]  # a source PK: its tests have no node_unique_id
+            data_tests: [unique, not_null]  # a source PK: its tests have no node_unique_id (fct_missing_primary_key_tests)
       - name: tested_only_too
         description: Same, so the disabled table below cannot mask a miscount.  # fct_unused_sources
         columns:
