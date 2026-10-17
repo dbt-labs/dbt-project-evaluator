@@ -41,6 +41,10 @@ for project in violations parity_1x parity_1x_no_exposures parity_1x_semantic_la
         echo "$selected" | grep -q "check 'fct_undocumented_models' found with 1 violation" || { echo "--select did not scope fct_undocumented_models"; status=1; }
         echo "$selected" | grep -q "check 'fct_test_coverage' found with 1 violation" || { echo "--select should not scope fct_test_coverage"; status=1; }
         echo "$selected" | grep -q "check 'fct_model_fanout' found" && { echo "--select did not scope fct_model_fanout"; status=1; }
+
+        # the tests of a source table have no node_unique_id: of the 8 source tables, only tested_only has a primary key
+        sources=$(dbt check fct_missing_primary_key_tests --vars '{enforced_primary_key_node_types: [source]}' --profiles-dir . 2>&1)
+        echo "$sources" | grep -q "check 'fct_missing_primary_key_tests' found with 7 violation" || { echo "fct_missing_primary_key_tests did not see the primary key tests of a source"; status=1; }
     fi
 
     if [ "$project" = "parity_1x" ]; then
