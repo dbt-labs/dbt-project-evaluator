@@ -31,7 +31,7 @@ To check that the site builds without warnings, run `uvx zensical build --strict
 
 Docs are then automatically pushed to the website as part of our CI/CD process. We use [Zensical's fork of mike](https://github.com/squidfunk/mike) as part of the process to publish different versions of the docs.
 
-Diagrams can be written as [Mermaid](https://mermaid.js.org/) charts in code blocks with the language `mermaid`, and are rendered by the site.
+Diagrams can be written as [Mermaid](https://mermaid.js.org/) charts in code blocks with the language `mermaid` (so that GitHub renders them too). The site renders them with [Pele](https://github.com/obsidianmd/pele), a Mermaid renderer loaded from jsDelivr at a pinned version with an integrity hash. To upgrade it, follow the comment in `overrides/main.html`.
 
 ## Recommended VSCode extensions to help with writing docs
 

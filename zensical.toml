@@ -31,6 +31,7 @@ nav = [
 ]
 
 extra_css = ["stylesheets/extra.css"]
+extra_javascript = ["javascripts/pele-init.js"]
 
 [project.extra.version]
 provider = "mike"
@@ -75,5 +76,5 @@ pymdownx.highlight.pygments_lang_class = true
 pymdownx.inlinehilite = {}
 pymdownx.snippets = {}
 pymdownx.superfences.custom_fences = [
-  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+  { name = "mermaid", class = "pele", format = "pymdownx.superfences.fence_code_format" },
 ]

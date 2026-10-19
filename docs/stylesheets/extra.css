@@ -7,10 +7,25 @@
 --md-typeset-a-color:             #ff694a;
 --md-accent-fg-color:             #047377;
 }
-/* Mermaid diagrams: node fills are dark in both color schemes, so keep the labels white */
-.mermaid {
-  --md-mermaid-label-fg-color: #fff;
-  --md-mermaid-node-fg-color: #fff;
+/* Mermaid diagrams are rendered by Pele (see javascripts/pele-init.js): follow the theme colors and font */
+.pele-diagram {
+  margin: 1em 0;
+  --pele-font: var(--md-text-font-family, sans-serif);
+  --pele-bg: var(--md-default-bg-color);
+  --pele-fg: var(--md-default-fg-color);
+  --pele-muted: var(--md-default-fg-color--light);
+  --pele-line: var(--md-default-fg-color--light);
+  --pele-surface: #e8f3f4;
+  --pele-surface-alt: #f4f8f8;
+  --pele-border: #047377;
+  --pele-accent: #047377;
+}
+[data-md-color-scheme="slate"] .pele-diagram {
+  --pele-surface: #1f3a3c;
+  --pele-surface-alt: #1a2526;
+  --pele-border: #4fb8bc;
+  --pele-accent: #4fb8bc;
+  --pele-line: #a0a8a8;
 }
 
 /* Labels of the migration steps: what can be done by hand, with the checklist or with the script */
