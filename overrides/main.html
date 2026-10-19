@@ -5,3 +5,19 @@
   Pick version 1.x in the version selector, or see the
   <a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/1.x">1.x branch</a>.
 {% endblock %}
+
+{% block scripts %}
+  {#
+    Pele renders the ```mermaid blocks (see docs/javascripts/pele-init.js).
+    The version is pinned and the file is checked with an SRI hash.
+    To upgrade, set the new <version> in the URL below, then replace the hash with the output of:
+      curl -sL https://cdn.jsdelivr.net/npm/pele@<version>/dist/pele.global.js | openssl dgst -sha384 -binary | openssl base64 -A
+    (prefixed with "sha384-"). Then check that the diagrams of docs/rules/*.md still render: `uvx zensical serve`.
+  #}
+  <script
+    src="https://cdn.jsdelivr.net/npm/pele@1.6.0/dist/pele.global.js"
+    integrity="sha384-4lHoXtKDt+x/E+htiTc83bpFWyREQzJCMudNQHirqKiCTW7Mx790I/5Q7criNZ1G"
+    crossorigin="anonymous"
+  ></script>
+  {{ super() }}
+{% endblock %}
