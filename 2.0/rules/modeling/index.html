@@ -1055,7 +1055,7 @@
 <p><code>fct_direct_join_to_source</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_direct_join_to_source.sql">source</a>) flags each model that selects from both another model and a source.</p>
 <p><strong>Example</strong></p>
 <p><code>int_model_4</code> is pulling in both a model and a source.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
@@ -1078,7 +1078,7 @@ across all the models that will consume the source data.</p>
 <li>and join this <code>staging</code> model to other ones to create our downstream transformation instead of using the source</li>
 </ol>
 <p>After refactoring your downstream model to select from the staging layer, your DAG should look like this:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
     stg_model_1["stg_model_1"]:::staging
@@ -1092,7 +1092,7 @@ across all the models that will consume the source data.</p>
 that depends directly on a source node.</p>
 <p><strong>Example</strong></p>
 <p><code>fct_model_9</code>, a marts model, builds from <code>source_1.table_5</code> a source.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef marts fill:#26357a,stroke:#1a2557,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1111,7 +1111,7 @@ node, there likely is a missing model that needs to be added.</p>
 <p>Add the reference to the appropriate <code>staging</code> model to maintain an abstraction layer between your raw data
 and your downstream data artifacts.</p>
 <p>After refactoring your downstream model to select from the staging layer, your DAG should look like this:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef marts fill:#26357a,stroke:#1a2557,color:#fff
@@ -1125,7 +1125,7 @@ and your downstream data artifacts.</p>
 <p><code>fct_duplicate_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_duplicate_sources.sql">source</a>) returns one row per source node that points at a database object also used by another source node.</p>
 <p><strong>Example</strong></p>
 <p>Imagine you have two separate source nodes - <code>source_1.table_5</code> and <code>source_1.raw_table_5</code>.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
     source_1_table_5["source_1.table_5"]:::source
@@ -1197,7 +1197,7 @@ and your downstream data artifacts.</p>
 You can set your own threshold for model fanout by overriding the <code>models_fanout_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
 <p><code>fct_model</code> has three direct leaf children.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef marts fill:#26357a,stroke:#1a2557,color:#fff
     classDef model fill:#55677f,stroke:#3e4d61,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1238,7 +1238,7 @@ predefine every query or quandary your team might have. So decide as a team wher
 <p><code>fct_multiple_sources_joined</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_multiple_sources_joined.sql">source</a>) flags each model or snapshot that references more than one source.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_2</code> references two source tables.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1280,7 +1280,7 @@ to move that logic back to the new staging models instead. This will help coloca
 transformations and avoid duplicate code, so that all downstream models can leverage the same
 set of transformations.</p>
 <p>Post-refactor, your DAG should look like this:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
@@ -1294,7 +1294,7 @@ set of transformations.</p>
     stg_model_1 --&gt; int_model_2
     stg_model_2 --&gt; int_model_2</code></pre>
 <p>or if you want to use base_ models and keep stg_model_2 as is:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     source_1_table_1["source_1.table_1"]:::source
@@ -1313,7 +1313,7 @@ is ALSO the direct child of ANOTHER one of the parent's direct children. Only in
 where the model "in between" the parent and child has NO other downstream dependencies.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_1</code>, <code>int_model_4</code>, and <code>int_model_5</code> create a "loop" in the DAG. <code>int_model_4</code> has no other downstream dependencies other than <code>int_model_5</code>.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1348,7 +1348,7 @@ that relation, in which case, leave it.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Barring jinja/macro/relation exceptions we mention directly above, to resolve this, simply bring the SQL contents from <code>int_model_4</code> into a CTE within <code>int_model_5</code>, and swap all <code>{{ ref('int_model_4') }}</code> references to the new CTE(s).</p>
 <p>Post-refactor, your DAG should look like this:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
     stg_model_1["stg_model_1"]:::staging
@@ -1359,7 +1359,7 @@ that relation, in which case, leave it.</p>
 <p><code>fct_root_models</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_root_models.sql">source</a>) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.</p>
 <p><strong>Example</strong></p>
 <p><code>model_4</code> has no direct parents</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef model fill:#55677f,stroke:#3e4d61,color:#fff
@@ -1397,7 +1397,7 @@ that relation, in which case, leave it.</p>
 <p><code>fct_source_fanout</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_source_fanout.sql">source</a>) shows each instance where a source is the direct parent of multiple resources in the DAG.</p>
 <p><strong>Example</strong></p>
 <p><code>source_1.table_1</code> has more than one direct child model.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1422,7 +1422,7 @@ that you need to break one raw data source into multiple base models.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Create a staging model which references the source and cleans the raw data (e.g. renaming, recasting). Any models referencing the source directly should be refactored to point towards the staging model instead.</p>
 <p>After refactoring the above example, the DAG would look something like this:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef model fill:#55677f,stroke:#3e4d61,color:#fff
@@ -1438,7 +1438,7 @@ that you need to break one raw data source into multiple base models.</p>
 <p><code>fct_staging_dependent_on_marts_or_intermediate</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_staging_dependent_on_marts_or_intermediate.sql">source</a>) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_5</code>, a staging model, builds from <code>fct_model_9</code> a marts model.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef marts fill:#26357a,stroke:#1a2557,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1455,7 +1455,7 @@ renamed, or reconfigured to only select from source nodes.</p>
 <p>Rename the file of the model in the <code>name</code> column to use the appropriate prefix, or change the models lineage
 by pointing the staging model to the appropriate <code>{{ source() }}</code>.</p>
 <p>After updating the model to use the appropriate <code>{{ source() }}</code> function, your graph should look like this:</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     source_1_table_5["source_1.table_5"]:::source
@@ -1465,7 +1465,7 @@ by pointing the staging model to the appropriate <code>{{ source() }}</code>.</p
 <p><code>fct_staging_dependent_on_staging</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_staging_dependent_on_staging.sql">source</a>) flags each staging model (<code>name</code>) that depends on another staging model (<code>parent</code>).</p>
 <p><strong>Example</strong></p>
 <p><code>stg_model_2</code> is a parent of <code>stg_model_4</code>.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
     stg_model_2["stg_model_2"]:::staging
@@ -1483,7 +1483,7 @@ by pointing the staging model to the appropriate <code>{{ source() }}</code>.</p
 <p><code>fct_unused_sources</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_unused_sources.sql">source</a>) flags each source with no children (tests don't count as children).</p>
 <p><strong>Example</strong></p>
 <p><code>source_1.table_4</code> isn't being referenced.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1516,7 +1516,7 @@ or any other nested information.</p>
 </span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_3</span>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">table_4</span><span class="w">  </span><span class="c1"># &lt;-- remove this line</span>
 </span></code></pre></div>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     source_1_table_1["source_1.table_1"]:::source
@@ -1533,7 +1533,7 @@ or any other nested information.</p>
 <p><code>fct_too_many_joins</code> (<a href="https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_too_many_joins.sql">source</a>) flags models with at least <code>too_many_joins_threshold</code> direct parents (models or sources). The threshold is 7 by default and you can set your own by overriding the <code>too_many_joins_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
 <p><code>fct_model_1</code> directly references seven (7) staging models upstream.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef marts fill:#26357a,stroke:#1a2557,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1557,7 +1557,7 @@ or any other nested information.</p>
 <p>This likely represents a model in which too much is being done. Having a model that too many upstream models introduces a lot of code complexity, which can be challenging to understand and maintain.</p>
 <p><strong>How to Remediate</strong></p>
 <p>Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart. Rather than having too many joins, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
     classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
     classDef marts fill:#26357a,stroke:#1a2557,color:#fff
@@ -1678,8 +1678,18 @@ or any other nested information.</p>
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["navigation.footer","navigation.instant","navigation.tracking","content.action.edit","toc.integrate"],"redirect":null,"search":"../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
+  
+  <script
+    src="https://cdn.jsdelivr.net/npm/pele@1.6.0/dist/pele.global.js"
+    integrity="sha384-4lHoXtKDt+x/E+htiTc83bpFWyREQzJCMudNQHirqKiCTW7Mx790I/5Q7criNZ1G"
+    crossorigin="anonymous"
+  ></script>
+  
       <script src="../../assets/javascripts/bundle.67a597eb.min.js"></script>
       
+        <script src="../../javascripts/pele-init.js"></script>
+      
     
+
   </body>
 </html>
