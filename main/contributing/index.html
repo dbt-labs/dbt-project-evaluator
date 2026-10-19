@@ -966,7 +966,7 @@
 </span></code></pre></div>
 <p>To check that the site builds without warnings, run <code>uvx zensical build --strict</code>.</p>
 <p>Docs are then automatically pushed to the website as part of our CI/CD process. We use <a href="https://github.com/squidfunk/mike">Zensical's fork of mike</a> as part of the process to publish different versions of the docs.</p>
-<p>Diagrams can be written as <a href="https://mermaid.js.org/">Mermaid</a> charts in code blocks with the language <code>mermaid</code>, and are rendered by the site.</p>
+<p>Diagrams can be written as <a href="https://mermaid.js.org/">Mermaid</a> charts in code blocks with the language <code>mermaid</code> (so that GitHub renders them too). The site renders them with <a href="https://github.com/obsidianmd/pele">Pele</a>, a Mermaid renderer loaded from jsDelivr at a pinned version with an integrity hash. To upgrade it, follow the comment in <code>overrides/main.html</code>.</p>
 <h2 id="recommended-vscode-extensions-to-help-with-writing-docs">Recommended VSCode extensions to help with writing docs<a class="headerlink" href="#recommended-vscode-extensions-to-help-with-writing-docs" title="Permanent link">#</a></h2>
 <ul>
 <li>
@@ -1073,8 +1073,18 @@
       <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.footer","navigation.instant","navigation.tracking","content.action.edit","toc.integrate"],"redirect":null,"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
+  
+  <script
+    src="https://cdn.jsdelivr.net/npm/pele@1.6.0/dist/pele.global.js"
+    integrity="sha384-4lHoXtKDt+x/E+htiTc83bpFWyREQzJCMudNQHirqKiCTW7Mx790I/5Q7criNZ1G"
+    crossorigin="anonymous"
+  ></script>
+  
       <script src="../assets/javascripts/bundle.67a597eb.min.js"></script>
       
+        <script src="../javascripts/pele-init.js"></script>
+      
     
+
   </body>
 </html>

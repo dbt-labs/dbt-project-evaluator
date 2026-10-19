@@ -936,7 +936,7 @@
 You can set your own threshold for chained views by overriding the <code>chained_views_threshold</code> variable. <a href="../../customization/overriding-variables/">See overriding variables section.</a></p>
 <p><strong>Example</strong></p>
 <p><code>table_1</code> depends on a chain of 4 views (<code>view_1</code>, <code>view_2</code>, <code>view_3</code>, and <code>view_4</code>). The chain is flagged here because <code>chained_views_threshold</code> is lowered to 3 for this example.</p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef model fill:#55677f,stroke:#3e4d61,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
     view_1["view_1"]:::model
@@ -965,7 +965,7 @@ You can set your own threshold for chained views by overriding the <code>chained
 <li>a <code>model</code> that does not use the <code>table</code> or <code>incremental</code> materialization</li>
 </ol>
 <p><strong>Example</strong></p>
-<pre class="mermaid"><code>flowchart LR
+<pre class="pele"><code>flowchart LR
     classDef marts fill:#26357a,stroke:#1a2557,color:#fff
     classDef exposure fill:#c2410c,stroke:#8f2f08,color:#fff
     classDef flagged stroke:#ff3b3b,stroke-width:4px
@@ -1080,8 +1080,18 @@ You can set your own threshold for chained views by overriding the <code>chained
       <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["navigation.footer","navigation.instant","navigation.tracking","content.action.edit","toc.integrate"],"redirect":null,"search":"../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
+  
+  <script
+    src="https://cdn.jsdelivr.net/npm/pele@1.6.0/dist/pele.global.js"
+    integrity="sha384-4lHoXtKDt+x/E+htiTc83bpFWyREQzJCMudNQHirqKiCTW7Mx790I/5Q7criNZ1G"
+    crossorigin="anonymous"
+  ></script>
+  
       <script src="../../assets/javascripts/bundle.67a597eb.min.js"></script>
       
+        <script src="../../javascripts/pele-init.js"></script>
+      
     
+
   </body>
 </html>
