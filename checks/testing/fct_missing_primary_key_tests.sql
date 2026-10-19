@@ -12,7 +12,10 @@ tests as (
     select coalesce(test.node_unique_id, edge.parent_unique_id) as node_unique_id, test.column_name,
            coalesce(nullif(test.test_definition_package, ''), 'dbt') || '.test_' || test.test_name as full_test_name
     from {{ evaluator_data_tests() }} test
-    -- the tests of a source table have no node_unique_id: their edge in the DAG points at the source
+    -- the tests of a source table have no node_unique_id: their edge in the DAG points at the source.
+    -- Workaround for dbt-labs/dbt#16794: remove this join once data_tests.node_unique_id is set for source tests.
+    -- A test with several source parents (e.g. `relationships` between two sources) counts for each of them;
+    -- this makes no difference for single-parent tests such as `unique` and `not_null`.
     left join {{ info_schema('edges') }} edge
         on test.node_unique_id is null
        and edge.child_unique_id = test.unique_id
