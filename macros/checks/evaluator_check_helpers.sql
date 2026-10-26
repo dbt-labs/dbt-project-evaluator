@@ -84,7 +84,7 @@ regexp_extract(replace({{ path }}, chr(92), '/'), '[^/]+$', 0)
                {%- if folders %}
                case list_filter(
                    string_split({{ evaluator_directory('model.original_file_path') }}, '/'),
-                   segment -> segment in ({% for folder in folders %}'{{ folder }}'{% if not loop.last %}, {% endif %}{% endfor %})
+                   lambda segment: segment in ({% for folder in folders %}'{{ folder }}'{% if not loop.last %}, {% endif %}{% endfor %})
                )[-1]
                    {%- for folder, model_type in folders.items() %}
                    when '{{ folder }}' then '{{ model_type }}'

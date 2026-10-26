@@ -84,7 +84,7 @@
 
 {# SQL condition: `column` of a violation, or one of its elements when it is a list, matches `pattern` #}
 {% macro evaluator_column_matches(column, pattern) -%}
-    len(list_filter(coalesce(try_cast(violation."{{ column }}" as varchar[]), [cast(violation."{{ column }}" as varchar)]), element -> element like '{{ pattern }}')) > 0
+    len(list_filter(coalesce(try_cast(violation."{{ column }}" as varchar[]), [cast(violation."{{ column }}" as varchar)]), lambda element: element like '{{ pattern }}')) > 0
 {%- endmacro %}
 
 
