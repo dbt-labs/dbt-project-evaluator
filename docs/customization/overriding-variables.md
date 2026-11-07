@@ -103,8 +103,8 @@ vars:
 
 | variable    | description | default     |
 | ----------- | ----------- | ----------- |
-| `max_depth_dag` | limits the maximum distance between nodes calculated in `int_all_dag_relationships` | 9 for bigquery, spark, and fabric, -1 for other adapters |
-| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 10000 |
+| `max_depth_dag` | limits the maximum distance between nodes calculated in `int_all_dag_relationships` | 9 for BigQuery, Spark, Databricks, Fabric, SQL Server, and Synapse; 4 for Athena, Trino, and ClickHouse; -1 for other adapters |
+| `insert_batch_size` | number of records inserted per batch when unpacking the graph into models | 500 for Athena and BigQuery; 1,000 for SQL Server; 10,000 for other adapters |
 
 **Note on max_depth_dag**
 
