@@ -1,0 +1,1 @@
+select 1 from {{ ref('stg_orders') }}, {{ ref('stg_customers') }}, {{ ref('int_chain_1') }}, {{ ref('int_chain_2') }}, {{ ref('int_chain_3') }}, {{ ref('int_chain_4') }}, {{ ref('int_chain_5') }}  -- too many joins

@@ -1,52 +1,76 @@
 # dbt_project_evaluator
 
+> [!IMPORTANT]
+> **Using dbt v1?** This README is for version 2, which requires dbt 2.0 or later. Stay on 1.x
+> (see the [README of the `1.x` branch](https://github.com/dbt-labs/dbt-project-evaluator/blob/1.x/README.md))
+> and cap the version in your `packages.yml` so that `dbt deps` doesn't upgrade you: `version: [">=1.0.0", "<2.0.0"]`
+
 This package highlights areas of a dbt project that are misaligned with dbt Labs' best practices.
-Specifically, this package tests for:
+Specifically, it checks:
 
 1. __[Modeling](https://dbt-labs.github.io/dbt-project-evaluator/latest/rules/modeling/)__ - your dbt DAG for modeling best practices
 2. __[Testing](https://dbt-labs.github.io/dbt-project-evaluator/latest/rules/testing)__ - your models for testing best practices
 3. __[Documentation](https://dbt-labs.github.io/dbt-project-evaluator/latest/rules/documentation)__ - your models for documentation best practices
 4. __[Structure](https://dbt-labs.github.io/dbt-project-evaluator/latest/rules/structure)__ - your dbt project for file structure and naming best practices
 5. __[Performance](https://dbt-labs.github.io/dbt-project-evaluator/latest/rules/performance)__ - your model materializations for performance best practices
-6. __[Governance](https://dbt-labs.github.io/dbt-project-evaluator/latest/rules/governance)__ - your best practices for model governance features.
+6. __[Governance](https://dbt-labs.github.io/dbt-project-evaluator/latest/rules/governance)__ - your best practices for model governance features
 
-In addition to tests, this package creates the model `int_all_dag_relationships` which holds information about your DAG in a tabular format and can be queried using SQL in your Warehouse.
+Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks): a SQL query over the dbt information schema that runs locally and returns one row per violation. Nothing is built in your warehouse, so it needs no credentials and works with every adapter supported by dbt 2.
 
-Currently, the following adapters are supported:
+## Why version 2?
 
-- BigQuery
-- Databricks/Spark
-- PostgreSQL
-- Redshift
-- Snowflake
-- DuckDB
-- Trino (tested with Iceberg connector)
-- AWS Athena (tested manually)
-- Greenplum (tested manually)
-- ClickHouse (tested manually)
-- Microsoft Fabric Data Warehouse (tested manually)
-- Microsoft Fabric Spark (tested manually)
+- **Native.** Run the rules with `dbt check`, and configure them in `dbt_project.yml` like any other resource.
+- **Checked before every build.** A rule set to `severity: error` stops a build that breaks it.
+- **Fast.** About 15 seconds for a project of 1,900 models, against about 2 minutes for the 1.x `dbt build`.
+- **Selectable.** `--select` and `state:modified` report only the violations on the resources you changed.
+- **No warehouse needed.** No credentials and no compute cost, so CI needs no secrets.
 
-## Using This Package
+## Install
 
-### Cloning via dbt Package Hub
-  
-Check [dbt Hub](https://hub.getdbt.com/dbt-labs/dbt_project_evaluator/latest/) for the latest installation instructions, or [read the docs](https://docs.getdbt.com/docs/package-management) for more information on installing packages.
-
-### Additional setup for Databricks/Spark/DuckDB/Redshift/ClickHouse/Fabric
-
-In your `dbt_project.yml`, add the following config:
-
-```yml
-# dbt_project.yml
-
-dispatch:
-  - macro_namespace: dbt
-    search_order: ['dbt_project_evaluator', 'dbt']
+```yaml
+# packages.yml
+packages:
+  - package: dbt-labs/dbt_project_evaluator
+    version: [">=2.0.0", "<3.0.0"]
 ```
 
-This is required because the project currently overrides a small number of dbt core macros in order to ensure the project can run across the listed adapters. The overridden macros are in the [cross_db_shim directory](macros/cross_db_shim/).
-  
+The checks then run before every `dbt build`, and on demand with `dbt check`. They are advisory by default (`severity: warn`).
+
+## Use
+
+```shell
+dbt check                                                       # every check
+dbt check fct_root_models                                       # one check
+dbt check --select state:modified --state path/to/main/target   # only what a pull request changes
+```
+
+Set the severity of a category or of a single check in your `dbt_project.yml`:
+
+```yaml
+checks:
+  dbt_project_evaluator:
+    structure:
+      +severity: error          # block `dbt build` on violations
+    documentation:
+      fct_undocumented_models:
+        +enabled: false         # turn off one rule
+```
+
+More options, in the documentation:
+
+- [accept some violations as exceptions](https://dbt-labs.github.io/dbt-project-evaluator/latest/customization/exceptions/)
+- [change a threshold or a naming convention](https://dbt-labs.github.io/dbt-project-evaluator/latest/customization/overriding-variables/)
+- [exclude a package or a path](https://dbt-labs.github.io/dbt-project-evaluator/latest/customization/excluding-packages-and-paths/)
+- [run the checks in CI](https://dbt-labs.github.io/dbt-project-evaluator/latest/ci-check/)
+
+## Coming from version 1?
+
+The rules are the same, but they are checks now instead of models, so the configuration changes: severity is set with `checks:`, exceptions are a var instead of a seed, and the 1.x tables are gone. `scripts/migrate_to_v2.py` converts your exceptions seed. See the [migration guide](https://dbt-labs.github.io/dbt-project-evaluator/latest/migrating-to-v2/) for all the changes.
+
+## Agent skills
+
+The package ships three skills that teach a coding agent (Claude Code, Cursor, Codex...) how to run the checks, fix the violations and migrate from 1.x. Set `ai_provider` under `flags:` in your `dbt_project.yml` and run `dbt deps` to install them. See [Agent skills](https://dbt-labs.github.io/dbt-project-evaluator/latest/skills/).
+
 ## Documentation
 
-The full documentation and list of rules are available on [this website](https://dbt-labs.github.io/dbt-project-evaluator/)
+The rules, the configuration options, the exceptions and how to run the checks in CI are on [the documentation site](https://dbt-labs.github.io/dbt-project-evaluator/).

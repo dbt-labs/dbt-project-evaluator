@@ -1,15 +1,20 @@
 
+
+Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) that returns one row per violation. Run it with `dbt check <rule_name>`, for example `dbt check fct_test_coverage`.
 # Testing
 
 ## Missing Primary Key Tests
 
-`fct_missing_primary_key_tests` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either
+`fct_missing_primary_key_tests` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/testing/fct_missing_primary_key_tests.sql)) lists every model that does not meet the minimum testing requirement of testing primary keys. Any model that does not have either
 
 1. a `not_null` test and a `unique` test applied to a single column OR
-2. a `dbt_utils.unique_combination_of_columns` test applied to a set of columns OR
-3. a `not_null` constraint and a `unique` test applied to a single column
+2. a `dbt_utils.unique_combination_of_columns` test applied to a set of columns
 
-will be flagged by this model.
+will be flagged by this check.
+
+!!! note "Current limitation: constraints are not counted"
+
+    1.x also accepted a `not_null` *constraint* combined with a `unique` test. Constraints are not available to checks yet ([dbt-labs/dbt#16553](https://github.com/dbt-labs/dbt/issues/16553)), so for now a model that relies on a `not_null` constraint is flagged until it also has a `not_null` test. This is expected to go away once dbt exposes constraints to checks.
 
 **Reason to Flag**
 
@@ -31,7 +36,7 @@ Snapshots should always have a multi-field primary key in order to function, whi
 ---
 ## Missing Source Freshness 
 
-`fct_sources_without_freshness` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_sources_without_freshness.sql)) lists every source that does not have a source freshness threshold defined. Any source that does not have one or both of warn_after and error_after will be flagged by this model.
+`fct_sources_without_freshness` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/testing/fct_sources_without_freshness.sql)) lists every source that does not have a source freshness threshold defined. Any source that has neither `warn_after` nor `error_after` will be flagged by this check.
 
 **Reason to Flag**
 
@@ -44,14 +49,14 @@ Apply a [source freshness block](https://docs.getdbt.com/docs/build/sources#decl
 ---
 ## Test Coverage
 
-`fct_test_coverage` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/tests/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.
-Specifically, this models measures:
+`fct_test_coverage` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/testing/fct_test_coverage.sql)) contains metrics pertaining to project-wide test coverage.
+Specifically, this check measures:
 
 1. `test_coverage_pct`: the percentage of your models that have minimum 1 test applied.
 2. `test_to_model_ratio`: the ratio of the number of tests in your dbt project to the number of models in your dbt project
 3. `<model_type>_test_coverage_pct`: the percentage of each of your model types that have minimum 1 test applied.
 
-This model will raise a `warn` error on a `dbt build` or `dbt test` if the `test_coverage_pct` is less than 100%.
+This check returns a single row, and so warns on `dbt check` and `dbt build` (by default), only when `test_coverage_pct` is below `test_coverage_target` (default 100%). It always looks at the whole project, even when you use `--select`.
 You can set your own threshold by overriding the `test_coverage_target` variable.
 You can adjust your own model types by overriding the `model_types` variable. [See overriding variables section.](../customization/overriding-variables.md)
 

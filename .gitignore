@@ -29,3 +29,7 @@ integration_tests/package-lock.yml
 *.db
 *.duckdb
 dbt_internal_packages/
+.user.yml
+
+# agent skills that dbt installs from the package into the test projects
+integration_tests_checks/*/.claude/

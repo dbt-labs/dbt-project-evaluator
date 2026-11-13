@@ -1,0 +1,5 @@
+packages:
+  - local: ../../
+  - package: dbt-labs/dbt_utils
+    version: [">=1.0.0", "<2.0.0"]
+  - local: exclude_package/

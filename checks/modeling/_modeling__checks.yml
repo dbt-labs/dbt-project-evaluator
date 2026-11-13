@@ -1,0 +1,27 @@
+version: 2
+
+checks:
+  - name: fct_direct_join_to_source
+    description: "Models that select from both a source and another model. Add a staging model for the source and select from that instead."
+  - name: fct_duplicate_sources
+    description: "More than one source node points at the same database object. Keep a single source definition per table."
+  - name: fct_marts_or_intermediate_dependent_on_source
+    description: "Marts or intermediate models that select directly from a source. Go through a staging model."
+  - name: fct_model_fanout
+    description: "Models with at least `models_fanout_threshold` direct leaf children. Consider moving shared logic upstream or into a BI layer."
+  - name: fct_multiple_sources_joined
+    description: "Models that select from more than one source. Give each source its own staging model and join downstream."
+  - name: fct_rejoining_of_upstream_concepts
+    description: "A -> B -> C where C also selects from A and B is only used by C. unique_id is B, which can usually be folded into C."
+  - name: fct_root_models
+    description: "Models with no parents, which usually means a hard-coded table reference instead of source() or ref()."
+  - name: fct_source_fanout
+    description: "Sources selected from by more than one model. A source should feed exactly one staging model."
+  - name: fct_staging_dependent_on_marts_or_intermediate
+    description: "Staging models that select from marts or intermediate models."
+  - name: fct_staging_dependent_on_staging
+    description: "Staging models that select from other staging models. Use a base model or move the logic downstream."
+  - name: fct_too_many_joins
+    description: "Models with at least `too_many_joins_threshold` direct parents. Consider breaking them into intermediate models."
+  - name: fct_unused_sources
+    description: "Sources that nothing selects from. Remove them or build the staging model that should use them."

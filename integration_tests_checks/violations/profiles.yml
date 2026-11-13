@@ -1,0 +1,7 @@
+dbt_project_evaluator_checks_tests:
+  target: duckdb
+  outputs:
+    duckdb:
+      type: duckdb
+      path: ./target/checks_tests.duckdb
+      threads: 4

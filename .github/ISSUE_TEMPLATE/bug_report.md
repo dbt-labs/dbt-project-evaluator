@@ -35,14 +35,9 @@ If applicable, add screenshots or log output to help explain your problem.
 ### System information
 **The contents of your `packages.yml` file:**
 
-**Which database are you using dbt with?**
-- [ ] postgres
-- [ ] redshift
-- [ ] bigquery
-- [ ] snowflake
-- [ ] trino/starburst
-- [ ] other (specify: ____________)
+**The version of the package (version 2 is for dbt 2.0.0 or later; for dbt v1, use version 1.x):**
 
+**Command you ran** (`dbt check`, `dbt build`...):
 
 **The output of `dbt --version`:**
 ```

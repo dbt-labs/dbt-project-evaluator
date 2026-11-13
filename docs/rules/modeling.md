@@ -1,15 +1,29 @@
 # Modeling
 
+Each rule is a native [dbt check](https://docs.getdbt.com/docs/build/checks) that returns one row per violation. Run it with `dbt check <rule_name>`, for example `dbt check fct_root_models`.
+
 ## Direct Join to Source
 
-`fct_direct_join_to_source` ([source](https://github.com/dbt-labs/dbt-project-evaluator/blob/main/models/marts/dag/fct_direct_join_to_source.sql){:target="_blank"}) shows each parent/child relationship where a model has a reference to
-both a model and a source.
+`fct_direct_join_to_source` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_direct_join_to_source.sql)) flags each model that selects from both another model and a source.
 
 **Example**
 
 `int_model_4` is pulling in both a model and a source.
 
-![DAG showing a model and a source joining into a new model](https://user-images.githubusercontent.com/8754100/167100127-29cdff47-0ef8-41e0-96a2-587021e39769.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_1["stg_model_1"]:::staging
+    int_model_4["int_model_4"]:::intermediate
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_1 --> int_model_4
+    source_1_table_2 --> int_model_4
+    class int_model_4 flagged
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
+```
 
 **Reason to Flag**
 
@@ -27,20 +41,39 @@ In our example, we would want to:
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 
-![DAG showing two staging models joining into a new model](https://user-images.githubusercontent.com/8754100/167100383-ca975328-c1af-4fe9-8729-7d0c81fd36a6.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    stg_model_1["stg_model_1"]:::staging
+    int_model_4["int_model_4"]:::intermediate
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_1 --> int_model_4
+    stg_model_2 --> int_model_4
+```
 
 ---
 
 ## Downstream Models Dependent on Source
 
-`fct_marts_or_intermediate_dependent_on_source` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
+`fct_marts_or_intermediate_dependent_on_source` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_marts_or_intermediate_dependent_on_source.sql)) shows each downstream model (`marts` or `intermediate`)
 that depends directly on a source node.
 
 **Example**
 
 `fct_model_9`, a marts model, builds from `source_1.table_5` a source.
 
-![image](https://user-images.githubusercontent.com/73915542/164775613-74cb7407-4bee-436c-94c8-e3c935bcb87f.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_5["source_1.table_5"]:::source
+    fct_model_9["fct_model_9"]:::marts
+    source_1_table_5 --> fct_model_9
+    class fct_model_9 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+```
 
 **Reason to Flag**
 
@@ -57,19 +90,37 @@ and your downstream data artifacts.
 
 After refactoring your downstream model to select from the staging layer, your DAG should look like this:
 
-![image](https://user-images.githubusercontent.com/73915542/165100261-cfb7197e-0f39-4ed7-9373-ab4b6e1a4963.png){ width=700 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    source_1_table_5["source_1.table_5"]:::source
+    stg_model_5["stg_model_5"]:::staging
+    fct_model_9["fct_model_9"]:::marts
+    source_1_table_5 --> stg_model_5
+    stg_model_5 --> fct_model_9
+```
 
 ---
 
 ## Duplicate Sources
 
-`fct_duplicate_sources` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_duplicate_sources.sql)) shows each database object that corresponds to more than one source node.
+`fct_duplicate_sources` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_duplicate_sources.sql)) returns one row per source node that points at a database object also used by another source node.
 
 **Example**
 
 Imagine you have two separate source nodes - `source_1.table_5` and `source_1.raw_table_5`.
 
-![two source nodes in DAG](https://user-images.githubusercontent.com/53586774/226765218-2302deab-8c98-49ce-968a-007ee8ba571a.png){ width=400 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_5["source_1.table_5"]:::source
+    source_1_raw_table_5["source_1.raw_table_5"]:::source
+    class source_1_table_5 flagged
+    class source_1_raw_table_5 flagged
+```
 
 But both source definitions point to the exact same location in your database - `real_database`.`real_schema`.`table_5`.
 
@@ -96,7 +147,11 @@ Combine the duplicate source nodes so that each source database location only ha
 
 ## Hard Coded References
 
-`fct_hard_coded_references` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_hard_coded_references.sql)) shows each instance where a model contains hard coded reference(s).
+!!! info "Reported by `dbt lint` in version 2"
+
+    Hard coded references are reported by the [`dbt lint`](https://docs.getdbt.com/reference/commands/lint#dbt-specific-rules) rule `DBT05` (`dbt.hard_coded_reference`), which you turn on in your `.sqlfluff` with `rules = DBT05`. It is not a `dbt check`.
+
+`dbt lint` shows each instance where a model contains hard coded reference(s).
 
 **Example**
 
@@ -119,7 +174,7 @@ left join customers on
 
 **Reason to Flag**
 
-Always use the `ref` function when selecting from another model and the `source` function when selecting from raw data, rather than using the direct relation reference (e.g. `my_schema.my_table`). Direct relation references are determined via regex mapping [here](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/macros/find_all_hard_coded_references.sql).
+Always use the `ref` function when selecting from another model and the `source` function when selecting from raw data, rather than using the direct relation reference (e.g. `my_schema.my_table`).
 
 The `ref` and `source` functions are part of what makes dbt so powerful! Using these functions allows dbt to infer dependencies (and check that you haven't created any circular dependencies), properly generate your DAG, and ensure that models are built in the correct order. This also ensures that your current model selects from upstream tables and views in the same environment that you're working in.
 
@@ -151,14 +206,27 @@ left join customers on
 
 ## Model Fanout
 
-`fct_model_fanout` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_model_fanout.sql)) shows all parents with more than 3 direct leaf children.
+`fct_model_fanout` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_model_fanout.sql)) flags every model with at least `models_fanout_threshold` (default 3) direct leaf children. A leaf is a model with no children of its own; tests, exposures, metrics and saved queries don't count as children.
 You can set your own threshold for model fanout by overriding the `models_fanout_threshold` variable. [See overriding variables section.](../customization/overriding-variables.md)
 
 **Example**
 
 `fct_model` has three direct leaf children.
 
-![A DAG showing three models branching out of a fct model](https://user-images.githubusercontent.com/30663534/159601497-c141c5ba-d3a6-465a-ab8f-12056d28c5ee.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    fct_model["fct_model"]:::marts
+    model_1["model_1"]:::model
+    model_2["model_2"]:::model
+    model_3["model_3"]:::model
+    fct_model --> model_1
+    fct_model --> model_2
+    fct_model --> model_3
+    class fct_model flagged
+```
 
 **Reason to Flag**
 
@@ -172,7 +240,13 @@ end your DAG after marts (i.e. fcts & dims) and join those artifacts together (w
 and setup time) to make your reports. For others, like Tableau, model fanouts might be more
 beneficial, as this tool prefers big tables over joins, so predefining some reports is usually more performant.
 
-To exclude specific cases, check out the instructions in [Configuring exceptions to the rules](../customization/exceptions.md).
+To accept specific cases, list them under `fct_model_fanout` in [`dbt_project_evaluator_exceptions`](../customization/exceptions.md), either by name or by one of the leaf children (`leaf_children` is a list):
+
+```yaml
+fct_model_fanout:
+  - fct_model_6                  # the model with the fanout
+  - leaf_children: report_%      # any model that has a leaf child matching report_%
+```
 
 **How to Remediate**
 
@@ -194,13 +268,26 @@ predefine every query or quandary your team might have. So decide as a team wher
 
 ## Multiple Sources Joined
 
-`fct_multiple_sources_joined` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_multiple_sources_joined.sql)) shows each instance where a model references more than one source.
+`fct_multiple_sources_joined` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_multiple_sources_joined.sql)) flags each model or snapshot that references more than one source.
 
 **Example**
 
-`model_1` references two source tables.
+`stg_model_2` references two source tables.
 
-![A DAG showing two sources feeding into a staging model](https://user-images.githubusercontent.com/30663534/159605226-14b23d28-1b30-42c9-85a9-3fbe5a41c025.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    source_1_table_1 --> stg_model_2
+    source_1_table_2 --> stg_model_2
+    class stg_model_2 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
+```
 
 **Reason to Flag**
 
@@ -215,7 +302,14 @@ their respective models.
 
 Sometimes companies have a bunch of [identical sources across systems](https://discourse.getdbt.com/t/unioning-identically-structured-data-sources/921). When these identical sources will only ever be used collectively, you should union them once and create a staging layer on the combined result.
 
-To exclude specific cases, check out the instructions in [Configuring exceptions to the rules](../customization/exceptions.md).
+To accept specific cases, list them under `fct_multiple_sources_joined` in [`dbt_project_evaluator_exceptions`](../customization/exceptions.md), either by model name or by source (`source_parents` is a list):
+
+```yaml
+fct_multiple_sources_joined:
+  - stg_%_unioned                                           # the model
+  - source_parents: source_1.table_1                        # any model that reads from this source
+  - {name: stg_model_2, source_parents: source_1.table_2}   # this model and this source
+```
 
 **How to Remediate**
 
@@ -236,17 +330,44 @@ set of transformations.
 
 Post-refactor, your DAG should look like this:
 
-![A refactored DAG showing two staging models feeding into an intermediate model](https://user-images.githubusercontent.com/30663534/159601894-3997eb34-32c2-4a80-a617-537ee96a8cf3.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    int_model_2["int_model_2"]:::intermediate
+    source_1_table_1 --> stg_model_1
+    source_1_table_2 --> stg_model_2
+    stg_model_1 --> int_model_2
+    stg_model_2 --> int_model_2
+```
 
 or if you want to use base_ models and keep stg_model_2 as is:
 
-![A refactored DAG showing two base models feeding into a staging model](https://user-images.githubusercontent.com/30663534/159602135-926f2823-3683-4cd5-be00-c04c312ed42d.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    base__model_1["base__model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    base__model_2["base__model_2"]:::staging
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_1 --> base__model_1
+    source_1_table_2 --> base__model_2
+    base__model_1 --> stg_model_2
+    base__model_2 --> stg_model_2
+```
 
 ---
 
 ## Rejoining of Upstream Concepts
 
-`fct_rejoining_of_upstream_concepts` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_rejoining_of_upstream_concepts.sql)) contains all cases where one of the parent's direct children
+`fct_rejoining_of_upstream_concepts` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_rejoining_of_upstream_concepts.sql)) contains all cases where one of the parent's direct children
 is ALSO the direct child of ANOTHER one of the parent's direct children. Only includes cases
 where the model "in between" the parent and child has NO other downstream dependencies.
 
@@ -254,7 +375,20 @@ where the model "in between" the parent and child has NO other downstream depend
 
 `stg_model_1`, `int_model_4`, and `int_model_5` create a "loop" in the DAG. `int_model_4` has no other downstream dependencies other than `int_model_5`.
 
-<img width="500" alt="A DAG showing three resources. A staging model is referenced by both an int model (`int_model_4`) and a second int model (`int_model_5`). `int_model_4` is also being referenced by `int_model_5`. This creates a 'loop' between the staging model, the int model, and the second int model." src="https://user-images.githubusercontent.com/30663534/159788799-6bfb745b-7316-485e-9665-f7e7f825742c.png">
+```mermaid
+flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_1["stg_model_1"]:::staging
+    int_model_4["int_model_4"]:::intermediate
+    int_model_5["int_model_5"]:::intermediate
+    stg_model_1 --> int_model_4
+    stg_model_1 --> int_model_5
+    int_model_4 --> int_model_5
+    class int_model_4 flagged
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
+```
 
 **Reason to Flag**
 
@@ -277,7 +411,12 @@ as an argument input. If the shape of the data in the output of `stg_model_1` is
 need for the input to the function within `int_model_5`, then you will indeed need `int_model_4` to create
 that relation, in which case, leave it.
 
-To exclude specific cases, check out the instructions in [Configuring exceptions to the rules](../customization/exceptions.md).
+To accept specific cases, list them under `fct_rejoining_of_upstream_concepts` in [`dbt_project_evaluator_exceptions`](../customization/exceptions.md). The check returns the columns `parent`, `parent_and_child` and `child`, so that a given loop can be accepted:
+
+```yaml
+fct_rejoining_of_upstream_concepts:
+  - {parent: stg_model_1, child: int_model_5.v2}
+```
 
 **How to Remediate**
 
@@ -285,21 +424,51 @@ Barring jinja/macro/relation exceptions we mention directly above, to resolve th
 
 Post-refactor, your DAG should look like this:
 
-![A refactored DAG removing the 'loop', by folding `int_model_4` into `int_model_5`.](https://user-images.githubusercontent.com/30663534/159789475-c5e1a087-1dc9-4d1c-bf13-fba52945ba6c.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    stg_model_1["stg_model_1"]:::staging
+    int_model_5["int_model_5"]:::intermediate
+    stg_model_1 --> int_model_5
+```
 
 ---
 
 ## Root Models
 
-`fct_root_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.
+`fct_root_models` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_root_models.sql)) shows each model with 0 direct parents, meaning that the model cannot be traced back to a declared source or model in the dbt project.
 
 **Example**
 
 `model_4` has no direct parents
 
-![A DAG showing three source tables, each being referenced by a staging model. Each staging model is being referenced by another accompanying model. model_4 is an independent resource not being referenced by any models](https://user-images.githubusercontent.com/91074396/156644411-83e269e7-f1f9-4f46-9cfd-bdee1c8e6b22.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_table_1["source.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    model_1["model_1"]:::model
+    source_table_2["source.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    model_2["model_2"]:::model
+    source_table_3["source.table_3"]:::source
+    stg_model_3["stg_model_3"]:::staging
+    model_3["model_3"]:::model
+    model_4["model_4"]:::model
+    source_table_1 --> stg_model_1
+    stg_model_1 --> model_1
+    source_table_2 --> stg_model_2
+    stg_model_2 --> model_2
+    source_table_3 --> stg_model_3
+    stg_model_3 --> model_3
+    class model_4 flagged
+```
 
-**Reason to Flag**</b>
+**Reason to Flag**
 
 This likely means that the model (`model_4`  below) contains raw table references, either to a raw data source, or another model in the project without using the `{{ source() }}` or `{{ ref() }}` functions, respectively. This means that dbt is unable to interpret the correct lineage of this model, and could result in mis-timed execution and/or circular references depending on the model’s upstream dependencies.
 
@@ -307,7 +476,13 @@ This likely means that the model (`model_4`  below) contains raw table reference
 
 This behavior may be observed in the case of a manually defined reference table that does not have any dependencies. A good example of this is a `dim_calendar` table that is generated by the `{{ dbt_utils.date_spine() }}` macro — this SQL logic is completely self contained, and does not require any external data sources to execute.
 
-To exclude specific cases, check out the instructions in [Configuring exceptions to the rules](../customization/exceptions.md).
+To accept specific cases, list them under `fct_root_models` in [`dbt_project_evaluator_exceptions`](../customization/exceptions.md), by name or by folder:
+
+```yaml
+fct_root_models:
+  - dim_calendar
+  - original_file_path: models/utils/%
+```
 
 **How to Remediate**
 
@@ -317,13 +492,26 @@ Start by mapping any table references in the `FROM` clause of the model definiti
 
 ## Source Fanout
 
-`fct_source_fanout` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_source_fanout.sql)) shows each instance where a source is the direct parent of multiple resources in the DAG.
+`fct_source_fanout` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_source_fanout.sql)) shows each instance where a source is the direct parent of multiple resources in the DAG.
 
 **Example**
 
-`source.table_1` has more than one direct child model.
+`source_1.table_1` has more than one direct child model.
 
-![image](https://user-images.githubusercontent.com/91074396/167182220-00620844-72c4-45ab-bfe1-48959b0cdf08.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_1 --> stg_model_1
+    source_1_table_1 --> stg_model_2
+    class source_1_table_1 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+    linkStyle 1 stroke:#ff3b3b,stroke-width:3px
+```
 
 **Reason to Flag**
 
@@ -334,7 +522,13 @@ Each source node should be referenced by a single model that performs basic oper
 NoSQL databases or heavily nested data sources often have so much info json packed into a table
 that you need to break one raw data source into multiple base models.
 
-To exclude specific cases, check out the instructions in [Configuring exceptions to the rules](../customization/exceptions.md).
+To accept specific cases, list them under `fct_source_fanout` in [`dbt_project_evaluator_exceptions`](../customization/exceptions.md), either by source or by one of its models (`model_children` is a list):
+
+```yaml
+fct_source_fanout:
+  - source_1.table_1            # the source
+  - model_children: base_%      # any source that has a model matching base_%
+```
 
 **How to Remediate**
 
@@ -342,19 +536,41 @@ Create a staging model which references the source and cleans the raw data (e.g.
 
 After refactoring the above example, the DAG would look something like this:
 
-![image](https://user-images.githubusercontent.com/91074396/167182379-3f74081e-2be9-4db5-a0e9-03d9185efbcc.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef model fill:#55677f,stroke:#3e4d61,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model["stg_model"]:::staging
+    model_1["model_1"]:::model
+    model_2["model_2"]:::model
+    source_1_table_1 --> stg_model
+    stg_model --> model_1
+    stg_model --> model_2
+```
 
 ---
 
 ## Staging Models Dependent on Downstream Models
 
-`fct_staging_dependent_on_marts_or_intermediate` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
+`fct_staging_dependent_on_marts_or_intermediate` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_staging_dependent_on_marts_or_intermediate.sql)) shows each staging model that depends on an intermediate or marts model, as defined by the naming conventions and folder paths specified in your project variables.
 
 **Example**
 
 `stg_model_5`, a staging model, builds from `fct_model_9` a marts model.
 
-![image](https://user-images.githubusercontent.com/73915542/164775542-235b5ef8-553d-46ee-9e86-3ff27a6028b5.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    fct_model_9["fct_model_9"]:::marts
+    stg_model_5["stg_model_5"]:::staging
+    fct_model_9 --> stg_model_5
+    class stg_model_5 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+```
 
 **Reason to Flag**
 
@@ -364,23 +580,38 @@ renamed, or reconfigured to only select from source nodes.
 
 **How to Remediate**
 
-Rename the file in the `child` column to use to appropriate prefix, or change the models lineage
+Rename the file of the model in the `name` column to use the appropriate prefix, or change the models lineage
 by pointing the staging model to the appropriate `{{ source() }}`.
 
 After updating the model to use the appropriate `{{ source() }}` function, your graph should look like this:
 
-![image](https://user-images.githubusercontent.com/73915542/165099955-c7f0e663-e9aa-445b-9954-675f70a1ad82.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    source_1_table_5["source_1.table_5"]:::source
+    stg_model_5["stg_model_5"]:::staging
+    source_1_table_5 --> stg_model_5
+```
 
 ## Staging Models Dependent on Other Staging Models
 
-`fct_staging_dependent_on_staging` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_staging_dependent_on_staging.sql)) shows each parent/child relationship where models in the staging layer are
-dependent on each other.
+`fct_staging_dependent_on_staging` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_staging_dependent_on_staging.sql)) flags each staging model (`name`) that depends on another staging model (`parent`).
 
 **Example**
 
 `stg_model_2` is a parent of `stg_model_4`.
 
-![A DAG showing stg_model_2 as a parent of stg_model_4.](https://user-images.githubusercontent.com/53586774/164788355-4c6e58b5-21e0-45c6-bfde-af82952bb495.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_4["stg_model_4"]:::staging
+    stg_model_2 --> stg_model_4
+    class stg_model_4 flagged
+    linkStyle 0 stroke:#ff3b3b,stroke-width:3px
+```
 
 **Reason to Flag**
 
@@ -388,7 +619,7 @@ This may indicate a change in naming is necessary, or that the child model shoul
 
 **How to Remediate**
 
-You should either change the model type of the `child` (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate `{{ source() }}`.
+You should either change the model type of the flagged model (maybe to an intermediate or marts model) or change the child's lineage instead reference the appropriate `{{ source() }}`.
 
 In our example, we might realize that `stg_model_4` is _actually_ an intermediate model. We should move this file to the appropriate intermediate directory and update the file name to `int_model_4`.
 
@@ -396,13 +627,29 @@ In our example, we might realize that `stg_model_4` is _actually_ an intermediat
 
 ## Unused Sources
 
-`fct_unused_sources` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_unused_sources.sql)) shows each source with 0 children.
+`fct_unused_sources` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_unused_sources.sql)) flags each source with no children (tests don't count as children).
 
 **Example**
 
-`source.table_4` isn't being referenced.
+`source_1.table_4` isn't being referenced.
 
-![A DAG showing three sources which are each being referenced by an accompanying staging model, and one source that isn't being referenced at all](https://user-images.githubusercontent.com/91074396/156637881-f67c1a28-93c7-4a91-9337-465aad94b73a.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_3["source_1.table_3"]:::source
+    stg_model_3["stg_model_3"]:::staging
+    source_1_table_4["source_1.table_4"]:::source
+    source_1_table_1 --> stg_model_1
+    source_1_table_2 --> stg_model_2
+    source_1_table_3 --> stg_model_3
+    class source_1_table_4 flagged
+```
 
 **Reason to Flag**
 
@@ -428,21 +675,53 @@ or any other nested information.
         - name: table_4  # <-- remove this line
   ```
 
-![A refactored DAG showing three sources which are each being referenced by an accompanying staging model](https://user-images.githubusercontent.com/30663534/159603703-6e94b00b-07d1-4f47-89df-8e5685d9fcf0.png){ width=500 }
+```mermaid
+flowchart LR
+    classDef source fill:#2e7d1e,stroke:#1f5a13,color:#fff
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    source_1_table_1["source_1.table_1"]:::source
+    stg_model_1["stg_model_1"]:::staging
+    source_1_table_2["source_1.table_2"]:::source
+    stg_model_2["stg_model_2"]:::staging
+    source_1_table_3["source_1.table_3"]:::source
+    stg_model_3["stg_model_3"]:::staging
+    source_1_table_1 --> stg_model_1
+    source_1_table_2 --> stg_model_2
+    source_1_table_3 --> stg_model_3
+```
 
 ---
 
 ## Models with Too Many Joins
 
-`fct_too_many_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/models/marts/dag/fct_too_many_joins.sql)) shows models with a reference to too many other models or sources.
-
-The number of different references to start raising errors is set to 7 by default, but you can set your own threshold by overriding the `too_many_joins_threshold` variable. [See overriding variables section.](../customization/overriding-variables.md)
+`fct_too_many_joins` ([source](https://github.com/dbt-labs/dbt-project-evaluator/tree/main/checks/modeling/fct_too_many_joins.sql)) flags models with at least `too_many_joins_threshold` direct parents (models or sources). The threshold is 7 by default and you can set your own by overriding the `too_many_joins_threshold` variable. [See overriding variables section.](../customization/overriding-variables.md)
 
 **Example**
 
 `fct_model_1` directly references seven (7) staging models upstream.
 
-![A DAG showing a model that directly references seven staging models upstream.](https://github.com/BradCr/dbt-project-evaluator/assets/151274228/46ea1f78-1bd7-436b-b15b-f63c726601a1){ width=600 }
+```mermaid
+flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    classDef flagged stroke:#ff3b3b,stroke-width:4px
+    stg_model_1["stg_model_1"]:::staging
+    fct_model_1["fct_model_1"]:::marts
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_3["stg_model_3"]:::staging
+    stg_model_4["stg_model_4"]:::staging
+    stg_model_5["stg_model_5"]:::staging
+    stg_model_6["stg_model_6"]:::staging
+    stg_model_7["stg_model_7"]:::staging
+    stg_model_1 --> fct_model_1
+    stg_model_2 --> fct_model_1
+    stg_model_3 --> fct_model_1
+    stg_model_4 --> fct_model_1
+    stg_model_5 --> fct_model_1
+    stg_model_6 --> fct_model_1
+    stg_model_7 --> fct_model_1
+    class fct_model_1 flagged
+```
 
 **Reason to Flag**
 
@@ -452,4 +731,28 @@ This likely represents a model in which too much is being done. Having a model t
 
 Bringing together a reasonable number (typically 4 to 6) of entities or concepts (staging models, or perhaps other intermediate models) that will be joined with another similarly purposed intermediate model to generate a mart. Rather than having too many joins, we can join two intermediate models that each house a piece of the complexity, giving us increased readability, flexibility, testing surface area, and insight into our components.
 
-![A DAG showing a model that directly references only two intermediate models. The intermediate models reference three and four staging models upstream.](https://github.com/BradCr/dbt-project-evaluator/assets/151274228/4b630e3c-f13a-443c-94e5-2d93c713c8f2){ width=700 }
+```mermaid
+flowchart LR
+    classDef staging fill:#0b7a9e,stroke:#085a75,color:#fff
+    classDef intermediate fill:#3f5fa8,stroke:#2c4580,color:#fff
+    classDef marts fill:#26357a,stroke:#1a2557,color:#fff
+    stg_model_1["stg_model_1"]:::staging
+    int_model_1["int_model_1"]:::intermediate
+    stg_model_2["stg_model_2"]:::staging
+    stg_model_3["stg_model_3"]:::staging
+    stg_model_4["stg_model_4"]:::staging
+    stg_model_5["stg_model_5"]:::staging
+    int_model_2["int_model_2"]:::intermediate
+    stg_model_6["stg_model_6"]:::staging
+    stg_model_7["stg_model_7"]:::staging
+    fct_model_1["fct_model_1"]:::marts
+    stg_model_1 --> int_model_1
+    stg_model_2 --> int_model_1
+    stg_model_3 --> int_model_1
+    stg_model_4 --> int_model_1
+    stg_model_5 --> int_model_2
+    stg_model_6 --> int_model_2
+    stg_model_7 --> int_model_2
+    int_model_1 --> fct_model_1
+    int_model_2 --> fct_model_1
+```

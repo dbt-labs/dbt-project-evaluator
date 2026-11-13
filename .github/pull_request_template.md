@@ -15,19 +15,12 @@ Closes #13
 Describe your changes, and why you're making them.
 -->
 
-## Integration Test Screenshot
+## Integration tests
 <!---
-Screenshot of passing integration tests locally
+Output of `./integration_tests_checks/run_checks.sh` (needs dbt v2 on PATH, runs on DuckDB)
 -->
 
 ## Checklist
-- [ ] I have verified that these changes work locally on the following warehouses (Note: it's okay if you do not have access to all warehouses, this helps us understand what has been covered)
-    - [ ] BigQuery
-    - [ ] Postgres
-    - [ ] Redshift
-    - [ ] Snowflake
-    - [ ] Databricks
-    - [ ] DuckDB
-    - [ ] Trino/Starburst
-- [ ] I have updated the README.md (if applicable)
-- [ ] I have added tests & descriptions to my models (and macros if applicable)
+- [ ] `./integration_tests_checks/run_checks.sh` passes locally
+- [ ] I have updated the README.md and the documentation in `docs/` (if applicable)
+- [ ] I have added or updated a case in `integration_tests_checks/` and its `expected_violations.csv` (if applicable)

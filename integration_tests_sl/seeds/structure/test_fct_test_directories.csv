@@ -1,3 +1,0 @@
-test_name,model_name,current_test_directory,change_test_directory_to
-not_null_int_model_4_id,int_model_4,models/staging/,models/marts/
-unique_int_model_4_id,int_model_4,models/staging/,models/marts/

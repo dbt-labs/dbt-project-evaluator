@@ -1,0 +1,7 @@
+integration_tests:
+  target: duckdb
+  outputs:
+    duckdb:
+      type: duckdb
+      path: ./target/checks_tests.duckdb
+      threads: 4
