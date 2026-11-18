@@ -132,7 +132,7 @@ regexp_extract(replace({{ path }}, chr(92), '/'), '[^/]+$', 0)
         union all
         {#- materialized and access do not apply to seeds and snapshots, and newer dbt versions
             drop both columns from their views #}
-        select unique_id, resource_type, name, resource_type as materialized, null as access, null
+        select unique_id, resource_type, name, null, null, null
         from {{ info_schema(view) }} node where node.enabled and {{ evaluator_check_in_scope('node') }}
         {%- endfor %}
         {%- for view in ['exposures', 'metrics', 'saved_queries'] %}
